@@ -3,7 +3,7 @@ import Def.{setting => dep}
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Libs {
-  val ScalaVersion = "2.12.4"
+  val ScalaVersion = "2.12.6"
 
   val `scala-reflect`      = "org.scala-lang"         % "scala-reflect"       % ScalaVersion
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
@@ -16,7 +16,7 @@ object Libs {
 }
 
 object Ammonite {
-  val Version = "1.1.0"
+  val Version = "1.1.2"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
