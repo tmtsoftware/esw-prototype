@@ -75,6 +75,7 @@ lazy val `sequencer-framework` = project
       Circe.`circe-core`.value,
       Circe.`circe-generic`.value,
       Circe.`circe-parser`.value,
+      Csw.`csw-location`,
       SharedLibs.scalaTest.value % Test
     )
   )

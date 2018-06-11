@@ -8,8 +8,8 @@ import tmt.sequencer.messages.SupervisorMsg.ControlCommand
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 
 object SupervisorBehavior {
-  def behavior(sequencerRef: ActorRef[SequencerMsg], script: Script): Behaviors.Immutable[SupervisorMsg] =
-    Behaviors.immutable { (ctx, msg) =>
+  def behavior(sequencerRef: ActorRef[SequencerMsg], script: Script): Behaviors.Receive[SupervisorMsg] =
+    Behaviors.receive[SupervisorMsg] { (ctx, msg) =>
       import ctx.executionContext
       msg match {
         case ControlCommand("shutdown", replyTo) => script.shutdown().onComplete(x => replyTo ! x)

@@ -15,6 +15,10 @@ object Libs {
   val `scalajs-library`    = "org.scala-js"           %% "scalajs-library"    % "0.6.22"
 }
 
+object Csw {
+  val `csw-location` = "org.tmt" %% "csw-location" % "0.1-SNAPSHOT"
+}
+
 object Ammonite {
   val Version = "1.1.2"
 
@@ -23,7 +27,7 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.11"
+  val Version = "2.5.12"
 
   val `akka-stream`        = "com.typesafe.akka" %% "akka-stream"        % Version
   val `akka-typed`         = "com.typesafe.akka" %% "akka-actor-typed"   % Version
