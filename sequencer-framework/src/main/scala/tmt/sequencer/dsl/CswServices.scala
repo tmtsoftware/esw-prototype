@@ -4,14 +4,18 @@ import akka.Done
 import akka.actor.{ActorSystem, Cancellable}
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{KillSwitch, KillSwitches, Materializer, ThrottleMode}
+import csw.messages.location.Connection.AkkaConnection
+import csw.messages.location.{ComponentId, ComponentType}
+import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.api.SequenceFeeder
-import tmt.sequencer.gateway.LocationService
+import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.models.{AggregateResponse, Command, CommandResponse, SequencerEvent}
+import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.{Engine, Sequencer}
 
 import scala.async.Async.{async, await}
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class CswServices(sequencer: Sequencer,
                   engine: Engine,
@@ -26,9 +30,19 @@ class CswServices(sequencer: Sequencer,
   }
 
   def sequenceProcessor(sequencerId: String): SequenceFeeder = {
-    //TODO: replace with csw-prod location service functionality
-    val uri = locationService.sequenceProcessorUri(sequencerId, observingMode)
-    ???
+    val componentId = ComponentId(s"$sequencerId@$observingMode", ComponentType.Sequencer)
+    val connection  = AkkaConnection(componentId)
+    val eventualFeederImpl = locationService
+      .resolve(connection, 5.seconds)
+      .map {
+        case Some(akkaLocation) =>
+          val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+          new SequenceFeederImpl(supervisorRef)
+        case None =>
+          throw new IllegalArgumentException(s"sequencer = $sequencerId with observing mode = $observingMode not found")
+      }(mat.executionContext)
+
+    Await.result(eventualFeederImpl, 7.seconds)
   }
 
   def nextIf(f: Command => Boolean): Future[Option[Command]] =
@@ -37,10 +51,13 @@ class CswServices(sequencer: Sequencer,
       if (hasNext) Some(await(sequencer.next).command) else None
     }(mat.executionContext)
 
-  def setup(componentName: String, command: Command): Future[CommandResponse] = {
-    val assembly = locationService.commandService(componentName)
-    assembly.submit(command)(mat.executionContext)
-  }
+  def setup(componentName: String, command: Command): Future[CommandResponse] =
+    async {
+//    val assembly = locationService.commandService(componentName)
+//    assembly.submit(command)(mat.executionContext)
+      println(s"Command $command received by $componentName")
+      CommandResponse.Success(command.id, s"Result submit: [$componentName] - $command")
+    }(mat.executionContext)
 
   def subscribe(key: String)(callback: SequencerEvent => Done)(implicit strandEc: ExecutionContext): KillSwitch = {
     subscribeAsync(key)(e => Future(callback(e))(strandEc))

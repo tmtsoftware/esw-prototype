@@ -1,12 +1,23 @@
 package tmt.sequencer
 
+import csw.messages.location.Connection.AkkaConnection
+import csw.messages.location.{ComponentId, ComponentType}
+import csw.services.location.models.AkkaRegistration
+
 object SequencerApp {
   def run(sequencerId: String, observingMode: String, port: Option[Int]): Unit = {
     val wiring = new Wiring(sequencerId, observingMode, port)
     import wiring._
     engine.start(sequencer, script)
-    rpcServer2.start()
-    supervisorRef
+    rpcServer.start()
+    val componentId = ComponentId(s"$sequencerId@$observingMode", ComponentType.Sequencer)
+    val connection  = AkkaConnection(componentId)
+
+    val registration = AkkaRegistration(connection, Some("sequencer"), supervisorRef, null)
+    locationService.register(registration).map { registrationResult =>
+      println(s"Successfully registered $sequencerId with $observingMode - $registrationResult")
+    }
+    Thread.sleep(4000)
     remoteRepl.server().start()
   }
 }

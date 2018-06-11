@@ -10,7 +10,7 @@ import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.models
 import tmt.sequencer.models.{Command, CommandList}
 
-class Routes2(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(
+class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(
     implicit mat: Materializer
 ) extends FailFastCirceSupport {
 
