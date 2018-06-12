@@ -1,6 +1,4 @@
 import sbt._
-import Def.{setting => dep}
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Libs {
   val ScalaVersion = "2.12.6"
@@ -8,16 +6,14 @@ object Libs {
   val `scala-reflect`      = "org.scala-lang"         % "scala-reflect"       % ScalaVersion
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
-  val `jgit`               = "org.eclipse.jgit"       % "org.eclipse.jgit"    % "4.11.0.201803080745-r"
   val `scala-async`        = "org.scala-lang.modules" %% "scala-async"        % "0.9.7"
-  val `enumeratum`         = "com.beachape"           %% "enumeratum"         % "1.5.13"
   val `akka-http-cors`     = "ch.megard"              %% "akka-http-cors"     % "0.3.0"
-  val `scalajs-library`    = "org.scala-js"           %% "scalajs-library"    % "0.6.22"
 }
 
 object Csw {
   val `csw-location` = "org.tmt" %% "csw-location" % "0.1-SNAPSHOT"
   val `csw-command`  = "org.tmt" %% "csw-command"  % "0.1-SNAPSHOT"
+  val `csw-messages` = "org.tmt" %% "csw-messages" % "0.1-SNAPSHOT"
 }
 
 object Ammonite {
@@ -38,13 +34,13 @@ object Akka {
 }
 
 object SharedLibs {
-  val `scalaTest` = dep("org.scalatest" %%% "scalatest" % "3.0.5")
+  val `scalaTest` = "org.scalatest" %% "scalatest" % "3.0.5"
 }
 
 object Circe {
   val Version = "0.9.3"
 
-  val `circe-core`    = dep("io.circe" %%% "circe-core"    % Version)
-  val `circe-generic` = dep("io.circe" %%% "circe-generic" % Version)
-  val `circe-parser`  = dep("io.circe" %%% "circe-parser"  % Version)
+  val `circe-core`    = "io.circe" %% "circe-core"    % Version
+  val `circe-generic` = "io.circe" %% "circe-generic" % Version
+  val `circe-parser`  = "io.circe" %% "circe-parser"  % Version
 }

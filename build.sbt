@@ -1,6 +1,3 @@
-import com.typesafe.sbt.web.Import.WebKeys.webJarsNodeModulesDirectory
-import sbtcrossproject.{CrossType, crossProject}
-
 inThisBuild(List(
   organization := "org.tmt",
   scalaVersion := "2.12.6",
@@ -24,25 +21,21 @@ inThisBuild(List(
 lazy val `esw-prototype` = project
   .in(file("."))
   .aggregate(
-    `sequencer-api-js`,
-    `sequencer-api-jvm`,
+    `sequencer-api`,
     `sequencer-macros`,
     `sequencer-framework`,
   )
 
-lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
+lazy val `sequencer-api` = project
   .settings(
     libraryDependencies ++= Seq(
-      Circe.`circe-core`.value,
-      Circe.`circe-generic`.value,
-      Circe.`circe-parser`.value,
-      SharedLibs.scalaTest.value % Test,
+      Csw.`csw-messages`,
+      Circe.`circe-core`,
+      Circe.`circe-generic`,
+      Circe.`circe-parser`,
+      SharedLibs.scalaTest % Test,
     )
   )
-
-lazy val `sequencer-api-js` = `sequencer-api`.js
-lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
 lazy val `sequencer-macros` = project
   .settings(
@@ -54,7 +47,7 @@ lazy val `sequencer-macros` = project
 
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-api-jvm`)
+  .dependsOn(`sequencer-macros`, `sequencer-api`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(
@@ -66,17 +59,15 @@ lazy val `sequencer-framework` = project
       Akka.`akka-typed-testkit`,
       Ammonite.`ammonite`,
       Ammonite.`ammonite-sshd`,
-      Libs.`jgit`,
-      Libs.`enumeratum`,
       Libs.`scala-async`,
       Libs.`akka-http-cors`,
       Akka.`akka-http`,
       Akka.`akka-http-circe`,
-      Circe.`circe-core`.value,
-      Circe.`circe-generic`.value,
-      Circe.`circe-parser`.value,
+      Circe.`circe-core`,
+      Circe.`circe-generic`,
+      Circe.`circe-parser`,
       Csw.`csw-location`,
       Csw.`csw-command`,
-      SharedLibs.scalaTest.value % Test
+      SharedLibs.scalaTest % Test
     )
   )
