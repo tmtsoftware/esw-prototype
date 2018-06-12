@@ -27,10 +27,10 @@ case class AkkaLocation(name: String)
 case class CommandService(assemblyLoc: AkkaLocation) {
   def submit(command: Command)(implicit ec: ExecutionContext): Future[CommandResponse] = Future {
     Thread.sleep(2000)
-    CommandResponse.Success(command.id, s"Result submit: [${assemblyLoc.name}] - $command")
+    CommandResponse.Success(command.runId, s"Result submit: [${assemblyLoc.name}] - $command")
   }
 
   def submitAndSubscribe(command: Command)(implicit ec: ExecutionContext): Future[CommandResponse] = Future {
-    CommandResponse.Success(command.id, s"Result submit and subscribe: [${assemblyLoc.name}] - $command")
+    CommandResponse.Success(command.runId, s"Result submit and subscribe: [${assemblyLoc.name}] - $command")
   }
 }

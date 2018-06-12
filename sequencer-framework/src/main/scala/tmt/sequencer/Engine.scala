@@ -17,7 +17,7 @@ class Engine(implicit mat: Materializer) {
 
   def processStep(sequencer: Sequencer, script: Script): Future[Done] = async {
     val step = await(sequencer.next)
-    step.command.name match {
+    step.command.commandName match {
       case x if x.startsWith("setup-") =>
         val aggregateResponse = await(script.execute(step.command))
         sequencer.update(aggregateResponse)

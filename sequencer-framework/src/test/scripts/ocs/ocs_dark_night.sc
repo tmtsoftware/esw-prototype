@@ -21,17 +21,17 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
-      val maybeCommandB = cs.nextIf(c => c.name == "setup-iris").await
+      val maybeCommandB = cs.nextIf(c => c.commandName == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB = maybeCommandB.get
-        val subCommandB1 = commandB.withId(Id(s"${commandB.id}1"))
-        val subCommandB2 = commandB.withId(Id(s"${commandB.id}2"))
+        val subCommandB1 = commandB.withId(Id(s"${commandB.runId}1"))
+        val subCommandB2 = commandB.withId(Id(s"${commandB.runId}2"))
         CommandList.from(subCommandB1, subCommandB2)
       } else CommandList.empty
 
-      println(s"[Ocs] Received commandA: ${commandA.name}")
-      val subCommandA1 = commandA.withId(Id(s"${commandA.id}1"))
-      val subCommandA2 = commandA.withId(Id(s"${commandA.id}2"))
+      println(s"[Ocs] Received commandA: ${commandA.commandName}")
+      val subCommandA1 = commandA.withId(Id(s"${commandA.runId}1"))
+      val subCommandA2 = commandA.withId(Id(s"${commandA.runId}2"))
 
       val subCommandsA = CommandList.from(subCommandA1, subCommandA2)
       val commandList = subCommandsA.add(subCommandsB)
@@ -45,19 +45,19 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris-tcs") { commandC =>
     spawn {
-      val maybeCommandD = cs.nextIf(c2 => c2.name == "setup-iris-tcs").await
+      val maybeCommandD = cs.nextIf(c2 => c2.commandName == "setup-iris-tcs").await
       val tcsSequence = if (maybeCommandD.isDefined) {
         val nextCommand = maybeCommandD.get
-        val subCommandD1 = nextCommand.withName("setup-tcs").withId(Id(s"${nextCommand.id}1"))
-        val subCommandD2 = nextCommand.withName("setup-tcs").withId(Id(s"${nextCommand.id}2"))
+        val subCommandD1 = nextCommand.withName("setup-tcs").withId(Id(s"${nextCommand.runId}1"))
+        val subCommandD2 = nextCommand.withName("setup-tcs").withId(Id(s"${nextCommand.runId}2"))
         CommandList(Seq(subCommandD1, subCommandD2))
       } else {
         CommandList.empty
       }
 
-      println(s"[Ocs] Received commandC: ${commandC.name}")
-      val subCommandC1 = commandC.withName("setup-iris").withId(Id(s"${commandC.id}1"))
-      val subCommandC2 = commandC.withName("setup-iris").withId(Id(s"${commandC.id}2"))
+      println(s"[Ocs] Received commandC: ${commandC.commandName}")
+      val subCommandC1 = commandC.withName("setup-iris").withId(Id(s"${commandC.runId}1"))
+      val subCommandC2 = commandC.withName("setup-iris").withId(Id(s"${commandC.runId}2"))
       val irisSequence = CommandList.from(subCommandC1, subCommandC2)
 
       val aggregateResponse = parAggregate(
@@ -74,7 +74,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-tcs") { command =>
     spawn {
-      println(s"[Ocs] Received command: ${command.name}")
+      println(s"[Ocs] Received command: ${command.commandName}")
 
       val responseE = tcs.feed(CommandList.from(command)).await.markSuccessful(command)
 
