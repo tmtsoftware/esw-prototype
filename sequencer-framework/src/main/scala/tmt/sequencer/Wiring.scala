@@ -1,6 +1,6 @@
 package tmt.sequencer
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.stream.{ActorMaterializer, Materializer}
@@ -23,6 +23,8 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy implicit val system: ActorSystem                = clusterSettings.system
   lazy implicit val materializer: Materializer         = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext = system.dispatcher
+
+  lazy val coordinatedShutdown: CoordinatedShutdown = CoordinatedShutdown(system)
 
   lazy val scriptConfigs = new ScriptConfigs(system)
   lazy val path: Path    = ammonite.ops.pwd / RelPath(scriptConfigs.scriptFactoryPath)

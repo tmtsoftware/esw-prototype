@@ -1,5 +1,6 @@
 package tmt.sequencer
 
+import akka.actor.CoordinatedShutdown
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{ComponentId, ComponentType}
 import csw.services.location.models.AkkaRegistration
@@ -16,7 +17,16 @@ object SequencerApp {
     val registration = AkkaRegistration(connection, Some("sequencer"), supervisorRef, null)
     locationService.register(registration).map { registrationResult =>
       println(s"Successfully registered $sequencerId with $observingMode - $registrationResult")
+
+      coordinatedShutdown.addTask(
+        CoordinatedShutdown.PhaseBeforeServiceUnbind,
+        s"unregistering-${registrationResult.location}"
+      ) { () =>
+        println(s"Shutting down actor system, unregistering-${registrationResult.location}")
+        registrationResult.unregister()
+      }
     }
+
     Thread.sleep(4000)
     remoteRepl.server().start()
   }
