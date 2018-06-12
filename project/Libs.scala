@@ -17,6 +17,7 @@ object Libs {
 
 object Csw {
   val `csw-location` = "org.tmt" %% "csw-location" % "0.1-SNAPSHOT"
+  val `csw-command`  = "org.tmt" %% "csw-command"  % "0.1-SNAPSHOT"
 }
 
 object Ammonite {
