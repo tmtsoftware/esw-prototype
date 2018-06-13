@@ -3,8 +3,6 @@ package tmt.sequencer.rpc.server
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.formats.JsonSupport
 import io.circe._
-import io.circe.parser._
-import io.circe.syntax._
 import play.api.libs.json
 import play.api.libs.json.{JsSuccess, Reads, Writes}
 

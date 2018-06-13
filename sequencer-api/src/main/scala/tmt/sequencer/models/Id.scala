@@ -1,7 +1,7 @@
 package tmt.sequencer.models
 
-import csw.messages.commands.{CommandName, SequenceCommand}
-import csw.messages.params.models.{Id, ObsId, Prefix}
+import csw.messages.commands.SequenceCommand
+import csw.messages.params.models.Id
 import tmt.sequencer.models.StepStatus.{Finished, InFlight, Pending}
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {
