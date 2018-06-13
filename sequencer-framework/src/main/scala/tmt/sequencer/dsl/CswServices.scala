@@ -6,14 +6,14 @@ import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{KillSwitch, KillSwitches, Materializer, ThrottleMode}
 import akka.util.Timeout
 import akka.{util, Done}
-import csw.messages.commands.Setup
+import csw.messages.commands.{SequenceCommand, Setup}
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{ComponentId, ComponentType}
 import csw.services.command.scaladsl.CommandService
 import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.{AggregateResponse, Command, CommandResponse, SequencerEvent}
+import tmt.sequencer.models.{AggregateResponse, CommandResponse, SequencerEvent}
 import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.util.{CswCommandAdapter, SequencerComponent}
 import tmt.sequencer.{Engine, Sequencer}
@@ -28,11 +28,11 @@ class CswServices(sequencer: Sequencer,
                   val sequencerId: String,
                   val observingMode: String)(implicit mat: Materializer, system: ActorSystem) {
 
-  implicit val typedSystem                                                       = system.toTyped
-  val commandHandlerBuilder: FunctionBuilder[Command, Future[AggregateResponse]] = new FunctionBuilder
+  implicit val typedSystem                                                               = system.toTyped
+  val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
-  def handleCommand(name: String)(handler: Command => Future[AggregateResponse]): Unit = {
-    commandHandlerBuilder.addHandler(_.commandName == name)(handler)
+  def handleCommand(name: String)(handler: SequenceCommand => Future[AggregateResponse]): Unit = {
+    commandHandlerBuilder.addHandler(_.commandName.name == name)(handler)
   }
 
   def sequenceProcessor(sequencerId: String): SequenceFeeder = {
@@ -52,13 +52,13 @@ class CswServices(sequencer: Sequencer,
     Await.result(eventualFeederImpl, 7.seconds)
   }
 
-  def nextIf(f: Command => Boolean): Future[Option[Command]] =
+  def nextIf(f: SequenceCommand => Boolean): Future[Option[SequenceCommand]] =
     async {
       val hasNext = await(sequencer.maybeNext).map(_.command).exists(f)
       if (hasNext) Some(await(sequencer.next).command) else None
     }(mat.executionContext)
 
-  def setup(componentName: String, command: Command): Future[CommandResponse] =
+  def setup(componentName: String, command: SequenceCommand): Future[CommandResponse] =
     async {
       val componentId = ComponentId(componentName, ComponentType.Assembly)
       val connection  = AkkaConnection(componentId)
@@ -68,12 +68,13 @@ class CswServices(sequencer: Sequencer,
           case Some(akkaLocation) =>
             val setupCommand: Setup       = CswCommandAdapter.setupCommandFrom(command)
             implicit val timeout: Timeout = util.Timeout(5.seconds)
+
             new CommandService(akkaLocation).submit(setupCommand)
           case None =>
             throw new IllegalArgumentException(s"sequencer = $sequencerId with observing mode = $observingMode not found")
         }(mat.executionContext)
-
-      println(s"response ===> ${Await.result(eventualCommandResponse, 7.seconds)}")
+      val response = Await.result(eventualCommandResponse, 7.seconds)
+      println(s"response ===> $response")
       CommandResponse.Success(command.runId, s"Result submit: [$componentName] - $command")
     }(mat.executionContext)
 

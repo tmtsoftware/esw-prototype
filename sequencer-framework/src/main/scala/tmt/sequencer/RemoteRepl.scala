@@ -2,13 +2,15 @@ package tmt.sequencer
 
 import akka.actor.typed.ActorRef
 import ammonite.sshd._
+import csw.messages.commands.{CommandName, Observe, Setup, Wait}
+import csw.messages.params.models.{Id, ObsId, Prefix}
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.CswServices
 import tmt.sequencer.messages.SequencerMsg.{Pause, Resume}
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.messages.SupervisorMsg.ControlCommand
-import tmt.sequencer.models.{Command, CommandList, Id}
+import tmt.sequencer.models.CommandList
 import tmt.sequencer.rpc.server.RpcConfigs
 
 class RemoteRepl(commandService: CswServices,
@@ -37,8 +39,14 @@ class RemoteRepl(commandService: CswServices,
       "sequencer"      -> sequencer,
       "sequenceFeeder" -> sequenceFeeder,
       "sequenceEditor" -> sequenceEditor,
-      "Command"        -> Command,
+      "Setup"          -> Setup,
+      "Observe"        -> Observe,
+      "Wait"           -> Wait,
       "CommandList"    -> CommandList,
+      "SetupCommand"   -> Setup,
+      "CommandName"    -> CommandName,
+      "Prefix"         -> Prefix,
+      "ObsId"          -> ObsId,
       "supervisor"     -> supervisor,
       "Id"             -> Id,
       "ControlCommand" -> ControlCommand,

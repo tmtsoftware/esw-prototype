@@ -2,17 +2,15 @@ package tmt.sequencer.rpc.server
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.stream.Materializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+import csw.messages.commands.SequenceCommand
+import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import io.circe.generic.auto._
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.models
-import tmt.sequencer.models.{Command, CommandList}
+import tmt.sequencer.models.CommandList
 
-class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(
-    implicit mat: Materializer
-) extends FailFastCirceSupport {
+class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor) extends FailFastCirceSupport with EswCirceSupport {
 
   val route: Route = cors() {
     post {
@@ -25,7 +23,7 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(
       } ~
       pathPrefix(SequenceEditor.ApiName) {
         path(SequenceEditor.AddAll) {
-          entity(as[List[Command]]) { commands =>
+          entity(as[List[SequenceCommand]]) { commands =>
             complete(sequenceEditor.addAll(commands))
           }
         } ~
@@ -45,27 +43,27 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(
           }
         } ~
         path(SequenceEditor.Delete) {
-          entity(as[List[models.Id]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.delete(ids))
           }
         } ~
         path(SequenceEditor.AddBreakpoints) {
-          entity(as[List[models.Id]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.addBreakpoints(ids))
           }
         } ~
         path(SequenceEditor.RemoveBreakpoints) {
-          entity(as[List[models.Id]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.removeBreakpoints(ids))
           }
         } ~
         path(SequenceEditor.Prepend) {
-          entity(as[List[Command]]) { commands =>
+          entity(as[List[SequenceCommand]]) { commands =>
             complete(sequenceEditor.prepend(commands))
           }
         } ~
         path(SequenceEditor.Replace) {
-          entity(as[(models.Id, List[Command])]) {
+          entity(as[(Id, List[SequenceCommand])]) {
             case (id, commands) =>
               complete(sequenceEditor.replace(id, commands))
           }

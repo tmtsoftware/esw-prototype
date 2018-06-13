@@ -1,27 +1,19 @@
 package tmt.sequencer.util
 
-import csw.messages.commands.{CommandName, Observe, Setup, Wait}
-import csw.messages.params.models.{ObsId, Prefix}
-import tmt.sequencer.models.Command
+import csw.messages.commands._
 
 object SequencerComponent {
   def getComponentName(sequencerId: String, observingMode: String) = s"$sequencerId@$observingMode"
 }
 
 object CswCommandAdapter {
-  def setupCommandFrom(setup: Command): Setup = {
+  def setupCommandFrom(setup: SequenceCommand): Setup = {
     import setup._
-    Setup(Prefix(prefix), CommandName(commandName), maybeObsId.map(ObsId(_)))
+    Setup(source, commandName, maybeObsId)
   }
 
-  def observeCommandFrom(observe: Command): Observe = {
+  def observeCommandFrom(observe: SequenceCommand): Observe = {
     import observe._
-    Observe(Prefix(prefix), CommandName(commandName), maybeObsId.map(ObsId(_)))
+    Observe(source, commandName, maybeObsId)
   }
-
-  def waitCommandFrom(wait: Command): Wait = {
-    import wait._
-    Wait(Prefix(prefix), CommandName(commandName), maybeObsId.map(ObsId(_)))
-  }
-
 }

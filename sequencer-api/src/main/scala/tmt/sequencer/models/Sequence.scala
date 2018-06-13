@@ -1,5 +1,8 @@
 package tmt.sequencer.models
 
+import csw.messages.commands.SequenceCommand
+import csw.messages.params.models.Id
+
 case class Sequence(steps: List[Step]) { outer =>
 
   require(steps.map(_.id).toSet.size == steps.size, "steps can not have duplicate ids")
@@ -13,18 +16,18 @@ case class Sequence(steps: List[Step]) { outer =>
 
   //update
 
-  def replace(id: Id, commands: List[Command]): Sequence        = replaceSteps(id, Step.from(commands))
-  private def replaceSteps(id: Id, steps: List[Step]): Sequence = insertStepsAfter(id, steps).delete(Set(id))
+  def replace(id: Id, commands: List[SequenceCommand]): Sequence = replaceSteps(id, Step.from(commands))
+  private def replaceSteps(id: Id, steps: List[Step]): Sequence  = insertStepsAfter(id, steps).delete(Set(id))
 
-  def prepend(commands: List[Command]): Sequence = {
+  def prepend(commands: List[SequenceCommand]): Sequence = {
     val (pre, post) = steps.span(!_.isPending)
     copy(pre ::: Step.from(commands) ::: post)
   }
-  def append(commands: List[Command]): Sequence = copy(steps ::: Step.from(commands))
+  def append(commands: List[SequenceCommand]): Sequence = copy(steps ::: Step.from(commands))
 
   def delete(ids: Set[Id]): Sequence = copy(steps.filterNot(step => ids.contains(step.id) && step.isPending))
 
-  def insertAfter(id: Id, commands: List[Command]): Sequence = insertStepsAfter(id, Step.from(commands))
+  def insertAfter(id: Id, commands: List[SequenceCommand]): Sequence = insertStepsAfter(id, Step.from(commands))
 
   private def insertStepsAfter(id: Id, newSteps: List[Step]): Sequence = {
     val (pre, post) = steps.span(_.id != id)
@@ -56,6 +59,6 @@ case class Sequence(steps: List[Step]) { outer =>
 }
 
 object Sequence {
-  def empty                         = Sequence(List.empty)
-  def from(commands: List[Command]) = Sequence(Step.from(commands))
+  def empty                                 = Sequence(List.empty)
+  def from(commands: List[SequenceCommand]) = Sequence(Step.from(commands))
 }

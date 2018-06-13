@@ -22,8 +22,23 @@ object ScriptImports {
   type SequencerEvent = models.SequencerEvent
   val SequencerEvent = models.SequencerEvent
 
-  type Command = tmt.sequencer.models.Command
-  val Command = tmt.sequencer.models.Command
+  type Setup = csw.messages.commands.Setup
+  val Setup = csw.messages.commands.Setup
+
+  type Observe = csw.messages.commands.Observe
+  val Observe = csw.messages.commands.Observe
+
+  type Wait = csw.messages.commands.Wait
+  val Wait = csw.messages.commands.Wait
+
+  type Prefix = csw.messages.params.models.Prefix
+  val Prefix = csw.messages.params.models.Prefix
+
+  type ObsId = csw.messages.params.models.ObsId
+  val ObsId = csw.messages.params.models.ObsId
+
+  type CommandName = csw.messages.commands.CommandName
+  val CommandName = csw.messages.commands.CommandName
 
   type CommandResponse = tmt.sequencer.models.CommandResponse
   val CommandResponse = tmt.sequencer.models.CommandResponse
@@ -33,8 +48,8 @@ object ScriptImports {
 
   type Future[T] = scala.concurrent.Future[T]
 
-  type Id = tmt.sequencer.models.Id
-  val Id = tmt.sequencer.models.Id
+  type Id = csw.messages.params.models.Id
+  val Id = csw.messages.params.models.Id
 
   private[tmt] def load(path: Path): ScriptFactory = synchronized {
     ammonite.Main().runScript(path, Seq.empty) match {
