@@ -1,8 +1,8 @@
 package tmt.sequencer
 
-import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
+import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import ammonite.ops.{Path, RelPath}

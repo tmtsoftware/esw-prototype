@@ -11,9 +11,11 @@ object Libs {
 }
 
 object Csw {
-  val `csw-location` = "org.tmt" %% "csw-location" % "0.1-SNAPSHOT"
-  val `csw-command`  = "org.tmt" %% "csw-command"  % "0.1-SNAPSHOT"
-  val `csw-messages` = "org.tmt" %% "csw-messages" % "0.1-SNAPSHOT"
+  val `csw-location`     = "org.tmt" %% "csw-location"     % "0.1-SNAPSHOT"
+  val `csw-command`      = "org.tmt" %% "csw-command"      % "0.1-SNAPSHOT"
+  val `csw-messages`     = "org.tmt" %% "csw-messages"     % "0.1-SNAPSHOT"
+  val `csw-event-api`    = "org.tmt" %% "csw-event-api"    % "0.1-SNAPSHOT"
+  val `csw-event-client` = "org.tmt" %% "csw-event-client" % "0.1-SNAPSHOT"
 }
 
 object Ammonite {
