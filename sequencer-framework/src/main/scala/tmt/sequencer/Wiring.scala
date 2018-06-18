@@ -6,21 +6,27 @@ import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import ammonite.ops.{Path, RelPath}
+import csw.messages.location.Connection.TcpConnection
+import csw.messages.location.{ComponentId, ComponentType}
+import csw.services.event.internal.redis.RedisEventServiceFactory
+import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
+import csw.services.location.models.TcpRegistration
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
+import scala.concurrent.{Await, ExecutionContext}
 
 class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
   lazy val clusterSettings           = ClusterSettings()
 
   lazy implicit val system: ActorSystem                = clusterSettings.system
+  lazy implicit val typedSystem                        = system.toTyped
   lazy implicit val materializer: Materializer         = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext = system.dispatcher
 
@@ -34,8 +40,15 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val locationService: LocationService = LocationServiceFactory.withSystem(system)
 
+  lazy val eventService: EventService = RedisEventServiceFactory.make(locationService)
+
+  val eventServiceConnection = TcpConnection(ComponentId("EventServer", ComponentType.Service))
+  val tcpRegistration        = TcpRegistration(eventServiceConnection, 26379, null)
+
+  Await.result(locationService.register(tcpRegistration), 5.seconds)
+
   lazy val engine         = new Engine
-  lazy val cswServices    = new CswServices(sequencer, engine, locationService, sequencerId, observingMode)
+  lazy val cswServices    = new CswServices(sequencer, engine, locationService, eventService, sequencerId, observingMode)
   lazy val script: Script = ScriptImports.load(path).get(cswServices)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")

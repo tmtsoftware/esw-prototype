@@ -17,10 +17,20 @@ object ScriptImports {
   type Done = akka.Done
   val Done = akka.Done
 
-  type Script         = dsl.Script
-  type CswServices    = dsl.CswServices
-  type SequencerEvent = models.SequencerEvent
-  val SequencerEvent = models.SequencerEvent
+  type Script      = dsl.Script
+  type CswServices = dsl.CswServices
+
+  type SystemEvent = csw.messages.events.SystemEvent
+  val SystemEvent = csw.messages.events.SystemEvent
+
+  type ObserveEvent = csw.messages.events.ObserveEvent
+  val ObserveEvent = csw.messages.events.ObserveEvent
+
+  type EventName = csw.messages.events.EventName
+  val EventName = csw.messages.events.EventName
+
+  type EventKey = csw.messages.events.EventKey
+  val EventKey = csw.messages.events.EventKey
 
   type Setup = csw.messages.commands.Setup
   val Setup = csw.messages.commands.Setup
@@ -45,6 +55,9 @@ object ScriptImports {
 
   type AggregateResponse = tmt.sequencer.models.AggregateResponse
   val AggregateResponse = tmt.sequencer.models.AggregateResponse
+
+  type CommandList = tmt.sequencer.models.CommandList
+  val CommandList = tmt.sequencer.models.CommandList
 
   type Future[T] = scala.concurrent.Future[T]
 

@@ -1,5 +1,4 @@
 import tmt.sequencer.ScriptImports._
-import tmt.sequencer.models.CommandList
 
 class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
@@ -9,14 +8,14 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   var eventCount = 0
   var commandCount = 0
 
-  val subscription = cs.subscribe("ocs") { event =>
-    eventCount = eventCount + 1
-    println(s"------------------> received-event: ${event.value} on key: ${event.key}")
-    Done
+  val cancellable = cs.publish(10.seconds) {
+    SystemEvent(Prefix("ocs-test"), EventName("system"))
   }
 
-  val cancellable = cs.publish(16.seconds) {
-    SequencerEvent("ocs-metadata", (eventCount + commandCount).toString)
+  val subscription = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+    eventCount = eventCount + 1
+    println(s"------------------> received-event on key: $eventKey")
+    Done
   }
 
   cs.handleCommand("setup-iris") { commandA =>
@@ -24,7 +23,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val maybeCommandB = cs.nextIf(c => c.commandName == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB  = maybeCommandB.get
-        CommandList.from(commandB)
+        val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
+        CommandList.from(commandB, commandB1)
       } else CommandList.empty
 
       println(s"[Ocs] Received commandA: ${commandA.commandName}")
@@ -75,9 +75,9 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.shutdown()
+    subscription.unsubscribe()
     cancellable.cancel()
-    println("shutdown")
+    println("shutdown ocs")
     Done
   }
 }

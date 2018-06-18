@@ -1,19 +1,20 @@
 package tmt.sequencer.dsl
 
 import akka.actor.typed.scaladsl.adapter._
-import akka.actor.{ActorSystem, Cancellable}
-import akka.stream.scaladsl.{Keep, Sink, Source}
-import akka.stream.{KillSwitch, KillSwitches, Materializer, ThrottleMode}
+import akka.actor.{typed, ActorSystem, Cancellable}
+import akka.stream.Materializer
 import akka.util.Timeout
 import akka.{util, Done}
 import csw.messages.commands.{SequenceCommand, Setup}
+import csw.messages.events.{Event, EventKey}
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{ComponentId, ComponentType}
 import csw.services.command.scaladsl.CommandService
+import csw.services.event.scaladsl.{EventService, EventSubscription}
 import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.{AggregateResponse, CommandResponse, SequencerEvent}
+import tmt.sequencer.models.{AggregateResponse, CommandResponse}
 import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.util.{CswCommandAdapter, SequencerComponent}
 import tmt.sequencer.{Engine, Sequencer}
@@ -25,10 +26,12 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 class CswServices(sequencer: Sequencer,
                   engine: Engine,
                   locationService: LocationService,
+                  eventService: EventService,
                   val sequencerId: String,
                   val observingMode: String)(implicit mat: Materializer, system: ActorSystem) {
 
-  implicit val typedSystem                                                               = system.toTyped
+  implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
+
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
   def handleCommand(name: String)(handler: SequenceCommand => Future[AggregateResponse]): Unit = {
@@ -78,30 +81,15 @@ class CswServices(sequencer: Sequencer,
       CommandResponse.Success(command.runId, s"Result submit: [$componentName] - $command")
     }(mat.executionContext)
 
-  def subscribe(key: String)(callback: SequencerEvent => Done)(implicit strandEc: ExecutionContext): KillSwitch = {
-    subscribeAsync(key)(e => Future(callback(e))(strandEc))
+  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: ExecutionContext): EventSubscription = {
+    println(s"==========================> Subscribing event $eventKeys")
+    val eventSubscriber = eventService.defaultSubscriber.map(_.subscribeAsync(eventKeys, e => Future(callback(e))))(strandEc)
+    Await.result(eventSubscriber, 2.seconds)
   }
 
-  def publish(every: FiniteDuration)(eventGeneratorBlock: => SequencerEvent)(implicit strandEc: ExecutionContext): Cancellable = {
-    publishAsync(every)(Future(eventGeneratorBlock)(strandEc))
-  }
-
-  private def subscribeAsync(key: String)(callback: SequencerEvent => Future[Done]): KillSwitch = {
-    Source
-      .fromIterator(() => Iterator.from(1))
-      .map(x => SequencerEvent(key, x.toString))
-      .throttle(1, 20.second, 1, ThrottleMode.shaping)
-      .mapAsync(1)(callback)
-      .viaMat(KillSwitches.single)(Keep.right)
-      .to(Sink.ignore)
-      .run()
-  }
-
-  private def publishAsync(every: FiniteDuration)(eventGeneratorBlock: => Future[SequencerEvent]): Cancellable = {
-    val source = Source.tick(0.millis, every, ()).mapAsync(1)(_ => eventGeneratorBlock)
-    val sink = Sink.foreach[SequencerEvent] {
-      case SequencerEvent(k, v) => println(s"published: event=$v on key=$k")
-    }
-    source.to(sink).run()
+  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: ExecutionContext): Cancellable = {
+    println(s"=========================> Publishing event $eventGeneratorBlock every $every")
+    val eventPublisher: Future[Cancellable] = eventService.defaultPublisher.map(_.publish(eventGeneratorBlock, every))(strandEc)
+    Await.result(eventPublisher, every)
   }
 }
