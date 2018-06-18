@@ -52,7 +52,10 @@ class CswServices(sequencer: Sequencer,
           throw new IllegalArgumentException(s"sequencer = $sequencerId with observing mode = $observingMode not found")
       }(mat.executionContext)
 
-    Await.result(eventualFeederImpl, 7.seconds)
+    println("*****************************************")
+    val feederImpl = Await.result(eventualFeederImpl, 7.seconds)
+    println("*****************************************" + feederImpl)
+    feederImpl
   }
 
   def nextIf(f: SequenceCommand => Boolean): Future[Option[SequenceCommand]] =

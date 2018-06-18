@@ -14,7 +14,7 @@ object SequencerApp {
     val wiring = new Wiring(sequencerId, observingMode, port)
     import wiring._
 
-    LoggingSystemFactory.start("sample", "", "", system)
+//    LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequencer, script)
     rpcServer.start()
     val componentId = ComponentId(SequencerComponent.getComponentName(sequencerId, observingMode), ComponentType.Sequencer)

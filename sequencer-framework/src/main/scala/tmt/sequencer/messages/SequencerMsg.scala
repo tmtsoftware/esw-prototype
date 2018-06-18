@@ -2,19 +2,20 @@ package tmt.sequencer.messages
 
 import akka.Done
 import akka.actor.typed.ActorRef
+import csw.messages.TMTSerializable
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.sequencer.models._
 
 import scala.util.Try
 
-sealed trait SupervisorMsg
+sealed trait SupervisorMsg extends TMTSerializable
 
 object SupervisorMsg {
   case class ControlCommand(name: String, replyTo: ActorRef[Try[Done]]) extends SupervisorMsg
 }
 
-sealed trait SequencerMsg
+sealed trait SequencerMsg extends TMTSerializable
 
 object SequencerMsg {
   case class GetNext(replyTo: ActorRef[Step])             extends SequencerMsg

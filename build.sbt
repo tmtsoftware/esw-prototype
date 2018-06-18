@@ -72,3 +72,13 @@ lazy val `sequencer-framework` = project
       SharedLibs.scalaTest % Test
     )
   )
+
+lazy val `location-agent-simulator` = project
+  .settings(
+    name := "location-agent-simulator",
+    libraryDependencies ++= Seq(
+      Csw.`csw-location`,
+      Akka.`akka-typed`,
+      SharedLibs.scalaTest % Test
+    )
+  )

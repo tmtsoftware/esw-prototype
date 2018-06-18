@@ -12,6 +12,7 @@ import csw.messages.location.{ComponentId, ComponentType}
 import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
+import csw.services.location.internal.LocationServiceClient
 import csw.services.location.models.TcpRegistration
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import csw.services.logging.messages.LogControlMessages
@@ -41,14 +42,9 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
   lazy val locationService: LocationService = LocationServiceFactory.withSystem(system)
+//  lazy val locationService: LocationService = new LocationServiceClient()
 
   lazy val eventService: EventService = RedisEventServiceFactory.make(locationService)
-
-  val eventServiceConnection = TcpConnection(ComponentId("EventServer", ComponentType.Service))
-  val probe                  = TestProbe[LogControlMessages]
-  val tcpRegistration        = TcpRegistration(eventServiceConnection, 26379, probe.ref)
-
-  Await.result(locationService.register(tcpRegistration), 5.seconds)
 
   lazy val engine         = new Engine
   lazy val cswServices    = new CswServices(sequencer, engine, locationService, eventService, sequencerId, observingMode)

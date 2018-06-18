@@ -8,15 +8,15 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   var eventCount = 0
   var commandCount = 0
 
-  val cancellable = cs.publish(10.seconds) {
-    SystemEvent(Prefix("ocs-test"), EventName("system"))
-  }
-
-  val subscription = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
-    eventCount = eventCount + 1
-    println(s"------------------> received-event on key: $eventKey")
-    Done
-  }
+//  val cancellable = cs.publish(10.seconds) {
+//    SystemEvent(Prefix("ocs-test"), EventName("system"))
+//  }
+//
+//  val subscription = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+//    eventCount = eventCount + 1
+//    println(s"------------------> received-event on key: $eventKey")
+//    Done
+//  }
 
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
@@ -75,8 +75,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.unsubscribe()
-    cancellable.cancel()
+//    subscription.unsubscribe()
+//    cancellable.cancel()
     println("shutdown ocs")
     Done
   }
