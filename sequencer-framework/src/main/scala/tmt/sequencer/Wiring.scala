@@ -4,6 +4,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.stream.{ActorMaterializer, Materializer}
+import akka.testkit.typed.scaladsl.TestProbe
 import akka.util.Timeout
 import ammonite.ops.{Path, RelPath}
 import csw.messages.location.Connection.TcpConnection
@@ -13,6 +14,7 @@ import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.models.TcpRegistration
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
+import csw.services.logging.messages.LogControlMessages
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
@@ -43,7 +45,8 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val eventService: EventService = RedisEventServiceFactory.make(locationService)
 
   val eventServiceConnection = TcpConnection(ComponentId("EventServer", ComponentType.Service))
-  val tcpRegistration        = TcpRegistration(eventServiceConnection, 26379, null)
+  val probe                  = TestProbe[LogControlMessages]
+  val tcpRegistration        = TcpRegistration(eventServiceConnection, 26379, probe.ref)
 
   Await.result(locationService.register(tcpRegistration), 5.seconds)
 
