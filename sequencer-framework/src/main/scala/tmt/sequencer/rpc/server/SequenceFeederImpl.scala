@@ -20,8 +20,6 @@ class SequenceFeederImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: A
   import system.dispatcher
 
   override def feed(commandList: CommandList): Future[AggregateResponse] = {
-    println("*****************************************************")
-    println(s"Feeding sequence $commandList")
     val future: Future[Try[AggregateResponse]] = supervisor ? (x => ProcessSequence(commandList.commands.toList, x))
     future.map(_.get)
   }

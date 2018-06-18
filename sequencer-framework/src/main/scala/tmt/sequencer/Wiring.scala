@@ -4,25 +4,19 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.stream.{ActorMaterializer, Materializer}
-import akka.testkit.typed.scaladsl.TestProbe
 import akka.util.Timeout
 import ammonite.ops.{Path, RelPath}
-import csw.messages.location.Connection.TcpConnection
-import csw.messages.location.{ComponentId, ComponentType}
 import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
-import csw.services.location.internal.LocationServiceClient
-import csw.services.location.models.TcpRegistration
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
-import csw.services.logging.messages.LogControlMessages
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
-import scala.concurrent.{Await, ExecutionContext}
 
 class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
