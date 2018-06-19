@@ -5,12 +5,15 @@
 
 * sequencer-api 
 * sequencer-framework
+* location-agent-simulator
 
 ## Build Instructions
 
 The build is based on sbt and depends on libraries published to bintray from the 
 [csw-prod](https://github.com/tmtsoftware/csw-prod) project.
 
+- Clone csw-prod and checkout to commit bd093ca18
+    - ```git checkout bd093ca18```
 
 ## Pre-requisites before running Components
 
@@ -31,7 +34,23 @@ run cluster-seed
     - ```$cd target/universal/stage/bin```
     - ```$./csw-cluster-seed --clusterPort=3552```
     
-* Clone csw-prod and run sbt universal:publishLocal
+* csw-prod and run sbt universal:publishLocal 
+    - ```git checkout bd093ca18```
+    - ```sbt universal:publishLocal```
+
+### Run redis-sentinal and redis-master 
+redis-server.conf and redis-sentinal.conf is checked into project directory. Run 
+redis-server and redis-sentinal using following commands. 
+    -  install redis (mac- ```brew install redis```)
+    - ```redis-server redis/redis-server.conf```
+    - ```redis-sentinel redis/redis-sentinel.conf```
+     
+
+### Run location-agent-simulator app
+    - ``` sbt location-agent-simulator/run ```
+
+### Run sample assembly
+  Follow instructions in [readme](https://github.com/Poorva17/sample-assembly-hcd)
 
 ## Running esw-sequencer
 
