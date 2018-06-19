@@ -1,8 +1,11 @@
 package tmt.sequencer.models
 
+import ai.x.play.json.Jsonx
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.sequencer.models.StepStatus.{Finished, InFlight, Pending}
+import play.api.libs.json._
+import csw.messages.params.formats.JsonSupport._
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {
   def id: Id              = command.runId
@@ -24,14 +27,23 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
 object Step {
   def from(command: SequenceCommand)                    = Step(command, StepStatus.Pending, hasBreakpoint = false)
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
+
+  implicit val format: OFormat[Step] = Json.format[Step]
 }
 
 sealed trait StepStatus
 
 object StepStatus {
-  case object Pending  extends StepStatus
+
+  case object Pending extends StepStatus
+
   case object InFlight extends StepStatus
+
   case object Finished extends StepStatus
+
+  import ai.x.play.json.implicits.formatSingleton
+  import ai.x.play.json.SingletonEncoder.simpleName
+  implicit lazy val jsonFormat: Format[StepStatus] = Jsonx.formatSealed[StepStatus]
 }
 
 case class CommandList(commands: Seq[SequenceCommand]) {
@@ -42,6 +54,8 @@ case class CommandList(commands: Seq[SequenceCommand]) {
 object CommandList {
   def from(commands: SequenceCommand*): CommandList = CommandList(commands.toList)
   def empty: CommandList                            = CommandList(Nil)
+
+  implicit val format: OFormat[CommandList] = Json.format[CommandList]
 }
 
 sealed trait CommandResponse {
@@ -53,6 +67,10 @@ sealed trait CommandResponse {
 object CommandResponse {
   case class Success(id: Id, value: String, typeName: String = Success.getClass.getSimpleName) extends CommandResponse
   case class Failed(id: Id, value: String, typeName: String = Failed.getClass.getSimpleName)   extends CommandResponse
+
+  implicit lazy val XFormat: Format[Success]            = Jsonx.formatCaseClass[Success]
+  implicit lazy val UnknownFormat: Format[Failed]       = Jsonx.formatCaseClass[Failed]
+  implicit lazy val jsonFormat: Format[CommandResponse] = Jsonx.formatSealed[CommandResponse]
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
@@ -66,4 +84,6 @@ case class AggregateResponse(childResponses: Set[CommandResponse]) {
   def markSuccessful(maybeCommand: Option[SequenceCommand]): AggregateResponse = markSuccessful(maybeCommand.toList: _*)
 }
 
-object AggregateResponse extends AggregateResponse(Set.empty)
+object AggregateResponse extends AggregateResponse(Set.empty) {
+  implicit val format: OFormat[AggregateResponse] = Json.format[AggregateResponse]
+}

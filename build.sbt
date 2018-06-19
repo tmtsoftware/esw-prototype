@@ -30,9 +30,7 @@ lazy val `sequencer-api` = project
   .settings(
     libraryDependencies ++= Seq(
       Csw.`csw-messages`,
-      Circe.`circe-core`,
-      Circe.`circe-generic`,
-      Circe.`circe-parser`,
+      Libs.`play-json`,
       SharedLibs.scalaTest % Test,
     )
   )
@@ -62,10 +60,8 @@ lazy val `sequencer-framework` = project
       Libs.`scala-async`,
       Libs.`akka-http-cors`,
       Akka.`akka-http`,
-      Akka.`akka-http-circe`,
-      Circe.`circe-core`,
-      Circe.`circe-generic`,
-      Circe.`circe-parser`,
+      Libs.`play-json`,
+      Akka.`akka-http-play-json`,
       Csw.`csw-location`,
       Csw.`csw-command`,
       Csw.`csw-event-client`,

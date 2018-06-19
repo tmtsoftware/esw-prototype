@@ -38,7 +38,7 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val locationService: LocationService = LocationServiceFactory.withSystem(system)
 //  lazy val locationService: LocationService = new LocationServiceClient()
 
-  lazy val eventService: EventService = RedisEventServiceFactory.make(locationService)
+  lazy val eventService: EventService = new RedisEventServiceFactory().make(locationService)
 
   lazy val engine         = new Engine
   lazy val cswServices    = new CswServices(sequencer, engine, locationService, eventService, sequencerId, observingMode)
@@ -48,7 +48,7 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef, script)
   lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
-  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor)
+  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor)(executionContext)
   lazy val rpcConfigs                     = new RpcConfigs(port)
   lazy val rpcServer                      = new RpcServer(rpcConfigs, routes)
 

@@ -2,6 +2,7 @@ package tmt.sequencer.models
 
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
+import play.api.libs.json._
 
 case class Sequence(steps: List[Step]) { outer =>
 
@@ -61,4 +62,6 @@ case class Sequence(steps: List[Step]) { outer =>
 object Sequence {
   def empty                                 = Sequence(List.empty)
   def from(commands: List[SequenceCommand]) = Sequence(Step.from(commands))
+
+  implicit val format: OFormat[Sequence] = Json.format[Sequence]
 }
