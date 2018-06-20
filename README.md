@@ -12,7 +12,7 @@
 The build is based on sbt and depends on libraries published to bintray from the 
 [csw-prod](https://github.com/tmtsoftware/csw-prod) project.
 
-- Clone csw-prod and checkout to commit 0e6741fac
+- Clone csw-prod and checkout to commit 7eadb4ffc
     - ```git checkout 7eadb4ffc```
 
 ## Pre-requisites before running Components
@@ -41,22 +41,34 @@ run cluster-seed
 ### Run redis-sentinal and redis-master 
 redis-server.conf and redis-sentinal.conf is checked into project directory. Run 
 redis-server and redis-sentinal using following commands. 
-    -  install redis (mac- ```brew install redis```)
-    - ```redis-server redis/redis-server.conf```
-    - ```redis-sentinel redis/redis-sentinel.conf```
-     
+    -  install redis
+```bash
+brew install redis
+redis-server redis/redis-server.conf
+redis-sentinel redis/redis-sentinel.conf
+```
 
 ### Run location-agent-simulator app
-    - ``` sbt location-agent-simulator/run ```
+```sbtshell
+sbt location-agent-simulator/run
+```
 
 ### Run sample assembly
   Follow instructions in [readme](https://github.com/Poorva17/sample-assembly-hcd)
 
 ## Running esw-sequencer
 
- - Run e.g. `sbt 'sequencer-framework/test:runMain runner.TestSequencerApp tcs darknight 7000'` 
- - Connect to ammonite REPL - `ssh repl@localhost -p7100`
- - Sample command - 
+ - Run e.g. 
+ ```sbtshell
+sbt 'sequencer-framework/test:runMain runner.TestSequencerApp tcs darknight 7000'
+```
+
+- Connect to ammonite REPL
+```bash
+ssh repl@localhost -p7100
+```
+  
+ - Sample command in ammonite REPL- 
  `sequenceFeeder.feed(
     CommandList(Seq(Setup(Prefix("test"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))))
   )`
