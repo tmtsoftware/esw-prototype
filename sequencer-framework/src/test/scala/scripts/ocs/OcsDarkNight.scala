@@ -1,11 +1,13 @@
+package scripts.ocs
+
 import tmt.sequencer.ScriptImports._
 
 class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   val iris = cs.sequenceProcessor("iris")
-  val tcs = cs.sequenceProcessor("tcs")
+  val tcs  = cs.sequenceProcessor("tcs")
 
-  var eventCount = 0
+  var eventCount   = 0
   var commandCount = 0
 
   val cancellable = cs.publish(10.seconds) {
@@ -14,13 +16,13 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   val subscription = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1
-    println(s"------------------> received-event on key: $eventKey")
+    println(s"------------------> received-event for ocs on key: $eventKey")
     Done
   }
 
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
-      val maybeCommandB = cs.nextIf(c => c.commandName == "setup-iris").await
+      val maybeCommandB = cs.nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB  = maybeCommandB.get
         val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
@@ -40,7 +42,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris-tcs") { commandC =>
     spawn {
-      val maybeCommandD = cs.nextIf(c2 => c2.commandName == "setup-iris-tcs").await
+      val maybeCommandD = cs.nextIf(c2 => c2.commandName.name == "setup-iris-tcs").await
       val tcsSequence = if (maybeCommandD.isDefined) {
         val nextCommand = maybeCommandD.get
         CommandList.from(nextCommand)

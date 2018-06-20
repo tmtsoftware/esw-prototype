@@ -5,7 +5,6 @@ import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, CoordinatedShutdown}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
-import ammonite.ops.{Path, RelPath}
 import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
@@ -14,6 +13,7 @@ import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
+import tmt.sequencer.scripts.{ScriptConfigs, ScriptLoader}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
@@ -29,9 +29,6 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val coordinatedShutdown: CoordinatedShutdown = CoordinatedShutdown(system)
 
-  lazy val scriptConfigs = new ScriptConfigs(system)
-  lazy val path: Path    = ammonite.ops.pwd / RelPath(scriptConfigs.scriptFactoryPath)
-
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
@@ -40,9 +37,11 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val eventService: EventService = new RedisEventServiceFactory().make(locationService)
 
-  lazy val engine         = new Engine
-  lazy val cswServices    = new CswServices(sequencer, engine, locationService, eventService, sequencerId, observingMode)
-  lazy val script: Script = ScriptImports.load(path).get(cswServices)
+  lazy val scriptConfigs: ScriptConfigs = new ScriptConfigs(sequencerId, observingMode)
+  lazy val scriptLoader: ScriptLoader   = new ScriptLoader(scriptConfigs, cswServices)
+  lazy val script: Script               = scriptLoader.load()
+  lazy val engine                       = new Engine
+  lazy val cswServices                  = new CswServices(sequencer, engine, locationService, eventService, sequencerId, observingMode)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 

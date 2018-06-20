@@ -1,8 +1,10 @@
+package scripts.iris
+
 import tmt.sequencer.ScriptImports._
 
 class IrisDarkNight(cs: CswServices) extends Script(cs) {
 
-  var eventCount = 0
+  var eventCount   = 0
   var commandCount = 0
 
   val cancellable = cs.publish(15.seconds) {
@@ -15,7 +17,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
     Done
   }
 
-    cs.handleCommand("setup-iris") { command =>
+  cs.handleCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
 
