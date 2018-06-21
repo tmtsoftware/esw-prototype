@@ -4,17 +4,17 @@ import tmt.sequencer.ScriptImports._
 
 class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
-  val iris = cs.sequenceProcessor("iris")
-  val tcs  = cs.sequenceProcessor("tcs")
+  val iris = cs.sequenceFeeder("iris")
+  val tcs  = cs.sequenceFeeder("tcs")
 
   var eventCount   = 0
   var commandCount = 0
 
-  val cancellable = cs.publish(10.seconds) {
+  val publisherStream = cs.publish(10.seconds) {
     SystemEvent(Prefix("ocs-test"), EventName("system"))
   }
 
-  val subscription = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+  val subscriptionStream = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1
     println(s"------------------> received-event for ocs on key: $eventKey")
     Done
@@ -77,8 +77,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.unsubscribe()
-    cancellable.cancel()
+    subscriptionStream.cancel().await
+    publisherStream.cancel().await
     println("shutdown ocs")
     Done
   }

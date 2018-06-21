@@ -11,14 +11,15 @@ import tmt.sequencer.messages.SequencerMsg.{Pause, Resume}
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.messages.SupervisorMsg.ControlCommand
 import tmt.sequencer.models.CommandList
-import tmt.sequencer.rpc.server.RpcConfigs
 
+// find a workaround for server not hanging after multiple connects/disconnects
+// explore timeout thing
 class RemoteRepl(commandService: CswServices,
                  sequencer: Sequencer,
                  supervisor: ActorRef[SupervisorMsg],
                  sequenceFeeder: SequenceFeeder,
                  sequenceEditor: SequenceEditor,
-                 rpcConfigs: RpcConfigs) {
+                 rpcConfigs: Configs) {
 
   def server() = new SshdRepl(
     SshServerConfig(
@@ -43,7 +44,6 @@ class RemoteRepl(commandService: CswServices,
       "Observe"        -> Observe,
       "Wait"           -> Wait,
       "CommandList"    -> CommandList,
-      "SetupCommand"   -> Setup,
       "CommandName"    -> CommandName,
       "Prefix"         -> Prefix,
       "ObsId"          -> ObsId,

@@ -49,7 +49,7 @@ object SequencerBehaviour {
       }
     }
 
-    Behaviors.receive[SequencerMsg] { (_, msg) =>
+    Behaviors.receiveMessage[SequencerMsg] { msg =>
       if (sequence.isFinished) {
         msg match {
           case ProcessSequence(Nil, replyTo)      => replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))

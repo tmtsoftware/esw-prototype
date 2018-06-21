@@ -26,13 +26,13 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.12"
+  val Version = "2.5.13"
 
-  val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"         % Version
-  val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"    % Version
-  val `akka-http`           = "com.typesafe.akka" %% "akka-http"           % "10.1.1"
-  val `akka-typed-testkit`  = "com.typesafe.akka" %% "akka-testkit-typed"  % Version
-  val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json" % "1.21.0" //Apache 2.0
+  val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
+  val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"         % Version
+  val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.1"
+  val `akka-typed-testkit`  = "com.typesafe.akka" %% "akka-actor-testkit-typed" % Version
+  val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json"      % "1.21.0" //Apache 2.0
 }
 
 object SharedLibs {

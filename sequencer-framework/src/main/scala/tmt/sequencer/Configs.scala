@@ -1,13 +1,14 @@
-package tmt.sequencer.scripts
+package tmt.sequencer
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
 
 import scala.util.Try
 
-class ScriptConfigs(sequencerId: String, observingMode: String)(implicit actorSystem: ActorSystem) {
-
+class Configs(sequencerId: String, observingMode: String, _port: Option[Int])(implicit actorSystem: ActorSystem) {
   private lazy val config: Config = actorSystem.settings.config
+
+  lazy val port: Int = _port.getOrElse(config.getConfig("rpc.server").getInt("port"))
 
   lazy val scriptClass: String =
     Try(

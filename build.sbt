@@ -54,7 +54,7 @@ lazy val `sequencer-framework` = project
       Libs.`scala-compiler`,
       Akka.`akka-stream`,
       Akka.`akka-typed`,
-      Akka.`akka-typed-testkit`,
+      Akka.`akka-typed-testkit` % Test,
       Ammonite.`ammonite`,
       Ammonite.`ammonite-sshd`,
       Libs.`scala-async`,

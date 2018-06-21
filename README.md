@@ -44,8 +44,8 @@ redis-server and redis-sentinal using following commands.
     -  install redis
 ```bash
 brew install redis
-redis-server redis/redis-server.conf
-redis-sentinel redis/redis-sentinel.conf
+redis-server esw-prototype/location-agent-simulator/redis/redis-server.conf
+redis-sentinel esw-prototype/location-agent-simulator/redis/redis-sentinel.conf
 ```
 
 ### Run location-agent-simulator app

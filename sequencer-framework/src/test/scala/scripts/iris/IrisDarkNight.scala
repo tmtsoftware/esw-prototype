@@ -7,7 +7,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   var eventCount   = 0
   var commandCount = 0
 
-  val cancellable = cs.publish(15.seconds) {
+  val cancellable = cs.publish(5.seconds) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
   }
 
@@ -20,7 +20,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   cs.handleCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
-
+      println("done looping")
       val firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
       val response = AggregateResponse
         .add(firstAssemblyResponse)
@@ -32,7 +32,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.unsubscribe()
+    subscription.cancel()
     cancellable.cancel()
     println("shutdown iris")
     Done

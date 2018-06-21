@@ -1,20 +1,13 @@
 package tmt.sequencer.scripts
 
+import tmt.sequencer.Configs
 import tmt.sequencer.dsl.{CswServices, Script}
 
-class ScriptLoader(scriptConfigs: ScriptConfigs, cswServices: CswServices) {
-
-  def load(): Script = {
-    getInstance(loadClass(scriptConfigs.scriptClass))
-  }
-
-  private[tmt] def loadClass(scriptClass: String): Class[_] = {
-    getClass.getClassLoader
-      .loadClass(scriptClass)
-  }
-
-  private[tmt] def getInstance(clazz: Class[_]): Script = {
+//merge with ScriptConfigs
+object ScriptLoader {
+  //should load take params and remove a few dependencies
+  def load(configs: Configs, cswServices: CswServices): Script = {
+    val clazz = getClass.getClassLoader.loadClass(configs.scriptClass)
     clazz.getConstructor(classOf[CswServices]).newInstance(cswServices).asInstanceOf[Script]
   }
-
 }

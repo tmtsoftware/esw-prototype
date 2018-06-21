@@ -1,18 +1,12 @@
 package tmt.sequencer
 
-import ammonite.ops.Path
-import tmt.sequencer.dsl.ScriptFactory
-
 import scala.concurrent.duration.DurationDouble
 import scala.language.implicitConversions
-import scala.reflect.{classTag, ClassTag}
+import scala.util.control.Breaks
 
 object ScriptImports {
 
   implicit def toDuration(d: Double): DurationDouble = new DurationDouble(d)
-
-  @volatile
-  private var tag: ClassTag[_] = _
 
   type Done = akka.Done
   val Done = akka.Done
@@ -64,15 +58,5 @@ object ScriptImports {
   type Id = csw.messages.params.models.Id
   val Id = csw.messages.params.models.Id
 
-  private[tmt] def load(path: Path): ScriptFactory = synchronized {
-    ammonite.Main().runScript(path, Seq.empty) match {
-      case (x, _) => println(s"script loading status: $x")
-    }
-    val constructor = tag.runtimeClass.getConstructors.toList.head
-    constructor.newInstance().asInstanceOf[ScriptFactory]
-  }
-
-  def init[T <: ScriptFactory: ClassTag]: Unit = {
-    tag = classTag[T]
-  }
+  def break: Unit = Breaks.break()
 }

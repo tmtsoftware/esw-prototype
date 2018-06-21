@@ -4,10 +4,11 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteResult._
 import akka.stream.ActorMaterializer
+import tmt.sequencer.Configs
 
 import scala.concurrent.Future
 
-class RpcServer(rpcConfigs: RpcConfigs, routes: Routes)(implicit system: ActorSystem) {
+class RpcServer(rpcConfigs: Configs, routes: Routes)(implicit system: ActorSystem) {
   private implicit val materializer: ActorMaterializer = ActorMaterializer()
   import materializer.executionContext
 
