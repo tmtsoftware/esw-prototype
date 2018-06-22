@@ -22,7 +22,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 class CswServices(sequencer: Sequencer,
                   engine: Engine,
-                  locationService: LocationServiceWrapper,
+                  locationService: LocationServiceGateway,
                   eventService: EventService,
                   val sequencerId: String,
                   val observingMode: String)(implicit mat: Materializer, system: ActorSystem)

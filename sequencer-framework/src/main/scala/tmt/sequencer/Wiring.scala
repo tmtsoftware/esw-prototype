@@ -14,7 +14,7 @@ import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
 import tmt.sequencer.scripts.ScriptLoader
-import tmt.sequencer.util.LocationServiceWrapper
+import tmt.sequencer.util.LocationServiceGateway
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
@@ -32,8 +32,8 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
   lazy val locationService: LocationService = LocationServiceFactory.withSystem(system)
-  lazy val locationServiceWrapper: LocationServiceWrapper =
-    new LocationServiceWrapper(locationService, system)
+  lazy val locationServiceWrapper: LocationServiceGateway =
+    new LocationServiceGateway(locationService, system)
 //  lazy val locationService: LocationService = new LocationServiceClient()
 
   lazy val eventService: EventService = new RedisEventServiceFactory().make(locationService)
