@@ -9,6 +9,12 @@ object AsyncMacros {
     q"_root_.tmt.sequencer.dsl.Async.async($body)($ec)"
   }
 
+  def asyncStrand[T: c.WeakTypeTag](c: blackbox.Context)(body: c.Expr[T])(standEc: c.Expr[StrandEc]): c.Tree = {
+    import c.universe._
+    val ec = reify(standEc.splice.ec)
+    q"_root_.tmt.sequencer.dsl.Async.async($body)($ec)"
+  }
+
   def await(c: blackbox.Context) = {
     import c.universe._
     val arg = c.prefix.tree.asInstanceOf[Apply].args.head

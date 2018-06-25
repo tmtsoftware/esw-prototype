@@ -1,9 +1,13 @@
 package tmt.sequencer.util
 
 import akka.actor.Cancellable
+import org.tmt.macros.StrandEc
+import tmt.sequencer.dsl.ScriptDsl
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-case class PublisherStream(eventualCancellable: Future[Cancellable])(implicit ec: ExecutionContext) {
-  def cancel(): Future[Boolean] = eventualCancellable.map(_.cancel())
+class PublisherStream(eventualCancellable: Future[Cancellable])(implicit strandEc: StrandEc) extends ScriptDsl {
+  def cancel(): Future[Boolean] = spawn {
+    eventualCancellable.await.cancel()
+  }
 }

@@ -2,9 +2,13 @@ package tmt.sequencer.util
 
 import akka.Done
 import csw.services.event.scaladsl.EventSubscription
+import org.tmt.macros.StrandEc
+import tmt.sequencer.dsl.ScriptDsl
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-case class SubscriptionStream(subscriptionStream: Future[EventSubscription])(implicit ec: ExecutionContext) {
-  def cancel(): Future[Done] = subscriptionStream.flatMap(_.unsubscribe())
+class SubscriptionStream(subscriptionStream: Future[EventSubscription])(implicit strandEc: StrandEc) extends ScriptDsl {
+  def cancel(): Future[Done] = spawn {
+    subscriptionStream.await.unsubscribe().await
+  }
 }

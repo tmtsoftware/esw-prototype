@@ -2,11 +2,14 @@ package tmt.sequencer.dsl
 
 import akka.Done
 import csw.messages.commands.SequenceCommand
+import org.tmt.macros.StrandEc
 import tmt.sequencer.models.AggregateResponse
 
 import scala.concurrent.Future
 
-abstract class Script(cs: CswServices) extends ActiveObject {
+abstract class Script(cs: CswServices) extends ScriptDsl {
+  implicit val strandEc: StrandEc = StrandEc.create()
+
   private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = cs.commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
     spawn(AggregateResponse)
@@ -14,7 +17,15 @@ abstract class Script(cs: CswServices) extends ActiveObject {
 
   def execute(command: SequenceCommand): Future[AggregateResponse] = spawn(commandHandler(command).await)
 
-  def shutdown(): Future[Done] = onShutdown().map(_ => shutdownEc())
+  def shutdown(): Future[Done] = spawn {
+    onShutdown().await
+    shutdownEc()
+  }
 
   protected def onShutdown(): Future[Done] = spawn(Done)
+
+  private[sequencer] def shutdownEc(): Done = {
+    strandEc.shutdown()
+    Done
+  }
 }

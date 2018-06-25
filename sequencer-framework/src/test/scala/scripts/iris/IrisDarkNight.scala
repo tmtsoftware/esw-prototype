@@ -32,8 +32,8 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.cancel()
-    cancellable.cancel()
+    subscription.cancel().await
+    cancellable.cancel().await
     println("shutdown iris")
     Done
   }

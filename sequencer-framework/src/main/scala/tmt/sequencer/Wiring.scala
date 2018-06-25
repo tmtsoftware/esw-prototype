@@ -31,9 +31,8 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
-  lazy val locationService: LocationService = LocationServiceFactory.withSystem(system)
-  lazy val locationServiceWrapper: LocationServiceGateway =
-    new LocationServiceGateway(locationService, system)
+  lazy val locationService: LocationService               = LocationServiceFactory.withSystem(system)
+  lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
 //  lazy val locationService: LocationService = new LocationServiceClient()
 
   lazy val eventService: EventService = new RedisEventServiceFactory().make(locationService)
