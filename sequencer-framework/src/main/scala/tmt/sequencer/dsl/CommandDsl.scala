@@ -5,10 +5,10 @@ import tmt.sequencer.Sequencer
 import tmt.sequencer.models.AggregateResponse
 
 import scala.async.Async.{async, await}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.Breaks.breakable
 
-abstract class CommandDsl(sequencer: Sequencer) extends ActiveObject {
+abstract class CommandDsl(sequencer: Sequencer)(implicit ec: ExecutionContext) {
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
   def handleCommand(name: String)(handler: SequenceCommand => Future[AggregateResponse]): Unit = {
