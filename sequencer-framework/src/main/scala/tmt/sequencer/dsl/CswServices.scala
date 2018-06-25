@@ -44,13 +44,10 @@ class CswServices(sequencer: Sequencer,
   def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse] = {
     locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
       async {
-        println("\n\n****************************************************************")
-        println(s"Sending command to assembly - $command")
         val setupCommand: Setup       = CswCommandAdapter.setupCommandFrom(command)
         implicit val timeout: Timeout = util.Timeout(10.seconds)
         val response                  = await(new CommandService(akkaLocation).submit(setupCommand))
-        println(s"Got response from assembly - $response")
-        println("****************************************************************\n\n")
+        println(s"Response - $response")
         CommandResponse.Success(command.runId, s"Result submit: [$assemblyName] - $command")
       }(system.dispatcher)
     }
