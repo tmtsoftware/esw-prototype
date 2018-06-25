@@ -2,7 +2,6 @@ package tmt.sequencer.dsl
 
 import akka.actor.typed.scaladsl.adapter._
 import akka.actor.{typed, ActorSystem, Cancellable}
-import akka.stream.Materializer
 import akka.util.Timeout
 import akka.{util, Done}
 import csw.messages.commands.{SequenceCommand, Setup}
@@ -25,18 +24,18 @@ class CswServices(sequencer: Sequencer,
                   locationService: LocationServiceGateway,
                   eventService: EventService,
                   val sequencerId: String,
-                  val observingMode: String)(implicit mat: Materializer, system: ActorSystem)
-    extends CommandDsl(sequencer)(system.dispatcher) {
+                  val observingMode: String)(implicit system: ActorSystem)
+    extends CommandDsl(sequencer) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
-  def sequenceFeeder(subSystemSequencerId: String): SequenceFeederImpl = {
+  def sequenceFeeder(subSystemSequencerId: String)(implicit ec: ExecutionContext): SequenceFeederImpl = {
     val componentName = SequencerComponent.getComponentName(subSystemSequencerId, observingMode)
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
         new SequenceFeederImpl(supervisorRef)
-      }(mat.executionContext)
+      }
     }
     Await.result(eventualFeederImpl, 5.seconds)
   }
@@ -50,7 +49,7 @@ class CswServices(sequencer: Sequencer,
         val response                  = await(eventualCommandResponse)
         println(s"Response - $response")
         CommandResponse.Success(command.runId, s"Result submit: [$assemblyName] - $command")
-      }(mat.executionContext)
+      }
     }
   }
 

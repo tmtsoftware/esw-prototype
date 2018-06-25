@@ -12,6 +12,9 @@ import scala.language.experimental.macros
 trait ActiveObject {
   protected implicit val ec: ExecutionContextExecutorService =
     ExecutionContext.fromExecutorService(Executors.newSingleThreadExecutor())
+}
+
+trait ScriptDsl extends ActiveObject {
 
   def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
   def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
