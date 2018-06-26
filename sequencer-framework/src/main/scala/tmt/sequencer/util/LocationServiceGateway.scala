@@ -5,6 +5,7 @@ import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{AkkaLocation, ComponentId, ComponentType}
+import csw.messages.params.models.Prefix
 import csw.services.location.commons.ActorSystemFactory
 import csw.services.location.models.AkkaRegistration
 import csw.services.location.scaladsl.LocationService
@@ -22,7 +23,7 @@ class LocationServiceGateway(locationService: LocationService, system: ActorSyst
 
     val registration =
       AkkaRegistration(AkkaConnection(ComponentId(componentName, componentType)),
-                       Some("sequencer"),
+                       Prefix("sequencer"),
                        supervisorRef,
                        dummyLogAdminActorRef)
 

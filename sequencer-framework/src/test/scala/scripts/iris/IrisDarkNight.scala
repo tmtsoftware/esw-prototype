@@ -26,7 +26,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
           counter += 1
           firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
           println(counter)
-          stopWhen(counter > 100)
+          stopWhen(counter > 2)
         }
       }.await
       println(s"[Iris] Received command: ${command.commandName}")
