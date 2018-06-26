@@ -43,8 +43,8 @@ object ScriptImports {
   type CommandName = csw.messages.commands.CommandName
   val CommandName = csw.messages.commands.CommandName
 
-  type CommandResponse = tmt.sequencer.models.CommandResponse
-  val CommandResponse = tmt.sequencer.models.CommandResponse
+  type CommandResponse = csw.messages.commands.CommandResponse
+  val CommandResponse = csw.messages.commands.CommandResponse
 
   type AggregateResponse = tmt.sequencer.models.AggregateResponse
   val AggregateResponse = tmt.sequencer.models.AggregateResponse

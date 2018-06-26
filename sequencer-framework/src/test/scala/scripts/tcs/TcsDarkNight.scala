@@ -12,7 +12,7 @@ class TcsDarkNight(cs: CswServices) extends Script(cs) {
       println(s"[Tcs] Received command: ${command.commandName}")
 
       val firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
-      val commandFailed         = firstAssemblyResponse.isInstanceOf[CommandResponse.Failed]
+      val commandFailed         = firstAssemblyResponse.isInstanceOf[CommandResponse.Error]
 
       val restAssemblyResponses = if (commandFailed) {
         val command2 = Setup(Prefix("test-command2"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))

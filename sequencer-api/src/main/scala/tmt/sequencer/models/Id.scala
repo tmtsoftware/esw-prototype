@@ -1,7 +1,7 @@
 package tmt.sequencer.models
 
 import ai.x.play.json.Jsonx
-import csw.messages.commands.SequenceCommand
+import csw.messages.commands.{CommandResponse, SequenceCommand}
 import csw.messages.params.models.Id
 import tmt.sequencer.models.StepStatus.{Finished, InFlight, Pending}
 import play.api.libs.json._
@@ -58,28 +58,13 @@ object CommandList {
   implicit val format: OFormat[CommandList] = Json.format[CommandList]
 }
 
-sealed trait CommandResponse {
-  def typeName: String
-  def id: Id
-  def value: String
-}
-
-object CommandResponse {
-  case class Success(id: Id, value: String, typeName: String = Success.getClass.getSimpleName) extends CommandResponse
-  case class Failed(id: Id, value: String, typeName: String = Failed.getClass.getSimpleName)   extends CommandResponse
-
-  implicit lazy val XFormat: Format[Success]            = Jsonx.formatCaseClass[Success]
-  implicit lazy val UnknownFormat: Format[Failed]       = Jsonx.formatCaseClass[Failed]
-  implicit lazy val jsonFormat: Format[CommandResponse] = Jsonx.formatSealed[CommandResponse]
-}
-
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
-  def ids: Set[Id]                                                 = childResponses.map(_.id)
+  def ids: Set[Id]                                                 = childResponses.map(_.runId)
   def add(commandResponses: CommandResponse*): AggregateResponse   = copy(childResponses ++ commandResponses.toSet)
   def add(maybeResponse: Set[CommandResponse]): AggregateResponse  = copy(childResponses ++ maybeResponse)
   def add(aggregateResponse: AggregateResponse): AggregateResponse = copy(childResponses ++ aggregateResponse.childResponses)
   def markSuccessful(commands: SequenceCommand*): AggregateResponse = add {
-    commands.map(command => CommandResponse.Success(id = command.runId, value = "all children are done")).toSet[CommandResponse]
+    commands.map(command => CommandResponse.Completed(command.runId)).toSet[CommandResponse]
   }
   def markSuccessful(maybeCommand: Option[SequenceCommand]): AggregateResponse = markSuccessful(maybeCommand.toList: _*)
 }

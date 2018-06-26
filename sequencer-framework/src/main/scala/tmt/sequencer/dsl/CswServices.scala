@@ -4,14 +4,13 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.actor.{typed, ActorSystem, Cancellable}
 import akka.util.Timeout
 import akka.{util, Done}
-import csw.messages.commands.{SequenceCommand, Setup}
+import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.CommandResponse
 import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.util._
 import tmt.sequencer.{Engine, Sequencer}
@@ -50,7 +49,7 @@ class CswServices(sequencer: Sequencer,
         implicit val timeout: Timeout = util.Timeout(10.seconds)
         val response                  = await(new CommandService(akkaLocation).submit(setupCommand))
         println(s"Response - $response")
-        CommandResponse.Success(command.runId, s"Result submit: [$assemblyName] - $command")
+        response
       }(system.dispatcher)
     }
   }
