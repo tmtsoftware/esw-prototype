@@ -7,7 +7,7 @@ import tmt.sequencer.dsl.ScriptDsl
 
 import scala.concurrent.Future
 
-class SubscriptionStream(subscriptionStream: Future[EventSubscription])(implicit strandEc: StrandEc) extends ScriptDsl {
+class SubscriptionStream(subscriptionStream: Future[EventSubscription])(implicit val strandEc: StrandEc) extends ScriptDsl {
   def cancel(): Future[Done] = spawn {
     subscriptionStream.await.unsubscribe().await
   }

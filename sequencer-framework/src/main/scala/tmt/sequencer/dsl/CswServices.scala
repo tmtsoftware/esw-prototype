@@ -30,6 +30,8 @@ class CswServices(sequencer: Sequencer,
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
+  implicit val strandEc: StrandEc = StrandEc.create()
+
   def sequenceFeeder(subSystemSequencerId: String): SequenceFeederImpl = {
     val componentName = SequencerComponent.getComponentName(subSystemSequencerId, observingMode)
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
@@ -53,7 +55,7 @@ class CswServices(sequencer: Sequencer,
     }
   }
 
-  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): SubscriptionStream = {
+  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done): SubscriptionStream = {
     println(s"==========================> Subscribing event $eventKeys")
     val eventualSubscription: Future[EventSubscription] = spawn {
       eventService.defaultSubscriber.await.subscribeAsync(eventKeys, e => spawn(callback(e)))
@@ -61,7 +63,7 @@ class CswServices(sequencer: Sequencer,
     new SubscriptionStream(eventualSubscription)
   }
 
-  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: StrandEc): PublisherStream = {
+  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): PublisherStream = {
     println(s"=========================> Publishing event $eventGeneratorBlock every $every")
     val eventualCancellable: Future[Cancellable] = spawn {
       eventService.defaultPublisher.await.publish(eventGeneratorBlock, every)

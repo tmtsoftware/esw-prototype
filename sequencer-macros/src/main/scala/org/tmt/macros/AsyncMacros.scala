@@ -9,9 +9,9 @@ object AsyncMacros {
     q"_root_.tmt.sequencer.dsl.Async.async($body)($ec)"
   }
 
-  def asyncStrand[T: c.WeakTypeTag](c: blackbox.Context)(body: c.Expr[T])(standEc: c.Expr[StrandEc]): c.Tree = {
+  def asyncStrand[T: c.WeakTypeTag](c: blackbox.Context)(body: c.Expr[T])(strandEc: c.Expr[StrandEc]): c.Tree = {
     import c.universe._
-    val ec = reify(standEc.splice.ec)
+    val ec = reify(strandEc.splice.ec)
     q"_root_.tmt.sequencer.dsl.Async.async($body)($ec)"
   }
 

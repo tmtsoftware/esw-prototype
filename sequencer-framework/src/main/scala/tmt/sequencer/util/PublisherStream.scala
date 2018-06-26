@@ -6,7 +6,7 @@ import tmt.sequencer.dsl.ScriptDsl
 
 import scala.concurrent.Future
 
-class PublisherStream(eventualCancellable: Future[Cancellable])(implicit strandEc: StrandEc) extends ScriptDsl {
+class PublisherStream(eventualCancellable: Future[Cancellable])(implicit val strandEc: StrandEc) extends ScriptDsl {
   def cancel(): Future[Boolean] = spawn {
     eventualCancellable.await.cancel()
   }

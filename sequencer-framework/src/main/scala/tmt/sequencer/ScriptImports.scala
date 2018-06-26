@@ -2,7 +2,6 @@ package tmt.sequencer
 
 import scala.concurrent.duration.DurationDouble
 import scala.language.implicitConversions
-import scala.util.control.Breaks
 
 object ScriptImports {
 
@@ -57,6 +56,4 @@ object ScriptImports {
 
   type Id = csw.messages.params.models.Id
   val Id = csw.messages.params.models.Id
-
-  def break: Unit = Breaks.break()
 }

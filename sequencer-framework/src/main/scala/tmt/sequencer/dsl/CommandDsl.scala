@@ -6,7 +6,6 @@ import tmt.sequencer.Sequencer
 import tmt.sequencer.models.AggregateResponse
 
 import scala.concurrent.Future
-import scala.util.control.Breaks.breakable
 
 abstract class CommandDsl(sequencer: Sequencer) extends ScriptDsl {
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
@@ -20,12 +19,4 @@ abstract class CommandDsl(sequencer: Sequencer) extends ScriptDsl {
       val hasNext = sequencer.maybeNext.await.map(_.command).exists(f)
       if (hasNext) Some(sequencer.next.await.command) else None
     }
-
-  def loop(body: => Unit): Unit = {
-    breakable(
-      while (true) {
-        body
-      }
-    )
-  }
 }

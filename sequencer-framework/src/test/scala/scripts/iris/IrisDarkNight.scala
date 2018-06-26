@@ -19,8 +19,17 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris") { command =>
     spawn {
+      var firstAssemblyResponse: CommandResponse = null
+      var counter                                = 0
+      loop {
+        spawn {
+          counter += 1
+          firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
+          println(counter)
+          stopWhen(counter > 100)
+        }
+      }.await
       println(s"[Iris] Received command: ${command.commandName}")
-      val firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
       val response = AggregateResponse
         .add(firstAssemblyResponse)
         .markSuccessful(command)
