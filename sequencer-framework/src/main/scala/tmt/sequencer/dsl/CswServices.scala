@@ -10,6 +10,7 @@ import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
+import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.util._
@@ -31,7 +32,7 @@ class CswServices(sequencer: Sequencer,
 
   implicit val strandEc: StrandEc = StrandEc.create()
 
-  def sequenceFeeder(subSystemSequencerId: String): SequenceFeederImpl = {
+  def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder = {
     val componentName = SequencerComponent.getComponentName(subSystemSequencerId, observingMode)
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {

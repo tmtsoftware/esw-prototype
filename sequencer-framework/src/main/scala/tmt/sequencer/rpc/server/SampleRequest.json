@@ -1,0 +1,90 @@
+{
+  "commands": [
+    {
+      "kind": "Setup",
+      "runId": "53ba55f9-26f5-4998-9bfe-b320b3f92d64",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId1"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    },
+    {
+      "kind": "Setup",
+      "runId": "e4385600-3b0b-4a74-878f-aa73620d12b4",
+      "source": "test2",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId2"
+      ],
+      "paramSet": []
+    },
+    {
+      "kind": "Setup",
+      "runId": "632865a8-0571-453b-bd4f-962a6fc112b8",
+      "source": "test3",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId3"
+      ],
+      "paramSet": []
+    },
+    {
+      "kind": "Setup",
+      "runId": "34d7fbf7-32a6-4644-94a7-4fb54f48d1c3",
+      "source": "test4",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId4"
+      ],
+      "paramSet": []
+    },
+    {
+      "kind": "Setup",
+      "runId": "35e7ad85-0054-4b66-a061-a7e9910ac21a",
+      "source": "test5",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId5"
+      ],
+      "paramSet": []
+    }
+  ]
+}

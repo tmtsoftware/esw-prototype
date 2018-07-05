@@ -7,7 +7,7 @@ import akka.util.Timeout
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SequencerMsg.ProcessSequence
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.{AggregateResponse, CommandList}
+import tmt.sequencer.models.{AggregateResponse, CommandList, InputCommand}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
@@ -20,7 +20,8 @@ class SequenceFeederImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: A
   import system.dispatcher
 
   override def feed(commandList: CommandList): Future[AggregateResponse] = {
-    val future: Future[Try[AggregateResponse]] = supervisor ? (x => ProcessSequence(commandList.commands.toList, x))
+    val sequenceCommands                       = commandList.commands.map(cmd => InputCommand.asSequenceCommand(cmd)).toList
+    val future: Future[Try[AggregateResponse]] = supervisor ? (x => ProcessSequence(sequenceCommands, x))
     future.map(_.get)
   }
 }

@@ -1,34 +1,35 @@
 package tmt.sequencer.rpc.server
 
+import akka.Done
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import csw.messages.commands.SequenceCommand
-import csw.messages.params.formats.JsonSupport
 import csw.messages.params.models.Id
+import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.models.CommandList
-import JsonSupport._
-import akka.Done
-import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import tmt.sequencer.models.{CommandList, InputCommand, UpickleRWSupport}
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationDouble
 
 class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(implicit ec: ExecutionContext)
-    extends PlayJsonSupport {
+    extends UpickleSupport
+    with UpickleRWSupport {
 
   val route: Route = cors() {
     post {
       pathPrefix(SequenceFeeder.ApiName) {
         path(SequenceFeeder.Feed) {
-          entity(as[CommandList]) { commandList =>
-            complete(sequenceFeeder.feed(commandList))
+          withRequestTimeout(40.seconds) {
+            entity(as[CommandList]) { commandList =>
+              complete(sequenceFeeder.feed(commandList))
+            }
           }
         }
       } ~
       pathPrefix(SequenceEditor.ApiName) {
         path(SequenceEditor.AddAll) {
-          entity(as[List[SequenceCommand]]) { commands =>
+          entity(as[List[InputCommand]]) { commands =>
             complete(sequenceEditor.addAll(commands).map(_ => Done))
           }
         } ~
@@ -57,12 +58,12 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(imp
           }
         } ~
         path(SequenceEditor.Prepend) {
-          entity(as[List[SequenceCommand]]) { commands =>
+          entity(as[List[InputCommand]]) { commands =>
             complete(sequenceEditor.prepend(commands).map(_ => Done))
           }
         } ~
         path(SequenceEditor.Replace) {
-          entity(as[(Id, List[SequenceCommand])]) {
+          entity(as[(Id, List[InputCommand])]) {
             case (id, commands) =>
               complete(sequenceEditor.replace(id, commands).map(_ => Done))
           }

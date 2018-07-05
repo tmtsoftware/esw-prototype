@@ -21,14 +21,23 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
   private implicit val scheduler: Scheduler = system.scheduler
   import system.dispatcher
 
+  def sequenceCommandsFrom(commands: List[InputCommand]): List[SequenceCommand] =
+    commands.map(cmd => InputCommand.asSequenceCommand(cmd))
+
   override def sequence: Future[Sequence] = supervisor ? GetSequence
 
-  override def addAll(commands: List[SequenceCommand]): Future[Unit]              = Future(supervisor ! Add(commands))
-  override def delete(ids: List[Id]): Future[Unit]                                = Future(supervisor ! Delete(ids))
-  override def insertAfter(id: Id, commands: List[SequenceCommand]): Future[Unit] = Future(supervisor ! InsertAfter(id, commands))
-  override def prepend(commands: List[SequenceCommand]): Future[Unit]             = Future(supervisor ! Prepend(commands))
-  override def replace(id: Id, commands: List[SequenceCommand]): Future[Unit]     = Future(supervisor ! Replace(id, commands))
-  override def reset(): Future[Unit]                                              = Future(supervisor ! DiscardPending)
+  override def addAll(commands: List[InputCommand]): Future[Unit] = Future(supervisor ! Add(sequenceCommandsFrom(commands)))
+  override def delete(ids: List[Id]): Future[Unit]                = Future(supervisor ! Delete(ids))
+
+  override def insertAfter(id: Id, commands: List[InputCommand]): Future[Unit] =
+    Future(supervisor ! InsertAfter(id, sequenceCommandsFrom(commands)))
+
+  override def prepend(commands: List[InputCommand]): Future[Unit] = Future(supervisor ! Prepend(sequenceCommandsFrom(commands)))
+
+  override def replace(id: Id, commands: List[InputCommand]): Future[Unit] =
+    Future(supervisor ! Replace(id, sequenceCommandsFrom(commands)))
+
+  override def reset(): Future[Unit] = Future(supervisor ! DiscardPending)
 
   override def pause(): Future[Unit]                          = Future(supervisor ! Pause)
   override def resume(): Future[Unit]                         = Future(supervisor ! Resume)
