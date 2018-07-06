@@ -1,4 +1,4 @@
-package tmt.sequencer.models
+package tmt.sequencer.utils
 
 import enumeratum.{Enum, EnumEntry}
 import upickle.default.{ReadWriter => RW}

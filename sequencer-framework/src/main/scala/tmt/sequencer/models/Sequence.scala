@@ -64,4 +64,12 @@ object Sequence {
 
   import upickle.default.{macroRW, ReadWriter => RW}
   implicit val SequenceRW: RW[Sequence] = macroRW[Sequence]
+
+  def toSequenceWeb(sequence: Sequence): SequenceWeb = {
+    SequenceWeb(sequence.steps.map(Step.asStepWeb))
+  }
+
+  def fromSequenceWeb(sequenceWeb: SequenceWeb): Sequence = {
+    Sequence(sequenceWeb.steps.map(Step.fromStepWeb))
+  }
 }

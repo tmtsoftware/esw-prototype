@@ -21,21 +21,20 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
   private implicit val scheduler: Scheduler = system.scheduler
   import system.dispatcher
 
-  def sequenceCommandsFrom(commands: List[SequenceCommandWeb]): List[SequenceCommand] =
-    commands.map(cmd => SequenceCommandConversions.asSequenceCommand(cmd))
+  def sequenceCommandsFrom(commands: List[SequenceCommand]): List[SequenceCommand] = commands.map(cmd => cmd)
 
   override def sequence: Future[Sequence] = supervisor ? GetSequence
 
-  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = Future(supervisor ! Add(sequenceCommandsFrom(commands)))
-  override def delete(ids: List[Id]): Future[Unit]                      = Future(supervisor ! Delete(ids))
+  override def addAll(commands: List[SequenceCommand]): Future[Unit] = Future(supervisor ! Add(sequenceCommandsFrom(commands)))
+  override def delete(ids: List[Id]): Future[Unit]                   = Future(supervisor ! Delete(ids))
 
-  override def insertAfter(id: Id, commands: List[SequenceCommandWeb]): Future[Unit] =
+  override def insertAfter(id: Id, commands: List[SequenceCommand]): Future[Unit] =
     Future(supervisor ! InsertAfter(id, sequenceCommandsFrom(commands)))
 
-  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] =
+  override def prepend(commands: List[SequenceCommand]): Future[Unit] =
     Future(supervisor ! Prepend(sequenceCommandsFrom(commands)))
 
-  override def replace(id: Id, commands: List[SequenceCommandWeb]): Future[Unit] =
+  override def replace(id: Id, commands: List[SequenceCommand]): Future[Unit] =
     Future(supervisor ! Replace(id, sequenceCommandsFrom(commands)))
 
   override def reset(): Future[Unit] = Future(supervisor ! DiscardPending)

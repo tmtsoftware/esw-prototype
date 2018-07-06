@@ -24,7 +24,7 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
 
 object Step {
   import UpickleFormatAdapter._
-  import EnumUpickleSupport._
+  import tmt.sequencer.utils.EnumUpickleSupport._
   import csw.messages.params.formats.JsonSupport._
 
   def from(command: SequenceCommand)                    = Step(command, StepStatus.Pending, hasBreakpoint = false)
@@ -74,7 +74,7 @@ case class AggregateResponse(childResponses: Set[CommandResponse]) {
 object AggregateResponse extends AggregateResponse(Set.empty) with UpickleRWSupport {
   implicit val aggregateResponseRW: RW[AggregateResponse] = macroRW[AggregateResponse]
 
-  def asAggregateResponseWeb(aggregateResponse: AggregateResponse): AggregateResponseWeb = {
+  def toAggregateResponseWeb(aggregateResponse: AggregateResponse): AggregateResponseWeb = {
     AggregateResponseWeb(aggregateResponse.childResponses.map(CommandResponseConversions.fromCommandResponse))
   }
 

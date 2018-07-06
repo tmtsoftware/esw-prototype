@@ -9,7 +9,7 @@ import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
-import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
+import tmt.sequencer.api.{SequenceEditor, SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
@@ -44,8 +44,10 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
   lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef, script)
+  lazy val sequenceEditorWebImpl          = new SequenceEditorWebImpl(sequenceEditor)
   lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
-  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor)
+  lazy val sequenceFeederWebImpl          = new SequenceFeederWebImpl(sequenceFeeder)
+  lazy val routes                         = new Routes(sequenceFeederWebImpl, sequenceEditorWebImpl)
   lazy val rpcServer                      = new RpcServer(configs, routes)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)
