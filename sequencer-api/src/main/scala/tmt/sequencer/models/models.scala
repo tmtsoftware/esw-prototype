@@ -38,7 +38,6 @@ object SequenceCommandWeb {
 
 case class SequenceWeb(steps: List[StepWeb])
 object SequenceWeb {
-  import tmt.sequencer.utils.EnumUpickleSupport._
   implicit val readWriter: RW[SequenceWeb] = macroRW[SequenceWeb]
 }
 
