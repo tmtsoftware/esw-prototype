@@ -10,7 +10,7 @@ import upickle.default.{macroRW, ReadWriter => RW, _}
 
 trait UpickleRWSupport {
 
-  import MicroPickleFormatAdapter._
+  import UpickleFormatAdapter._
 
   implicit val idRW: RW[Id]         = readWriterFromFormat
   implicit val resultRW: RW[Result] = readWriterFromFormat
@@ -46,15 +46,9 @@ trait UpickleRWSupport {
     macroRW[CommandNotAvailable],
     macroRW[NotAllowed]
   )
-
-  implicit lazy val commandResultTypeRW: RW[CommandResultType] = RW.merge(
-    macroRW[Intermediate.type],
-    RW.merge(macroRW[Positive.type], macroRW[Negative.type])
-  )
-
 }
 
-object MicroPickleFormatAdapter {
+object UpickleFormatAdapter {
   def readWriterFromFormat[T](implicit format: Format[T]): RW[T] = {
     upickle.default
       .readwriter[String]

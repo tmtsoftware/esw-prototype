@@ -23,39 +23,41 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
 }
 
 object Step {
+  import UpickleFormatAdapter._
+  import EnumUpickleSupport._
   import csw.messages.params.formats.JsonSupport._
-  import MicroPickleFormatAdapter._
 
   def from(command: SequenceCommand)                    = Step(command, StepStatus.Pending, hasBreakpoint = false)
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
 
   implicit val sequenceCommandRW: RW[SequenceCommand] = readWriterFromFormat
   implicit val stepRW: RW[Step]                       = macroRW[Step]
+
+  def asStepWeb(step: Step): StepWeb = {
+    StepWeb(SequenceCommandConversions.fromSequenceCommand(step.command), step.status, step.hasBreakpoint)
+  }
+
+  def fromStepWeb(stepWeb: StepWeb): Step = {
+    Step(SequenceCommandConversions.asSequenceCommand(stepWeb.command), stepWeb.status, stepWeb.hasBreakpoint)
+  }
 }
 
-sealed trait StepStatus
-
-object StepStatus {
-
-  case object Pending extends StepStatus
-
-  case object InFlight extends StepStatus
-
-  case object Finished extends StepStatus
-
-  implicit lazy val stepStatusRW: RW[StepStatus] = RW.merge(macroRW[Pending.type], macroRW[InFlight.type], macroRW[Finished.type])
-}
-
-case class CommandList(commands: Seq[InputCommand]) {
-  def add(others: SequenceCommand*): CommandList = CommandList(commands ++ others.map(InputCommand.fromSequenceCommand))
+case class CommandList(commands: Seq[SequenceCommand]) {
+  def add(others: SequenceCommand*): CommandList = CommandList(commands ++ others)
   def add(other: CommandList): CommandList       = CommandList(commands ++ other.commands)
 }
 
 object CommandList {
-  def from(commands: SequenceCommand*): CommandList = CommandList(commands.map(InputCommand.fromSequenceCommand).toList)
+  def from(commands: SequenceCommand*): CommandList = CommandList(commands.toList)
   def empty: CommandList                            = CommandList(Nil)
 
-  implicit val commandListRW: RW[CommandList] = macroRW[CommandList]
+  def asCommandListWeb(commandList: CommandList): CommandListWeb = {
+    CommandListWeb(commandList.commands.map(SequenceCommandConversions.fromSequenceCommand))
+  }
+
+  def fromCommandListWeb(commandListWeb: CommandListWeb): CommandList = {
+    CommandList(commandListWeb.commands.map(SequenceCommandConversions.asSequenceCommand))
+  }
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
@@ -71,4 +73,13 @@ case class AggregateResponse(childResponses: Set[CommandResponse]) {
 
 object AggregateResponse extends AggregateResponse(Set.empty) with UpickleRWSupport {
   implicit val aggregateResponseRW: RW[AggregateResponse] = macroRW[AggregateResponse]
+
+  def asAggregateResponseWeb(aggregateResponse: AggregateResponse): AggregateResponseWeb = {
+    AggregateResponseWeb(aggregateResponse.childResponses.map(CommandResponseConversions.fromCommandResponse))
+  }
+
+  def fromAggregateResponseWeb(aggregateResponseWeb: AggregateResponseWeb): AggregateResponse = {
+    AggregateResponse(aggregateResponseWeb.childResponses.map(CommandResponseConversions.asCommandResponse))
+  }
+
 }

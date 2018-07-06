@@ -1,3 +1,5 @@
+import sbtcrossproject.{CrossType, crossProject}
+
 inThisBuild(List(
   organization := "org.tmt",
   scalaVersion := "2.12.6",
@@ -21,19 +23,25 @@ inThisBuild(List(
 lazy val `esw-prototype` = project
   .in(file("."))
   .aggregate(
-    `sequencer-api`,
+    `sequencer-api-js`,
+    `sequencer-api-jvm`,
     `sequencer-macros`,
     `sequencer-framework`,
   )
 
-lazy val `sequencer-api` = project
+lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure)
   .settings(
     libraryDependencies ++= Seq(
-      Csw.`csw-messages`,
-      Libs.`play-json`,
-      SharedLibs.scalaTest % Test,
+      Libs.`play-json`.value,
+      Libs.`upickle`.value,
+      Enumeratum.`enumeratum`.value,
+      SharedLibs.scalaTest.value % Test,
     )
   )
+
+lazy val `sequencer-api-js` = `sequencer-api`.js
+lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
+
 
 lazy val `sequencer-macros` = project
   .settings(
@@ -45,7 +53,7 @@ lazy val `sequencer-macros` = project
 
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-api`)
+  .dependsOn(`sequencer-macros`, `sequencer-api-jvm`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(
@@ -60,12 +68,12 @@ lazy val `sequencer-framework` = project
       Libs.`scala-async`,
       Libs.`akka-http-cors`,
       Akka.`akka-http`,
-      Libs.`play-json`,
+      Libs.`play-json`.value,
       Akka.`akka-http-play-json`,
       Csw.`csw-location`,
       Csw.`csw-command`,
       Csw.`csw-event-client`,
-      SharedLibs.scalaTest % Test
+      SharedLibs.scalaTest.value % Test
     )
   )
 
@@ -75,6 +83,6 @@ lazy val `location-agent-simulator` = project
     libraryDependencies ++= Seq(
       Csw.`csw-location`,
       Akka.`akka-typed`,
-      SharedLibs.scalaTest % Test
+      SharedLibs.scalaTest.value % Test
     )
   )

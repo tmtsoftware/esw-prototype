@@ -1,12 +1,12 @@
 package tmt.sequencer.api
 
 import csw.messages.params.models.Id
-import tmt.sequencer.models.{InputCommand, Sequence}
+import tmt.sequencer.models.{Sequence, SequenceCommandWeb}
 
 import scala.concurrent.Future
 
 trait SequenceEditor {
-  def addAll(commands: List[InputCommand]): Future[Unit]
+  def addAll(commands: List[SequenceCommandWeb]): Future[Unit]
   def pause(): Future[Unit]
   def resume(): Future[Unit]
   def reset(): Future[Unit]
@@ -14,9 +14,9 @@ trait SequenceEditor {
   def delete(ids: List[Id]): Future[Unit]
   def addBreakpoints(ids: List[Id]): Future[Unit]
   def removeBreakpoints(ids: List[Id]): Future[Unit]
-  def insertAfter(id: Id, commands: List[InputCommand]): Future[Unit]
-  def prepend(commands: List[InputCommand]): Future[Unit]
-  def replace(id: Id, commands: List[InputCommand]): Future[Unit]
+  def insertAfter(id: Id, commands: List[SequenceCommandWeb]): Future[Unit]
+  def prepend(commands: List[SequenceCommandWeb]): Future[Unit]
+  def replace(id: Id, commands: List[SequenceCommandWeb]): Future[Unit]
   def shutdown(): Future[Unit]
 }
 

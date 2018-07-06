@@ -7,7 +7,7 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.models.{CommandList, InputCommand, UpickleRWSupport}
+import tmt.sequencer.models.{CommandList, SequenceCommandWeb, UpickleRWSupport}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
@@ -18,18 +18,18 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(imp
 
   val route: Route = cors() {
     post {
-      pathPrefix(SequenceFeeder.ApiName) {
-        path(SequenceFeeder.Feed) {
-          withRequestTimeout(40.seconds) {
-            entity(as[CommandList]) { commandList =>
-              complete(sequenceFeeder.feed(commandList))
-            }
-          }
-        }
-      } ~
+//      pathPrefix(SequenceFeeder.ApiName) {
+//        path(SequenceFeeder.Feed) {
+//          withRequestTimeout(40.seconds) {
+//            entity(as[CommandList]) { commandList =>
+//              complete(sequenceFeeder.feed(commandList))
+//            }
+//          }
+//        }
+//      } ~
       pathPrefix(SequenceEditor.ApiName) {
         path(SequenceEditor.AddAll) {
-          entity(as[List[InputCommand]]) { commands =>
+          entity(as[List[SequenceCommandWeb]]) { commands =>
             complete(sequenceEditor.addAll(commands).map(_ => Done))
           }
         } ~
@@ -58,12 +58,12 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(imp
           }
         } ~
         path(SequenceEditor.Prepend) {
-          entity(as[List[InputCommand]]) { commands =>
+          entity(as[List[SequenceCommandWeb]]) { commands =>
             complete(sequenceEditor.prepend(commands).map(_ => Done))
           }
         } ~
         path(SequenceEditor.Replace) {
-          entity(as[(Id, List[InputCommand])]) {
+          entity(as[(Id, List[SequenceCommandWeb])]) {
             case (id, commands) =>
               complete(sequenceEditor.replace(id, commands).map(_ => Done))
           }
