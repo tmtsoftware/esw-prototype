@@ -29,7 +29,8 @@ lazy val `esw-prototype` = project
     `sequencer-framework`,
   )
 
-lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure)
+lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
   .settings(
     libraryDependencies ++= Seq(
       Libs.`play-json`.value,
@@ -38,28 +39,18 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform).crossType(Cross
       SharedLibs.scalaTest.value % Test,
     )
   )
+  .jsSettings(
+    libraryDependencies ++= Seq(
+      Libs.`scalajs-dom`.value,
+    )
+  )
 
 lazy val `sequencer-api-js` = `sequencer-api`.js
 lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
-lazy val `sequencer-client` = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
-  .dependsOn(`sequencer-api`)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(
-    libraryDependencies ++= Seq(
-      Libs.`monix`.value,
-      Libs.`scalajs-dom`.value,
-      SharedLibs.scalaTest.value % Test,
-    )
-  )
-
-lazy val `sequencer-client-js` = `sequencer-client`.js
-lazy val `sequencer-client-jvm` = `sequencer-client`.jvm
-
 lazy val `sequencer-js-app` = project
   .enablePlugins(ScalaJSPlugin)
-  .dependsOn(`sequencer-client-js`)
+  .dependsOn(`sequencer-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",

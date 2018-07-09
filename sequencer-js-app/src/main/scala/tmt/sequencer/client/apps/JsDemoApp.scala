@@ -6,7 +6,8 @@ import ujson.Js
 
 object JsDemoApp {
   def main(args: Array[String]): Unit = {
-    import monix.execution.Scheduler.Implicits.global
+
+    import scala.concurrent.ExecutionContext.Implicits.global
 
     val client = new SequenceFeederClient("http://0.0.0.0:8000")
 
