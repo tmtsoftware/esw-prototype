@@ -42,6 +42,31 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform).crossType(Cross
 lazy val `sequencer-api-js` = `sequencer-api`.js
 lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
+lazy val `sequencer-client` = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(`sequencer-api`)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    libraryDependencies ++= Seq(
+      Libs.`monix`.value,
+      Libs.`scalajs-dom`.value,
+      SharedLibs.scalaTest.value % Test,
+    )
+  )
+
+lazy val `sequencer-client-js` = `sequencer-client`.js
+lazy val `sequencer-client-jvm` = `sequencer-client`.jvm
+
+lazy val `sequencer-js-app` = project
+  .enablePlugins(ScalaJSPlugin)
+  .dependsOn(`sequencer-client-js`)
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    scalacOptions += "-P:scalajs:sjsDefinedByDefault",
+    libraryDependencies ++= Seq(
+      SharedLibs.scalaTest.value % Test,
+    )
+  )
 
 lazy val `sequencer-macros` = project
   .settings(

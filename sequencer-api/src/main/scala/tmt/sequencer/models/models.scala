@@ -2,6 +2,7 @@ package tmt.sequencer.models
 
 import upickle.default.{macroRW, ReadWriter => RW}
 import enumeratum.{Enum, EnumEntry}
+import ujson.Js
 
 import scala.collection.immutable
 
@@ -29,7 +30,7 @@ case class SequenceCommandWeb(
     source: String,
     commandName: String,
     maybeObsId: Option[String],
-    paramSet: String
+    paramSet: Js.Arr
 )
 
 object SequenceCommandWeb {

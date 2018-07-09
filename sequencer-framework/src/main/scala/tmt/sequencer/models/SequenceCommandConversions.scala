@@ -15,7 +15,7 @@ object SequenceCommandConversions {
       command.source.prefix,
       command.commandName.name,
       command.maybeObsId.map(_.obsId),
-      (Json.toJson(command) \ "paramSet").toString
+      ujson.read((Json.toJson(command) \ "paramSet").toString).arr
     )
   }
 
@@ -26,14 +26,14 @@ object SequenceCommandConversions {
           Prefix(command.source),
           CommandName(command.commandName),
           command.maybeObsId.map(v => ObsId(v)),
-          paramSetFormat.reads(Json.parse(command.paramSet)).getOrElse(Set.empty)
+          paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
         )
       case "Observe" =>
         Observe(
           Prefix(command.source),
           CommandName(command.commandName),
           command.maybeObsId.map(v => ObsId(v)),
-          paramSetFormat.reads(Json.parse(command.paramSet)).getOrElse(Set.empty)
+          paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
         )
       case "Wait" => ???
       case _      => ???
