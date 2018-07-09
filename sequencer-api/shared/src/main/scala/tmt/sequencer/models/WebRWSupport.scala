@@ -1,15 +1,12 @@
 package tmt.sequencer.models
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsArray, JsObject}
 import tmt.sequencer.utils.EnumUpickleSupport
-import ujson.Js
-import upickle.default.{macroRW, ReadWriter => RW, _}
+import upickle.default.{macroRW, ReadWriter => RW}
 
 trait WebRWSupport {
-  implicit val jsObjectRW: RW[JsObject] = readwriter[Js.Obj].bimap(
-    x => read[Js.Obj](x.toString()),
-    x => Json.parse(x.toString()).as[JsObject]
-  )
+  implicit lazy val jsObjectRW: RW[JsObject]                         = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val jsArrayRW: RW[JsArray]                           = UpickleFormatAdapter.playJsonToUpickle
   implicit lazy val aggregateResponseWebRW: RW[AggregateResponseWeb] = macroRW[AggregateResponseWeb]
   implicit lazy val commandListWebRW: RW[CommandListWeb]             = macroRW[CommandListWeb]
   implicit lazy val commandResponseWebRW: RW[CommandResponseWeb]     = macroRW[CommandResponseWeb]

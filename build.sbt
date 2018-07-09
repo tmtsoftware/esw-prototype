@@ -76,6 +76,7 @@ lazy val `sequencer-framework` = project
       Libs.`scala-reflect`,
       Libs.`akka-http-cors`,
       Libs.`scala-compiler`,
+      Libs.`ujson-play`,
       Akka.`akka-stream`,
       Akka.`akka-typed`,
       Akka.`akka-typed-testkit` % Test,

@@ -19,12 +19,12 @@ object JsDemoApp extends WebRWSupport {
           "test1",
           "setup-iris",
           Some("test-obsId1"),
-          Seq(Json.obj())
+          Json.arr()
         )
       )
     )
 
-    println(commandListWeb)
+    println(upickle.default.write(commandListWeb))
 
     val res = client.feed(commandListWeb)
     res.onComplete(println)

@@ -5,6 +5,7 @@ import csw.messages.commands.CommandResponse._
 import csw.messages.commands._
 import csw.messages.params.models.{Id, ObsId, Prefix}
 import play.api.libs.json._
+import ujson.play.PlayJson
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
 trait UpickleRWSupport extends WebRWSupport {
@@ -19,8 +20,8 @@ trait UpickleRWSupport extends WebRWSupport {
   implicit lazy val sequenceRW: RW[Sequence]                   = macroRW
 
   implicit lazy val commandResponseRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
-    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, upickle.default.write(x)),
-    x => commandResponseRWHelper(x.payload)
+    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, Json.parse(write(x)(commandResponseRWHelper)).as[JsObject]),
+    x => read(x.payload.toString())(commandResponseRWHelper)
   )
 
   implicit lazy val sequenceCommandRW: RW[SequenceCommand] = readwriter[SequenceCommandWeb].bimap(
@@ -31,7 +32,7 @@ trait UpickleRWSupport extends WebRWSupport {
         command.source.prefix,
         command.commandName.name,
         command.maybeObsId.map(_.obsId),
-        (Json.toJson(command) \ "paramSet").as[Seq[JsObject]]
+        (Json.toJson(command) \ "paramSet").as[JsArray]
     ),
     command =>
       command.kind match {
@@ -40,14 +41,14 @@ trait UpickleRWSupport extends WebRWSupport {
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(Json.arr(command.paramSet)).getOrElse(Set.empty)
+            paramSetFormat.reads(command.paramSet).getOrElse(Set.empty)
           )
         case "Observe" =>
           Observe(
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(Json.arr(command.paramSet)).getOrElse(Set.empty)
+            paramSetFormat.reads(command.paramSet).getOrElse(Set.empty)
           )
         case "Wait" => ???
         case _      => ???
