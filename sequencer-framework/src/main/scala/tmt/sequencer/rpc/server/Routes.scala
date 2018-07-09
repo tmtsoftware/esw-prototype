@@ -4,15 +4,14 @@ import akka.Done
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
-import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb}
-import tmt.sequencer.models.{CommandListWeb, SequenceCommandWeb, UpickleRWSupport}
+import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
+import tmt.sequencer.models._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class Routes(sequenceFeeder: SequenceFeederWeb, sequenceEditor: SequenceEditorWeb)(implicit ec: ExecutionContext)
+class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditorWeb)(implicit ec: ExecutionContext)
     extends UpickleSupport
     with UpickleRWSupport {
 
@@ -21,8 +20,8 @@ class Routes(sequenceFeeder: SequenceFeederWeb, sequenceEditor: SequenceEditorWe
       pathPrefix(SequenceFeederWeb.ApiName) {
         path(SequenceFeederWeb.Feed) {
           withRequestTimeout(40.seconds) {
-            entity(as[CommandListWeb]) { commandListWeb =>
-              complete(sequenceFeeder.feed(commandListWeb))
+            entity(as[CommandList]) { commandList =>
+              complete(sequenceFeeder.feed(commandList))
             }
           }
         }

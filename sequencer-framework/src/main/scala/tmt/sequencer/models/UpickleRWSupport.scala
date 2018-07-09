@@ -15,6 +15,16 @@ trait UpickleRWSupport {
   implicit val idRW: RW[Id]         = readWriterFromFormat
   implicit val resultRW: RW[Result] = readWriterFromFormat
 
+  implicit val commandListRW: RW[CommandList] = implicitly[RW[CommandListWeb]].bimap(
+    x => CommandListWeb(x.commands.map(SequenceCommandConversions.fromSequenceCommand)),
+    x => CommandList(x.commands.map(SequenceCommandConversions.asSequenceCommand))
+  )
+
+  implicit val aggregateResponseRW: RW[AggregateResponse] = implicitly[RW[AggregateResponseWeb]].bimap(
+    x => AggregateResponseWeb(x.childResponses.map(CommandResponseConversions.fromCommandResponse)),
+    x => AggregateResponse(x.childResponses.map(CommandResponseConversions.asCommandResponse))
+  )
+
   implicit lazy val commandIssueRW: RW[CommandIssue] = RW.merge(
     macroRW[MissingKeyIssue],
     macroRW[WrongPrefixIssue],

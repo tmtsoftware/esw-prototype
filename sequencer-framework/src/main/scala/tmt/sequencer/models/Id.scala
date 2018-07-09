@@ -50,14 +50,6 @@ case class CommandList(commands: Seq[SequenceCommand]) {
 object CommandList {
   def from(commands: SequenceCommand*): CommandList = CommandList(commands.toList)
   def empty: CommandList                            = CommandList(Nil)
-
-  def asCommandListWeb(commandList: CommandList): CommandListWeb = {
-    CommandListWeb(commandList.commands.map(SequenceCommandConversions.fromSequenceCommand))
-  }
-
-  def fromCommandListWeb(commandListWeb: CommandListWeb): CommandList = {
-    CommandList(commandListWeb.commands.map(SequenceCommandConversions.asSequenceCommand))
-  }
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
@@ -71,15 +63,4 @@ case class AggregateResponse(childResponses: Set[CommandResponse]) {
   def markSuccessful(maybeCommand: Option[SequenceCommand]): AggregateResponse = markSuccessful(maybeCommand.toList: _*)
 }
 
-object AggregateResponse extends AggregateResponse(Set.empty) with UpickleRWSupport {
-  implicit val aggregateResponseRW: RW[AggregateResponse] = macroRW[AggregateResponse]
-
-  def toAggregateResponseWeb(aggregateResponse: AggregateResponse): AggregateResponseWeb = {
-    AggregateResponseWeb(aggregateResponse.childResponses.map(CommandResponseConversions.fromCommandResponse))
-  }
-
-  def fromAggregateResponseWeb(aggregateResponseWeb: AggregateResponseWeb): AggregateResponse = {
-    AggregateResponse(aggregateResponseWeb.childResponses.map(CommandResponseConversions.asCommandResponse))
-  }
-
-}
+object AggregateResponse extends AggregateResponse(Set.empty)
