@@ -7,7 +7,7 @@ import csw.messages.params.models.{Id, ObsId, Prefix}
 import play.api.libs.json._
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
-trait UpickleRWSupport {
+trait UpickleRWSupport extends WebRWSupport {
   import csw.messages.params.formats.JsonSupport._
 
   implicit lazy val idRW: RW[Id]         = UpickleFormatAdapter.playJsonToUpickle
@@ -18,9 +18,9 @@ trait UpickleRWSupport {
   implicit lazy val stepRW: RW[Step]                           = macroRW
   implicit lazy val sequenceRW: RW[Sequence]                   = macroRW
 
-  implicit lazy val commandResponseWebRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
+  implicit lazy val commandResponseRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
     x => CommandResponseWeb(x.runId.id, x.resultType.entryName, upickle.default.write(x)),
-    x => commandResponseRW(x.payload)
+    x => commandResponseRWHelper(x.payload)
   )
 
   implicit lazy val sequenceCommandRW: RW[SequenceCommand] = readwriter[SequenceCommandWeb].bimap(
@@ -31,7 +31,7 @@ trait UpickleRWSupport {
         command.source.prefix,
         command.commandName.name,
         command.maybeObsId.map(_.obsId),
-        ujson.read((Json.toJson(command) \ "paramSet").toString).arr
+        (Json.toJson(command) \ "paramSet").as[Seq[JsObject]]
     ),
     command =>
       command.kind match {
@@ -40,14 +40,14 @@ trait UpickleRWSupport {
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
+            paramSetFormat.reads(Json.arr(command.paramSet)).getOrElse(Set.empty)
           )
         case "Observe" =>
           Observe(
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
+            paramSetFormat.reads(Json.arr(command.paramSet)).getOrElse(Set.empty)
           )
         case "Wait" => ???
         case _      => ???
@@ -74,7 +74,7 @@ trait UpickleRWSupport {
     macroRW[OtherIssue],
   )
 
-  lazy val commandResponseRW: RW[CommandResponse] = RW.merge(
+  lazy val commandResponseRWHelper: RW[CommandResponse] = RW.merge(
     macroRW[Accepted],
     macroRW[Invalid],
     macroRW[CompletedWithResult],
@@ -85,22 +85,4 @@ trait UpickleRWSupport {
     macroRW[CommandNotAvailable],
     macroRW[NotAllowed]
   )
-}
-
-object UpickleFormatAdapter {
-  def playJsonToUpickle[T](implicit format: Format[T]): RW[T] = {
-    upickle.default
-      .readwriter[String]
-      .bimap[T](
-        result => format.writes(result).toString(),
-        str => format.reads(Json.parse(str)).get
-      )
-  }
-
-  def upickleToPlayJson[T](implicit rw: RW[T]): Format[T] = {
-    new Format[T] {
-      override def reads(json: JsValue): JsResult[T] = JsSuccess(read[T](json.toString()))
-      override def writes(o: T): JsValue             = Json.parse(write(o))
-    }
-  }
 }
