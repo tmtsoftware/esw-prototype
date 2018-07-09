@@ -1,18 +1,17 @@
 package tmt.sequencer.models
 
 import play.api.libs.json._
+import ujson.Js
 import upickle.default.{ReadWriter => RW, _}
 
 object UpickleFormatAdapter {
-  def playJsonToUpickle[T](implicit format: Format[T]): RW[T] =
-    readwriter[String]
-      .bimap[T](
-        result => format.writes(result).toString(),
-        str => format.reads(Json.parse(str)).get
-      )
+  val jsValueRW: RW[JsValue] = readwriter[Js.Value].bimap(
+    x => read[Js.Value](x.toString()),
+    x => Json.parse(x.toString())
+  )
 
-  def upickleToPlayJson[T](implicit rw: RW[T]): Format[T] = new Format[T] {
-    override def reads(json: JsValue): JsResult[T] = JsSuccess(read[T](json.toString()))
-    override def writes(o: T): JsValue             = Json.parse(write(o))
-  }
+  def playJsonToUpickle[T](implicit format: Format[T]): RW[T] = jsValueRW.bimap[T](
+    result => Json.toJson(result),
+    jsValue => jsValue.as[T]
+  )
 }
