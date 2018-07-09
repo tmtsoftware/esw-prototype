@@ -61,15 +61,4 @@ case class Sequence(steps: List[Step]) { outer =>
 object Sequence {
   def empty                                 = Sequence(List.empty)
   def from(commands: List[SequenceCommand]) = Sequence(Step.from(commands))
-
-  import upickle.default.{macroRW, ReadWriter => RW}
-  implicit val SequenceRW: RW[Sequence] = macroRW[Sequence]
-
-  def toSequenceWeb(sequence: Sequence): SequenceWeb = {
-    SequenceWeb(sequence.steps.map(Step.asStepWeb))
-  }
-
-  def fromSequenceWeb(sequenceWeb: SequenceWeb): Sequence = {
-    Sequence(sequenceWeb.steps.map(Step.fromStepWeb))
-  }
 }

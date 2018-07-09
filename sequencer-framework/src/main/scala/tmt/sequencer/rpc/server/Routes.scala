@@ -4,14 +4,16 @@ import akka.Done
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
+import csw.messages.commands.SequenceCommand
+import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
-import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
+import tmt.sequencer.api.{SequenceEditor, SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
 import tmt.sequencer.models._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditorWeb)(implicit ec: ExecutionContext)
+class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(implicit ec: ExecutionContext)
     extends UpickleSupport
     with UpickleRWSupport {
 
@@ -28,7 +30,7 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditorWeb)(
       } ~
       pathPrefix(SequenceEditorWeb.ApiName) {
         path(SequenceEditorWeb.AddAll) {
-          entity(as[List[SequenceCommandWeb]]) { commands =>
+          entity(as[List[SequenceCommand]]) { commands =>
             complete(sequenceEditor.addAll(commands).map(_ => Done))
           }
         } ~
@@ -42,27 +44,27 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditorWeb)(
           complete(sequenceEditor.reset().map(_ => Done))
         } ~
         path(SequenceEditorWeb.Delete) {
-          entity(as[List[String]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.delete(ids).map(_ => Done))
           }
         } ~
         path(SequenceEditorWeb.AddBreakpoints) {
-          entity(as[List[String]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.addBreakpoints(ids).map(_ => Done))
           }
         } ~
         path(SequenceEditorWeb.RemoveBreakpoints) {
-          entity(as[List[String]]) { ids =>
+          entity(as[List[Id]]) { ids =>
             complete(sequenceEditor.removeBreakpoints(ids).map(_ => Done))
           }
         } ~
         path(SequenceEditorWeb.Prepend) {
-          entity(as[List[SequenceCommandWeb]]) { commands =>
+          entity(as[List[SequenceCommand]]) { commands =>
             complete(sequenceEditor.prepend(commands).map(_ => Done))
           }
         } ~
         path(SequenceEditorWeb.Replace) {
-          entity(as[(String, List[SequenceCommandWeb])]) {
+          entity(as[(Id, List[SequenceCommand])]) {
             case (id, commands) =>
               complete(sequenceEditor.replace(id, commands).map(_ => Done))
           }

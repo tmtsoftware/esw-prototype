@@ -2,27 +2,56 @@ package tmt.sequencer.models
 
 import csw.messages.commands.CommandIssue._
 import csw.messages.commands.CommandResponse._
-import csw.messages.commands.CommandResultType.{Intermediate, Negative, Positive}
-import csw.messages.commands.{CommandIssue, CommandResponse, CommandResultType, Result}
-import csw.messages.params.models.Id
+import csw.messages.commands._
+import csw.messages.params.models.{Id, ObsId, Prefix}
 import play.api.libs.json._
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
 trait UpickleRWSupport {
+  import csw.messages.params.formats.JsonSupport._
 
-  import UpickleFormatAdapter._
+  implicit lazy val idRW: RW[Id]         = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val resultRW: RW[Result] = UpickleFormatAdapter.playJsonToUpickle
 
-  implicit val idRW: RW[Id]         = readWriterFromFormat
-  implicit val resultRW: RW[Result] = readWriterFromFormat
+  implicit lazy val aggregateResponseRW: RW[AggregateResponse] = macroRW
+  implicit lazy val commandListRW: RW[CommandList]             = macroRW
+  implicit lazy val stepRW: RW[Step]                           = macroRW
+  implicit lazy val sequenceRW: RW[Sequence]                   = macroRW
 
-  implicit val commandListRW: RW[CommandList] = implicitly[RW[CommandListWeb]].bimap(
-    x => CommandListWeb(x.commands.map(SequenceCommandConversions.fromSequenceCommand)),
-    x => CommandList(x.commands.map(SequenceCommandConversions.asSequenceCommand))
+  implicit lazy val commandResponseWebRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
+    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, upickle.default.write(x)),
+    x => commandResponseRW(x.payload)
   )
 
-  implicit val aggregateResponseRW: RW[AggregateResponse] = implicitly[RW[AggregateResponseWeb]].bimap(
-    x => AggregateResponseWeb(x.childResponses.map(CommandResponseConversions.fromCommandResponse)),
-    x => AggregateResponse(x.childResponses.map(CommandResponseConversions.asCommandResponse))
+  implicit lazy val sequenceCommandRW: RW[SequenceCommand] = readwriter[SequenceCommandWeb].bimap(
+    command =>
+      SequenceCommandWeb(
+        command.getClass.getSimpleName,
+        command.runId.toString,
+        command.source.prefix,
+        command.commandName.name,
+        command.maybeObsId.map(_.obsId),
+        ujson.read((Json.toJson(command) \ "paramSet").toString).arr
+    ),
+    command =>
+      command.kind match {
+        case "Setup" =>
+          Setup(
+            Prefix(command.source),
+            CommandName(command.commandName),
+            command.maybeObsId.map(v => ObsId(v)),
+            paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
+          )
+        case "Observe" =>
+          Observe(
+            Prefix(command.source),
+            CommandName(command.commandName),
+            command.maybeObsId.map(v => ObsId(v)),
+            paramSetFormat.reads(Json.parse(command.paramSet.toString())).getOrElse(Set.empty)
+          )
+        case "Wait" => ???
+        case _      => ???
+    }
   )
 
   implicit lazy val commandIssueRW: RW[CommandIssue] = RW.merge(
@@ -45,7 +74,7 @@ trait UpickleRWSupport {
     macroRW[OtherIssue],
   )
 
-  implicit lazy val commandResponseRW: RW[CommandResponse] = RW.merge(
+  lazy val commandResponseRW: RW[CommandResponse] = RW.merge(
     macroRW[Accepted],
     macroRW[Invalid],
     macroRW[CompletedWithResult],
@@ -59,7 +88,7 @@ trait UpickleRWSupport {
 }
 
 object UpickleFormatAdapter {
-  def readWriterFromFormat[T](implicit format: Format[T]): RW[T] = {
+  def playJsonToUpickle[T](implicit format: Format[T]): RW[T] = {
     upickle.default
       .readwriter[String]
       .bimap[T](
@@ -68,7 +97,7 @@ object UpickleFormatAdapter {
       )
   }
 
-  def readWriterToFormat[T](implicit rw: RW[T]): Format[T] = {
+  def upickleToPlayJson[T](implicit rw: RW[T]): Format[T] = {
     new Format[T] {
       override def reads(json: JsValue): JsResult[T] = JsSuccess(read[T](json.toString()))
       override def writes(o: T): JsValue             = Json.parse(write(o))

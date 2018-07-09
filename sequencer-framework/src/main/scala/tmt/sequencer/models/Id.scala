@@ -3,7 +3,6 @@ package tmt.sequencer.models
 import csw.messages.commands.{CommandResponse, SequenceCommand}
 import csw.messages.params.models.Id
 import tmt.sequencer.models.StepStatus.{Finished, InFlight, Pending}
-import upickle.default.{macroRW, ReadWriter => RW}
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {
   def id: Id              = command.runId
@@ -23,23 +22,8 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
 }
 
 object Step {
-  import UpickleFormatAdapter._
-  import tmt.sequencer.utils.EnumUpickleSupport._
-  import csw.messages.params.formats.JsonSupport._
-
   def from(command: SequenceCommand)                    = Step(command, StepStatus.Pending, hasBreakpoint = false)
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
-
-  implicit val sequenceCommandRW: RW[SequenceCommand] = readWriterFromFormat
-  implicit val stepRW: RW[Step]                       = macroRW[Step]
-
-  def asStepWeb(step: Step): StepWeb = {
-    StepWeb(SequenceCommandConversions.fromSequenceCommand(step.command), step.status, step.hasBreakpoint)
-  }
-
-  def fromStepWeb(stepWeb: StepWeb): Step = {
-    Step(SequenceCommandConversions.asSequenceCommand(stepWeb.command), stepWeb.status, stepWeb.hasBreakpoint)
-  }
 }
 
 case class CommandList(commands: Seq[SequenceCommand]) {

@@ -2,6 +2,7 @@ package tmt.sequencer.models
 
 import upickle.default.{macroRW, ReadWriter => RW}
 import enumeratum.{Enum, EnumEntry}
+import tmt.sequencer.utils.EnumUpickleSupport
 import ujson.Js
 
 import scala.collection.immutable
@@ -49,11 +50,12 @@ object StepStatus extends Enum[StepStatus] {
   case object Pending  extends StepStatus
   case object InFlight extends StepStatus
   case object Finished extends StepStatus
+
+  implicit val rw: RW[StepStatus] = EnumUpickleSupport.enumFormat
 }
 
 case class StepWeb(command: SequenceCommandWeb, status: StepStatus, hasBreakpoint: Boolean)
 
 object StepWeb {
-  import tmt.sequencer.utils.EnumUpickleSupport._
   implicit val readWriter: RW[StepWeb] = macroRW[StepWeb]
 }
