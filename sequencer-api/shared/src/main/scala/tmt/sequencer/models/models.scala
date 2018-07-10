@@ -2,12 +2,13 @@ package tmt.sequencer.models
 
 import enumeratum.{Enum, EnumEntry}
 import play.api.libs.json.{JsArray, JsObject, JsValue}
+import ujson.Js
 
 import scala.collection.immutable
 
 case class AggregateResponseWeb(childResponses: Set[CommandResponseWeb])
 case class CommandListWeb(commands: Seq[SequenceCommandWeb])
-case class CommandResponseWeb(runId: String, resultType: String, payload: JsObject)
+case class CommandResponseWeb(runId: String, resultType: String, payload: Js.Obj)
 
 case class SequenceCommandWeb(
     kind: String,
@@ -15,7 +16,7 @@ case class SequenceCommandWeb(
     source: String,
     commandName: String,
     maybeObsId: Option[String],
-    paramSet: JsArray
+    paramSet: Js.Arr
 )
 
 case class SequenceWeb(steps: List[StepWeb])

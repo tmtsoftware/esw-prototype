@@ -3,6 +3,7 @@ package tmt.sequencer.client.apps
 import play.api.libs.json.Json
 import tmt.sequencer.SequenceFeederClient
 import tmt.sequencer.models.{CommandListWeb, SequenceCommandWeb, WebRWSupport}
+import ujson.Js
 
 object JsDemoApp extends WebRWSupport {
   def main(args: Array[String]): Unit = {
@@ -19,7 +20,7 @@ object JsDemoApp extends WebRWSupport {
           "test1",
           "setup-iris",
           Some("test-obsId1"),
-          Json.arr()
+          Js.Arr()
         )
       )
     )

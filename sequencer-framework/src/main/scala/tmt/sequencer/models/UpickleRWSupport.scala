@@ -3,16 +3,16 @@ package tmt.sequencer.models
 import csw.messages.commands.CommandIssue._
 import csw.messages.commands.CommandResponse._
 import csw.messages.commands._
+import csw.messages.params.generics.Parameter
 import csw.messages.params.models.{Id, ObsId, Prefix}
-import play.api.libs.json._
-import ujson.play.PlayJson
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
 trait UpickleRWSupport extends WebRWSupport {
   import csw.messages.params.formats.JsonSupport._
 
-  implicit lazy val idRW: RW[Id]         = UpickleFormatAdapter.playJsonToUpickle
-  implicit lazy val resultRW: RW[Result] = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val idRW: RW[Id]                      = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val resultRW: RW[Result]              = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val paramSetRW: RW[Set[Parameter[_]]] = UpickleFormatAdapter.playJsonToUpickle(paramSetFormat)
 
   implicit lazy val aggregateResponseRW: RW[AggregateResponse] = macroRW
   implicit lazy val commandListRW: RW[CommandList]             = macroRW
@@ -20,7 +20,7 @@ trait UpickleRWSupport extends WebRWSupport {
   implicit lazy val sequenceRW: RW[Sequence]                   = macroRW
 
   implicit lazy val commandResponseRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
-    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, commandResponseRWHelper.write(PlayJson, x).as[JsObject]),
+    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, writeJs(x)(commandResponseRWHelper).obj),
     x => commandResponseRWHelper(x.payload.toString())
   )
 
@@ -32,7 +32,7 @@ trait UpickleRWSupport extends WebRWSupport {
         command.source.prefix,
         command.commandName.name,
         command.maybeObsId.map(_.obsId),
-        (Json.toJson(command) \ "paramSet").as[JsArray]
+        writeJs(command.paramSet)(paramSetRW).arr
     ),
     command =>
       command.kind match {
@@ -41,14 +41,14 @@ trait UpickleRWSupport extends WebRWSupport {
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(command.paramSet).getOrElse(Set.empty)
+            readJs(command.paramSet)(paramSetRW)
           )
         case "Observe" =>
           Observe(
             Prefix(command.source),
             CommandName(command.commandName),
             command.maybeObsId.map(v => ObsId(v)),
-            paramSetFormat.reads(command.paramSet).getOrElse(Set.empty)
+            readJs(command.paramSet)(paramSetRW)
           )
         case "Wait" => ???
         case _      => ???
