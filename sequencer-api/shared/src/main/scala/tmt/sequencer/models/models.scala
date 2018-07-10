@@ -1,7 +1,6 @@
 package tmt.sequencer.models
 
 import enumeratum.{Enum, EnumEntry}
-import play.api.libs.json.{JsArray, JsObject, JsValue}
 import ujson.Js
 
 import scala.collection.immutable

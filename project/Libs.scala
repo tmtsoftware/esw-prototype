@@ -49,3 +49,7 @@ object Akka {
 object SharedLibs {
   val `scalaTest` = dep("org.scalatest" %%% "scalatest" % "3.0.5")
 }
+
+object React4s {
+  val `react4s` = dep("com.github.ahnfelt" %%% "react4s" % "0.9.14-SNAPSHOT")
+}

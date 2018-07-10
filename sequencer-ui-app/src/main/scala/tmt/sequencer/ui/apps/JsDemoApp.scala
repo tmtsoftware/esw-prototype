@@ -1,12 +1,11 @@
-package tmt.sequencer.client.apps
+package tmt.sequencer.ui.apps
 
-import play.api.libs.json.Json
 import tmt.sequencer.SequenceFeederClient
 import tmt.sequencer.models.{CommandListWeb, SequenceCommandWeb, WebRWSupport}
 import ujson.Js
 
 object JsDemoApp extends WebRWSupport {
-  def main(args: Array[String]): Unit = {
+  def main2(args: Array[String]): Unit = {
 
     import scala.concurrent.ExecutionContext.Implicits.global
 

@@ -7,7 +7,7 @@ import akka.util.Timeout
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SequencerMsg.ProcessSequence
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.{AggregateResponse, CommandList, SequenceCommandWeb}
+import tmt.sequencer.models.{AggregateResponse, CommandList}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong

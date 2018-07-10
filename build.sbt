@@ -1,4 +1,6 @@
+import sbt.Keys.{libraryDependencies, resolvers}
 import sbtcrossproject.{CrossType, crossProject}
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 inThisBuild(List(
   organization := "org.tmt",
@@ -27,6 +29,7 @@ lazy val `esw-prototype` = project
     `sequencer-api-jvm`,
     `sequencer-macros`,
     `sequencer-framework`,
+    `sequencer-ui-app`
   )
 
 lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
@@ -48,14 +51,20 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
 lazy val `sequencer-api-js` = `sequencer-api`.js
 lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
-lazy val `sequencer-js-app` = project
-  .enablePlugins(ScalaJSPlugin)
+lazy val `sequencer-ui-app` = project
+  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .dependsOn(`sequencer-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    npmDependencies in Compile ++= Seq(
+      "react" -> "16.4.1",
+      "react-dom" -> "16.4.1"
+    ),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
       SharedLibs.scalaTest.value % Test,
+      React4s.`react4s`.value
     )
   )
 
