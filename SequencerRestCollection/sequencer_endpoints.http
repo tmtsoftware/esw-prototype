@@ -1,0 +1,403 @@
+### Send POST request with json body
+POST http://localhost:8000/feeder/feed
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "kind": "Setup",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId1"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    },
+    {
+      "kind": "Setup",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId1"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    },
+    {
+      "kind": "Setup",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId1"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    }
+  ]
+}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/addAll
+Content-Type: application/json
+
+ [
+    {
+      "kind": "Setup",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-obsId1"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    }
+]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/pause
+Content-Type: application/json
+
+{}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/resume
+Content-Type: application/json
+
+{}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/reset
+Content-Type: application/json
+
+{}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/prepend
+Content-Type: application/json
+
+
+[
+  {
+    "kind": "Setup",
+    "source": "test1",
+    "commandName": "setup-iris",
+    "maybeObsId": [
+      "test-obsId1"
+    ],
+    "paramSet": [
+      {
+        "keyName": "myStruct",
+        "keyType": "StructKey",
+        "values": [
+          {
+            "paramSet": [
+              {
+                "keyName": "ra",
+                "keyType": "StringKey",
+                "values": [
+                  "12:13:14.1"
+                ],
+                "units": "NoUnits"
+              },
+              {
+                "keyName": "dec",
+                "keyType": "StringKey",
+                "values": [
+                  "32:33:34.4"
+                ],
+                "units": "NoUnits"
+              },
+              {
+                "keyName": "epoch",
+                "keyType": "DoubleKey",
+                "values": [
+                  1950.0
+                ],
+                "units": "NoUnits"
+              }
+            ]
+          }
+        ],
+        "units": "NoUnits"
+      }
+    ]
+  }
+ ]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/prepend
+Content-Type: application/json
+
+[
+  {
+    "kind": "Setup",
+    "source": "test1",
+    "commandName": "setup-iris",
+    "maybeObsId": [
+      "test-obsId1"
+    ],
+    "paramSet": [
+      {
+        "keyName": "myStruct",
+        "keyType": "StructKey",
+        "values": [
+          {
+            "paramSet": [
+              {
+                "keyName": "ra",
+                "keyType": "StringKey",
+                "values": [
+                  "12:13:14.1"
+                ],
+                "units": "NoUnits"
+              },
+              {
+                "keyName": "dec",
+                "keyType": "StringKey",
+                "values": [
+                  "32:33:34.4"
+                ],
+                "units": "NoUnits"
+              },
+              {
+                "keyName": "epoch",
+                "keyType": "DoubleKey",
+                "values": [
+                  1950.0
+                ],
+                "units": "NoUnits"
+              }
+            ]
+          }
+        ],
+        "units": "NoUnits"
+      }
+    ]
+  }
+]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/shutdown
+Content-Type: application/json
+
+{}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/sequence
+Content-Type: application/json
+
+{}
+
+### Send POST request with json body
+POST http://localhost:8000/editor/addBreakpoints
+Content-Type: application/json
+
+["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/removeBreakpoints
+Content-Type: application/json
+
+["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/delete
+Content-Type: application/json
+
+["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+
+### Send POST request with json body
+POST http://localhost:8000/editor/replace
+Content-Type: application/json
+
+[ "ac37a334-fbda-4234-9166-f14020c52ac8",
+    [{
+      "kind": "Setup",
+      "source": "test1",
+      "commandName": "setup-iris",
+      "maybeObsId": [
+        "test-replace"
+      ],
+      "paramSet": [
+        {
+          "keyName": "myStruct",
+          "keyType": "StructKey",
+          "values": [
+            {
+              "paramSet": [
+                {
+                  "keyName": "ra",
+                  "keyType": "StringKey",
+                  "values": [
+                    "12:13:14.1"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "dec",
+                  "keyType": "StringKey",
+                  "values": [
+                    "32:33:34.4"
+                  ],
+                  "units": "NoUnits"
+                },
+                {
+                  "keyName": "epoch",
+                  "keyType": "DoubleKey",
+                  "values": [
+                    1950.0
+                  ],
+                  "units": "NoUnits"
+                }
+              ]
+            }
+          ],
+          "units": "NoUnits"
+        }
+      ]
+    }]
+]
+
+
+
