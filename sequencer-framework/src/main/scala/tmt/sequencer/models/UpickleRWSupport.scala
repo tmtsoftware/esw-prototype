@@ -28,11 +28,11 @@ trait UpickleRWSupport extends WebRWSupport {
     command =>
       SequenceCommandWeb(
         command.getClass.getSimpleName,
-        command.runId.toString,
         command.source.prefix,
         command.commandName.name,
         command.maybeObsId.map(_.obsId),
-        writeJs(command.paramSet)(paramSetRW).arr
+        writeJs(command.paramSet)(paramSetRW).arr,
+        Option(command.runId.id)
     ),
     command =>
       command.kind match {

@@ -12,11 +12,11 @@ case class CommandResponseWeb(runId: String, resultType: String, payload: Js.Obj
 
 case class SequenceCommandWeb(
     kind: String,
-    runId: String,
     source: String,
     commandName: String,
     maybeObsId: Option[String],
-    paramSet: Js.Arr
+    paramSet: Js.Arr,
+    runId: Option[String] = None,
 )
 
 case class SequenceWeb(steps: List[StepWeb])

@@ -34,6 +34,9 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(imp
             complete(sequenceEditor.addAll(commands).map(_ => Done))
           }
         } ~
+        path(SequenceEditorWeb.Sequence) {
+          complete(sequenceEditor.sequence)
+        } ~
         path(SequenceEditorWeb.Pause) {
           complete(sequenceEditor.pause().map(_ => Done))
         } ~

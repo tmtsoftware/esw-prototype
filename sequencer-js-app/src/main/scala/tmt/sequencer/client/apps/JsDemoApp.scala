@@ -16,7 +16,6 @@ object JsDemoApp extends WebRWSupport {
       Seq(
         SequenceCommandWeb(
           "Setup",
-          "53ba55f9-26f5-4998-9bfe-b320b3f92d64",
           "test1",
           "setup-iris",
           Some("test-obsId1"),
