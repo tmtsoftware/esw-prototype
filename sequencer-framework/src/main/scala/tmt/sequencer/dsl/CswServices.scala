@@ -1,9 +1,9 @@
 package tmt.sequencer.dsl
 
 import akka.actor.typed.scaladsl.adapter._
-import akka.actor.{typed, ActorSystem, Cancellable}
+import akka.actor.{ActorSystem, Cancellable, typed}
 import akka.util.Timeout
-import akka.{util, Done}
+import akka.{Done, util}
 import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
@@ -69,5 +69,9 @@ class CswServices(sequencer: Sequencer,
       eventService.defaultPublisher.await.publish(eventGeneratorBlock, every)
     }
     new PublisherStream(eventualCancellable)
+  }
+
+  def log(msg: String): Unit = spawn {
+    eventService.defaultPublisher.await.publish(LogEvent.createLogEvent(sequencerId, msg)).await
   }
 }
