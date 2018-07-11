@@ -72,6 +72,12 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor)(imp
               complete(sequenceEditor.replace(id, commands).map(_ => Done))
           }
         } ~
+        path(SequenceEditorWeb.InsertAfter) {
+          entity(as[(Id, List[SequenceCommand])]) {
+            case (id, commands) =>
+              complete(sequenceEditor.insertAfter(id, commands).map(_ => Done))
+          }
+        } ~
         path(SequenceEditorWeb.Shutdown) {
           complete(sequenceEditor.shutdown().map(_ => Done))
         }
