@@ -12,8 +12,8 @@
 The build is based on sbt and depends on libraries published to bintray from the 
 [csw-prod](https://github.com/tmtsoftware/csw-prod) project.
 
-- Clone csw-prod and checkout to commit e2545d06d
-    - ```git checkout e2545d06d```
+- Clone csw-prod and checkout to commit 6ba398391
+    - ```git checkout 6ba398391```
 
 ## Pre-requisites before running Components
 
@@ -35,7 +35,7 @@ run cluster-seed
     - ```$./csw-cluster-seed --clusterPort=3552```
     
 * csw-prod and run sbt universal:publishLocal 
-    - ```git checkout e2545d06d```
+    - ```git checkout 6ba398391```
     - ```sbt universal:publishLocal```
 
 ### Run redis-sentinal and redis-master 
