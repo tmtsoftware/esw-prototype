@@ -7,7 +7,9 @@ import scala.collection.immutable
 
 case class AggregateResponseWeb(childResponses: Set[CommandResponseWeb])
 case class CommandListWeb(commands: Seq[SequenceCommandWeb])
-case class CommandResponseWeb(runId: String, resultType: String, payload: Js.Obj)
+case class CommandResponseWeb(response: Js.Obj) {
+  def runId: String = response("runId").str
+}
 
 case class SequenceCommandWeb(
     kind: String,

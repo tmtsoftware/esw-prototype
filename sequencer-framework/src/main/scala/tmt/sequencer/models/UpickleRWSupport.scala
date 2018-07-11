@@ -20,8 +20,8 @@ trait UpickleRWSupport extends WebRWSupport {
   implicit lazy val sequenceRW: RW[Sequence]                   = macroRW
 
   implicit lazy val commandResponseRW: RW[CommandResponse] = readwriter[CommandResponseWeb].bimap(
-    x => CommandResponseWeb(x.runId.id, x.resultType.entryName, writeJs(x)(commandResponseRWHelper).obj),
-    x => commandResponseRWHelper(x.payload.toString())
+    x => CommandResponseWeb(writeJs(x)(commandResponseRWHelper).obj),
+    x => readJs(x.response)(commandResponseRWHelper)
   )
 
   implicit lazy val sequenceCommandRW: RW[SequenceCommand] = readwriter[SequenceCommandWeb].bimap(
