@@ -12,6 +12,7 @@ object Main {
     val clientE: SequenceEditorClient = new SequenceEditorClient("http://0.0.0.0:8000")
 
     val component = E.div(
+      Component(HeaderComponent),
       Component(SequenceFeederComponent, clientF),
       Component(SequenceEditorComponent, clientE)
     )

@@ -3,6 +3,7 @@ package tmt.sequencer.ui.r4s
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.SequenceEditorClient
 import tmt.sequencer.models.{SequenceCommandWeb, WebRWSupport}
+import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 import scala.util.{Failure, Success}
 
@@ -59,9 +60,11 @@ case class EditorIOComponent(api: P[String], path: P[String], client: P[Sequence
   ]""".stripMargin
   )
 
-  val output: State[String] = State("")
+  val output: State[String] = State("Command Response from sequencer will be displayed here")
 
   import scala.concurrent.ExecutionContext.Implicits.global
+
+  def loadingOutput(): Unit = output.set("Waiting for Command Response ....")
 
   def handleClick(get: Get): Unit = {
     val postData = get(input)
@@ -73,24 +76,38 @@ case class EditorIOComponent(api: P[String], path: P[String], client: P[Sequence
 
   override def render(get: Get): Node = {
     E.div(
-      E.strong(Text(get(api))),
-      E.textarea(
-        TextAreaCss,
-        A.onChangeText(input.set),
-        A.value(get(input))
+      E.div(
+        OperationTitleCss,
+        Text(get(api)),
+        E.div(
+          E.span(
+            E.textarea(
+              TextAreaCss,
+              S.height.px(280),
+              A.onChangeText(input.set),
+              A.value(get(input))
+            )
+          )
+        ),
+        E.div(
+          E.button(ButtonCss, Text(get(path)), A.onClick(e => {
+            e.preventDefault()
+            handleClick(get)
+          }))
+        )
       ),
-      E.button(
-        ButtonCss,
-        A.onClick(e => {
-          e.preventDefault()
-          handleClick(get)
-        }),
-        Text(get(path))
-      ),
-      E.textarea(
-        TextAreaCss,
-        A.value(get(output))
-      )
+      E.div(OperationTitleCss,
+            Text(s"${get(api)} Response"),
+            E.div(
+              TextAreaCss,
+              E.span(
+                E.pre(
+                  Text(
+                    get(output)
+                  )
+                )
+              )
+            ))
     )
   }
 
