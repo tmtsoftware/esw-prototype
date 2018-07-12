@@ -23,11 +23,8 @@ case class PrependComponent(client: P[SequenceEditorClient]) extends Component[N
 
   override def render(get: Get): ElementOrComponent = {
     E.div(
-      Component(IOOperationComponent,
-                "Sequence Editor - Prepend Commands",
-                "Prepend to Sequence",
-                get(PrependResponse),
-                get(client)).withHandler(x => handleAddAll(get, x))
+      Component(IOOperationComponent, "Sequence Editor - Prepend Commands", "Prepend to Sequence", get(PrependResponse))
+        .withHandler(x => handleAddAll(get, x))
     )
   }
 }

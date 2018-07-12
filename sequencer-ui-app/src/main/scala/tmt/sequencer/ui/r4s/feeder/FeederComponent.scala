@@ -26,7 +26,7 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
 
   override def render(get: Get): ElementOrComponent = {
     E.div(
-      Component(IOOperationComponent, "Sequence Feeder - Feed", "Feed Sequence", get(feedResponse), get(client))
+      Component(IOOperationComponent, "Sequence Feeder - Feed", "Feed Sequence", get(feedResponse))
         .withHandler(x => handleFeed(get, x))
     )
   }

@@ -23,7 +23,7 @@ case class AddAllComponent(client: P[SequenceEditorClient]) extends Component[No
 
   override def render(get: Get): ElementOrComponent = {
     E.div(
-      Component(IOOperationComponent, "Sequence Editor - Add All", "Add to Sequence", get(addAllResponse), get(client))
+      Component(IOOperationComponent, "Sequence Editor - Add All", "Add to Sequence", get(addAllResponse))
         .withHandler(x => handleAddAll(get, x))
     )
   }

@@ -6,10 +6,7 @@ import tmt.sequencer.models._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext)
-    extends SequencerClient
-    with SequenceEditorWeb
-    with WebRWSupport {
+class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
 
   override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}"

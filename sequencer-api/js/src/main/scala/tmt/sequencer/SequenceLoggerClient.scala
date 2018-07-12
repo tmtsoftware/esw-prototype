@@ -6,10 +6,7 @@ import tmt.sequencer.models.WebRWSupport
 
 import scala.concurrent.ExecutionContext
 
-class SequenceLoggerClient(baseUri: String)(implicit ec: ExecutionContext)
-    extends SequencerClient
-    with SequenceLoggerWeb
-    with WebRWSupport {
+class SequenceLoggerClient(baseUri: String)(implicit ec: ExecutionContext) extends SequenceLoggerWeb with WebRWSupport {
 
   override def onLogEvent(callback: String => Unit): Unit = {
     val eventSource = new EventSource(s"$baseUri/sequencer/logs")
