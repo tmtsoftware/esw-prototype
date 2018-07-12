@@ -45,7 +45,7 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef, script)
   lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
-  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor)
+  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor, eventService)
   lazy val rpcServer                      = new RpcServer(configs, routes)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)

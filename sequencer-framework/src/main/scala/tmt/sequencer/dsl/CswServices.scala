@@ -1,9 +1,9 @@
 package tmt.sequencer.dsl
 
 import akka.actor.typed.scaladsl.adapter._
-import akka.actor.{ActorSystem, Cancellable, typed}
+import akka.actor.{typed, ActorSystem, Cancellable}
 import akka.util.Timeout
-import akka.{Done, util}
+import akka.{util, Done}
 import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
