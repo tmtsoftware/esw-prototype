@@ -12,6 +12,25 @@ object OperationTitleCss extends CssClass(
   S.color(Palette.text),
 )
 
+object RightColumnCss extends CssClass(
+  S.position.relative(),
+  S.left.percent(50),
+  S.bottom.px(1703),
+  S.padding.px(20),
+  S.fontFamily("Verdana"),
+  S.fontSize.px(16),
+  S.color(Palette.text),
+  S.overflowX("auto"),
+)
+
+object RightButtonCss extends CssClass(
+  ButtonCss,
+  S.fontFamily("Verdana"),
+  S.position("absolute"),
+  S.top.px(15),
+  S.right.px(700),
+)
+
 object TextAreaCss extends CssClass(
   S.position.relative(),
   S.boxSizing.borderBox(),
