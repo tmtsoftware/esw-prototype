@@ -1,7 +1,9 @@
 package tmt.sequencer.ui.r4s
 
 import com.github.ahnfelt.react4s._
+import tmt.sequencer.ui.r4s.editor.EditorComponent
 import tmt.sequencer.ui.r4s.facade.NpmReactBridge
+import tmt.sequencer.ui.r4s.feeder.FeederComponent
 import tmt.sequencer.{SequenceEditorClient, SequenceFeederClient}
 
 object Main {
@@ -13,8 +15,8 @@ object Main {
 
     val component = E.div(
       Component(HeaderComponent),
-      Component(SequenceFeederComponent, clientF),
-      Component(SequenceEditorComponent, clientE)
+      Component(FeederComponent, clientF),
+      Component(EditorComponent, clientE)
     )
     NpmReactBridge.renderToDomById(component, "main")
   }
