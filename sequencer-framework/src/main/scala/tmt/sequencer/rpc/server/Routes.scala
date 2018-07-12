@@ -1,20 +1,20 @@
 package tmt.sequencer.rpc.server
 
-import akka.Done
 import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
+import akka.{Done, NotUsed}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.SequenceCommand
 import csw.messages.events.{Event, EventKey}
 import csw.messages.params.models.Id
-import csw.services.event.scaladsl.{EventService, EventSubscription}
+import csw.services.event.scaladsl.EventService
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api.{SequenceEditor, SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
 import tmt.sequencer.models._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
 class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eventService: EventService)(
@@ -24,8 +24,9 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eve
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
-  val stream: Future[Source[Event, EventSubscription]] =
-    eventService.defaultSubscriber.map(_.subscribe(Set(EventKey("iris.log"))))
+  val stream: Source[Event, NotUsed] = {
+    Source.fromFuture(eventService.defaultSubscriber).flatMapConcat(_.subscribe(Set(EventKey("iris.log"))))
+  }
 
   val route: Route = cors() {
     post {
@@ -95,9 +96,7 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eve
     } ~
     get(
       path("sequencer" / "logs") {
-        complete(stream.map(_.map { event =>
-          ServerSentEvent(event.toString)
-        }))
+        complete(stream.map(event => ServerSentEvent(event.toString())))
       }
     )
   }
