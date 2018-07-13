@@ -2,6 +2,7 @@ package tmt.sequencer.ui.r4s.logevent
 
 import com.github.ahnfelt.react4s.{E, _}
 import tmt.sequencer.SequenceLoggerClient
+import tmt.sequencer.ui.r4s.SequencerConstants
 import tmt.sequencer.ui.r4s.theme._
 
 case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[NoEmit] {
@@ -18,7 +19,7 @@ case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[
 
   override def render(get: Get): ElementOrComponent = {
     val showLogs   = get(showLogsS)
-    val buttonText = if (showLogs) "Hide Logs" else "Show Logs"
+    val buttonText = if (showLogs) SequencerConstants.HIDE_LOGS else SequencerConstants.SHOW_LOGS
     val logOutputText: ElementOrComponent =
       if (showLogs)
         E.textarea(
