@@ -15,10 +15,10 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
 
   def loadingOutput(): Unit = feedResponse.set("Waiting for Command Response ....")
 
-  def handleFeed(get: Get, msg: IOOperationComponent.Msg): Unit = msg match {
+  def handleFeed(client: SequenceFeederClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       loadingOutput()
-      get(client).feed(upickle.default.read[CommandListWeb](request)).onComplete {
+      client.feed(upickle.default.read[CommandListWeb](request)).onComplete {
         case Success(response) => feedResponse.set(upickle.default.write[AggregateResponseWeb](response, 2))
         case Failure(ex)       => feedResponse.set(ex.getMessage)
       }
@@ -27,7 +27,7 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
   override def render(get: Get): ElementOrComponent = {
     E.div(
       Component(IOOperationComponent, "Sequence Feeder - Feed", "Feed Sequence", get(feedResponse))
-        .withHandler(x => handleFeed(get, x))
+        .withHandler(x => handleFeed(get(client), x))
     )
   }
 }

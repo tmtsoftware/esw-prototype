@@ -12,7 +12,7 @@ case class ResetComponent(client: P[SequenceEditorClient]) extends Component[NoE
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def handleReset(get: Get): Unit = get(client).reset().onComplete {
+  def handleReset(client: SequenceEditorClient): Unit = client.reset().onComplete {
     case Success(_)  => ResetResponse.set("Done")
     case Failure(ex) => ResetResponse.set(ex.getMessage)
   }
@@ -22,7 +22,7 @@ case class ResetComponent(client: P[SequenceEditorClient]) extends Component[NoE
       OperationTitleCss,
       E.button(ButtonCss, Text("Reset Sequence"), A.onClick(e => {
         e.preventDefault()
-        handleReset(get)
+        handleReset(get(client))
       }))
     )
   }

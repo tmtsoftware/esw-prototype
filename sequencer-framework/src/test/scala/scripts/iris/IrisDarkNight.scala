@@ -11,7 +11,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
   }
 
-  val subscription = cs.subscribe(Set(EventKey("iris-test.system"))) { eventKey =>
+  val subscription = cs.subscribe(Set(EventKey("iris.log"))) { eventKey =>
     eventCount = eventCount + 1
     println(s"------------------> received-event on key: $eventKey")
     Done

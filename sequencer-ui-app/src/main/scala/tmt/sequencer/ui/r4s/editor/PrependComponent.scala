@@ -13,9 +13,9 @@ case class PrependComponent(client: P[SequenceEditorClient]) extends Component[N
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def handleAddAll(get: Get, msg: IOOperationComponent.Msg): Unit = msg match {
+  def handlePrepend(client: SequenceEditorClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
-      get(client).prepend(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
+      client.prepend(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
         case Success(_)  => PrependResponse.set("Done")
         case Failure(ex) => PrependResponse.set(ex.getMessage)
       }
@@ -24,7 +24,7 @@ case class PrependComponent(client: P[SequenceEditorClient]) extends Component[N
   override def render(get: Get): ElementOrComponent = {
     E.div(
       Component(IOOperationComponent, "Sequence Editor - Prepend Commands", "Prepend to Sequence", get(PrependResponse))
-        .withHandler(x => handleAddAll(get, x))
+        .withHandler(x => handlePrepend(get(client), x))
     )
   }
 }

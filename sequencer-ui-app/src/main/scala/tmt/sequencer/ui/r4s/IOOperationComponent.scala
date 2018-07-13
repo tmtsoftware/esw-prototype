@@ -5,7 +5,7 @@ import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
 import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 case class IOOperationComponent(componentNameProp: P[String], operation: P[String], output: P[String])
-  extends Component[IOOperationComponent.Msg] {
+    extends Component[IOOperationComponent.Msg] {
   val input = State("")
 
   override def render(get: Get): Node = {
@@ -50,9 +50,6 @@ case class IOOperationComponent(componentNameProp: P[String], operation: P[Strin
 }
 
 object IOOperationComponent {
-
   sealed trait Msg
-
   case class HandleClick(request: String) extends Msg
-
 }

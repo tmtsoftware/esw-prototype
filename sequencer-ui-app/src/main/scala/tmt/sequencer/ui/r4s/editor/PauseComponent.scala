@@ -12,7 +12,7 @@ case class PauseComponent(client: P[SequenceEditorClient]) extends Component[NoE
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def handlePause(get: Get): Unit = get(client).pause().onComplete {
+  def handlePause(client: SequenceEditorClient): Unit = client.pause().onComplete {
     case Success(_)  => PauseResponse.set("Done")
     case Failure(ex) => PauseResponse.set(ex.getMessage)
   }
@@ -22,7 +22,7 @@ case class PauseComponent(client: P[SequenceEditorClient]) extends Component[NoE
       OperationTitleCss,
       E.button(ButtonCss, Text("Pause Sequence"), A.onClick(e => {
         e.preventDefault()
-        handlePause(get)
+        handlePause(get(client))
       }))
     )
   }

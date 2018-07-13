@@ -12,7 +12,7 @@ case class ResumeComponent(client: P[SequenceEditorClient]) extends Component[No
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def handleResume(get: Get): Unit = get(client).resume().onComplete {
+  def handleResume(client: SequenceEditorClient): Unit = client.resume().onComplete {
     case Success(_)  => ResumeResponse.set("Done")
     case Failure(ex) => ResumeResponse.set(ex.getMessage)
   }
@@ -22,7 +22,7 @@ case class ResumeComponent(client: P[SequenceEditorClient]) extends Component[No
       OperationTitleCss,
       E.button(ButtonCss, Text("Resume Sequence"), A.onClick(e => {
         e.preventDefault()
-        handleResume(get)
+        handleResume(get(client))
       }))
     )
   }

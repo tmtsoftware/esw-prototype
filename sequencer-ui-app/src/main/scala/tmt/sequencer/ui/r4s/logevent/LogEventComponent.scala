@@ -4,16 +4,17 @@ import com.github.ahnfelt.react4s.{E, _}
 import tmt.sequencer.SequenceLoggerClient
 import tmt.sequencer.ui.r4s.theme._
 
-case class LogEventComponent() extends Component[NoEmit] {
+case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[NoEmit] {
   val streamData: State[String] = State("")
-  val HOST_IP                   = "10.131.23.146"
   val showLogsS                 = State(false)
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
-  private val sequenceLoggerClient = new SequenceLoggerClient(s"http://$HOST_IP:8000")
-
-  sequenceLoggerClient.onLogEvent(x => streamData.set(x))
+  override def componentWillRender(get: Get): Unit = {
+    if (get(streamData).isEmpty) {
+      get(client).onLogEvent(x => {
+        streamData.modify(_.concat(s"$x\n"))
+      })
+    }
+  }
 
   override def render(get: Get): ElementOrComponent = {
     val showLogs   = get(showLogsS)
@@ -34,5 +35,9 @@ case class LogEventComponent() extends Component[NoEmit] {
       })),
       logOutputText
     )
+  }
+
+  override def componentWillUnmount(get: Get): Unit = {
+    get(client).closeEventSource()
   }
 }

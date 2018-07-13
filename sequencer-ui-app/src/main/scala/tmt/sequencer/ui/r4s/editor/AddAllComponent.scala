@@ -13,9 +13,9 @@ case class AddAllComponent(client: P[SequenceEditorClient]) extends Component[No
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def handleAddAll(get: Get, msg: IOOperationComponent.Msg): Unit = msg match {
+  def handleAddAll(client: SequenceEditorClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
-      get(client).addAll(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
+      client.addAll(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
         case Success(_)  => addAllResponse.set("Done")
         case Failure(ex) => addAllResponse.set(ex.getMessage)
       }
@@ -24,7 +24,7 @@ case class AddAllComponent(client: P[SequenceEditorClient]) extends Component[No
   override def render(get: Get): ElementOrComponent = {
     E.div(
       Component(IOOperationComponent, "Sequence Editor - Add All", "Add to Sequence", get(addAllResponse))
-        .withHandler(x => handleAddAll(get, x))
+        .withHandler(x => handleAddAll(get(client), x))
     )
   }
 }
