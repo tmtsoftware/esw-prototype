@@ -22,7 +22,7 @@ case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[
     val buttonText = if (showLogs) SequencerConstants.HIDE_LOGS else SequencerConstants.SHOW_LOGS
 
     val logOutputText = if (showLogs) {
-      E.ul(Tags(get(streamDataListS).map { stream =>
+      E.ul(LogTextAreaCss, Tags(get(streamDataListS).map { stream =>
         E.li(Text(stream))
       }))
     } else {

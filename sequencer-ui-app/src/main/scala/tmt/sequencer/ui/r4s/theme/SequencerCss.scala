@@ -29,9 +29,9 @@ object RightButtonCss
     extends CssClass(
       ButtonCss,
       S.fontFamily("Verdana"),
-      S.position("absolute"),
-      S.top.px(15),
-      S.right.px(700),
+      S.position.fixed(),
+      S.top.px(80),
+      S.right.px(8),
     )
 
 object TextAreaCss
@@ -49,6 +49,14 @@ object TextAreaCss
       S.fontFamily("monospace"),
       S.fontSize.px(14),
       S.overflowX("auto"),
+    )
+
+object LogTextAreaCss
+    extends CssClass(
+      TextAreaCss,
+      S.position.fixed(),
+      S.left.px(750),
+      S.top.px(110)
     )
 
 object TopBarCss
