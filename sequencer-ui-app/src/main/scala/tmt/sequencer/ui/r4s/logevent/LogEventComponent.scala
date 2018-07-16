@@ -6,13 +6,13 @@ import tmt.sequencer.ui.r4s.SequencerConstants
 import tmt.sequencer.ui.r4s.theme._
 
 case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[NoEmit] {
-  val streamData: State[String] = State("")
-  val showLogsS                 = State(false)
+  val streamDataListS: State[List[String]] = State(List.empty[String])
+  val showLogsS                            = State(false)
 
   override def componentWillRender(get: Get): Unit = {
-    if (get(streamData).isEmpty) {
+    if (get(streamDataListS).isEmpty) {
       get(client).onLogEvent(x => {
-        streamData.modify(_.concat(s"$x\n"))
+        streamDataListS.set(get(streamDataListS) :+ s"$x\n")
       })
     }
   }
@@ -20,13 +20,14 @@ case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[
   override def render(get: Get): ElementOrComponent = {
     val showLogs   = get(showLogsS)
     val buttonText = if (showLogs) SequencerConstants.HIDE_LOGS else SequencerConstants.SHOW_LOGS
-    val logOutputText: ElementOrComponent =
-      if (showLogs)
-        E.textarea(
-          TextAreaCss,
-          Text(get(streamData))
-        )
-      else E.div()
+
+    val logOutputText = if (showLogs) {
+      E.ul(Tags(get(streamDataListS).map { stream =>
+        E.li(Text(stream))
+      }))
+    } else {
+      E.ul()
+    }
 
     E.div(
       RightColumnCss,

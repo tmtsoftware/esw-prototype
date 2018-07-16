@@ -11,7 +11,7 @@ import csw.messages.events.{Event, EventKey}
 import csw.messages.params.models.Id
 import csw.services.event.scaladsl.EventService
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
-import tmt.sequencer.api.{SequenceEditor, SequenceEditorWeb, SequenceFeeder, SequenceFeederWeb}
+import tmt.sequencer.api._
 import tmt.sequencer.models._
 
 import scala.concurrent.ExecutionContext
@@ -95,8 +95,8 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eve
       }
     } ~
     get(
-      path("sequencer" / "logs") {
-        complete(stream.map(event => ServerSentEvent(event.toString())))
+      path(SequenceLoggerWeb.ApiName / SequenceLoggerWeb.logs) {
+        complete(stream.map(event => ServerSentEvent(event.paramSet.toString())))
       }
     )
   }
