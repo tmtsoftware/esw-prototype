@@ -14,8 +14,8 @@ case class ResumeComponent(client: P[SequenceEditorClient]) extends Component[No
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def handleResume(client: SequenceEditorClient): Unit = client.resume().onComplete {
-    case Success(value) => resumeResponse.set(value)
-    case Failure(_)     => resumeResponse.set(SequencerConstants.ERROR_MSG)
+    case Success(_)  => resumeResponse.set(SequencerConstants.SUCCESS_MSG)
+    case Failure(ex) => resumeResponse.set(ex.getMessage)
   }
 
   override def render(get: Get): ElementOrComponent = {

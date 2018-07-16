@@ -14,9 +14,10 @@ case class PauseComponent(client: P[SequenceEditorClient]) extends Component[NoE
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def handlePause(client: SequenceEditorClient): Unit = client.pause().onComplete {
-    case Success(value) =>
-      pauseResponse.set(value)
-    case Failure(_) => pauseResponse.set(SequencerConstants.ERROR_MSG)
+    case Success(_) => pauseResponse.set(SequencerConstants.SUCCESS_MSG)
+    case Failure(ex) =>
+      println(ex)
+      pauseResponse.set(ex.getMessage)
   }
 
   override def render(get: Get): ElementOrComponent = {

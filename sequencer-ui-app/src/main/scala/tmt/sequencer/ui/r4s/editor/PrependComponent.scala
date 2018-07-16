@@ -9,15 +9,15 @@ import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
 import scala.util.{Failure, Success}
 
 case class PrependComponent(client: P[SequenceEditorClient]) extends Component[NoEmit] with WebRWSupport {
-  val PrependResponse = State("")
+  val prependResponse = State("")
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def handlePrepend(client: SequenceEditorClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       client.prepend(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
-        case Success(value) => PrependResponse.set(value)
-        case Failure(ex)    => PrependResponse.set(SequencerConstants.ERROR_MSG)
+        case Success(_)  => prependResponse.set(SequencerConstants.SUCCESS_MSG)
+        case Failure(ex) => prependResponse.set(ex.getMessage)
       }
   }
 
@@ -26,7 +26,7 @@ case class PrependComponent(client: P[SequenceEditorClient]) extends Component[N
       Component(IOOperationComponent,
                 SequencerConstants.PREPEND_COMPONENT,
                 SequencerConstants.PREPEND_OPERATION,
-                get(PrependResponse))
+                get(prependResponse))
         .withHandler(x => handlePrepend(get(client), x))
     )
   }
