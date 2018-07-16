@@ -16,8 +16,8 @@ case class AddAllComponent(client: P[SequenceEditorClient]) extends Component[No
   def handleAddAll(client: SequenceEditorClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       client.addAll(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
-        case Success(_) => addAllResponse.set("Done")
-        case Failure(_) => addAllResponse.set(SequencerConstants.ERROR_MSG)
+        case Success(value) => addAllResponse.set(value)
+        case Failure(_)     => addAllResponse.set(SequencerConstants.ERROR_MSG)
       }
   }
 

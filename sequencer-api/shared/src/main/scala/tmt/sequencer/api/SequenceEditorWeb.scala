@@ -5,18 +5,18 @@ import tmt.sequencer.models.{SequenceCommandWeb, SequenceWeb}
 import scala.concurrent.Future
 
 trait SequenceEditorWeb {
-  def addAll(commands: List[SequenceCommandWeb]): Future[Unit]
-  def pause(): Future[Unit]
-  def resume(): Future[Unit]
-  def reset(): Future[Unit]
+  def addAll(commands: List[SequenceCommandWeb]): Future[String]
+  def pause(): Future[String]
+  def resume(): Future[String]
+  def reset(): Future[String]
   def sequenceWeb: Future[SequenceWeb]
-  def delete(ids: List[String]): Future[Unit]
-  def addBreakpoints(ids: List[String]): Future[Unit]
-  def removeBreakpoints(ids: List[String]): Future[Unit]
-  def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit]
-  def prepend(commands: List[SequenceCommandWeb]): Future[Unit]
-  def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit]
-  def shutdown(): Future[Unit]
+  def delete(ids: List[String]): Future[String]
+  def addBreakpoints(ids: List[String]): Future[String]
+  def removeBreakpoints(ids: List[String]): Future[String]
+  def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[String]
+  def prepend(commands: List[SequenceCommandWeb]): Future[String]
+  def replace(id: String, commands: List[SequenceCommandWeb]): Future[String]
+  def shutdown(): Future[String]
 }
 
 object SequenceEditorWeb {

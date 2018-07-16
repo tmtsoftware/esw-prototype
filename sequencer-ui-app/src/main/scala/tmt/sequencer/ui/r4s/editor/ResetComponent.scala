@@ -9,13 +9,13 @@ import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss}
 import scala.util.{Failure, Success}
 
 case class ResetComponent(client: P[SequenceEditorClient]) extends Component[NoEmit] with WebRWSupport {
-  val ResetResponse = State("")
+  val resetResponse = State("")
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def handleReset(client: SequenceEditorClient): Unit = client.reset().onComplete {
-    case Success(_) => ResetResponse.set("Done")
-    case Failure(_) => ResetResponse.set(SequencerConstants.ERROR_MSG)
+    case Success(value) => resetResponse.set(value)
+    case Failure(_)     => resetResponse.set(SequencerConstants.ERROR_MSG)
   }
 
   override def render(get: Get): ElementOrComponent = {
@@ -24,7 +24,8 @@ case class ResetComponent(client: P[SequenceEditorClient]) extends Component[NoE
       E.button(ButtonCss, Text(SequencerConstants.RESET_OPERATION), A.onClick(e => {
         e.preventDefault()
         handleReset(get(client))
-      }))
+      })),
+      Text(get(resetResponse))
     )
   }
 }

@@ -16,8 +16,8 @@ case class PrependComponent(client: P[SequenceEditorClient]) extends Component[N
   def handlePrepend(client: SequenceEditorClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       client.prepend(upickle.default.read[List[SequenceCommandWeb]](request)).onComplete {
-        case Success(_) => PrependResponse.set("Done")
-        case Failure(_) => PrependResponse.set(SequencerConstants.ERROR_MSG)
+        case Success(value) => PrependResponse.set(value)
+        case Failure(ex)    => PrependResponse.set(SequencerConstants.ERROR_MSG)
       }
   }
 

@@ -49,32 +49,41 @@ object SequencerBehaviour {
       }
     }
 
+    def updateAndSendResponse(newSequence: Sequence, replyTo: ActorRef[Try[Unit]]): Unit = {
+      sequence = newSequence
+      replyTo ! Success({})
+    }
+
     Behaviors.receiveMessage[SequencerMsg] { msg =>
       if (sequence.isFinished) {
         msg match {
           case ProcessSequence(Nil, replyTo)      => replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))
           case ProcessSequence(commands, replyTo) => sequence = Sequence.from(commands); responseRefOpt = Some(replyTo)
-          case GetSequence(replyTo)               => replyTo ! sequence
+          case GetSequence(replyTo)               => replyTo ! Success(sequence)
           case GetNext(replyTo)                   => sendNext(replyTo)
-          case x                                  => println(s"command=$x can not be applied on a finished sequence")
+          case x: ExternalSequencerMsg =>
+            x.replyTo ! Failure(
+              new RuntimeException(s"${x.getClass.getSimpleName} can not be applied on a finished sequence")
+            )
+          case x => println(s"${x.getClass.getSimpleName} can not be applied on a finished sequence")
         }
       } else {
         msg match {
-          case ProcessSequence(_, replyTo) => replyTo ! Failure(new RuntimeException("previous sequence has not finished yet"))
-          case GetSequence(replyTo)        => replyTo ! sequence
-          case GetNext(replyTo)            => sendNext(replyTo)
-          case MaybeNext(replyTo)          => replyTo ! sequence.next
-          case Update(_aggregateResponse)  => update(_aggregateResponse)
-          case Add(commands)               => sequence = sequence.append(commands)
-          case Pause                       => sequence = sequence.pause
-          case Resume                      => sequence = sequence.resume
-          case DiscardPending              => sequence = sequence.discardPending
-          case Replace(stepId, commands)   => sequence = sequence.replace(stepId, commands)
-          case Prepend(commands)           => sequence = sequence.prepend(commands)
-          case Delete(ids)                 => sequence = sequence.delete(ids.toSet)
-          case InsertAfter(id, commands)   => sequence = sequence.insertAfter(id, commands)
-          case AddBreakpoints(ids)         => sequence = sequence.addBreakpoints(ids)
-          case RemoveBreakpoints(ids)      => sequence = sequence.removeBreakpoints(ids)
+          case ProcessSequence(_, replyTo)        => replyTo ! Failure(new RuntimeException("previous sequence has not finished yet"))
+          case GetSequence(replyTo)               => replyTo ! Success(sequence)
+          case GetNext(replyTo)                   => sendNext(replyTo)
+          case MaybeNext(replyTo)                 => replyTo ! sequence.next
+          case Update(_aggregateResponse)         => update(_aggregateResponse)
+          case Add(commands, replyTo)             => updateAndSendResponse(sequence.append(commands), replyTo)
+          case Pause(replyTo)                     => updateAndSendResponse(sequence.pause, replyTo)
+          case Resume(replyTo)                    => updateAndSendResponse(sequence.resume, replyTo)
+          case DiscardPending(replyTo)            => updateAndSendResponse(sequence.discardPending, replyTo)
+          case Replace(stepId, commands, replyTo) => updateAndSendResponse(sequence.replace(stepId, commands), replyTo)
+          case Prepend(commands, replyTo)         => updateAndSendResponse(sequence.prepend(commands), replyTo)
+          case Delete(ids, replyTo)               => updateAndSendResponse(sequence.delete(ids.toSet), replyTo)
+          case InsertAfter(id, commands, replyTo) => updateAndSendResponse(sequence.insertAfter(id, commands), replyTo)
+          case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(sequence.addBreakpoints(ids), replyTo)
+          case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(sequence.removeBreakpoints(ids), replyTo)
         }
       }
       trySend()

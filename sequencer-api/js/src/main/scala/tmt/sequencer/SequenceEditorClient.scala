@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
 
-  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = {
+  override def addAll(commands: List[SequenceCommandWeb]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}"
     Ajax
       .post(
@@ -16,37 +16,37 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write(commands),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def pause(): Future[Unit] = {
+  override def pause(): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}"
     Ajax
       .post(
         url = url,
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def resume(): Future[Unit] = {
+  override def resume(): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}"
     Ajax
       .post(
         url = url,
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def reset(): Future[Unit] = {
+  override def reset(): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}"
     Ajax
       .post(
         url = url,
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
   override def sequenceWeb: Future[SequenceWeb] = {
@@ -62,7 +62,7 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
       }
   }
 
-  override def delete(ids: List[String]): Future[Unit] = {
+  override def delete(ids: List[String]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}"
     Ajax
       .post(
@@ -70,10 +70,10 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write(ids),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def addBreakpoints(ids: List[String]): Future[Unit] = {
+  override def addBreakpoints(ids: List[String]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}"
     Ajax
       .post(
@@ -81,10 +81,10 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write(ids),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def removeBreakpoints(ids: List[String]): Future[Unit] = {
+  override def removeBreakpoints(ids: List[String]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}"
     Ajax
       .post(
@@ -92,10 +92,10 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write(ids),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = {
+  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}"
     Ajax
       .post(
@@ -103,10 +103,10 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write((id, commands)),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = {
+  override def prepend(commands: List[SequenceCommandWeb]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}"
     Ajax
       .post(
@@ -114,10 +114,10 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write(commands),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = {
+  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}"
     Ajax
       .post(
@@ -125,16 +125,16 @@ class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) exten
         data = upickle.default.write((id, commands)),
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 
-  override def shutdown(): Future[Unit] = {
+  override def shutdown(): Future[String] = {
     val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}"
     Ajax
       .post(
         url = url,
         headers = Map("Content-Type" -> "application/json")
       )
-      .map(xhr => println(xhr.responseText))
+      .map(xhr => xhr.responseText)
   }
 }
