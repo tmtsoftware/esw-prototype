@@ -48,7 +48,8 @@ object TextAreaCss
       S.padding.px(10),
       S.fontFamily("monospace"),
       S.fontSize.px(14),
-      S.overflowX("auto"),
+      S.overflow("auto"),
+      S.height.px(300)
     )
 
 object LogTextAreaCss
