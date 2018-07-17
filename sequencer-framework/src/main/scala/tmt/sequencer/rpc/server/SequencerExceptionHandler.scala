@@ -2,15 +2,14 @@ package tmt.sequencer.rpc.server
 
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
-import tmt.sequencer.models.SequencerOperationFailed
 
-object SequencerExceptionHandler extends Directives with JsonRejectionHandler {
+import scala.util.control.NonFatal
 
-  def route: Directive[Unit] =
-    handleExceptions(jsonExceptionHandler) & handleRejections(jsonRejectionHandler) & rejectEmptyResponse
+object SequencerExceptionHandler extends Directives {
+
+  def route: Directive[Unit] = handleExceptions(jsonExceptionHandler) & rejectEmptyResponse
 
   private val jsonExceptionHandler: ExceptionHandler = ExceptionHandler {
-    case ex: SequencerOperationFailed =>
-      complete(JsonSupport.asJsonResponse(StatusCodes.InternalServerError, ex.getMessage))
+    case NonFatal(ex) => complete(HttpResponse(StatusCodes.InternalServerError, entity = ex.getMessage))
   }
 }

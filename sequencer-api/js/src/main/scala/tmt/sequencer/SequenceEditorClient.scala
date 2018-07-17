@@ -9,186 +9,79 @@ import scala.util.control.NonFatal
 
 class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
 
-  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write(commands),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
+  private val EMPTY_DATA = ""
 
-  override def pause(): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}"
-    Ajax
-      .post(
-        url = url,
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(ex) =>
-          println(s">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$ex")
-          println(s">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${ex.getCause}")
-          println(s">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${ex.getMessage}")
-          println(s">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${ex.getLocalizedMessage}")
-          println(s">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${ex.getStackTrace}")
-          throw new RuntimeException(ex)
-      }
-  }
+  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",
+    data = upickle.default.write(commands)
+  )
 
-  override def resume(): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}"
-    Ajax
-      .post(
-        url = url,
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
+  override def pause(): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}",
+    EMPTY_DATA
+  )
 
-  override def reset(): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}"
-    Ajax
-      .post(
-        url = url,
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
+  override def resume(): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}",
+    data = EMPTY_DATA
+  )
 
-  override def sequenceWeb: Future[SequenceWeb] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}"
+  override def reset(): Future[Unit] = post(url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}", EMPTY_DATA)
+
+  override def sequenceWeb: Future[SequenceWeb] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}",
+    transform = x => upickle.default.read[SequenceWeb](x)
+  )
+
+  override def delete(ids: List[String]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}",
+    data = upickle.default.write(ids)
+  )
+
+  override def addBreakpoints(ids: List[String]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}",
+    data = upickle.default.write(ids)
+  )
+
+  override def removeBreakpoints(ids: List[String]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}",
+    data = upickle.default.write(ids)
+  )
+
+  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}",
+    data = upickle.default.write((id, commands))
+  )
+
+  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}",
+    data = upickle.default.write(commands)
+  )
+
+  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}",
+    data = upickle.default.write((id, commands))
+  )
+
+  override def shutdown(): Future[Unit] = post(
+    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}",
+    data = EMPTY_DATA
+  )
+
+  private def post(url: String, data: String): Future[Unit] = post(url, data, println)
+
+  private def post[T](url: String, data: String = "", transform: String => T): Future[T] =
     Ajax
       .post(
         url = url,
+        data = data,
         headers = Map("Content-Type" -> "application/json")
       )
       .map { xhr =>
         println(xhr.responseText)
-        upickle.default.read[SequenceWeb](xhr.responseText)
+        transform(xhr.responseText)
       }
       .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
+        case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)
       }
-  }
-
-  override def delete(ids: List[String]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write(ids),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def addBreakpoints(ids: List[String]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write(ids),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def removeBreakpoints(ids: List[String]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write(ids),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write((id, commands)),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write(commands),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}"
-    Ajax
-      .post(
-        url = url,
-        data = upickle.default.write((id, commands)),
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
-
-  override def shutdown(): Future[Unit] = {
-    val url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}"
-    Ajax
-      .post(
-        url = url,
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map(xhr => println(xhr.responseText))
-      .recover {
-        case NonFatal(AjaxException(req)) =>
-          throw new RuntimeException(req.statusText)
-      }
-  }
 }
