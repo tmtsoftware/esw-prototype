@@ -17,7 +17,11 @@ import tmt.sequencer.models._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eventService: EventService)(
+class Routes(sequenceFeeder: SequenceFeeder,
+             sequenceEditor: SequenceEditor,
+             eventService: EventService,
+             sequencerId: String,
+             observingMode: String)(
     implicit ec: ExecutionContext
 ) extends UpickleSupport
     with UpickleRWSupport {
@@ -25,7 +29,9 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eve
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
   val stream: Source[Event, NotUsed] = {
-    Source.fromFuture(eventService.defaultSubscriber).flatMapConcat(_.subscribe(Set(EventKey("iris.log"))))
+    Source
+      .fromFuture(eventService.defaultSubscriber)
+      .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.log"))))
   }
 
   val route: Route = cors() {

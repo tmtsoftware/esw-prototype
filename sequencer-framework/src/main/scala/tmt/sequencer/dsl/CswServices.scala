@@ -72,6 +72,6 @@ class CswServices(sequencer: Sequencer,
   }
 
   def log(msg: String): Unit = spawn {
-    eventService.defaultPublisher.await.publish(LogEvent.createLogEvent(sequencerId, msg)).await
+    eventService.defaultPublisher.await.publish(LogEvent.createLogEvent(s"$sequencerId-$observingMode", msg)).await
   }
 }

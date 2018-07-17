@@ -22,6 +22,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
+      cs.log(s"Command ${commandA.commandName} received by ${cs.sequencerId}")
       val maybeCommandB = cs.nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB  = maybeCommandB.get
@@ -34,7 +35,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val commandList = subCommandsB.add(commandA)
 
       val response = iris.feed(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
-
+      cs.log(s"[Ocs] Received response: $response")
       println(s"[Ocs] Received response: $response")
       response
     }

@@ -56,7 +56,9 @@ object LogTextAreaCss
       TextAreaCss,
       S.position.fixed(),
       S.left.px(750),
-      S.top.px(110)
+      S.top.px(110),
+      S.height.px(430),
+      S.overflow("auto")
     )
 
 object LogTitleAreaCss

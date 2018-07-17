@@ -4,19 +4,6 @@ import tmt.sequencer.ScriptImports._
 
 class IrisDarkNight(cs: CswServices) extends Script(cs) {
 
-  var eventCount   = 0
-  var commandCount = 0
-
-  val cancellable = cs.publish(5.seconds) {
-    SystemEvent(Prefix("iris-test"), EventName("system"))
-  }
-
-  val subscription = cs.subscribe(Set(EventKey("iris.log"))) { eventKey =>
-    eventCount = eventCount + 1
-    println(s"------------------> received-event on key: $eventKey")
-    Done
-  }
-
   cs.handleCommand("setup-iris") { command =>
     spawn {
       cs.log(s"Command ${command.commandName} received by ${cs.sequencerId}")
@@ -43,8 +30,6 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscription.cancel().await
-    cancellable.cancel().await
     println("shutdown iris")
     Done
   }
