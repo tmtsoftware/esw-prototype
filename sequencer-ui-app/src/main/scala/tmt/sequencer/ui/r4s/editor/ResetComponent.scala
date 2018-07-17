@@ -14,8 +14,8 @@ case class ResetComponent(client: P[SequenceEditorClient]) extends Component[NoE
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def handleReset(client: SequenceEditorClient): Unit = client.reset().onComplete {
-    case Success(value) => resetResponse.set(value)
-    case Failure(_)     => resetResponse.set(SequencerConstants.ERROR_MSG)
+    case Success(_)  => resetResponse.set(SequencerConstants.SUCCESS_MSG)
+    case Failure(ex) => resetResponse.set(ex.getMessage)
   }
 
   override def render(get: Get): ElementOrComponent = {

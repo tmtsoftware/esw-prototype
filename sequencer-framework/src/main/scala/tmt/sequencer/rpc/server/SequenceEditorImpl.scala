@@ -15,7 +15,6 @@ import tmt.sequencer.models.Sequence
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
-import scala.util.control.NonFatal
 
 class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(implicit system: ActorSystem)
     extends SequenceEditor {
@@ -23,10 +22,7 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
   private implicit val scheduler: Scheduler = system.scheduler
   import system.dispatcher
 
-  def unitResponseHelper(future: Future[Try[Unit]]): Future[String] = future.map {
-    case util.Failure(NonFatal(ex)) => ex.getMessage
-    case _                          => "Operation Successful"
-  }
+  def responseHelper[T](future: Future[Try[T]]): Future[T] = future.map(_.get)
 
   def sequenceCommandsFrom(commands: List[SequenceCommand]): List[SequenceCommand] = commands.map(cmd => cmd)
 
@@ -35,35 +31,31 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
     future.map(_.get)
   }
 
-  override def addAll(commands: List[SequenceCommand]): Future[String] =
-    unitResponseHelper(supervisor ? (x => Add(sequenceCommandsFrom(commands), x)))
+  override def addAll(commands: List[SequenceCommand]): Future[Unit] =
+    responseHelper(supervisor ? (x => Add(sequenceCommandsFrom(commands), x)))
 
-  override def delete(ids: List[Id]): Future[String] = unitResponseHelper(supervisor ? (x => Delete(ids, x)))
+  override def delete(ids: List[Id]): Future[Unit] = responseHelper(supervisor ? (x => Delete(ids, x)))
 
-  override def insertAfter(id: Id, commands: List[SequenceCommand]): Future[String] =
-    unitResponseHelper(supervisor ? (x => InsertAfter(id, sequenceCommandsFrom(commands), x)))
+  override def insertAfter(id: Id, commands: List[SequenceCommand]): Future[Unit] =
+    responseHelper(supervisor ? (x => InsertAfter(id, sequenceCommandsFrom(commands), x)))
 
-  override def prepend(commands: List[SequenceCommand]): Future[String] =
-    unitResponseHelper(supervisor ? (x => Prepend(sequenceCommandsFrom(commands), x)))
+  override def prepend(commands: List[SequenceCommand]): Future[Unit] =
+    responseHelper(supervisor ? (x => Prepend(sequenceCommandsFrom(commands), x)))
 
-  override def replace(id: Id, commands: List[SequenceCommand]): Future[String] =
-    unitResponseHelper(supervisor ? (x => Replace(id, sequenceCommandsFrom(commands), x)))
+  override def replace(id: Id, commands: List[SequenceCommand]): Future[Unit] =
+    responseHelper(supervisor ? (x => Replace(id, sequenceCommandsFrom(commands), x)))
 
-  override def reset(): Future[String] = unitResponseHelper(supervisor ? (x => DiscardPending(x)))
+  override def reset(): Future[Unit] = responseHelper(supervisor ? (x => DiscardPending(x)))
 
-  override def pause(): Future[String] = unitResponseHelper(supervisor ? (x => Pause(x)))
+  override def pause(): Future[Unit] = responseHelper(supervisor ? (x => Pause(x)))
 
-  override def resume(): Future[String] = unitResponseHelper(supervisor ? (x => Resume(x)))
+  override def resume(): Future[Unit] = responseHelper(supervisor ? (x => Resume(x)))
 
-  override def addBreakpoints(ids: List[Id]): Future[String] = unitResponseHelper(supervisor ? (x => AddBreakpoints(ids, x)))
+  override def addBreakpoints(ids: List[Id]): Future[Unit] = responseHelper(supervisor ? (x => AddBreakpoints(ids, x)))
 
-  override def removeBreakpoints(ids: List[Id]): Future[String] =
-    unitResponseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
+  override def removeBreakpoints(ids: List[Id]): Future[Unit] =
+    responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[String] = {
-    script.shutdown().map(_ => "Operation Successful").recover {
-      case NonFatal(ex) => ex.getMessage
-    }
-  }
+  override def shutdown(): Future[Unit] = script.shutdown().map(_ => ())
 
 }

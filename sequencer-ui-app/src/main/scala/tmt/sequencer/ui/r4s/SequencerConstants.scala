@@ -2,6 +2,7 @@ package tmt.sequencer.ui.r4s
 
 object SequencerConstants {
   val ERROR_MSG         = "Oops!! Something went wrong"
+  val SUCCESS_MSG       = "Operation Successful"
   val LOADER_TEXT       = "Waiting for Response ...."
   val ADD_ALL_COMPONENT = "Sequence Editor - Add All"
   val ADD_ALL_OPERATION = "Add to Sequence"
