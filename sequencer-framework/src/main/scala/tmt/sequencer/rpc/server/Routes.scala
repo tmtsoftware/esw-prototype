@@ -95,11 +95,20 @@ class Routes(sequenceFeeder: SequenceFeeder, sequenceEditor: SequenceEditor, eve
           }
         }
       } ~
-      get(
+      get {
         path(SequenceLoggerWeb.ApiName / SequenceLoggerWeb.logs) {
           complete(stream.map(event => ServerSentEvent(event.paramSet.toString())))
         }
-      )
+      } ~
+      get {
+        pathSingleSlash {
+          getFromResource("web/index.html")
+        } ~
+        // Scala-JS puts them in the root of the resource directory per default,
+        // so that's where we pick them up
+        path("sequencer-ui-app-fastopt-bundle.js")(getFromResource("sequencer-ui-app-fastopt-bundle.js"))
+      }
+
     }
   }
 }

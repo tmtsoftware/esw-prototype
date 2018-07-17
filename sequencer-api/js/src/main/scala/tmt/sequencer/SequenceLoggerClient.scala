@@ -4,8 +4,8 @@ import org.scalajs.dom.EventSource
 import tmt.sequencer.api.SequenceLoggerWeb
 import tmt.sequencer.models.WebRWSupport
 
-class SequenceLoggerClient(baseUri: String) extends SequenceLoggerWeb with WebRWSupport {
-  val eventSource = new EventSource(s"$baseUri/${SequenceLoggerWeb.ApiName}/${SequenceLoggerWeb.logs}")
+class SequenceLoggerClient() extends SequenceLoggerWeb with WebRWSupport {
+  val eventSource = new EventSource(s"${SequenceLoggerWeb.ApiName}/${SequenceLoggerWeb.logs}")
 
   override def onLogEvent(callback: String => Unit): Unit = {
     eventSource.onmessage = { messageEvent =>

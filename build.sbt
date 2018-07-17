@@ -100,7 +100,11 @@ lazy val `sequencer-framework` = project
       Csw.`csw-command`,
       Csw.`csw-event-client`,
       SharedLibs.scalaTest.value % Test
-    )
+    ),
+    resourceGenerators in Compile += Def.task {
+      Seq((`sequencer-ui-app` / Compile / fastOptJS / webpack).value.head.data)
+    }.taskValue,
+    watchSources ++= (watchSources in `sequencer-ui-app`).value
   )
 
 lazy val `location-agent-simulator` = project

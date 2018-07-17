@@ -7,64 +7,64 @@ import tmt.sequencer.models._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class SequenceEditorClient(baseUri: String)(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
+class SequenceEditorClient()(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
 
   private val EMPTY_DATA = ""
 
   override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",
     data = upickle.default.write(commands)
   )
 
   override def pause(): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}",
     EMPTY_DATA
   )
 
   override def resume(): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}",
     data = EMPTY_DATA
   )
 
-  override def reset(): Future[Unit] = post(url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}", EMPTY_DATA)
+  override def reset(): Future[Unit] = post(url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}", EMPTY_DATA)
 
   override def sequenceWeb: Future[SequenceWeb] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}",
     transform = x => upickle.default.read[SequenceWeb](x)
   )
 
   override def delete(ids: List[String]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}",
     data = upickle.default.write(ids)
   )
 
   override def addBreakpoints(ids: List[String]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}",
     data = upickle.default.write(ids)
   )
 
   override def removeBreakpoints(ids: List[String]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}",
     data = upickle.default.write(ids)
   )
 
   override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}",
     data = upickle.default.write((id, commands))
   )
 
   override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}",
     data = upickle.default.write(commands)
   )
 
   override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}",
     data = upickle.default.write((id, commands))
   )
 
   override def shutdown(): Future[Unit] = post(
-    url = s"$baseUri/${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}",
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}",
     data = EMPTY_DATA
   )
 

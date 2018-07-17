@@ -9,7 +9,7 @@ object JsDemoApp extends WebRWSupport {
 
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    val client = new SequenceFeederClient("http://0.0.0.0:8000")
+    val client = new SequenceFeederClient()
 
     val commandListWeb = CommandListWeb(
       Seq(

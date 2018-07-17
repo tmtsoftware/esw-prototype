@@ -11,9 +11,9 @@ object Main {
   def main(arguments: Array[String]): Unit = {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    val clientF: SequenceFeederClient = new SequenceFeederClient("http://0.0.0.0:8000")
-    val clientE: SequenceEditorClient = new SequenceEditorClient("http://0.0.0.0:8000")
-    val clientL: SequenceLoggerClient = new SequenceLoggerClient("http://0.0.0.0:8000")
+    val clientF: SequenceFeederClient = new SequenceFeederClient()
+    val clientE: SequenceEditorClient = new SequenceEditorClient()
+    val clientL: SequenceLoggerClient = new SequenceLoggerClient()
 
     val component = E.div(
       Component(HeaderComponent),
