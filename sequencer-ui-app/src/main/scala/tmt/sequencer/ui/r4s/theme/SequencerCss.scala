@@ -59,6 +59,14 @@ object LogTextAreaCss
       S.top.px(110)
     )
 
+object LogTitleAreaCss
+    extends CssClass(
+      OperationTitleCss,
+      S.position.fixed(),
+      S.left.px(750),
+      S.top.px(55)
+    )
+
 object TopBarCss
     extends CssClass(
       S.borderTop("5px solid " + Palette.blue),

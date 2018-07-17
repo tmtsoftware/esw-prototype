@@ -2,9 +2,9 @@ package tmt.sequencer.ui.r4s.feeder
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.SequenceFeederClient
-import tmt.sequencer.models.{AggregateResponseWeb, CommandListWeb, WebRWSupport}
-import tmt.sequencer.ui.r4s.{IOOperationComponent, SequencerConstants}
+import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
 import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
+import tmt.sequencer.ui.r4s.{IOOperationComponent, SequencerConstants}
 
 import scala.util.{Failure, Success}
 
@@ -19,7 +19,7 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
     case HandleClick(request) =>
       loadingOutput()
       client.feed(upickle.default.read[CommandListWeb](request)).onComplete {
-        case Success(response) => feedResponse.set(upickle.default.write[AggregateResponseWeb](response, 2))
+        case Success(response) => feedResponse.set(upickle.default.write(response, 2))
         case Failure(_)        => feedResponse.set(SequencerConstants.ERROR_MSG)
       }
   }

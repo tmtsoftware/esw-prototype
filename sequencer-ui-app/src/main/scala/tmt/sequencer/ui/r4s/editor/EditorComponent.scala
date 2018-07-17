@@ -9,8 +9,7 @@ case class EditorComponent(editorClient: P[SequenceEditorClient]) extends Compon
   override def render(get: Get): ElementOrComponent = {
     val client = get(editorClient)
     E.div(
-      Component(PrependComponent, client),
-      Component(AddAllComponent, client),
+      Component(ShowSequenceComponent, client),
       Component(PauseComponent, client),
       Component(ResumeComponent, client),
       Component(ResetComponent, client)
