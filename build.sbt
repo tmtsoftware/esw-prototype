@@ -106,13 +106,3 @@ lazy val `sequencer-framework` = project
     }.taskValue,
     watchSources ++= (watchSources in `sequencer-ui-app`).value
   )
-
-lazy val `location-agent-simulator` = project
-  .settings(
-    name := "location-agent-simulator",
-    libraryDependencies ++= Seq(
-      Csw.`csw-location`,
-      Akka.`akka-typed`,
-      SharedLibs.scalaTest.value % Test
-    )
-  )
