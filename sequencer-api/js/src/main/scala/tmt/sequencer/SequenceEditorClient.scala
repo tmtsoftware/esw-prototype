@@ -1,86 +1,67 @@
 package tmt.sequencer
 
-import org.scalajs.dom.ext.{Ajax, AjaxException}
 import tmt.sequencer.api.SequenceEditorWeb
 import tmt.sequencer.models._
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.control.NonFatal
+import scala.concurrent.Future
 
-class SequenceEditorClient()(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
+class SequenceEditorClient(gateway: WebGateway) extends SequenceEditorWeb with WebRWSupport {
 
-  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = post(
+  override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",
     data = upickle.default.write(commands)
   )
 
-  override def pause(): Future[Unit] = post(
+  override def pause(): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}"
   )
 
-  override def resume(): Future[Unit] = post(
+  override def resume(): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}"
   )
 
-  override def reset(): Future[Unit] = post(
+  override def reset(): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}"
   )
 
-  override def sequenceWeb: Future[SequenceWeb] = post(
+  override def sequenceWeb: Future[SequenceWeb] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}",
     data = "",
     transform = x => upickle.default.read[SequenceWeb](x)
   )
 
-  override def delete(ids: List[String]): Future[Unit] = post(
+  override def delete(ids: List[String]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Delete}",
     data = upickle.default.write(ids)
   )
 
-  override def addBreakpoints(ids: List[String]): Future[Unit] = post(
+  override def addBreakpoints(ids: List[String]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddBreakpoints}",
     data = upickle.default.write(ids)
   )
 
-  override def removeBreakpoints(ids: List[String]): Future[Unit] = post(
+  override def removeBreakpoints(ids: List[String]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.RemoveBreakpoints}",
     data = upickle.default.write(ids)
   )
 
-  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
+  override def insertAfter(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.InsertAfter}",
     data = upickle.default.write((id, commands))
   )
 
-  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = post(
+  override def prepend(commands: List[SequenceCommandWeb]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Prepend}",
     data = upickle.default.write(commands)
   )
 
-  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = post(
+  override def replace(id: String, commands: List[SequenceCommandWeb]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Replace}",
     data = upickle.default.write((id, commands))
   )
 
-  override def shutdown(): Future[Unit] = post(
+  override def shutdown(): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}"
   )
 
-  private def post(url: String): Future[Unit]               = post(url, "", println)
-  private def post(url: String, data: String): Future[Unit] = post(url, data, println)
-
-  private def post[T](url: String, data: String, transform: String => T): Future[T] =
-    Ajax
-      .post(
-        url = url,
-        data = data,
-        headers = Map("Content-Type" -> "application/json")
-      )
-      .map { xhr =>
-        println(xhr.responseText)
-        transform(xhr.responseText)
-      }
-      .recover {
-        case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)
-      }
 }
