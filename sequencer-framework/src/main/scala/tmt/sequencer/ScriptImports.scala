@@ -52,6 +52,8 @@ object ScriptImports {
   type CommandList = tmt.sequencer.models.CommandList
   val CommandList = tmt.sequencer.models.CommandList
 
+  type SequenceCommand = csw.messages.commands.SequenceCommand
+
   type Future[T] = scala.concurrent.Future[T]
 
   type Id = csw.messages.params.models.Id
