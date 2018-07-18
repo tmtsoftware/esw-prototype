@@ -1,18 +1,18 @@
 package tmt.sequencer.ui.r4s.logevent
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.SequenceLoggerClient
+import org.scalajs.dom.raw.EventSource
 import tmt.sequencer.ui.r4s.SequencerConstants
 import tmt.sequencer.ui.r4s.theme._
 
-case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[NoEmit] {
+case class LogEventComponent(client: P[EventSource]) extends Component[NoEmit] {
   val streamDataListS: State[List[String]] = State(List.empty[String])
 
   override def componentWillRender(get: Get): Unit = {
     if (get(streamDataListS).isEmpty) {
-      get(client).onLogEvent(x => {
+      get(client).onmessage = { x =>
         streamDataListS.set(get(streamDataListS) :+ s"$x\n")
-      })
+      }
     }
   }
 
@@ -27,6 +27,6 @@ case class LogEventComponent(client: P[SequenceLoggerClient]) extends Component[
   }
 
   override def componentWillUnmount(get: Get): Unit = {
-    get(client).closeEventSource()
+    get(client).close()
   }
 }
