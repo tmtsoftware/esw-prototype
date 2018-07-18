@@ -9,27 +9,26 @@ import scala.util.control.NonFatal
 
 class SequenceEditorClient()(implicit ec: ExecutionContext) extends SequenceEditorWeb with WebRWSupport {
 
-  private val EMPTY_DATA = ""
-
   override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",
     data = upickle.default.write(commands)
   )
 
   override def pause(): Future[Unit] = post(
-    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}",
-    EMPTY_DATA
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Pause}"
   )
 
   override def resume(): Future[Unit] = post(
-    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}",
-    data = EMPTY_DATA
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Resume}"
   )
 
-  override def reset(): Future[Unit] = post(url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}", EMPTY_DATA)
+  override def reset(): Future[Unit] = post(
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Reset}"
+  )
 
   override def sequenceWeb: Future[SequenceWeb] = post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Sequence}",
+    data = "",
     transform = x => upickle.default.read[SequenceWeb](x)
   )
 
@@ -64,13 +63,13 @@ class SequenceEditorClient()(implicit ec: ExecutionContext) extends SequenceEdit
   )
 
   override def shutdown(): Future[Unit] = post(
-    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}",
-    data = EMPTY_DATA
+    url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.Shutdown}"
   )
 
+  private def post(url: String): Future[Unit]               = post(url, "", println)
   private def post(url: String, data: String): Future[Unit] = post(url, data, println)
 
-  private def post[T](url: String, data: String = "", transform: String => T): Future[T] =
+  private def post[T](url: String, data: String, transform: String => T): Future[T] =
     Ajax
       .post(
         url = url,
