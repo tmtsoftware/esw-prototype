@@ -11,5 +11,5 @@ object SequencerConstants {
   val RESET_OPERATION         = "Reset Sequence"
   val FEED_COMPONENT          = "Sequence Feeder - Feed"
   val FEED_OPERATION          = "Feed Sequence"
-  val SERVER_LOG_STREAM       = "Server Log Stream"
+  val SERVER_RESULT_STREAM    = "Server Result Stream"
 }

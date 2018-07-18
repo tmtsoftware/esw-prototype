@@ -20,7 +20,7 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
       loadingOutput()
       client.feed(upickle.default.read[CommandListWeb](request)).onComplete {
         case Success(response) => feedResponse.set(upickle.default.write(response, 2))
-        case Failure(_)        => feedResponse.set(SequencerConstants.ERROR_MSG)
+        case Failure(ex)       => feedResponse.set(ex.getMessage)
       }
   }
 

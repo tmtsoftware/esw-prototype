@@ -52,7 +52,7 @@ object TextAreaCss
       S.height.px(300)
     )
 
-object LogTextAreaCss
+object ResultTextAreaCss
     extends CssClass(
       TextAreaCss,
       S.position.fixed(),
@@ -62,7 +62,7 @@ object LogTextAreaCss
       S.overflow("auto")
     )
 
-object LogTitleAreaCss
+object ResultTitleAreaCss
     extends CssClass(
       OperationTitleCss,
       S.position.fixed(),

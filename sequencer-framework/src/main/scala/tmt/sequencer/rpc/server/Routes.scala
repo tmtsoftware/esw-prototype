@@ -31,7 +31,7 @@ class Routes(sequenceFeeder: SequenceFeeder,
   val stream: Source[Event, NotUsed] = {
     Source
       .fromFuture(eventService.defaultSubscriber)
-      .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.log"))))
+      .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.result"))))
   }
 
   val route: Route = cors() {
@@ -102,7 +102,7 @@ class Routes(sequenceFeeder: SequenceFeeder,
         }
       } ~
       get {
-        path(SequenceLoggerWeb.ApiName / SequenceLoggerWeb.logs) {
+        path(SequenceLoggerWeb.ApiName / SequenceLoggerWeb.results) {
           complete(stream.map(event => ServerSentEvent(event.paramSet.toString())))
         }
       } ~

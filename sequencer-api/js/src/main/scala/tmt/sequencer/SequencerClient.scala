@@ -9,5 +9,5 @@ object SequencerClient {
   private val gateway              = new WebGateway()
   val feeder: SequenceFeederClient = new SequenceFeederClient(gateway)
   val editor: SequenceEditorClient = new SequenceEditorClient(gateway)
-  val logger: EventSource          = new EventSource(s"${SequenceLoggerWeb.ApiName}/${SequenceLoggerWeb.logs}")
+  val logger: EventSource          = new EventSource(s"${SequenceLoggerWeb.ApiName}/${SequenceLoggerWeb.results}")
 }

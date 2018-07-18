@@ -71,7 +71,7 @@ class CswServices(sequencer: Sequencer,
     new PublisherStream(eventualCancellable)
   }
 
-  def log(msg: String): Unit = spawn {
-    eventService.defaultPublisher.await.publish(LogEvent.createLogEvent(s"$sequencerId-$observingMode", msg)).await
+  def sendResult(msg: String): Unit = spawn {
+    eventService.defaultPublisher.await.publish(ResultEvent.createResultEvent(s"$sequencerId-$observingMode", msg)).await
   }
 }

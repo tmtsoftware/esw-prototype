@@ -6,5 +6,5 @@ trait SequenceLoggerWeb {
 
 object SequenceLoggerWeb {
   val ApiName = "sequencer"
-  val logs    = "logs"
+  val results = "results"
 }

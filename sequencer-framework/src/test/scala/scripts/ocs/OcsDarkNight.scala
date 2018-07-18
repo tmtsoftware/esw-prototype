@@ -22,7 +22,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
-      cs.log(s"Command ${commandA.commandName} received by ${cs.sequencerId}")
+      println(s"[Ocs] Received command: ${commandA.commandName}")
+      cs.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
       val maybeCommandB = cs.nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB  = maybeCommandB.get
@@ -30,13 +31,11 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
         CommandList.from(commandB, commandB1)
       } else CommandList.empty
 
-      println(s"[Ocs] Received commandA: ${commandA.commandName}")
-
       val commandList = subCommandsB.add(commandA)
 
       val response = iris.feed(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
-      cs.log(s"[Ocs] Received response: $response")
       println(s"[Ocs] Received response: $response")
+      cs.sendResult(s"[Ocs] Received response: $response")
       response
     }
   }
@@ -51,7 +50,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
         CommandList.empty
       }
 
-      println(s"[Ocs] Received commandC: ${commandC.commandName}")
+      println(s"[Ocs] Received command: ${commandC.commandName}")
       val irisSequence = CommandList.from(commandC)
 
       val aggregateResponse = parAggregate(
