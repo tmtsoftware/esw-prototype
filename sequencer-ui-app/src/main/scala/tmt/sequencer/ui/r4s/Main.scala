@@ -12,7 +12,7 @@ object Main {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     val gateway                       = new WebGateway()
-    val clientF: SequenceFeederClient = new SequenceFeederClient()
+    val clientF: SequenceFeederClient = new SequenceFeederClient(gateway)
     val clientE: SequenceEditorClient = new SequenceEditorClient(gateway)
     val clientL: SequenceLoggerClient = new SequenceLoggerClient()
 

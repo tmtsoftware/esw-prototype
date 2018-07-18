@@ -1,6 +1,6 @@
 package tmt.sequencer.ui.apps
 
-import tmt.sequencer.SequenceFeederClient
+import tmt.sequencer.{SequenceFeederClient, WebGateway}
 import tmt.sequencer.models.{CommandListWeb, SequenceCommandWeb, WebRWSupport}
 import ujson.Js
 
@@ -9,7 +9,8 @@ object JsDemoApp extends WebRWSupport {
 
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    val client = new SequenceFeederClient()
+    val gateway = new WebGateway()
+    val client  = new SequenceFeederClient(gateway)
 
     val commandListWeb = CommandListWeb(
       Seq(
