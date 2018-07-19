@@ -3,6 +3,7 @@ package tmt.sequencer
 import org.scalajs.dom.raw.EventSource
 import tmt.sequencer.api.SequenceLoggerWeb
 
+//TODO: discuss
 object SequencerClient {
   import scala.concurrent.ExecutionContext.Implicits.global
 

@@ -6,14 +6,14 @@ import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 case class IOOperationComponent(componentNameProp: P[String], operation: P[String], output: P[String])
     extends Component[IOOperationComponent.Msg] {
+
   val input = State("")
 
   override def render(get: Get): Node = {
-    val componentName = get(componentNameProp)
     E.div(
       E.div(
         OperationTitleCss,
-        Text(s"$componentName Request"),
+        Text(s"${get(componentNameProp)} Request"),
         E.div(
           E.span(
             E.textarea(
@@ -25,24 +25,22 @@ case class IOOperationComponent(componentNameProp: P[String], operation: P[Strin
           )
         ),
         E.div(
-          E.button(ButtonCss, Text(get(operation)), A.onClick(e => {
-            e.preventDefault()
-            emit(HandleClick(get(input)))
-          }))
+          E.button(
+            ButtonCss,
+            Text(get(operation)),
+            A.onClick { e =>
+              e.preventDefault()
+              emit(HandleClick(get(input)))
+            }
+          )
         )
       ),
       E.div(
         OperationTitleCss,
-        Text(s"$componentName Response"),
+        Text(s"${get(componentNameProp)} Response"),
         E.div(
           TextAreaCss,
-          E.span(
-            E.pre(
-              Text(
-                get(output)
-              )
-            )
-          )
+          E.span(E.pre(Text(get(output))))
         )
       )
     )

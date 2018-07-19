@@ -111,3 +111,13 @@ object ButtonCss
       S.color(Palette.blue),
       S.borderColor(Palette.grey)
     )
+
+object AnchorCss
+    extends CssClass(
+      LinkCss,
+      S.fontFamily("Verdana"),
+      S.fontSize.px(16),
+      S.position("absolute"),
+      S.top.px(15),
+      S.right.px(10),
+    )
