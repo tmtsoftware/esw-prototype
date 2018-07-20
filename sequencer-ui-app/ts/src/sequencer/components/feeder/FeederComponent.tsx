@@ -1,37 +1,42 @@
 import * as React from 'react';
-import { Component } from 'react';
-import * as request from "superagent";
+import {Component} from 'react';
+import Client from "../../client/IFeederClient";
 import IOOperationComponent from '../IOOperationComponent';
 
 interface IState {
     feedResponse: string
 }
 
+interface IProps {
+    client: Client
+}
 
-class FeederComponent extends Component<{}, IState> {
 
-    constructor(props: {}) {
+class FeederComponent extends Component<IProps, IState> {
+
+    constructor(props: IProps) {
         super(props);
         this.state = {feedResponse: ""}
     }
 
+    public callBack = (res: string) => this.setState({
+            feedResponse: res
+        }
+    );
+
     public render() {
         return (
-            <IOOperationComponent componentNameProp="Sequence Feeder" operation="Feed" output={this.state.feedResponse} feedApi={this.feedApi}/>
+            <IOOperationComponent
+                componentNameProp="Sequence Feeder"
+                operation="Feed"
+                output={this.state.feedResponse}
+                feedApi={this.feedApi}/>
         );
     }
 
     private feedApi = (input: string) => {
-        request
-            .post('http://localhost:8000/feeder/feed')
-            .set('Content-Type', 'application/json')
-            .send(input)
-            .end((err, res) =>
-                this.setState({
-                    feedResponse: JSON.stringify(res.body,null,2)
-                })
-            );
-    }
+        this.props.client.feedApi(input, this.callBack)
+    };
 }
 
 export default FeederComponent
