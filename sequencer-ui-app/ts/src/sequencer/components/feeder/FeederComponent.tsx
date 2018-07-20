@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
+import * as request from "superagent";
 import IOOperationComponent from '../IOOperationComponent';
 
 interface IState {
@@ -21,14 +22,15 @@ class FeederComponent extends Component<{}, IState> {
     }
 
     private feedApi = (input: string) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8000/feeder/feed', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = () => {
-                this.setState({feedResponse: xhr.responseText})
-        };
-        xhr.send(input);
-        alert("Button was clicked")
+        request
+            .post('http://localhost:8000/feeder/feed')
+            .set('Content-Type', 'application/json')
+            .send(input)
+            .end((err, res) =>
+                this.setState({
+                    feedResponse: JSON.stringify(res.body,null,2)
+                })
+            );
     }
 }
 
