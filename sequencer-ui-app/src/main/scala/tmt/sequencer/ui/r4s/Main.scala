@@ -5,7 +5,7 @@ import tmt.sequencer._
 import tmt.sequencer.ui.r4s.editor.EditorComponent
 import tmt.sequencer.ui.r4s.facade.NpmReactBridge
 import tmt.sequencer.ui.r4s.feeder.FeederComponent
-import tmt.sequencer.ui.r4s.logevent.ResultEventComponent
+import tmt.sequencer.ui.r4s.resultevent.ResultEventComponent
 
 object Main {
   def main(arguments: Array[String]): Unit = {

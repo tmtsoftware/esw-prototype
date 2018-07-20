@@ -1,4 +1,4 @@
-package tmt.sequencer.ui.r4s.logevent
+package tmt.sequencer.ui.r4s.resultevent
 
 import com.github.ahnfelt.react4s._
 import org.scalajs.dom.raw.EventSource
