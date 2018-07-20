@@ -1,14 +1,24 @@
 import * as React from 'react';
-import {Component} from 'react';
-import styled from "styled-components";
+import {Component} from "react";
+import styled, {css, StyledFunction} from "styled-components";
 
-const Button = styled.button`
+interface IYourProps {
+    primary: boolean
+}
+
+const myButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
+
+const MyButton = myButton`
         border-radius: 3px;
         padding: 0.25em 1em;
         margin: 0 1em;
         background: transparent;
-        color: blue;
-        border: 2px solid grey;
+        color: darkblue;
+        border: 2px solid darkblue;
+        
+        ${props => props.primary && css`
+        background: lightblue;
+        color: darkblue;`}
       `;
 
 interface IProps {
@@ -44,7 +54,7 @@ class IOOperationComponent extends Component<IProps, IState> {
                 <div>{componentNameProp} Request</div>
                 <div><span><textarea className="Textarea" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <Button onClick={this.handleClick}>{operation}</Button>
+                    <MyButton primary={true} onClick={this.handleClick}>{operation}</MyButton>
                 </div>
                 <div><span><textarea className="Textarea" value={output}/></span></div>
             </div>
