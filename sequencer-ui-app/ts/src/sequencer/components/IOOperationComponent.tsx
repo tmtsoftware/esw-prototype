@@ -1,5 +1,15 @@
 import * as React from 'react';
 import {Component} from 'react';
+import styled from "styled-components";
+
+const Button = styled.button`
+        border-radius: 3px;
+        padding: 0.25em 1em;
+        margin: 0 1em;
+        background: transparent;
+        color: blue;
+        border: 2px solid grey;
+      `;
 
 interface IProps {
     componentNameProp: string
@@ -34,7 +44,7 @@ class IOOperationComponent extends Component<IProps, IState> {
                 <div>{componentNameProp} Request</div>
                 <div><span><textarea className="Textarea" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <button onClick={this.handleClick}>{operation}</button>
+                    <Button onClick={this.handleClick}>{operation}</Button>
                 </div>
                 <div><span><textarea className="Textarea" value={output}/></span></div>
             </div>
