@@ -32,11 +32,11 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div>
                 <div>{componentNameProp} Request</div>
-                <div><span><textarea value={this.state.input} onChange={this.updateInput}/></span></div>
+                <div><span><textarea className="Textarea" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
                     <button onClick={this.handleClick}>{operation}</button>
                 </div>
-                <div><span><textarea value={output}/></span></div>
+                <div><span><textarea className="Textarea" value={output}/></span></div>
             </div>
         );
     }

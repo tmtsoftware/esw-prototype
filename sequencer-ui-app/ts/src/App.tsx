@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './App.css'
 import FeederComponent from './sequencer/components/feeder/FeederComponent';
 
 class App extends React.Component {
