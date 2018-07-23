@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 import FeederClient from "../../client/IFeederClient";
-import IOOperationComponent from '../IOOperationComponent';
+import {IOOperationComponent} from '../IOOperationComponent';
 
 interface IState {
     resumeResponse: string

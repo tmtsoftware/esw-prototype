@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 import EditorClient from "../../client/EditorClient";
+import {CustomButton} from "../IOOperationComponent";
 
 interface IState {
     pauseResponse: string
@@ -27,7 +28,7 @@ class PauseComponent extends Component<IProps, IState> {
             <div>
                 <div>Sequence Editor Pause</div>
                 <div>
-                    <button onClick={this.handleClick}>Pause</button>
+                    <CustomButton primary={true} onClick={this.handleClick}>Pause</CustomButton>
                     <span>{this.state.pauseResponse}</span>
                 </div>
             </div>

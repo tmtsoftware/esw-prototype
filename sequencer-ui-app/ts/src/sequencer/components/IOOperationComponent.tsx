@@ -6,9 +6,9 @@ interface IYourProps {
     primary: boolean
 }
 
-const myButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
+const styledButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
 
-const MyButton = myButton`
+const CustomButton = styledButton`
         border-radius: 3px;
         padding: 0.25em 1em;
         margin: 0 1em;
@@ -54,7 +54,7 @@ class IOOperationComponent extends Component<IProps, IState> {
                 <div>{componentNameProp} Request</div>
                 <div><span><textarea className="Textarea" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <MyButton primary={true} onClick={this.handleClick}>{operation}</MyButton>
+                    <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
                 </div>
                 <div><span><textarea className="Textarea" value={output}/></span></div>
             </div>
@@ -76,4 +76,4 @@ class IOOperationComponent extends Component<IProps, IState> {
     };
 }
 
-export default IOOperationComponent
+export {IOOperationComponent, CustomButton}
