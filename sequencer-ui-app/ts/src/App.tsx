@@ -6,19 +6,25 @@ import FeederComponent from './sequencer/components/feeder/FeederComponent';
 import PauseComponent from "./sequencer/components/editor/PauseComponent";
 import ResumeComponent from "./sequencer/components/editor/ResumeComponent";
 import ShowSequenceComponent from "./sequencer/components/editor/ShowSequenceComponent";
+import ResultEventComponent from "./sequencer/components/resultevent/ResultEventComponent";
+import ResultEventClient from "./sequencer/client/ResultEventClient";
+import HeaderComponent from "./sequencer/components/header/HeaderComponent";
 
 class App extends React.Component {
 
     public render() {
         const feederClient = new FeederClient('http://localhost:8000');
         const editorClient = new EditorClient('http://localhost:8000');
+        const resultClient = new ResultEventClient('http://localhost:8000');
         return (
             <div className="App">
+                <HeaderComponent/>
                 <FeederComponent client={feederClient}/>
                 <PauseComponent client={editorClient}/>
                 <ResumeComponent client={editorClient}/>
                 <ShowSequenceComponent client={editorClient}/>
-            </div>
+                <ResultEventComponent client={resultClient}/>
+                </div>
         );
     }
 }

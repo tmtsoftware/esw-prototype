@@ -1,7 +1,7 @@
 package tmt.sequencer.ui.r4s.feeder
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.{SequenceFeederClient, SequencerClient}
+import tmt.sequencer.SequenceFeederClient
 import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
 import tmt.sequencer.ui.r4s.IOOperationComponent
 import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
