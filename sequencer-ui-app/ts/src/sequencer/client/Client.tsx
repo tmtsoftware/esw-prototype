@@ -6,7 +6,7 @@ class Client {
         this.baseUrl = baseUrl;
     }
 
-    public post = (url: string, input: string = "", callback: (res: string) => void) => {
+    public post = (url: string, callback: (res: string) => void, input: string = "") => {
         request
             .post(url)
             .set('Content-Type', 'application/json')

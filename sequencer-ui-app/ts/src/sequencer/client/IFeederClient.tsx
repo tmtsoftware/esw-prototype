@@ -7,7 +7,7 @@ class FeederClient extends Client{
         super(baseUrl)
     }
 
-    public feedApi = (input: string, callback: (res: string) => void) => this.post(`${this.baseUrl}/feeder/feed`, input, callback)
+    public feedApi = (input: string, callback: (res: string) => void) => this.post(`${this.baseUrl}/feeder/feed`, callback, input)
 }
 
 export default FeederClient

@@ -5,6 +5,7 @@ import FeederClient from "./sequencer/client/IFeederClient";
 import FeederComponent from './sequencer/components/feeder/FeederComponent';
 import PauseComponent from "./sequencer/components/editor/PauseComponent";
 import ResumeComponent from "./sequencer/components/editor/ResumeComponent";
+import ShowSequenceComponent from "./sequencer/components/editor/ShowSequenceComponent";
 
 class App extends React.Component {
 
@@ -16,6 +17,7 @@ class App extends React.Component {
                 <FeederComponent client={feederClient}/>
                 <PauseComponent client={editorClient}/>
                 <ResumeComponent client={editorClient}/>
+                <ShowSequenceComponent client={editorClient}/>
             </div>
         );
     }
