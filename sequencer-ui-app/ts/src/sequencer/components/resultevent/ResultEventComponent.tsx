@@ -21,7 +21,7 @@ class ResultEventComponent extends Component<IProps, IState> {
     }
 
     public componentWillMount(){
-        if (!(this.state.results && this.state.results.length)) {
+        if (!(this.state.results.length)) {
             this.props.client.onMessage(this.callBack)
         }
     }
@@ -38,10 +38,10 @@ class ResultEventComponent extends Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <p className="ResultTitleAreaCss">Sequencer Results Stream</p>
-                <div className="RightColumnCss">
+                <p className="result-title-area">Sequencer Results Stream</p>
+                <div className="right-column">
                     {console.log(`${this.state.results.length}`)}
-                    <ul className="ResultTextAreaCss">
+                    <ul className="result-text-area">
                         {this.state.results.map((value: string, index: number) => <li key={index}>{value}</li>)}
                     </ul>
                 </div>

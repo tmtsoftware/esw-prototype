@@ -1,4 +1,4 @@
-.Textarea {
+.text-area {
     position: relative;
     box-sizing: border-box;
     background-color: rgb(255, 255, 255);
@@ -22,7 +22,7 @@ button {
     border-color: rgb(211, 211, 211);
 }
 
-.TopBarCss{
+.top-bar{
     border-top: 5px solid rgb(0,0,255);
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -33,7 +33,7 @@ button {
     right: 0px;
     height: 50px
 }
-.BrandTitleCss{
+.brand-title{
     display: inline-block;
     padding-top: 8px;
     font-family: Verdana;
@@ -41,13 +41,13 @@ button {
     padding-left: 50px;
     font-size: 20px;
 }
-.BrandTaglineCss{
+.brand-tagline{
     display: inline-block;
     padding-top: 8px;
     font-family: Verdana;
     padding-left: 50px;
 }
-.AnchorCss{
+.anchor{
     color: rgb(0,0,255);
     text-decoration: none;
     cursor: pointer;
@@ -58,7 +58,7 @@ button {
     right: 10px;
 }
 
-.RightColumnCss{
+.right-column{
     left: 50%;
     bottom: 1703px;
     padding: 20px;
@@ -68,7 +68,7 @@ button {
     overflow-x: auto;
 }
 
-.RightColumnTextCss{
+.right-column-text{
     position: fixed;
     display: block;
     float: right;
@@ -77,7 +77,7 @@ button {
 }
 
 
-.ResultTitleAreaCss{
+.result-title-area{
     font-family: Verdana;
     font-size: 16px;
     color: rgb(30, 30, 30);
@@ -87,7 +87,7 @@ button {
     top: 62px;
     right: 32%;
 }
-.ResultTextAreaCss{
+.result-text-area{
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background-color: rgb(255, 255, 255);
@@ -106,7 +106,7 @@ button {
     height: 430px;
 }
 
-.OperationTitleCss{
+.operation-title{
     position: relative;
     left: 0px;
     top: 50px;

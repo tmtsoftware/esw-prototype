@@ -5,11 +5,11 @@ class HeaderComponent extends React.Component {
     public render() {
         return (
             <div>
-                <div className="TopBarCss">
-                    <span className="BrandTitleCss">TMT</span>
-                    <span className="BrandTaglineCss">Sequencer Component</span>
+                <div className="top-bar">
+                    <span className="brand-title">TMT</span>
+                    <span className="brand-tagline">Sequencer Component</span>
                 </div>
-                <a className="AnchorCss" href="https://github.com/tmtsoftware/esw-prototype">Github</a>
+                <a className="anchor" href="https://github.com/tmtsoftware/esw-prototype">Github</a>
             </div>
         );
     }

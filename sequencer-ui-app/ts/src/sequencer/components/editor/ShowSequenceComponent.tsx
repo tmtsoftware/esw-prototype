@@ -29,7 +29,7 @@ class ShowSequenceComponent extends Component<IProps, IState> {
                 <div>Sequence Editor Show Sequence</div>
                 <div>
                     <CustomButton primary={true} onClick={this.handleClick}>Show Sequence</CustomButton>
-                    <div><span><textarea className="Textarea" value={this.state.showSequenceResponse}/></span></div>
+                    <div><span><textarea className="text-area" value={this.state.showSequenceResponse}/></span></div>
                 </div>
             </div>
         );

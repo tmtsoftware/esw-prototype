@@ -51,12 +51,12 @@ class IOOperationComponent extends Component<IProps, IState> {
 
         return (
             <div>
-                <div className="OperationTitleCss">{componentNameProp} Request</div>
-                <div><span><textarea className="Textarea" value={this.state.input} onChange={this.updateInput}/></span></div>
+                <div className="operation-title">{componentNameProp} Request</div>
+                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
                     <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
                 </div>
-                <div><span><textarea className="Textarea" value={output}/></span></div>
+                <div><span><textarea className="text-area" value={output}/></span></div>
             </div>
         );
     }
