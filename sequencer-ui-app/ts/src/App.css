@@ -85,7 +85,7 @@ button {
     display: block;
     float: right;
     top: 62px;
-    right: 466px;
+    right: 32%;
 }
 .ResultTextAreaCss{
     -webkit-box-sizing: border-box;
@@ -101,7 +101,7 @@ button {
     font-size: 14px;
     overflow: auto;
     position: fixed;
-    left: 750px;
+    left: 52%;
     top: 97px;
     height: 430px;
 }
