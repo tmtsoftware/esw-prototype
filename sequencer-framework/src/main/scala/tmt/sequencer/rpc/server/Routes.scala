@@ -102,7 +102,7 @@ class Routes(sequenceFeeder: SequenceFeeder,
         }
       } ~
       get {
-        path(SequenceLoggerWeb.ApiName / SequenceLoggerWeb.results) {
+        path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
           complete(stream.map(event => ServerSentEvent(event.paramSet.toString())))
         }
       } ~

@@ -1,7 +1,7 @@
 package tmt.sequencer
 
 import org.scalajs.dom.raw.EventSource
-import tmt.sequencer.api.SequenceLoggerWeb
+import tmt.sequencer.api.SequenceResultsWeb
 
 object SequencerClient {
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -9,5 +9,5 @@ object SequencerClient {
   private val gateway              = new WebGateway()
   val feeder: SequenceFeederClient = new SequenceFeederClient(gateway)
   val editor: SequenceEditorClient = new SequenceEditorClient(gateway)
-  val logger: EventSource          = new EventSource(s"${SequenceLoggerWeb.ApiName}/${SequenceLoggerWeb.results}")
+  val logger: EventSource          = new EventSource(s"${SequenceResultsWeb.ApiName}/${SequenceResultsWeb.results}")
 }

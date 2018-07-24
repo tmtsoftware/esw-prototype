@@ -11,24 +11,23 @@ case class ResultEventComponent(client: P[EventSource]) extends Component[NoEmit
   override def componentWillRender(get: Get): Unit = {
     if (get(streamDataListS).isEmpty) {
       get(client).onmessage = { x =>
-        streamDataListS.set(get(streamDataListS) :+ s"${x.data.toString}\n")
+        //TODO: Delimiter for different msgs
+        streamDataListS.set(get(streamDataListS) :+ s"${x.data.toString}\n${"*" * 50}\n")
       }
     }
   }
 
-  override def render(get: Get): ElementOrComponent = {
-    E.div(
-      RightColumnCss,
-      E.p(
-        ResultTitleAreaCss,
-        Text("Server Result Stream")
-      ),
-      E.ul(
-        ResultTextAreaCss,
-        Tags(get(streamDataListS).map(stream => E.li(Text(stream))))
-      )
+  override def render(get: Get): ElementOrComponent = E.div(
+    RightColumnCss,
+    E.p(
+      ResultTitleAreaCss,
+      Text("Server Result Stream")
+    ),
+    E.ul(
+      ResultTextAreaCss,
+      Tags(get(streamDataListS).map(stream => E.li(Text(stream))))
     )
-  }
+  )
 
   override def componentWillUnmount(get: Get): Unit = {
     get(client).close()

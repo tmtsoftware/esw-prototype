@@ -15,7 +15,6 @@ object OperationTitleCss
 
 object RightColumnCss
     extends CssClass(
-      S.position.relative(),
       S.left.percent(50),
       S.bottom.px(1703),
       S.padding.px(20),

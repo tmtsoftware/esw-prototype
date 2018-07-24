@@ -7,7 +7,6 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
   cs.handleCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
-      cs.sendResult(s"[Iris] Received command: ${command.commandName}")
       var firstAssemblyResponse: CommandResponse = null
       var counter                                = 0
       loop {
@@ -24,7 +23,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
         .markSuccessful(command)
 
       println(s"[Iris] Received response: $response")
-      cs.sendResult(s"[Iris] Received response: $response")
+      cs.sendResult(s"$response")
       response
     }
   }

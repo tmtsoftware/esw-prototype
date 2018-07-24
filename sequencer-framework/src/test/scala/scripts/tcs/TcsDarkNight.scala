@@ -28,6 +28,7 @@ class TcsDarkNight(cs: CswServices) extends Script(cs) {
         .markSuccessful(command)
 
       println(s"[Tcs] Received response: $response")
+      cs.sendResult(s"$response")
       response
     }
   }

@@ -35,7 +35,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
       val response = iris.feed(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
       println(s"[Ocs] Received response: $response")
-      cs.sendResult(s"[Ocs] Received response: $response")
+      cs.sendResult(s"$response")
       response
     }
   }
@@ -61,6 +61,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val response = aggregateResponse.markSuccessful(commandC).markSuccessful(maybeCommandD)
 
       println(s"[Ocs] Received response: $response")
+      cs.sendResult(s"$response")
       response
     }
   }
@@ -72,6 +73,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val responseE = tcs.feed(CommandList.from(command)).await.markSuccessful(command)
 
       println(s"[Ocs] Received response: $responseE")
+      cs.sendResult(s"$responseE")
       responseE
     }
   }
