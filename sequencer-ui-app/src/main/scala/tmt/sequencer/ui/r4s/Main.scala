@@ -1,20 +1,24 @@
 package tmt.sequencer.ui.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer._
-import tmt.sequencer.ui.r4s.editor.EditorComponent
 import tmt.sequencer.ui.r4s.facade.NpmReactBridge
-import tmt.sequencer.ui.r4s.feeder.FeederComponent
-import tmt.sequencer.ui.r4s.resultevent.ResultEventComponent
+
+import scala.scalajs.js
+import scala.scalajs.js.annotation.JSImport
 
 object Main {
   def main(arguments: Array[String]): Unit = {
+    val button = Button(J("color", "secondary"), Text("Click"))
     val component = E.div(
-      Component(HeaderComponent),
-      Component(FeederComponent, SequencerClient.feeder),
-      Component(EditorComponent, SequencerClient.editor),
-      Component(ResultEventComponent, SequencerClient.logger)
+      button
     )
     NpmReactBridge.renderToDomById(component, "main")
   }
 }
+@js.native
+@JSImport("@material-ui/core", JSImport.Namespace)
+object Material extends js.Object {
+  val Button: js.Dynamic = js.native
+}
+
+object Button extends JsComponent(Material.Button)

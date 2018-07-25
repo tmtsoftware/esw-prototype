@@ -59,7 +59,8 @@ lazy val `sequencer-ui-app` = project
     resolvers += Resolver.sonatypeRepo("snapshots"),
     npmDependencies in Compile ++= Seq(
       "react" -> "16.4.1",
-      "react-dom" -> "16.4.1"
+      "react-dom" -> "16.4.1",
+      "@material-ui/core" -> "1.4.1"
     ),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
