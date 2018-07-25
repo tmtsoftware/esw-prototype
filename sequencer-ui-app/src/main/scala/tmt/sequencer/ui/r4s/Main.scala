@@ -8,9 +8,8 @@ import scala.scalajs.js.annotation.JSImport
 
 object Main {
   def main(arguments: Array[String]): Unit = {
-    val button = Button(J("color", "secondary"), Text("Click"))
     val component = E.div(
-      button
+      Button(J("color", "secondary"), Text("Click"))
     )
     NpmReactBridge.renderToDomById(component, "main")
   }
