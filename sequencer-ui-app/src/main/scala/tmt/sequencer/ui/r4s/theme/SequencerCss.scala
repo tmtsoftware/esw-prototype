@@ -55,8 +55,8 @@ object ResultTextAreaCss
     extends CssClass(
       TextAreaCss,
       S.position.fixed(),
-      S.left.px(750),
-      S.top.px(110),
+      S.left("52%"),
+      S.top.px(97),
       S.height.px(430),
       S.overflow("auto")
     )
@@ -65,7 +65,7 @@ object ResultTitleAreaCss
     extends CssClass(
       OperationTitleCss,
       S.position.fixed(),
-      S.left.px(750),
+      S.left("52%"),
       S.top.px(55)
     )
 
