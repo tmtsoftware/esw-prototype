@@ -6,6 +6,7 @@
 * sequencer-api 
 * sequencer-framework
 * location-agent-simulator
+* sequencer-ui-app
 
 ## Build Instructions
 
@@ -52,3 +53,16 @@ ssh repl@localhost -p7100
     CommandList(Seq(Setup(Prefix("test"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))))
   )`
  
+
+## Run React4s (scala.js) app
+
+Open <HOST_IP>:<SEQUENCER_PORT> 
+    - e.g. localhost:7000 which will connect to tcs sequencer
+
+ 
+## Run typescript app
+
+```javascript 
+npm install
+npm start
+```
