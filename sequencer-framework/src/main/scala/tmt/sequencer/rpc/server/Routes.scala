@@ -14,7 +14,7 @@ import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api._
 import tmt.sequencer.models._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationDouble
 
 class Routes(sequenceFeeder: SequenceFeeder,
@@ -41,7 +41,14 @@ class Routes(sequenceFeeder: SequenceFeeder,
           path(SequenceFeederWeb.Feed) {
             withRequestTimeout(40.seconds) {
               entity(as[CommandList]) { commandList =>
-                complete(sequenceFeeder.feed(commandList))
+                complete(sequenceEditor.sequence.flatMap { seq =>
+                  if (seq.steps.isEmpty) {
+                    sequenceFeeder.feed(commandList)
+                    Future.successful(Done)
+                  } else {
+                    Future.failed(new RuntimeException("Previous sequence is still running, cannot feed another sequence"))
+                  }
+                })
               }
             }
           }

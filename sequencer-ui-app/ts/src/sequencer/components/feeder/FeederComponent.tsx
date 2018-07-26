@@ -4,7 +4,7 @@ import FeederClient from "../../client/IFeederClient";
 import {IOOperationComponent} from '../IOOperationComponent';
 
 interface IState {
-    resumeResponse: string
+    feedResponse: string
 }
 
 interface IProps {
@@ -16,11 +16,11 @@ class FeederComponent extends Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {resumeResponse: ""}
+        this.state = {feedResponse: ""}
     }
 
     public callBack = (res: string) => this.setState({
-            resumeResponse: res
+            feedResponse: res
         }
     );
 
@@ -29,7 +29,7 @@ class FeederComponent extends Component<IProps, IState> {
             <IOOperationComponent
                 componentNameProp="Sequence Feeder"
                 operation="Feed"
-                output={this.state.resumeResponse}
+                output={this.state.feedResponse}
                 feedApi={this.feedApi}/>
         );
     }

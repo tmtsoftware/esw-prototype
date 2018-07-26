@@ -17,7 +17,7 @@ case class FeederComponent(client: P[SequenceFeederClient]) extends Component[No
     case HandleClick(request) =>
       feedResponse.set("Waiting for Response ....")
       client.feed(upickle.default.read[CommandListWeb](request)).onComplete {
-        case Success(response) => feedResponse.set(upickle.default.write(response, 2))
+        case Success(response) => feedResponse.set("Operation Successful")
         case Failure(ex)       => feedResponse.set(ex.getMessage)
       }
   }
