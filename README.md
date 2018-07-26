@@ -12,8 +12,8 @@
 The build is based on sbt and depends on libraries published to bintray from the 
 [csw-prod](https://github.com/tmtsoftware/csw-prod) project.
 
-- Clone csw-prod and checkout to commit 6ba398391
-    - ```git checkout 6ba398391```
+- Clone csw-prod and checkout to commit d392316b7
+    - ```git checkout d392316b7```
 
 ## Pre-requisites before running Components
 
@@ -25,7 +25,7 @@ run csw-services.sh script
     - ```$./csw-services.sh start -i en0```
     
 * csw-prod and run sbt universal:publishLocal 
-    - ```git checkout 6ba398391```
+    - ```git checkout d392316b7```
     - ```sbt universal:publishLocal```
 
 
