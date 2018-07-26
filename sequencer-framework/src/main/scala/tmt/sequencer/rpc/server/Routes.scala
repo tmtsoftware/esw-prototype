@@ -9,7 +9,7 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.SequenceCommand
 import csw.messages.events.{Event, EventKey}
 import csw.messages.params.models.Id
-import csw.services.event.scaladsl.EventService
+import csw.services.event.api.scaladsl.EventService
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api._
 import tmt.sequencer.models._

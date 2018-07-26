@@ -5,8 +5,8 @@ import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
+import csw.services.event.api.scaladsl.EventService
 import csw.services.event.internal.redis.RedisEventServiceFactory
-import csw.services.event.scaladsl.EventService
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}

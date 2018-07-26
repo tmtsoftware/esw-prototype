@@ -8,7 +8,7 @@ import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
-import csw.services.event.scaladsl.{EventService, EventSubscription}
+import csw.services.event.api.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.messages.SupervisorMsg

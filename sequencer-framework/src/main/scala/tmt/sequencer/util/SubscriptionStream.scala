@@ -1,7 +1,7 @@
 package tmt.sequencer.util
 
 import akka.Done
-import csw.services.event.scaladsl.EventSubscription
+import csw.services.event.api.scaladsl.EventSubscription
 import org.tmt.macros.StrandEc
 import tmt.sequencer.dsl.ScriptDsl
 
