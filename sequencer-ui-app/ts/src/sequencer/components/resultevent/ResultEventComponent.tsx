@@ -20,20 +20,25 @@ class ResultEventComponent extends Component<IProps, IState> {
         this.callBack = this.callBack.bind(this)
     }
 
-    public componentWillMount(){
+    public componentWillMount() {
         if (!(this.state.results.length)) {
             this.props.client.onMessage(this.callBack)
         }
     }
 
-    public componentWillUnmount(){
+    public componentWillUnmount() {
         this.props.client.close()
     }
 
-    public callBack = (evt: MessageEvent) => this.setState({
-            results: this.state.results.concat(evt.data.toString())
+    public callBack = (evt: MessageEvent) => {
+        if (evt.data.toString()) {
+            this.setState({
+                    results: this.state.results.concat(evt.data.toString())
+                        .concat("\n".concat("*".repeat(50)).concat("\n"))
+                }
+            )
         }
-    );
+    };
 
     public render() {
         return (

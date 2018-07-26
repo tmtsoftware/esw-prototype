@@ -1,10 +1,10 @@
 package tmt.sequencer.rpc.server
 
-import akka.{Done, NotUsed}
 import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
+import akka.{Done, NotUsed}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.SequenceCommand
 import csw.messages.events.{Event, EventKey}
@@ -14,8 +14,8 @@ import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.api._
 import tmt.sequencer.models._
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.DurationDouble
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
 
 class Routes(sequenceFeeder: SequenceFeeder,
              sequenceEditor: SequenceEditor,
@@ -39,16 +39,12 @@ class Routes(sequenceFeeder: SequenceFeeder,
       post {
         pathPrefix(SequenceFeederWeb.ApiName) {
           path(SequenceFeederWeb.Feed) {
-            withRequestTimeout(40.seconds) {
-              entity(as[CommandList]) { commandList =>
-                complete(sequenceEditor.sequence.flatMap { seq =>
-                  if (seq.steps.isEmpty) {
-                    sequenceFeeder.feed(commandList)
-                    Future.successful(Done)
-                  } else {
-                    Future.failed(new RuntimeException("Previous sequence is still running, cannot feed another sequence"))
-                  }
-                })
+            entity(as[CommandList]) { commandList =>
+              onSuccess(sequenceEditor.isAvailable) { isAvailable =>
+                validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {
+                  sequenceFeeder.feed(commandList)
+                  complete(Done)
+                }
               }
             }
           }
@@ -110,7 +106,11 @@ class Routes(sequenceFeeder: SequenceFeeder,
       } ~
       get {
         path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
-          complete(stream.map(event => ServerSentEvent(event.paramSet.toString())))
+          complete {
+            stream
+              .map(event => ServerSentEvent(event.paramSet.toString()))
+              .keepAlive(1.second, () => ServerSentEvent.heartbeat)
+          }
         }
       } ~
       get {

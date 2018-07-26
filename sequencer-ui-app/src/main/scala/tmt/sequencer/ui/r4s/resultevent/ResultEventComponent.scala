@@ -12,7 +12,9 @@ case class ResultEventComponent(client: P[EventSource]) extends Component[NoEmit
     if (get(streamDataListS).isEmpty) {
       get(client).onmessage = { x =>
         //TODO: Delimiter for different msgs
-        streamDataListS.set(get(streamDataListS) :+ s"${x.data.toString}\n${"*" * 50}\n")
+        if (x.data.toString.nonEmpty) {
+          streamDataListS.set(get(streamDataListS) :+ s"${x.data.toString}\n${"*" * 50}\n")
+        }
       }
     }
   }

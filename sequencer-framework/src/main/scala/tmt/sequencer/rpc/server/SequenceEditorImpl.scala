@@ -58,4 +58,5 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
 
   override def shutdown(): Future[Unit] = script.shutdown().map(_ => ())
 
+  override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
