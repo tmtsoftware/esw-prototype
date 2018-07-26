@@ -5,7 +5,7 @@ import tmt.sequencer.models.{AggregateResponseWeb, CommandListWeb}
 import scala.concurrent.Future
 
 trait SequenceFeederWeb {
-  def feed(commandListWeb: CommandListWeb): Future[AggregateResponseWeb]
+  def feed(commandListWeb: CommandListWeb): Future[Unit]
 }
 
 object SequenceFeederWeb {

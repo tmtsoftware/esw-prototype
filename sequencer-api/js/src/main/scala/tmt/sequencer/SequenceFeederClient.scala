@@ -7,9 +7,8 @@ import scala.concurrent.Future
 
 class SequenceFeederClient(gateway: WebGateway) extends SequenceFeederWeb with WebRWSupport {
 
-  override def feed(commandList: CommandListWeb): Future[AggregateResponseWeb] = gateway.post(
+  override def feed(commandList: CommandListWeb): Future[Unit] = gateway.post(
     url = s"${SequenceFeederWeb.ApiName}/${SequenceFeederWeb.Feed}",
-    data = upickle.default.write(commandList),
-    transform = x => upickle.default.read[AggregateResponseWeb](x)
+    data = upickle.default.write(commandList)
   )
 }
