@@ -109,7 +109,7 @@ class Routes(sequenceFeeder: SequenceFeeder,
           complete {
             stream
               .map(event => ServerSentEvent(event.paramSet.toString()))
-              .keepAlive(1.second, () => ServerSentEvent.heartbeat)
+              .keepAlive(10.second, () => ServerSentEvent.heartbeat)
           }
         }
       } ~
