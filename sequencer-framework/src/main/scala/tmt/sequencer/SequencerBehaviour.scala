@@ -39,6 +39,10 @@ object SequencerBehaviour {
     def update(_aggregateResponse: AggregateResponse): Unit = {
       sequence = sequence.updateStatus(_aggregateResponse.ids, StepStatus.Finished)
       aggregateResponse = aggregateResponse.add(_aggregateResponse)
+      clearSequenceIfFinished()
+    }
+
+    def clearSequenceIfFinished(): Unit = {
       if (sequence.isFinished) {
         println("Sequence is finished")
         responseRefOpt.foreach(x => x ! Success(aggregateResponse))
@@ -51,6 +55,7 @@ object SequencerBehaviour {
 
     def updateAndSendResponse(newSequence: Sequence, replyTo: ActorRef[Try[Unit]]): Unit = {
       sequence = newSequence
+      clearSequenceIfFinished()
       replyTo ! Success({})
     }
 
