@@ -85,7 +85,7 @@ button {
     display: block;
     float: right;
     top: 62px;
-    right: 32%;
+    left: 53%;
 }
 .result-text-area{
     -webkit-box-sizing: border-box;
