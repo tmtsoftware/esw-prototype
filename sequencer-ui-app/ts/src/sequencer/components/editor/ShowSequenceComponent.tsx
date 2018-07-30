@@ -17,7 +17,6 @@ class ShowSequenceComponent extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {showSequenceResponse: ""};
-        this.handleClick = this.handleClick.bind(this)
     }
 
     public callBack(res: string) {
@@ -36,9 +35,9 @@ class ShowSequenceComponent extends Component<IProps, IState> {
         );
     }
 
-    private handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    private handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        this.props.client.showSequence(this.callBack)
+        this.props.client.showSequence((res) => this.callBack(res))
     };
 }
 

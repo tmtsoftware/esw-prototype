@@ -17,7 +17,6 @@ class PauseComponent extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {pauseResponse: ""};
-        this.handleClick = this.handleClick.bind(this)
     }
 
     public callBack(res: string) {
@@ -36,9 +35,9 @@ class PauseComponent extends Component<IProps, IState> {
         );
     }
 
-    private handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    private handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        this.props.client.pause(this.callBack)
+        this.props.client.pause((res) => this.callBack(res))
     };
 }
 

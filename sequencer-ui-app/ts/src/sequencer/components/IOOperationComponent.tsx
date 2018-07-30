@@ -25,7 +25,7 @@ interface IProps {
     componentNameProp: string
     operation: string
     output: string,
-    feedApi: (input: string) => void
+    feedApi(input: string): void
 }
 
 interface IState {

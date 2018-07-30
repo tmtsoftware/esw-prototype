@@ -33,8 +33,8 @@ class FeederComponent extends Component<IProps, IState> {
         );
     }
 
-    private feedApi(input: string) {
-        this.props.client.feedApi(input, this.callBack)
+    private feedApi = (input: string) => {
+        this.props.client.feedApi(input, (res) => this.callBack(res))
     };
 }
 
