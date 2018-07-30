@@ -20,7 +20,9 @@ class ResumeComponent extends Component<IProps, IState> {
         this.handleClick = this.handleClick.bind(this)
     }
 
-    public callBack = (res: string) => this.setState({resumeResponse: res});
+    public callBack(res: string) {
+        this.setState({resumeResponse: res});
+    }
 
     public render() {
         return (
@@ -34,7 +36,7 @@ class ResumeComponent extends Component<IProps, IState> {
         );
     }
 
-    private handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    private handleClick(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         this.props.client.resume(this.callBack)
     };

@@ -1,4 +1,3 @@
-
 class ResultEventClient {
     protected baseUrl: string;
     protected eventSource: EventSource;
@@ -8,10 +7,13 @@ class ResultEventClient {
         this.eventSource = new EventSource(`${this.baseUrl}/sequencer/results`);
     }
 
-    public onMessage = (callback: (evt: MessageEvent) => any) =>
+    public onMessage(callback: (evt: MessageEvent) => any) {
         this.eventSource.onmessage = callback;
+    }
 
-    public close = () => this.eventSource.close();
+    public close() {
+        this.eventSource.close();
+    }
 }
 
 export default ResultEventClient

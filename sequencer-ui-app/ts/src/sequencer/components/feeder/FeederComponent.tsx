@@ -19,10 +19,9 @@ class FeederComponent extends Component<IProps, IState> {
         this.state = {feedResponse: ""}
     }
 
-    public callBack = (res: string) => this.setState({
-            feedResponse: res
-        }
-    );
+    public callBack(res: string) {
+        this.setState({feedResponse: res});
+    }
 
     public render() {
         return (
@@ -34,7 +33,7 @@ class FeederComponent extends Component<IProps, IState> {
         );
     }
 
-    private feedApi = (input: string) => {
+    private feedApi(input: string) {
         this.props.client.feedApi(input, this.callBack)
     };
 }

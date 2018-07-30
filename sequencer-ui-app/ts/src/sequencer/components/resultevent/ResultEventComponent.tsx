@@ -30,7 +30,7 @@ class ResultEventComponent extends Component<IProps, IState> {
         this.props.client.close()
     }
 
-    public callBack = (evt: MessageEvent) => {
+    public callBack(evt: MessageEvent) {
         if (evt.data.toString()) {
             this.setState({
                     results: this.state.results.concat(evt.data.toString())

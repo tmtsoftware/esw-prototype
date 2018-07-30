@@ -20,8 +20,9 @@ class PauseComponent extends Component<IProps, IState> {
         this.handleClick = this.handleClick.bind(this)
     }
 
-    public callBack = (res: string) => this.setState({pauseResponse: res}
-    );
+    public callBack(res: string) {
+        this.setState({pauseResponse: res});
+    }
 
     public render() {
         return (
@@ -35,7 +36,7 @@ class PauseComponent extends Component<IProps, IState> {
         );
     }
 
-    private handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    private handleClick(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         this.props.client.pause(this.callBack)
     };
