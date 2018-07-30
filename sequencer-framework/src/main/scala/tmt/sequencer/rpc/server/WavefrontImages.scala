@@ -15,6 +15,6 @@ class WavefrontImages(implicit mat: Materializer, ec: ExecutionContext) {
 
   def imageContentAsUrls: Source[String, NotUsed] = {
     val imagePaths = Files.list(Paths.get("/usr/local/data/frames")).toScala[List]
-    Source(imagePaths).map(path => prefix + Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
+    Source(imagePaths.sorted).map(path => prefix + Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
   }
 }

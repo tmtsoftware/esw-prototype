@@ -120,7 +120,6 @@ class Routes(
           complete {
             wavefrontImages.imageContentAsUrls
               .map(imageDataAsUrl => ServerSentEvent(imageDataAsUrl))
-              .keepAlive(10.second, () => ServerSentEvent.heartbeat)
           }
         }
       } ~

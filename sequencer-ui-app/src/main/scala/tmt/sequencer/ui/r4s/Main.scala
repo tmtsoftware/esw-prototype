@@ -5,7 +5,7 @@ import tmt.sequencer._
 import tmt.sequencer.ui.r4s.editor.EditorComponent
 import tmt.sequencer.ui.r4s.facade.NpmReactBridge
 import tmt.sequencer.ui.r4s.feeder.FeederComponent
-import tmt.sequencer.ui.r4s.resultevent.ResultEventComponent
+import tmt.sequencer.ui.r4s.resultevent.{ImageComponent, ResultEventComponent}
 
 object Main {
   def main(arguments: Array[String]): Unit = {
@@ -13,7 +13,8 @@ object Main {
       Component(HeaderComponent),
       Component(FeederComponent, SequencerClient.feeder),
       Component(EditorComponent, SequencerClient.editor),
-      Component(ResultEventComponent, SequencerClient.logger)
+      Component(ResultEventComponent, SequencerClient.logger),
+      Component(ImageComponent, SequencerClient.imageEventSource)
     )
     NpmReactBridge.renderToDomById(component, "main")
   }
