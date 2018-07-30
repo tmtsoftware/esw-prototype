@@ -43,9 +43,11 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
+  lazy val wavefrontImages = new WavefrontImages()
+
   lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef, script)
   lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
-  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor, eventService, sequencerId, observingMode)
+  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor, eventService, sequencerId, observingMode, wavefrontImages)
   lazy val rpcServer                      = new RpcServer(configs, routes)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)

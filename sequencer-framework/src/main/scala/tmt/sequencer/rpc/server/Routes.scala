@@ -17,13 +17,15 @@ import tmt.sequencer.models._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 
-class Routes(sequenceFeeder: SequenceFeeder,
-             sequenceEditor: SequenceEditor,
-             eventService: EventService,
-             sequencerId: String,
-             observingMode: String)(
-    implicit ec: ExecutionContext
-) extends UpickleSupport
+class Routes(
+    sequenceFeeder: SequenceFeeder,
+    sequenceEditor: SequenceEditor,
+    eventService: EventService,
+    sequencerId: String,
+    observingMode: String,
+    wavefrontImages: WavefrontImages
+)(implicit ec: ExecutionContext)
+    extends UpickleSupport
     with UpickleRWSupport {
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
@@ -109,6 +111,15 @@ class Routes(sequenceFeeder: SequenceFeeder,
           complete {
             stream
               .map(event => ServerSentEvent(event.paramSet.toString()))
+              .keepAlive(10.second, () => ServerSentEvent.heartbeat)
+          }
+        }
+      } ~
+      get {
+        path(SequenceResultsWeb.ApiName / "images") {
+          complete {
+            wavefrontImages.imageContentAsUrls
+              .map(imageDataAsUrl => ServerSentEvent(imageDataAsUrl))
               .keepAlive(10.second, () => ServerSentEvent.heartbeat)
           }
         }
