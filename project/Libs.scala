@@ -12,7 +12,6 @@ object Libs {
   val `akka-http-cors`     = "ch.megard" %% "akka-http-cors" % "0.3.0"
   val `play-json`          = dep("com.typesafe.play" %%% "play-json" % "2.6.9") //Apache 2.0
   val `upickle`            = dep("com.lihaoyi" %%% "upickle" % "0.6.6")
-  val `ujson-play`         = "com.lihaoyi" %% "ujson-play" % "0.6.6"
   val `monix`              = dep("io.monix" %%% "monix" % "3.0.0-RC1")
   val `scalajs-dom`        = dep("org.scala-js" %%% "scalajs-dom" % "0.9.6")
 }

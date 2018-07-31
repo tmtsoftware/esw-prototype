@@ -1,6 +1,5 @@
 package tmt.sequencer.api
 
-import akka.Done
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.sequencer.models.Sequence

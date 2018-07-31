@@ -81,9 +81,8 @@ lazy val `sequencer-api` = project
   .dependsOn(`sequencer-web-api-jvm`)
   .settings(
     libraryDependencies ++= Seq(
-      Libs.`ujson-play`,
       Akka.`akka-typed`,
-      Csw.`csw-messages`,
+      Csw.`csw-messages`
     )
   )
 
@@ -96,7 +95,6 @@ lazy val `sequencer-framework` = project
       Libs.`scala-reflect`,
       Libs.`akka-http-cors`,
       Libs.`scala-compiler`,
-      Libs.`ujson-play`,
       Akka.`akka-stream`,
       Akka.`akka-typed`,
       Akka.`akka-typed-testkit` % Test,
