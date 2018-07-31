@@ -20,5 +20,5 @@ trait SequenceEditor {
   def insertAfter(id: Id, commands: List[SequenceCommand]): Future[Unit]
   def prepend(commands: List[SequenceCommand]): Future[Unit]
   def replace(id: Id, commands: List[SequenceCommand]): Future[Unit]
-  def shutdown(): Future[Done]
+  def shutdown(): Future[Unit]
 }

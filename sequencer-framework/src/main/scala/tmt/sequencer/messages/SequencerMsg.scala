@@ -1,6 +1,5 @@
 package tmt.sequencer.messages
 
-import akka.Done
 import akka.actor.typed.ActorRef
 import csw.messages.TMTSerializable
 import csw.messages.commands.SequenceCommand
@@ -12,7 +11,7 @@ import scala.util.Try
 sealed trait SupervisorMsg extends TMTSerializable
 
 object SupervisorMsg {
-  case class ControlCommand(name: String, replyTo: ActorRef[Try[Done]]) extends SupervisorMsg
+  case class ControlCommand(name: String, replyTo: ActorRef[Try[Unit]]) extends SupervisorMsg
 }
 
 sealed trait SequencerMsg extends TMTSerializable

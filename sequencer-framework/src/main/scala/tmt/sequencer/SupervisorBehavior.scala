@@ -12,7 +12,7 @@ object SupervisorBehavior {
     Behaviors.receive[SupervisorMsg] { (ctx, msg) =>
       import ctx.executionContext
       msg match {
-        case ControlCommand("shutdown", replyTo) => script.shutdown().onComplete(x => replyTo ! x)
+        case ControlCommand("shutdown", replyTo) => script.shutdown().onComplete(x => replyTo ! x.map(_ => ()))
         case msg: ExternalSequencerMsg           => sequencerRef ! msg
         case _                                   =>
       }

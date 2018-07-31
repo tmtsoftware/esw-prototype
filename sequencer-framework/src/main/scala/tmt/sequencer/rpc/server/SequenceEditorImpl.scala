@@ -1,6 +1,5 @@
 package tmt.sequencer.rpc.server
 
-import akka.Done
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
@@ -56,7 +55,7 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: A
   override def removeBreakpoints(ids: List[Id]): Future[Unit] =
     responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[Done] = responseHelper(supervisor ? (x => ControlCommand("shutdown", x)))
+  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => ControlCommand("shutdown", x)))
 
   override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
