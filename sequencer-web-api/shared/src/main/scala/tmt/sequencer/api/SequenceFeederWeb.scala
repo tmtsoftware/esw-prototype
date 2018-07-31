@@ -1,6 +1,6 @@
 package tmt.sequencer.api
 
-import tmt.sequencer.models.{AggregateResponseWeb, CommandListWeb}
+import tmt.sequencer.models.CommandListWeb
 
 import scala.concurrent.Future
 

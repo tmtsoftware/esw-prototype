@@ -1,7 +1,7 @@
 package tmt.sequencer
 
 import tmt.sequencer.api.SequenceFeederWeb
-import tmt.sequencer.models.{AggregateResponseWeb, CommandListWeb, WebRWSupport}
+import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
 
 import scala.concurrent.Future
 

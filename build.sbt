@@ -25,14 +25,14 @@ inThisBuild(List(
 lazy val `esw-prototype` = project
   .in(file("."))
   .aggregate(
-    `sequencer-api-js`,
-    `sequencer-api-jvm`,
+    `sequencer-web-api-js`,
+    `sequencer-web-api-jvm`,
     `sequencer-macros`,
     `sequencer-framework`,
     `sequencer-ui-app`
   )
 
-lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
+lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .settings(
     libraryDependencies ++= Seq(
@@ -48,12 +48,12 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
     )
   )
 
-lazy val `sequencer-api-js` = `sequencer-api`.js
-lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
+lazy val `sequencer-web-api-js` = `sequencer-web-api`.js
+lazy val `sequencer-web-api-jvm` = `sequencer-web-api`.jvm
 
 lazy val `sequencer-ui-app` = project
   .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
-  .dependsOn(`sequencer-api-js`)
+  .dependsOn(`sequencer-web-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     resolvers += Resolver.sonatypeRepo("snapshots"),
@@ -78,7 +78,7 @@ lazy val `sequencer-macros` = project
 
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-api-jvm`)
+  .dependsOn(`sequencer-macros`, `sequencer-web-api-jvm`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(

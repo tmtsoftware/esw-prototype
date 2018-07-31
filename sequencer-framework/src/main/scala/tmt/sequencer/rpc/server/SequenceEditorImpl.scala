@@ -8,7 +8,6 @@ import akka.util.Timeout
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.sequencer.api.SequenceEditor
-import tmt.sequencer.dsl.Script
 import tmt.sequencer.messages.SequencerMsg._
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.messages.SupervisorMsg.ControlCommand
