@@ -1,5 +1,6 @@
 package tmt.sequencer.api
 
+import akka.Done
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.sequencer.models.Sequence
@@ -19,5 +20,5 @@ trait SequenceEditor {
   def insertAfter(id: Id, commands: List[SequenceCommand]): Future[Unit]
   def prepend(commands: List[SequenceCommand]): Future[Unit]
   def replace(id: Id, commands: List[SequenceCommand]): Future[Unit]
-  def shutdown(): Future[Unit]
+  def shutdown(): Future[Done]
 }

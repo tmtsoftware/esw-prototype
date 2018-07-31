@@ -1,5 +1,6 @@
 package tmt.sequencer.rpc.server
 
+import akka.Done
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
@@ -10,14 +11,14 @@ import tmt.sequencer.api.SequenceEditor
 import tmt.sequencer.dsl.Script
 import tmt.sequencer.messages.SequencerMsg._
 import tmt.sequencer.messages.SupervisorMsg
+import tmt.sequencer.messages.SupervisorMsg.ControlCommand
 import tmt.sequencer.models.Sequence
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
-class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(implicit system: ActorSystem)
-    extends SequenceEditor {
+class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceEditor {
   private implicit val timeout: Timeout     = Timeout(10.hour)
   private implicit val scheduler: Scheduler = system.scheduler
   import system.dispatcher
@@ -56,7 +57,7 @@ class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg], script: Script)(im
   override def removeBreakpoints(ids: List[Id]): Future[Unit] =
     responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[Unit] = script.shutdown().map(_ => ())
+  override def shutdown(): Future[Done] = responseHelper(supervisor ? (x => ControlCommand("shutdown", x)))
 
   override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
