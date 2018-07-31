@@ -28,6 +28,7 @@ lazy val `esw-prototype` = project
     `sequencer-web-api-js`,
     `sequencer-web-api-jvm`,
     `sequencer-macros`,
+    `sequencer-api`,
     `sequencer-framework`,
     `sequencer-ui-app`
   )
@@ -76,9 +77,19 @@ lazy val `sequencer-macros` = project
     )
   )
 
+lazy val `sequencer-api` = project
+  .dependsOn(`sequencer-web-api-jvm`)
+  .settings(
+    libraryDependencies ++= Seq(
+      Libs.`ujson-play`,
+      Akka.`akka-typed`,
+      Csw.`csw-messages`,
+    )
+  )
+
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-web-api-jvm`)
+  .dependsOn(`sequencer-macros`, `sequencer-web-api-jvm`, `sequencer-api`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(

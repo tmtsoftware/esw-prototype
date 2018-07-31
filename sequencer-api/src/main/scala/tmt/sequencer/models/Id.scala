@@ -2,7 +2,7 @@ package tmt.sequencer.models
 
 import csw.messages.commands.{CommandResponse, SequenceCommand}
 import csw.messages.params.models.Id
-import tmt.sequencer.models.StepStatus.{Finished, InFlight, Pending}
+import tmt.sequencer.models.StepStatus._
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {
   def id: Id              = command.runId
