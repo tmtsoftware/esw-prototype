@@ -1,6 +1,7 @@
 package tmt.sequencer.ui.apps
 
-import tmt.sequencer.{SequenceFeederClient, WebGateway}
+import tmt.sequencer.WebGateway
+import tmt.sequencer.client.SequenceFeederClient
 import tmt.sequencer.models.{CommandListWeb, SequenceCommandWeb, WebRWSupport}
 import ujson.Js
 

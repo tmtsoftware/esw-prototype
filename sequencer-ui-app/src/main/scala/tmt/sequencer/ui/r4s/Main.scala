@@ -1,7 +1,7 @@
 package tmt.sequencer.ui.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer._
+import tmt.sequencer.client.SequencerClient
 import tmt.sequencer.ui.r4s.editor.EditorComponent
 import tmt.sequencer.ui.r4s.facade.NpmReactBridge
 import tmt.sequencer.ui.r4s.feeder.FeederComponent

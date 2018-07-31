@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer.client
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._

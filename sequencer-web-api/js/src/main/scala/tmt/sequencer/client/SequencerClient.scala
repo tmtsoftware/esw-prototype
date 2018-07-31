@@ -1,6 +1,7 @@
-package tmt.sequencer
+package tmt.sequencer.client
 
 import org.scalajs.dom.raw.EventSource
+import tmt.sequencer.WebGateway
 import tmt.sequencer.api.SequenceResultsWeb
 
 object SequencerClient {

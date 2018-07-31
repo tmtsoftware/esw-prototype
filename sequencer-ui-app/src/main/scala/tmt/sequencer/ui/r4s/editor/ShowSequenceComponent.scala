@@ -1,7 +1,7 @@
 package tmt.sequencer.ui.r4s.editor
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.SequenceEditorClient
+import tmt.sequencer.client.SequenceEditorClient
 import tmt.sequencer.models.WebRWSupport
 import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 

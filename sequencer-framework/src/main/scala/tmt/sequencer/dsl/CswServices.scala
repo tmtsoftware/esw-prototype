@@ -11,8 +11,8 @@ import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
 import tmt.sequencer.api.SequenceFeeder
+import tmt.sequencer.client.SequenceFeederImpl
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.rpc.server.SequenceFeederImpl
 import tmt.sequencer.util._
 import tmt.sequencer.{Engine, Sequencer}
 

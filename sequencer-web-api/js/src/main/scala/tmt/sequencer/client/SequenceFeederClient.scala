@@ -1,5 +1,6 @@
-package tmt.sequencer
+package tmt.sequencer.client
 
+import tmt.sequencer.WebGateway
 import tmt.sequencer.api.SequenceFeederWeb
 import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
 

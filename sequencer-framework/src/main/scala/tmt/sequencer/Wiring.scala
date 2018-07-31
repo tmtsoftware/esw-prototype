@@ -10,6 +10,7 @@ import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
+import tmt.sequencer.client.{SequenceEditorImpl, SequenceFeederImpl}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.rpc.server._
