@@ -106,3 +106,7 @@ lazy val `sequencer-framework` = project
     }.taskValue,
     watchSources ++= (watchSources in `sequencer-ui-app`).value
   )
+
+lazy val `sequencer-scripts-test` = project
+  .dependsOn(`sequencer-framework`)
+  .settings(name := "sequencer-scripts-test")
