@@ -86,6 +86,19 @@ lazy val `sequencer-api` = project
     )
   )
 
+lazy val `sequencer-ui-gateway` = project
+  .dependsOn(`sequencer-api`)
+  .settings(
+    libraryDependencies ++= Seq(
+      Csw.`csw-messages`,
+      Akka.`akka-http`,
+      Akka.`akka-stream`,
+      Csw.`csw-event-client`,
+      Libs.`akka-http-cors`,
+      Csw.`csw-location`
+    )
+  )
+
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
   .dependsOn(`sequencer-macros`, `sequencer-web-api-jvm`, `sequencer-api`)
