@@ -6,7 +6,7 @@ import akka.actor.{typed, ActorSystem}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import csw.services.event.api.scaladsl.EventService
-import csw.services.event.internal.redis.RedisEventServiceFactory
+import csw.services.event.EventServiceFactory
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
@@ -35,7 +35,7 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val locationService: LocationService               = LocationServiceFactory.makeLocalHttpClient
   lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
 
-  lazy val eventService: EventService = new RedisEventServiceFactory().make(locationService)
+  lazy val eventService: EventService = new EventServiceFactory().make(locationService)
   lazy val configs                    = new Configs(sequencerId, observingMode, port)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
   lazy val engine                     = new Engine
