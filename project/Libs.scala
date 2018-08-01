@@ -22,10 +22,17 @@ object Enumeratum {
 }
 
 object Csw {
-  val `csw-location`     = "org.tmt" %% "csw-location"     % "0.1-SNAPSHOT"
-  val `csw-command`      = "org.tmt" %% "csw-command"      % "0.1-SNAPSHOT"
-  val `csw-messages`     = "org.tmt" %% "csw-messages"     % "0.1-SNAPSHOT"
-  val `csw-event-client` = "org.tmt" %% "csw-event-client" % "0.1-SNAPSHOT"
+  //for testing local changes use following
+  //private val Org     = "org.tmt"
+  //private val Version = "0.1-SNAPSHOT"
+
+  private val Org     = "com.github.tmtsoftware.csw-prod"
+  private val Version = "89260aa"
+
+  val `csw-location`     = Org %% "csw-location"     % Version
+  val `csw-command`      = Org %% "csw-command"      % Version
+  val `csw-messages`     = Org %% "csw-messages"     % Version
+  val `csw-event-client` = Org %% "csw-event-client" % Version
 }
 
 object Ammonite {
