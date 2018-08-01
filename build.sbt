@@ -30,7 +30,8 @@ lazy val `esw-prototype` = project
     `sequencer-macros`,
     `sequencer-api`,
     `sequencer-framework`,
-    `sequencer-ui-app`
+    `sequencer-ui-app`,
+    `sequencer-ui-gateway`
   )
 
 lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)

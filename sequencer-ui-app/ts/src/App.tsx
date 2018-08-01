@@ -13,9 +13,9 @@ import HeaderComponent from "./sequencer/components/header/HeaderComponent";
 class App extends React.Component {
 
     public render() {
-        const feederClient = new FeederClient('http://localhost:8000');
-        const editorClient = new EditorClient('http://localhost:8000');
-        const resultClient = new ResultEventClient('http://localhost:8000');
+        const feederClient = new FeederClient('http://localhost:9090/sequencer/iris/darknight');
+        const editorClient = new EditorClient('http://localhost:9090/sequencer/iris/darknight');
+        const resultClient = new ResultEventClient('http://localhost:9090/sequencer/iris/darknight');
         return (
             <div className="App">
                 <HeaderComponent/>

@@ -11,7 +11,6 @@ object SequencerApp {
 
     LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequencer, script)
-    rpcServer.start()
 
     locationServiceWrapper.register(SequencerComponent.getComponentName(sequencerId, observingMode),
                                     ComponentType.Sequencer,

@@ -1,22 +1,15 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer
 
-import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
+import akka.actor.ActorSystem
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location}
-import csw.messages.params.models.Prefix
-import csw.services.location.commons.ActorSystemFactory
-import csw.services.location.models.AkkaRegistration
 import csw.services.location.scaladsl.LocationService
-import csw.services.logging.messages.LogControlMessages
-import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.client.{SequenceEditorImpl, SequenceFeederImpl}
 import tmt.sequencer.messages.SupervisorMsg
 
 import scala.async.Async.async
 import scala.concurrent.duration.DurationDouble
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceGateway(locationService: LocationService)(implicit ec: ExecutionContext, system: ActorSystem) {
 

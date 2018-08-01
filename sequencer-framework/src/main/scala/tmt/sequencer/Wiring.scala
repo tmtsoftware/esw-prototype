@@ -13,7 +13,6 @@ import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.client.{SequenceEditorImpl, SequenceFeederImpl}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
-import tmt.sequencer.rpc.server._
 import tmt.sequencer.scripts.ScriptLoader
 import tmt.sequencer.util.LocationServiceGateway
 
@@ -46,8 +45,6 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef)
   lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
-  lazy val routes                         = new Routes(sequenceFeeder, sequenceEditor, eventService, sequencerId, observingMode)
-  lazy val rpcServer                      = new RpcServer(configs, routes)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)
 }

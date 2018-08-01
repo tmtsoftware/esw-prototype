@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config

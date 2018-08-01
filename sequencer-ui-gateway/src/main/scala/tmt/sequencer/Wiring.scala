@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
@@ -6,6 +6,7 @@ import csw.services.event.api.scaladsl.EventService
 import csw.services.event.internal.redis.RedisEventServiceFactory
 import csw.services.location.commons.ActorSystemFactory
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
+import tmt.sequencer.rpc.server.{Routes, RpcServer}
 
 import scala.concurrent.ExecutionContext
 
@@ -22,5 +23,4 @@ class Wiring(port: Option[Int]) {
   lazy val configs   = new Configs(port)
   lazy val routes    = new Routes(locationServiceWrapper, eventService)
   lazy val rpcServer = new RpcServer(configs, routes)
-
 }

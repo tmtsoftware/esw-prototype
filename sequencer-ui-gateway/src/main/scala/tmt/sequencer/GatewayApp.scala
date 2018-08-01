@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer
 
 object GatewayApp {
   def main(args: Array[String]): Unit = {
