@@ -11,7 +11,7 @@ import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
 import tmt.sequencer.api.SequenceFeeder
-import tmt.sequencer.client.SequenceFeederImpl
+import tmt.sequencer.client.SequenceFeederClient
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.util._
 import tmt.sequencer.{Engine, Sequencer}
@@ -37,7 +37,7 @@ class CswServices(sequencer: Sequencer,
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceFeederImpl(supervisorRef)
+        new SequenceFeederClient(supervisorRef)
       }(system.dispatcher)
     }
     Await.result(eventualFeederImpl, 5.seconds)

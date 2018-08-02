@@ -13,7 +13,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
-class SequenceFeederImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceFeeder {
+class SequenceFeederClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceFeeder {
   private implicit val timeout: Timeout     = Timeout(10.hour)
   private implicit val scheduler: Scheduler = system.scheduler
 

@@ -1,7 +1,7 @@
 package tmt.sequencer.ui.r4s.feeder
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.client.SequenceFeederClient
+import tmt.sequencer.client.SequenceFeederWebClient
 import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
 import tmt.sequencer.ui.r4s.IOOperationComponent
 import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
@@ -9,11 +9,11 @@ import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class FeederComponent(client: P[SequenceFeederClient]) extends Component[NoEmit] with WebRWSupport {
+case class FeederComponent(client: P[SequenceFeederWebClient]) extends Component[NoEmit] with WebRWSupport {
 
   val feedResponse = State("")
 
-  def handleFeed(client: SequenceFeederClient, msg: IOOperationComponent.Msg): Unit = msg match {
+  def handleFeed(client: SequenceFeederWebClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       feedResponse.set("Waiting for Response ....")
       client.feed(upickle.default.read[CommandListWeb](request)).onComplete {

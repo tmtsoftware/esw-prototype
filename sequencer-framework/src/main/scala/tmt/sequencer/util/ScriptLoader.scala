@@ -1,4 +1,4 @@
-package tmt.sequencer.scripts
+package tmt.sequencer.util
 
 import tmt.sequencer.Configs
 import tmt.sequencer.dsl.{CswServices, Script}

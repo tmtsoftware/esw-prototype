@@ -10,11 +10,10 @@ import csw.services.event.EventServiceFactory
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.client.{SequenceEditorImpl, SequenceFeederImpl}
+import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
-import tmt.sequencer.scripts.ScriptLoader
-import tmt.sequencer.util.LocationServiceGateway
+import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
@@ -43,8 +42,8 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
-  lazy val sequenceEditor: SequenceEditor = new SequenceEditorImpl(supervisorRef)
-  lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederImpl(supervisorRef)
+  lazy val sequenceEditor: SequenceEditor = new SequenceEditorClient(supervisorRef)
+  lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederClient(supervisorRef)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)
 }

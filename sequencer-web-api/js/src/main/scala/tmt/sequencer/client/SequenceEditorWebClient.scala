@@ -6,7 +6,7 @@ import tmt.sequencer.models._
 
 import scala.concurrent.Future
 
-class SequenceEditorClient(gateway: WebGateway) extends SequenceEditorWeb with WebRWSupport {
+class SequenceEditorWebClient(gateway: WebGateway) extends SequenceEditorWeb with WebRWSupport {
 
   override def addAll(commands: List[SequenceCommandWeb]): Future[Unit] = gateway.post(
     url = s"${SequenceEditorWeb.ApiName}/${SequenceEditorWeb.AddAll}",

@@ -1,18 +1,18 @@
 package tmt.sequencer.ui.r4s.editor
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.client.SequenceEditorClient
+import tmt.sequencer.client.SequenceEditorWebClient
 import tmt.sequencer.models.WebRWSupport
 import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class ShowSequenceComponent(client: P[SequenceEditorClient]) extends Component[NoEmit] with WebRWSupport {
+case class ShowSequenceComponent(client: P[SequenceEditorWebClient]) extends Component[NoEmit] with WebRWSupport {
 
   val sequenceResponse = State("")
 
-  def handleShowSequence(client: SequenceEditorClient): Unit = client.sequenceWeb.onComplete {
+  def handleShowSequence(client: SequenceEditorWebClient): Unit = client.sequenceWeb.onComplete {
     case Success(value) => sequenceResponse.set(upickle.default.write(value, indent = 2))
     case Failure(ex)    => sequenceResponse.set(ex.getMessage)
   }

@@ -16,7 +16,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
-class SequenceEditorImpl(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceEditor {
+class SequenceEditorClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceEditor {
   private implicit val timeout: Timeout     = Timeout(10.hour)
   private implicit val scheduler: Scheduler = system.scheduler
   import system.dispatcher
