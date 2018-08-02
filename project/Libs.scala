@@ -1,6 +1,6 @@
 import sbt._
 import Def.{setting => dep}
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Libs {
   val ScalaVersion = "2.12.6"
@@ -17,7 +17,7 @@ object Libs {
 }
 
 object Enumeratum {
-  val version      = "1.5.12"
+  val version      = "1.5.13"
   val `enumeratum` = dep("com.beachape" %%% "enumeratum" % version) //MIT License
 }
 
@@ -43,11 +43,11 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.13"
+  val Version = "2.5.14"
 
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
   val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"         % Version
-  val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.1"
+  val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.3"
   val `akka-typed-testkit`  = "com.typesafe.akka" %% "akka-actor-testkit-typed" % Version
   val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json"      % "1.21.0" //Apache 2.0
 }
