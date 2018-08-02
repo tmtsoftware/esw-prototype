@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer.server
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.sse.ServerSentEvent

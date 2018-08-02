@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer.server
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -8,9 +8,9 @@ import tmt.sequencer.Configs
 
 import scala.concurrent.Future
 
-class RpcServer(rpcConfigs: Configs, routes: Routes)(implicit system: ActorSystem) {
+class Server(configs: Configs, routes: Routes)(implicit system: ActorSystem) {
   private implicit val materializer: ActorMaterializer = ActorMaterializer()
   import materializer.executionContext
 
-  def start(): Future[Http.ServerBinding] = Http().bindAndHandle(routes.route, interface = "0.0.0.0", port = rpcConfigs.port)
+  def start(): Future[Http.ServerBinding] = Http().bindAndHandle(routes.route, interface = "0.0.0.0", port = configs.port)
 }

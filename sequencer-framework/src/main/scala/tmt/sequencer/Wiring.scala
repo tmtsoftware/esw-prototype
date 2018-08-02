@@ -18,7 +18,7 @@ import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
+class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
   lazy val clusterSettings           = ClusterSettings()
 
@@ -35,7 +35,7 @@ class Wiring(sequencerId: String, observingMode: String, port: Option[Int]) {
   lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
 
   lazy val eventService: EventService = new EventServiceFactory().make(locationService)
-  lazy val configs                    = new Configs(sequencerId, observingMode, port)
+  lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
   lazy val engine                     = new Engine
   lazy val cswServices                = new CswServices(sequencer, engine, locationServiceWrapper, eventService, sequencerId, observingMode)

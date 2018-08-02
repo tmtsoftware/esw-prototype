@@ -5,10 +5,10 @@ import com.typesafe.config.Config
 
 import scala.util.Try
 
-class Configs(sequencerId: String, observingMode: String, _port: Option[Int])(implicit actorSystem: ActorSystem) {
+class Configs(sequencerId: String, observingMode: String, _replPort: Int)(implicit actorSystem: ActorSystem) {
   private lazy val config: Config = actorSystem.settings.config
 
-  lazy val port: Int = _port.getOrElse(config.getConfig("rpc.server").getInt("port"))
+  lazy val replPort: Int = _replPort
 
   lazy val scriptClass: String =
     Try(

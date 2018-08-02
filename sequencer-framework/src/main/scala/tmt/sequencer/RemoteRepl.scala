@@ -24,7 +24,7 @@ class RemoteRepl(commandService: CswServices,
   def server() = new SshdRepl(
     SshServerConfig(
       address = "0.0.0.0",
-      port = rpcConfigs.port + 100,
+      port = rpcConfigs.replPort,
       passwordAuthenticator = Some(AcceptAllPasswordAuthenticator.INSTANCE) // or publicKeyAuthenticator
     ),
     predef = """

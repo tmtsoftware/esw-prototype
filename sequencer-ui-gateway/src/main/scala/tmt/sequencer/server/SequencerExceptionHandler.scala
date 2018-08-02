@@ -1,4 +1,4 @@
-package tmt.sequencer.rpc.server
+package tmt.sequencer.server
 
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._

@@ -6,6 +6,6 @@ object GatewayApp {
 
     val wiring = new Wiring(port)
 
-    wiring.rpcServer.start()
+    wiring.server.start()
   }
 }
