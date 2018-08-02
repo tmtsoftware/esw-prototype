@@ -6,7 +6,7 @@ import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location
 import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.util.SequencerComponent
+import tmt.sequencer.util.SequencerUtil
 
 import scala.async.Async.async
 import scala.concurrent.duration.DurationDouble
@@ -25,7 +25,7 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
       }
 
   def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeederClient] = {
-    val componentName = SequencerComponent.getComponentName(sequencerId, observingMode)
+    val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
@@ -35,7 +35,7 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
   }
 
   def sequenceEditor(sequencerId: String, observingMode: String): Future[SequenceEditorClient] = {
-    val componentName = SequencerComponent.getComponentName(sequencerId, observingMode)
+    val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]

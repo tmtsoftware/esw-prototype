@@ -33,7 +33,7 @@ class CswServices(sequencer: Sequencer,
   implicit val strandEc: StrandEc = StrandEc.create()
 
   def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder = {
-    val componentName = SequencerComponent.getComponentName(subSystemSequencerId, observingMode)
+    val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]

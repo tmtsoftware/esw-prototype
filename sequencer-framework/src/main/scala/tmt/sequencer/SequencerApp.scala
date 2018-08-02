@@ -2,7 +2,7 @@ package tmt.sequencer
 
 import csw.messages.location.ComponentType
 import csw.services.logging.scaladsl.LoggingSystemFactory
-import tmt.sequencer.util.SequencerComponent
+import tmt.sequencer.util.SequencerUtil
 
 object SequencerApp {
   def run(sequencerId: String, observingMode: String, replPort: Int): Unit = {
@@ -12,7 +12,7 @@ object SequencerApp {
     LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequencer, script)
 
-    locationServiceWrapper.register(SequencerComponent.getComponentName(sequencerId, observingMode),
+    locationServiceWrapper.register(SequencerUtil.getComponentName(sequencerId, observingMode),
                                     ComponentType.Sequencer,
                                     supervisorRef)
 

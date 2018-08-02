@@ -23,4 +23,17 @@ class WebGateway(implicit ec: ExecutionContext) {
       .recover {
         case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)
       }
+
+  def get[T](url: String = "", transform: String => T): Future[T] =
+    Ajax
+      .get(
+        url = url
+      )
+      .map { xhr =>
+        println(xhr.responseText)
+        transform(xhr.responseText)
+      }
+      .recover {
+        case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)
+      }
 }

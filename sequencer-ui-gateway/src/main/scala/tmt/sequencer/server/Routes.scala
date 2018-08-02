@@ -18,8 +18,9 @@ import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.sequencer.LocationServiceGateway
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
 import tmt.sequencer.models._
+import tmt.sequencer.util.SequencerUtil
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 
 class Routes(
@@ -41,7 +42,13 @@ class Routes(
     SequencerExceptionHandler.route {
       get {
         pathSingleSlash {
-          complete(locationService.list(ComponentType.Sequencer))
+          getFromResource("web/index.html")
+        } ~
+        path("locations") {
+          val eventualLocations = locationService.list(ComponentType.Sequencer)
+          val eventualSequencerPaths =
+            eventualLocations.map(_.map(location => SequencerUtil.parseLocation(location.connection.name)))
+          complete(eventualSequencerPaths)
         } ~
         path("sequencer-ui-app-fastopt-bundle.js") {
           getFromResource("sequencer-ui-app-fastopt-bundle.js")
@@ -52,6 +59,14 @@ class Routes(
           get {
             pathSingleSlash {
               getFromResource("web/index.html")
+            } ~
+            path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
+              complete {
+                stream
+                  .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.result"))))
+                  .map(event => ServerSentEvent(event.paramSet.toString()))
+                  .keepAlive(10.second, () => ServerSentEvent.heartbeat)
+              }
             }
           } ~
           post {
@@ -77,7 +92,8 @@ class Routes(
                 }
               } ~
               path(SequenceEditorWeb.Sequence) {
-                complete(sequenceEditor.flatMap(_.sequence))
+                val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
+                complete(eventualSequence)
               } ~
               path(SequenceEditorWeb.Pause) {
                 complete(sequenceEditor.flatMap(_.pause().map(_ => Done)))
@@ -122,16 +138,6 @@ class Routes(
               } ~
               path(SequenceEditorWeb.Shutdown) {
                 complete(sequenceEditor.flatMap(_.shutdown().map(_ => Done)))
-              }
-            }
-          } ~
-          get {
-            path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
-              complete {
-                stream
-                  .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.result"))))
-                  .map(event => ServerSentEvent(event.paramSet.toString()))
-                  .keepAlive(10.second, () => ServerSentEvent.heartbeat)
               }
             }
           }
