@@ -6,6 +6,7 @@ import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location
 import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
 import tmt.sequencer.messages.SupervisorMsg
+import tmt.sequencer.util.SequencerComponent
 
 import scala.async.Async.async
 import scala.concurrent.duration.DurationDouble
