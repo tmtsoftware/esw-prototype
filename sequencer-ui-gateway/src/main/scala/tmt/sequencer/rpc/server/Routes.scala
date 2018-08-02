@@ -46,6 +46,12 @@ class Routes(
       } ~
       pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
         {
+          get {
+            pathSingleSlash {
+              getFromResource("web/index.html")
+            } ~
+            path("sequencer-ui-app-fastopt-bundle.js")(getFromResource("sequencer-ui-app-fastopt-bundle.js"))
+          } ~
           post {
             val sequenceFeeder = locationService.sequenceFeeder(sequencerId, observingMode)
             val sequenceEditor = locationService.sequenceEditor(sequencerId, observingMode)

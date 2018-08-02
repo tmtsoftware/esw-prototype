@@ -97,7 +97,11 @@ lazy val `sequencer-ui-gateway` = project
       Csw.`csw-event-client`,
       Libs.`akka-http-cors`,
       Csw.`csw-location`
-    )
+    ),
+    resourceGenerators in Compile += Def.task {
+      Seq((`sequencer-ui-app` / Compile / fastOptJS / webpack).value.head.data)
+    }.taskValue,
+    watchSources ++= (watchSources in `sequencer-ui-app`).value
   )
 
 lazy val `sequencer-framework` = project
@@ -123,11 +127,7 @@ lazy val `sequencer-framework` = project
       Csw.`csw-command`,
       Csw.`csw-event-client`,
       SharedLibs.scalaTest.value % Test
-    ),
-    resourceGenerators in Compile += Def.task {
-      Seq((`sequencer-ui-app` / Compile / fastOptJS / webpack).value.head.data)
-    }.taskValue,
-    watchSources ++= (watchSources in `sequencer-ui-app`).value
+    )
   )
 
 lazy val `sequencer-scripts-test` = project
