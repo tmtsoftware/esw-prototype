@@ -1,8 +1,10 @@
 package tmt.sequencer
 
 import akka.actor.ActorSystem
+import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import csw.messages.location.Connection.AkkaConnection
 import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location}
+import csw.services.command.scaladsl.CommandService
 import csw.services.location.scaladsl.LocationService
 import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
 import tmt.sequencer.messages.SupervisorMsg
@@ -13,6 +15,8 @@ import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceGateway(locationService: LocationService)(implicit ec: ExecutionContext, system: ActorSystem) {
+
+  implicit val typedSystem = system.toTyped
 
   def resolve[T](componentName: String, componentType: ComponentType)(f: AkkaLocation => Future[T]): Future[T] =
     locationService
@@ -41,6 +45,12 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
         new SequenceEditorClient(supervisorRef)
       }(system.dispatcher)
+    }
+  }
+
+  def commandServiceFor(assemblyName: String): Future[CommandService] = {
+    resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
+      async(new CommandService(akkaLocation))
     }
   }
 

@@ -96,7 +96,8 @@ lazy val `sequencer-ui-gateway` = project
       Akka.`akka-stream`,
       Csw.`csw-event-client`,
       Libs.`akka-http-cors`,
-      Csw.`csw-location`
+      Csw.`csw-location`,
+      Csw.`csw-command`
     ),
     resourceGenerators in Compile += Def.task {
       Seq((`sequencer-ui-app` / Compile / fastOptJS / webpack).value.head.data)

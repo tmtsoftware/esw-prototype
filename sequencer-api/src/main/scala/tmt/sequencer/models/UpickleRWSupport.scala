@@ -86,4 +86,34 @@ trait UpickleRWSupport extends WebRWSupport {
     macroRW[CommandNotAvailable],
     macroRW[NotAllowed]
   )
+
+  implicit lazy val controlCommandRW: RW[ControlCommand] = readwriter[ControlCommandWeb].bimap(
+    command =>
+      ControlCommandWeb(
+        command.getClass.getSimpleName,
+        command.source.prefix,
+        command.commandName.name,
+        command.maybeObsId.map(_.obsId),
+        writeJs(command.paramSet)(paramSetRW).arr,
+        Option(command.runId.id)
+    ),
+    command =>
+      command.kind match {
+        case "Setup" =>
+          Setup(
+            Prefix(command.source),
+            CommandName(command.commandName),
+            command.maybeObsId.map(v => ObsId(v)),
+            readJs(command.paramSet)(paramSetRW)
+          )
+        case "Observe" =>
+          Observe(
+            Prefix(command.source),
+            CommandName(command.commandName),
+            command.maybeObsId.map(v => ObsId(v)),
+            readJs(command.paramSet)(paramSetRW)
+          )
+        case _ => ???
+    }
+  )
 }

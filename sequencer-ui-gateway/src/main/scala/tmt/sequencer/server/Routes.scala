@@ -6,9 +6,10 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives.{entity, _}
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
-import akka.{Done, NotUsed}
+import akka.util.Timeout
+import akka.{util, Done, NotUsed}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import csw.messages.commands.SequenceCommand
+import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.events.EventKey
 import csw.messages.location.ComponentType
 import csw.messages.params.models.Id
@@ -139,6 +140,22 @@ class Routes(
               path(SequenceEditorWeb.Shutdown) {
                 complete(sequenceEditor.flatMap(_.shutdown().map(_ => Done)))
               }
+            }
+          }
+        }
+      } ~
+      pathPrefix("assembly" / Segment) { assemblyName =>
+        val commandService = locationService.commandServiceFor(assemblyName)
+        get {
+          pathSingleSlash {
+            getFromResource("web/index.html")
+          }
+        } ~
+        post {
+          path("setup") {
+            entity(as[ControlCommand]) { command =>
+              implicit val timeout: Timeout = util.Timeout(10.seconds)
+              complete(commandService.flatMap(_.submit(command)))
             }
           }
         }

@@ -20,6 +20,15 @@ case class SequenceCommandWeb(
     runId: Option[String] = None,
 )
 
+case class ControlCommandWeb(
+    kind: String,
+    source: String,
+    commandName: String,
+    maybeObsId: Option[String],
+    paramSet: Js.Arr,
+    runId: Option[String] = None,
+)
+
 case class SequenceWeb(steps: List[StepWeb])
 
 sealed trait StepStatus extends EnumEntry
