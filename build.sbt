@@ -66,14 +66,15 @@ lazy val `sequencer-ui-app` = project
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
       SharedLibs.scalaTest.value % Test,
-      React4s.`react4s`.value
+      React4s.`react4s`.value,
+      Libs.`scala-async`.value
     )
   )
 
 lazy val `sequencer-macros` = project
   .settings(
     libraryDependencies ++= Seq(
-      Libs.`scala-async`,
+      Libs.`scala-async`.value,
       Libs.`scala-reflect`,
     )
   )
@@ -119,7 +120,7 @@ lazy val `sequencer-framework` = project
       Akka.`akka-typed-testkit` % Test,
       Ammonite.`ammonite`,
       Ammonite.`ammonite-sshd`,
-      Libs.`scala-async`,
+      Libs.`scala-async`.value,
       Libs.`akka-http-cors`,
       Akka.`akka-http`,
       Libs.`play-json`.value,

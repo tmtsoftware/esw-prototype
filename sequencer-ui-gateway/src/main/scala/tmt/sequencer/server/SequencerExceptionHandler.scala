@@ -7,7 +7,7 @@ import scala.util.control.NonFatal
 
 object SequencerExceptionHandler extends Directives {
 
-  def route: Directive[Unit] = handleExceptions(jsonExceptionHandler) & rejectEmptyResponse
+  def route: Directive[Unit] = handleExceptions(jsonExceptionHandler)
 
   private val jsonExceptionHandler: ExceptionHandler = ExceptionHandler {
     case NonFatal(ex) => complete(HttpResponse(StatusCodes.InternalServerError, entity = ex.getMessage))

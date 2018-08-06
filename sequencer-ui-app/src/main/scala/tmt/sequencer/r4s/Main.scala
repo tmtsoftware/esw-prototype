@@ -3,7 +3,7 @@ package tmt.sequencer.r4s
 import com.github.ahnfelt.react4s._
 import org.scalajs.dom.window
 import tmt.WebClients
-import tmt.assembly.r4s.SubmitComponent
+import tmt.assembly.r4s.AssemblyCommandComponent
 import tmt.sequencer.r4s.editor.EditorComponent
 import tmt.sequencer.r4s.facade.NpmReactBridge
 import tmt.sequencer.r4s.feeder.FeederComponent
@@ -21,7 +21,7 @@ object Main {
         Component(ResultEventComponent, WebClients.logger)
       )
     } else {
-      Component(SubmitComponent, WebClients.assemblyCommandClient)
+      Component(AssemblyCommandComponent, WebClients.assemblyCommandClient)
     }
     NpmReactBridge.renderToDomById(component, "main")
   }

@@ -8,7 +8,7 @@ object Libs {
   val `scala-reflect`      = "org.scala-lang" % "scala-reflect" % ScalaVersion
   val `scala-compiler`     = "org.scala-lang" % "scala-compiler" % ScalaVersion
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
-  val `scala-async`        = "org.scala-lang.modules" %% "scala-async" % "0.9.7"
+  val `scala-async`        = dep("org.scala-lang.modules" %% "scala-async" % "0.9.7")
   val `akka-http-cors`     = "ch.megard" %% "akka-http-cors" % "0.3.0"
   val `play-json`          = dep("com.typesafe.play" %%% "play-json" % "2.6.9") //Apache 2.0
   val `upickle`            = dep("com.lihaoyi" %%% "upickle" % "0.6.6")

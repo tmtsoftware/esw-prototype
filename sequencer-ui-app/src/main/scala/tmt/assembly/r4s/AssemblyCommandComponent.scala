@@ -9,7 +9,7 @@ import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class SubmitComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with WebRWSupport {
+case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with WebRWSupport {
 
   val submitResponse = State("")
 
