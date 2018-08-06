@@ -1,4 +1,4 @@
-package tmt.sequencer.ui.r4s.editor
+package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.SequenceEditorWebClient

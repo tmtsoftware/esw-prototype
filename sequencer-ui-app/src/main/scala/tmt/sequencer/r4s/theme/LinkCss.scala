@@ -1,4 +1,4 @@
-package tmt.sequencer.ui.r4s.theme
+package tmt.sequencer.r4s.theme
 
 import com.github.ahnfelt.react4s._
 

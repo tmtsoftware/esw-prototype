@@ -54,5 +54,6 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
     }
   }
 
-  def list(componentType: ComponentType): Future[List[Location]] = locationService.list(componentType)
+  def listSequencers(): Future[List[Location]] = locationService.list(ComponentType.Sequencer)
+  def listAssemblies(): Future[List[Location]] = locationService.list(ComponentType.Assembly)
 }

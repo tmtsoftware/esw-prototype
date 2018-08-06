@@ -11,18 +11,18 @@ import akka.{util, Done, NotUsed}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.events.EventKey
-import csw.messages.location.ComponentType
 import csw.messages.params.models.Id
 import csw.services.event.api.scaladsl.{EventService, EventSubscriber}
 import csw.services.location.internal.UpickleFormats
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
+import tmt.assembly.api.AssemblyCommandWeb
 import tmt.sequencer.LocationServiceGateway
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
 import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 
 class Routes(
     locationService: LocationServiceGateway,
@@ -45,11 +45,19 @@ class Routes(
         pathSingleSlash {
           getFromResource("web/index.html")
         } ~
-        path("locations") {
-          val eventualLocations = locationService.list(ComponentType.Sequencer)
-          val eventualSequencerPaths =
-            eventualLocations.map(_.map(location => SequencerUtil.parseLocation(location.connection.name)))
-          complete(eventualSequencerPaths)
+        pathPrefix("locations") {
+          path("sequencers") {
+            val eventualLocations = locationService.listSequencers()
+            val eventualSequencerPaths =
+              eventualLocations.map(_.map(location => SequencerUtil.parseSequencerLocation(location.connection.name)))
+            complete(eventualSequencerPaths)
+          } ~
+          path("assemblies") {
+            val eventualLocations = locationService.listAssemblies()
+            val eventualAssemblyPaths =
+              eventualLocations.map(_.map(location => SequencerUtil.parseAssemblyLocation(location.connection.name)))
+            complete(eventualAssemblyPaths)
+          }
         } ~
         path("sequencer-ui-app-fastopt-bundle.js") {
           getFromResource("sequencer-ui-app-fastopt-bundle.js")
@@ -152,7 +160,7 @@ class Routes(
           }
         } ~
         post {
-          path("setup") {
+          path(AssemblyCommandWeb.Submit) {
             entity(as[ControlCommand]) { command =>
               implicit val timeout: Timeout = util.Timeout(10.seconds)
               complete(commandService.flatMap(_.submit(command)))

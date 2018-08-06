@@ -1,8 +1,8 @@
-package tmt.sequencer.ui.r4s
+package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.ui.r4s.IOOperationComponent.HandleClick
-import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
+import tmt.sequencer.r4s.IOOperationComponent.HandleClick
+import tmt.sequencer.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 case class IOOperationComponent(componentNameProp: P[String], operation: P[String], output: P[String])
     extends Component[IOOperationComponent.Msg] {

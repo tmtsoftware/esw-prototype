@@ -1,4 +1,4 @@
-package tmt.sequencer
+package tmt
 
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 

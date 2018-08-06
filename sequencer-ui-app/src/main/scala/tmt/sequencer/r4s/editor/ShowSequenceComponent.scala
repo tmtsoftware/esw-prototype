@@ -1,9 +1,9 @@
-package tmt.sequencer.ui.r4s.editor
+package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.SequenceEditorWebClient
 import tmt.sequencer.models.WebRWSupport
-import tmt.sequencer.ui.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
+import tmt.sequencer.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}

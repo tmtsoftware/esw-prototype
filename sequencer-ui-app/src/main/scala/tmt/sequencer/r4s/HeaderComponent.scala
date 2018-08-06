@@ -1,7 +1,7 @@
-package tmt.sequencer.ui.r4s
+package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.ui.r4s.theme._
+import tmt.sequencer.r4s.theme._
 
 case class HeaderComponent() extends Component[NoEmit] {
   override def render(get: Get): Node = {
