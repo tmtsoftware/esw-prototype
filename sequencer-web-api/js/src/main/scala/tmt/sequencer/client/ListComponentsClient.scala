@@ -9,13 +9,13 @@ class ListComponentsClient(gateway: WebGateway) extends WebRWSupport {
   def listSequencers: Future[List[String]] =
     gateway.get(
       "/locations/sequencers",
-      transform = x => upickle.default.read[List[String]](x).map(d => s"http://localhost:9090/$d")
+      transform = x => upickle.default.read[List[String]](x)
     )
 
   def listAssemblies: Future[List[String]] =
     gateway.get(
       "/locations/assemblies",
-      transform = x => upickle.default.read[List[String]](x).map(d => s"http://localhost:9090/R$d")
+      transform = x => upickle.default.read[List[String]](x)
     )
 
 }

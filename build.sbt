@@ -67,6 +67,7 @@ lazy val `sequencer-ui-app` = project
     libraryDependencies ++= Seq(
       SharedLibs.scalaTest.value % Test,
       React4s.`react4s`.value,
+      React4s.`router4s`.value,
       Libs.`scala-async`.value
     ),
     version in webpack := "4.8.1",

@@ -1,7 +1,6 @@
 package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.WebClients
 import tmt.sequencer.client.ListComponentsClient
 import tmt.sequencer.models.WebRWSupport
 import tmt.sequencer.r4s.theme.OperationTitleCss
@@ -31,26 +30,14 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
       E.ul(
         Tags(
           get(sequencers).map(
-            sequencer =>
-              E.li(
-                E.a(
-                  A.href(sequencer),
-                  Text(sequencer)
-                )
-            )
+            sequencer => E.li(E.a(A.href(s"#$sequencer"), Text(sequencer)))
           )
-        )
-      ),
-      Text("Assemblies"),
-      E.ul(
-        Tags(
-          get(assemblies).map(
-            assembly =>
-              E.li(
-                E.a(
-                  A.href(assembly),
-                  Text(assembly)
-                )
+        ),
+        Text("Assemblies"),
+        E.ul(
+          Tags(
+            get(assemblies).map(
+              assembly => E.li(E.a(A.href(s"#$assembly"), Text(assembly)))
             )
           )
         )
