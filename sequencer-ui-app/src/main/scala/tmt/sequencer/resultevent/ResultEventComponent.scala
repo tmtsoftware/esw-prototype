@@ -1,8 +1,8 @@
-package tmt.sequencer.r4s.resultevent
+package tmt.sequencer.resultevent
 
 import com.github.ahnfelt.react4s._
 import org.scalajs.dom.raw.EventSource
-import tmt.sequencer.r4s.theme._
+import tmt.theme._
 
 case class ResultEventComponent(client: P[EventSource]) extends Component[NoEmit] {
 

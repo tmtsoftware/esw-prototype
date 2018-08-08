@@ -1,10 +1,10 @@
-package tmt.sequencer.r4s.feeder
+package tmt.sequencer.feeder
 
 import com.github.ahnfelt.react4s._
+import tmt.IOOperationComponent
+import tmt.IOOperationComponent.HandleClick
 import tmt.sequencer.client.SequenceFeederWebClient
 import tmt.sequencer.models.{CommandListWeb, WebRWSupport}
-import tmt.sequencer.r4s.IOOperationComponent
-import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}

@@ -1,4 +1,4 @@
-package tmt.sequencer.r4s.facade
+package tmt.sequencer.facade
 
 import com.github.ahnfelt.react4s.ReactBridge
 

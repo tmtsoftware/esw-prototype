@@ -1,7 +1,6 @@
-package tmt.sequencer.r4s
-
+package tmt
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.r4s.theme._
+import tmt.theme.{AnchorCss, BrandTaglineCss, BrandTitleCss, TopBarCss}
 
 case class HeaderComponent() extends Component[NoEmit] {
   override def render(get: Get): Node = {

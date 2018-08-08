@@ -1,12 +1,10 @@
-package tmt.sequencer.r4s
-
+package tmt
 import com.github.ahnfelt.react4s._
-import tmt.WebClients
 import tmt.sequencer.client.ListComponentsClient
 import tmt.sequencer.models.WebRWSupport
-import tmt.sequencer.r4s.theme.OperationTitleCss
-
+import tmt.theme.OperationTitleCss
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import scala.util.{Failure, Success}
 
 case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEmit] with WebRWSupport {

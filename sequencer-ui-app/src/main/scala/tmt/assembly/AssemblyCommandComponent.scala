@@ -1,12 +1,11 @@
-package tmt.assembly.r4s
-
+package tmt.assembly
 import com.github.ahnfelt.react4s._
+import tmt.IOOperationComponent
+import tmt.IOOperationComponent.HandleClick
 import tmt.assembly.client.AssemblyCommandWebClient
 import tmt.sequencer.models.{ControlCommandWeb, WebRWSupport}
-import tmt.sequencer.r4s.IOOperationComponent
-import tmt.sequencer.r4s.IOOperationComponent.HandleClick
-
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import scala.util.{Failure, Success}
 
 case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with WebRWSupport {

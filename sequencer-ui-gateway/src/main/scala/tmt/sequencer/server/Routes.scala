@@ -43,9 +43,6 @@ class Routes(
     SequencerExceptionHandler.route {
       {
         get {
-          pathSingleSlash {
-            getFromResource("web/index.html")
-          } ~
           pathPrefix("locations") {
             path("sequencers") {
               val eventualLocations = locationService.listSequencers()
@@ -59,16 +56,10 @@ class Routes(
                 eventualLocations.map(_.map(location => SequencerUtil.parseAssemblyLocation(location.connection.name)))
               complete(eventualAssemblyPaths)
             }
-          } ~
-          path("sequencer-ui-app-fastopt-bundle.js") {
-            getFromResource("sequencer-ui-app-fastopt-bundle.js")
           }
         } ~
         pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
           get {
-            pathSingleSlash {
-              getFromResource("web/index.html")
-            } ~
             path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
               complete {
                 stream(sequencerId, observingMode)
@@ -152,11 +143,6 @@ class Routes(
         } ~
         pathPrefix("assembly" / Segment) { assemblyName =>
           val commandService = locationService.commandServiceFor(assemblyName)
-          get {
-            pathSingleSlash {
-              getFromResource("web/index.html")
-            }
-          } ~
           post {
             path(AssemblyCommandWeb.Submit) {
               entity(as[ControlCommand]) { command =>

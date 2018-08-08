@@ -1,4 +1,4 @@
-package tmt.sequencer.r4s.theme
+package tmt.theme
 
 object Palette {
   val text: String       = "rgb(30, 30, 30)"
