@@ -54,7 +54,7 @@ lazy val `sequencer-web-api-js` = `sequencer-web-api`.js
 lazy val `sequencer-web-api-jvm` = `sequencer-web-api`.jvm
 
 lazy val `sequencer-ui-app` = project
-  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin)
   .dependsOn(`sequencer-web-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
@@ -68,6 +68,16 @@ lazy val `sequencer-ui-app` = project
       SharedLibs.scalaTest.value % Test,
       React4s.`react4s`.value,
       Libs.`scala-async`.value
+    ),
+    version in webpack := "4.8.1",
+    version in startWebpackDevServer := "3.1.4",
+//    webpackConfigFile in fastOptJS := Some(baseDirectory.value / "my.custom.webpack.config.js"),
+    webpackResources := webpackResources.value +++
+        PathFinder(Seq(baseDirectory.value/ "index.html")) ** "*.*",
+
+    webpackDevServerExtraArgs in fastOptJS ++= Seq(
+      "--content-base",
+      baseDirectory.value.getAbsolutePath
     )
   )
 
@@ -99,11 +109,7 @@ lazy val `sequencer-ui-gateway` = project
       Libs.`akka-http-cors`,
       Csw.`csw-location`,
       Csw.`csw-command`
-    ),
-    resourceGenerators in Compile += Def.task {
-      Seq((`sequencer-ui-app` / Compile / fastOptJS / webpack).value.head.data)
-    }.taskValue,
-    watchSources ++= (watchSources in `sequencer-ui-app`).value
+    )
   )
 
 lazy val `sequencer-framework` = project

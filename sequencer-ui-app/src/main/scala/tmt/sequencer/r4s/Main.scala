@@ -20,8 +20,10 @@ object Main {
         Component(EditorComponent, WebClients.editor),
         Component(ResultEventComponent, WebClients.logger)
       )
-    } else {
+    } else if (window.location.pathname.contains("/assembly/")) {
       Component(AssemblyCommandComponent, WebClients.assemblyCommandClient)
+    } else {
+      E.div(Text("invalid route"))
     }
     NpmReactBridge.renderToDomById(component, "main")
   }
