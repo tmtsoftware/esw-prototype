@@ -60,7 +60,7 @@ class Routes(
         } ~
         pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
           get {
-            path(SequenceResultsWeb.ApiName / SequenceResultsWeb.results) {
+            path(SequenceResultsWeb.results) {
               complete {
                 stream(sequencerId, observingMode)
                   .map(event => ServerSentEvent(event.paramSet.toString()))
