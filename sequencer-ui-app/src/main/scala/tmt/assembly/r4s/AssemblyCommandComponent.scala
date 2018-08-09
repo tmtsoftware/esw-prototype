@@ -7,7 +7,7 @@ import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with WebRWSupport {
 
@@ -16,10 +16,15 @@ case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends
   def handleSubmit(client: AssemblyCommandWebClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       submitResponse.set("Waiting for Response ....")
-      client.submit(upickle.default.read[ControlCommandWeb](request)).onComplete {
-        case Success(response) => submitResponse.set(upickle.default.write(response, 2))
-        case Failure(ex)       => submitResponse.set(ex.getMessage)
-      }
+      Try(upickle.default.read[ControlCommandWeb](request))
+        .map(
+          input =>
+            client.submit(input).onComplete {
+              case Success(response) => submitResponse.set(upickle.default.write(response, 2))
+              case Failure(ex)       => submitResponse.set(ex.getMessage)
+          }
+        )
+        .recover { case ex => submitResponse.set("Invalid input request, please verify the input provided") }
   }
 
   override def render(get: Get): ElementOrComponent = {
