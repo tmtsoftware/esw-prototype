@@ -9,18 +9,18 @@ import scala.util.{Failure, Success}
 
 case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEmit] with WebRWSupport {
 
-  val sequencers: State[List[String]] = State(List.empty[String])
+  val sequencers: State[List[String]] = State(List("sequencer/a/b/"))
   val assemblies: State[List[String]] = State(List.empty[String])
 
-  Get.Unsafe(client).listSequencers.transform {
-    case Success(result) => Success(sequencers.set(result))
-    case Failure(ex)     => Success(sequencers.set(List(ex.getMessage)))
-  }
-
-  Get.Unsafe(client).listAssemblies.transform {
-    case Success(result) => Success(assemblies.set(result))
-    case Failure(ex)     => Success(assemblies.set(List(ex.getMessage)))
-  }
+//  Get.Unsafe(client).listSequencers.transform {
+//    case Success(result) => Success(sequencers.set(result))
+//    case Failure(ex)     => Success(sequencers.set(List(ex.getMessage)))
+//  }
+//
+//  Get.Unsafe(client).listAssemblies.transform {
+//    case Success(result) => Success(assemblies.set(result))
+//    case Failure(ex)     => Success(assemblies.set(List(ex.getMessage)))
+//  }
 
   override def render(get: Get): ElementOrComponent = {
     E.div(

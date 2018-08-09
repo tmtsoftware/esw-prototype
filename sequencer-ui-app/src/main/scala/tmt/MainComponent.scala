@@ -17,17 +17,23 @@ case class MainComponent() extends Component[NoEmit] {
 
   val page = State(Routes.router.data(path()))
 
-//  dom.window.onhashchange = { _ =>
+  if (dom.window.location.href.contains("?")) {
+    dom.window.onhashchange = { _ =>
+      page.set(Routes.router.data(path()))
+    }
+  }
+
+  //  dom.window.onhashchange = { _ =>
 //    println("onhashchange")
 //    page.set(Routes.router.data(path()))
 //  }
 
-  dom.window.onbeforeunload = { _ =>
-    println("onbeforeunload")
-    println("*********************")
-    println(path())
-    page.set(Routes.router.data(path()))
-  }
+//  dom.window.onbeforeunload = { _ =>
+//    println("onbeforeunload")
+//    println("*********************")
+//    println(path())
+//    page.set(Routes.router.data(path()))
+//  }
 
 //  dom.window.onchange = { _ =>
 //    println("onchange")

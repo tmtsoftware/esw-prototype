@@ -10,11 +10,11 @@ object SequencerUtil {
     val sequencerArgs = location.split(sequencerLocationDelimeter)
     val sequencerId   = sequencerArgs(0)
     val observingMode = sequencerArgs(1).split("-")(0)
-    s"#sequencer/$sequencerId/$observingMode/"
+    s"sequencer/$sequencerId/$observingMode/"
   }
 
   def parseAssemblyLocation(location: String): String = {
     val assemblyArgs = location.split("-")
-    s"#assembly/${assemblyArgs(0)}/"
+    s"assembly/${assemblyArgs(0)}/"
   }
 }
