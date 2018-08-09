@@ -2,23 +2,16 @@ package tmt.sequencer
 
 import com.github.ahnfelt.react4s._
 import org.scalajs.dom
+import tmt.Path
 
 case class MainComponent() extends Component[NoEmit] {
-  def path(): String =
-    if (dom.window.location.href.contains("localhost"))
-      dom.window.location.hash.drop(1)
-    else
-      dom.window.location.pathname
-
-  val page = State(Routes.router.data(path()))
+  val page = State(Routes.router.data(Path.hashPath))
 
   dom.window.onhashchange = { _ =>
-    println("hashchange")
-    page.set(Routes.router.data(path()))
+    page.set(Routes.router.data(Path.hashPath))
   }
 
   override def render(get: Get): Node = {
-    println(get(page))
     E.div(
       get(page)
         .map(Component(PageComponent, _))

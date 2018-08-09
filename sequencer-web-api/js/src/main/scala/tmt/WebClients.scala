@@ -8,7 +8,7 @@ import tmt.sequencer.client.{ListComponentsClient, SequenceEditorWebClient, Sequ
 object WebClients {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private val gateway                           = new WebGateway()
+  private val gateway                           = new WebGateway("http://localhost:9090")
   lazy val feeder: SequenceFeederWebClient      = new SequenceFeederWebClient(gateway)
   lazy val editor: SequenceEditorWebClient      = new SequenceEditorWebClient(gateway)
   lazy val listSequencers: ListComponentsClient = new ListComponentsClient(gateway)
