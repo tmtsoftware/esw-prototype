@@ -6,16 +6,16 @@ class EditorClient extends Client {
         super(baseUrl)
     }
 
-    public pause(url:string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}${url}editor/pause`, callback)
+    public pause(callback: (res: string) => void) {
+        this.post(`${this.baseUrl}editor/pause`, callback)
     };
 
-    public resume(url:string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}${url}editor/resume`, callback)
+    public resume(callback: (res: string) => void) {
+        this.post(`${this.baseUrl}editor/resume`, callback)
     };
 
-    public showSequence(url: string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}${url}editor/sequence`, callback)
+    public showSequence(callback: (res: string) => void) {
+        this.post(`${this.baseUrl}editor/sequence`, callback)
     }
 }
 

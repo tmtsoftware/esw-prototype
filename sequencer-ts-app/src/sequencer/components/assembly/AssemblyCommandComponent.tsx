@@ -10,7 +10,6 @@ interface IState {
 
 interface IProps {
     client: AssemblyCommandWebClient
-    assemblyPath: string
 }
 
 class AssemblyCommandComponent extends Component<IProps, IState> {
@@ -35,7 +34,7 @@ class AssemblyCommandComponent extends Component<IProps, IState> {
     }
 
     private submit = (input: string) => {
-        this.props.client.submit(this.props.assemblyPath, input, (res) => this.callBack(res))
+        this.props.client.submit(input, (res) => this.callBack(res))
     };
 
 }

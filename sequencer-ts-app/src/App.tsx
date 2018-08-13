@@ -11,37 +11,39 @@ import ResultEventClient from "./sequencer/client/ResultEventClient";
 import HeaderComponent from "./sequencer/components/header/HeaderComponent";
 import {ListComponent} from "./sequencer/components/ListComponent";
 import {ListComponentsClient} from "./sequencer/client/ListComponentsClient";
-import {HashRouter, Route, /*Link*/} from "react-router-dom";
+import {HashRouter, Route} from "react-router-dom";
 import AssemblyCommandWebClient from "./sequencer/client/AssemblyCommandWebClient";
 import AssemblyCommandComponent from "./sequencer/components/assembly/AssemblyCommandComponent";
 
 class App extends React.Component {
 
     public render() {
-        const feederClient = new FeederClient('http://localhost:9090');
-        const editorClient = new EditorClient('http://localhost:9090');
-        const listClient = new ListComponentsClient('http://localhost:9090');
-        const assemblyClient = new AssemblyCommandWebClient('http://localhost:9090');
-
         const List = () => {
+            const listClient = new ListComponentsClient('http://localhost:9090');
             return <ListComponent client={listClient}/>
         };
 
         const Sequencer = (props: any) => {
-            const resultClient = new ResultEventClient('http://localhost:9090', props.location.pathname);
+            const sequencerPath = `${props.location.pathname}`;
+            const feederClient = new FeederClient(`http://localhost:9090${sequencerPath}`);
+            const editorClient = new EditorClient(`http://localhost:9090${sequencerPath}`);
+            const resultClient = new ResultEventClient(`http://localhost:9090${sequencerPath}`);
 
             return <div>
-                <FeederComponent client={feederClient} sequencerPath={props.location.pathname}/>
-                <PauseComponent client={editorClient} sequencerPath={props.location.pathname}/>
-                <ResumeComponent client={editorClient} sequencerPath={props.location.pathname}/>
-                <ShowSequenceComponent client={editorClient} sequencerPath={props.location.pathname}/>
+                <FeederComponent client={feederClient} />
+                <PauseComponent client={editorClient} />
+                <ResumeComponent client={editorClient} />
+                <ShowSequenceComponent client={editorClient} />
                 <ResultEventComponent client={resultClient}/>
             </div>
         };
 
         const Assembly = (props: any) => {
+            const assemblyPath = props.location.pathname;
+            const assemblyClient = new AssemblyCommandWebClient(`http://localhost:9090${assemblyPath}`);
+
             return <div>
-                <AssemblyCommandComponent client={assemblyClient} assemblyPath={props.location.pathname}/>
+                <AssemblyCommandComponent client={assemblyClient}/>
             </div>
         };
 

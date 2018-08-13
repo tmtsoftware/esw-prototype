@@ -9,7 +9,6 @@ interface IState {
 
 interface IProps {
     client: EditorClient
-    sequencerPath: string
 }
 
 
@@ -38,7 +37,7 @@ class ShowSequenceComponent extends Component<IProps, IState> {
 
     private handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        this.props.client.showSequence(this.props.sequencerPath,(res) => this.callBack(res))
+        this.props.client.showSequence((res) => this.callBack(res))
     };
 }
 

@@ -9,7 +9,6 @@ interface IState {
 
 interface IProps {
     client: FeederClient
-    sequencerPath: string
 }
 
 
@@ -35,7 +34,7 @@ class FeederComponent extends Component<IProps, IState> {
     }
 
     private feedApi = (input: string) => {
-        this.props.client.feedApi(this.props.sequencerPath, input, (res) => this.callBack(res))
+        this.props.client.feedApi(input, (res) => this.callBack(res))
     };
 }
 

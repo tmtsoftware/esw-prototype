@@ -7,8 +7,8 @@ class AssemblyCommandWebClient extends Client {
         super(baseUrl)
     }
 
-    public submit(url:string, input: string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}${url}Submit`, callback, input)
+    public submit(input: string, callback: (res: string) => void) {
+        this.post(`${this.baseUrl}Submit`, callback, input)
     }
 }
 
