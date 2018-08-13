@@ -13,12 +13,15 @@ object WebClients {
 
   lazy val listSequencers: ListComponentsClient = new ListComponentsClient(new WebGateway(gatewayHost))
 
+  def assemblyCommandClient(assemblyName: String): AssemblyCommandWebClient =
+    new AssemblyCommandWebClient(new WebGateway(s"$gatewayHost/assembly/$assemblyName/"))
+
   def feeder(sequencerInfo: SequencerInfo): SequenceFeederWebClient = new SequenceFeederWebClient(sequencerClient(sequencerInfo))
-  lazy val editor: SequenceEditorWebClient                          = new SequenceEditorWebClient(new WebGateway(gatewayHost))
-  lazy val logger: EventSource                                      = new EventSource(s"$gatewayHost/${Path.hashPath}${SequenceResultsWeb.results}")
+  def editor(sequencerInfo: SequencerInfo): SequenceEditorWebClient = new SequenceEditorWebClient(sequencerClient(sequencerInfo))
+  def logger(sequencerInfo: SequencerInfo): EventSource =
+    new EventSource(s"${sequencerPath(sequencerInfo)}${SequenceResultsWeb.results}")
 
-  lazy val assemblyCommandClient: AssemblyCommandWebClient = new AssemblyCommandWebClient(new WebGateway(gatewayHost))
+  private def sequencerClient(sequencerInfo: SequencerInfo) = new WebGateway(sequencerPath(sequencerInfo))
 
-  private def sequencerClient(sequencerInfo: SequencerInfo) =
-    new WebGateway(s"$gatewayHost/sequencer/${sequencerInfo.id}/${sequencerInfo.mode}")
+  private def sequencerPath(sequencerInfo: SequencerInfo) = s"$gatewayHost/sequencer/${sequencerInfo.id}/${sequencerInfo.mode}/"
 }

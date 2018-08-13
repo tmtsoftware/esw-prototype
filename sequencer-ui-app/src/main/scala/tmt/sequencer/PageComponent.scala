@@ -12,7 +12,7 @@ case class PageComponent(page: P[Page]) extends Component[NoEmit] {
     get(page) match {
       case Home                                      => Component(ListComponent, WebClients.listSequencers)
       case SequencerWithMode(mode, Sequencer(id, _)) => Component(SequencerComponent, SequencerInfo(id, mode))
-      case Assembly(_, _)                            => Component(AssemblyCommandComponent, WebClients.assemblyCommandClient)
+      case Assembly(assemblyName, _)                 => Component(AssemblyCommandComponent, WebClients.assemblyCommandClient(assemblyName))
       case _                                         => E.div(Text("invalid route"))
     }
   }
