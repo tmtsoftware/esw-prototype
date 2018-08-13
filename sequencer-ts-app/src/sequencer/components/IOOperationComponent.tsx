@@ -50,7 +50,7 @@ class IOOperationComponent extends Component<IProps, IState> {
         } = this.props;
 
         return (
-            <div>
+            <div className="card-panel">
                 <h6>{componentNameProp} Request</h6>
                 <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span>
                 </div>

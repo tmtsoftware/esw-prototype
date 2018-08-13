@@ -45,7 +45,6 @@ class ResultEventComponent extends Component<IProps, IState> {
             <div>
                 <h6 className="right-title">Sequencer Results Stream</h6>
                 <div className="right-column">
-                    {console.log(`${this.state.results.length}`)}
                     <ul className="result-text-area">
                         {this.state.results.map((value: string, index: number) => <li key={index}>{value}</li>)}
                     </ul>
