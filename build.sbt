@@ -31,7 +31,7 @@ lazy val `esw-prototype` = project
     `sequencer-api`,
     `sequencer-framework`,
     `sequencer-ui-app`,
-    `sequencer-ui-gateway`
+    `sequencer-gateway`
   )
 
 lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
@@ -99,7 +99,7 @@ lazy val `sequencer-api` = project
     )
   )
 
-lazy val `sequencer-ui-gateway` = project
+lazy val `sequencer-gateway` = project
   .dependsOn(`sequencer-api`)
   .settings(
     libraryDependencies ++= Seq(

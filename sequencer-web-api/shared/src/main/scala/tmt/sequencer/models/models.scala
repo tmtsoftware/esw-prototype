@@ -41,3 +41,5 @@ object StepStatus extends Enum[StepStatus] {
 }
 
 case class StepWeb(command: SequenceCommandWeb, status: StepStatus, hasBreakpoint: Boolean)
+
+case class SequencerInfo(id: String, mode: String)
