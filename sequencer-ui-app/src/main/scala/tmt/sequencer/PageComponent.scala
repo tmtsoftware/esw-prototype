@@ -8,11 +8,10 @@ import tmt.sequencer.r4s.ListComponent
 case class PageComponent(page: P[Page]) extends Component[NoEmit] {
   override def render(get: Get): Node = {
     get(page) match {
-      case Home => Component(ListComponent, WebClients.listSequencers)
-      case SequencerWithMode(_, _) =>
-        Component(SequencerComponent) //TODO: send Page/path to component and remove path.hashpath from gateway
-      case Assembly(_, _) => Component(AssemblyCommandComponent, WebClients.assemblyCommandClient)
-      case _              => E.div(Text("invalid route"))
+      case Home                    => Component(ListComponent, WebClients.listSequencers)
+      case SequencerWithMode(_, _) => Component(SequencerComponent)
+      case Assembly(_, _)          => Component(AssemblyCommandComponent, WebClients.assemblyCommandClient)
+      case _                       => E.div(Text("invalid route"))
     }
   }
 }

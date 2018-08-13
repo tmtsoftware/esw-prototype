@@ -32,13 +32,13 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
           get(sequencers).map(
             sequencer => E.li(E.a(A.href(s"#$sequencer"), Text(sequencer)))
           )
-        ),
-        Text("Assemblies"),
-        E.ul(
-          Tags(
-            get(assemblies).map(
-              assembly => E.li(E.a(A.href(s"#$assembly"), Text(assembly)))
-            )
+        )
+      ),
+      Text("Assemblies"),
+      E.ul(
+        Tags(
+          get(assemblies).map(
+            assembly => E.li(E.a(A.href(s"#$assembly"), Text(assembly)))
           )
         )
       )

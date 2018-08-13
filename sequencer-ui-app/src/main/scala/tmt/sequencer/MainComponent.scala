@@ -3,6 +3,7 @@ package tmt.sequencer
 import com.github.ahnfelt.react4s._
 import org.scalajs.dom
 import tmt.Path
+import tmt.sequencer.r4s.HeaderComponent
 
 case class MainComponent() extends Component[NoEmit] {
   val page = State(Routes.router.data(Path.hashPath))
@@ -13,6 +14,7 @@ case class MainComponent() extends Component[NoEmit] {
 
   override def render(get: Get): Node = {
     E.div(
+      Component(HeaderComponent),
       get(page)
         .map(Component(PageComponent, _))
         .getOrElse(E.div(Text("Not found")))
