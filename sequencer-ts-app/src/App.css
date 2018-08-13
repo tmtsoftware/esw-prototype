@@ -4,8 +4,6 @@
     background-color: rgb(255, 255, 255);
     color: rgb(30, 30, 30);
     top: 12px;
-    left: -10px;
-    width: 50%;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     margin: 28px;
     padding: 10px;
@@ -13,49 +11,6 @@
     font-size: 14px;
     overflow: auto;
     height: 300px;
-}
-
-button {
-    font-size: 16px;
-    width: 10%;
-    color: rgb(0, 0, 255);
-    border-color: rgb(211, 211, 211);
-}
-
-.top-bar{
-    border-top: 5px solid rgb(0,0,255);
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    right: 0px;
-    height: 50px
-}
-.brand-title{
-    display: inline-block;
-    padding-top: 8px;
-    font-family: Verdana;
-    color: rgb(0,0,255);
-    padding-left: 50px;
-    font-size: 20px;
-}
-.brand-tagline{
-    display: inline-block;
-    padding-top: 8px;
-    font-family: Verdana;
-    padding-left: 50px;
-}
-.anchor{
-    color: rgb(0,0,255);
-    text-decoration: none;
-    cursor: pointer;
-    font-family: Verdana;
-    font-size: 16px;
-    position: absolute;
-    top: 15px;
-    right: 10px;
 }
 
 .right-column{
@@ -68,54 +23,29 @@ button {
     overflow-x: auto;
 }
 
-.right-column-text{
-    position: fixed;
-    display: block;
-    float: right;
-    top: 62px;
-    right: 447px;
-}
-
-
-.result-title-area{
-    font-family: Verdana;
-    font-size: 16px;
-    color: rgb(30, 30, 30);
-    position: fixed;
-    display: block;
-    float: right;
-    top: 62px;
-    left: 53%;
-}
 .result-text-area{
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background-color: rgb(255, 255, 255);
     color: rgb(30, 30, 30);
-    width: 45%;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     margin: 10px 0px 0px 10px;
     padding: 10px;
     font-family: monospace;
-    font-size: 14px;
     overflow: auto;
     position: fixed;
-    left: 52%;
     top: 97px;
     height: 430px;
 }
 
-.operation-title{
-    position: relative;
-    left: 0px;
-    top: 50px;
-    padding: 20px;
-    font-family: Verdana;
-    font-size: 16px;
-    color: rgb(30, 30, 30);
+.right-title {
+    position: fixed;
+    left: 750px;
 }
 
 .list-comp{
     margin-top: 5%;
+    margin-bottom: 5%;
+    width: 70%;
 }

@@ -13,12 +13,12 @@ const CustomButton = styledButton`
         padding: 0.25em 1em;
         margin: 0 1em;
         background: transparent;
-        color: darkblue;
-        border: 2px solid darkblue;
+        border: 2px solid teal;
+        width: auto;
         
         ${props => props.primary && css`
-        background: lightblue;
-        color: darkblue;`}
+        background: white;
+        color: teal;`}
       `;
 
 interface IProps {
@@ -51,7 +51,7 @@ class IOOperationComponent extends Component<IProps, IState> {
 
         return (
             <div>
-                <div className="operation-title">{componentNameProp} Request</div>
+                <h6>{componentNameProp} Request</h6>
                 <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span>
                 </div>
                 <div>

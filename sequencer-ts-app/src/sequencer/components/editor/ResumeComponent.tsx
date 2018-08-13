@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {Component} from 'react';
 import EditorClient from "../../client/EditorClient";
-import {CustomButton} from "../IOOperationComponent";
 
 interface IState {
     resumeResponse: string
@@ -26,9 +25,11 @@ class ResumeComponent extends Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <div>Sequence Editor Resume</div>
+                <h6>Sequence Editor Resume</h6>
                 <div>
-                    <CustomButton primary={true} onClick={this.handleClick}>Resume</CustomButton>
+                    <a className="btn-large">
+                        <i className="material-icons" onClick={this.handleClick}>play_arrow</i>
+                    </a>
                     <span>{this.state.resumeResponse}</span>
                 </div>
             </div>

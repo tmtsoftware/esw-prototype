@@ -26,7 +26,7 @@ class ShowSequenceComponent extends Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <div>Sequence Editor Show Sequence</div>
+                <h6>Sequence Editor Show Sequence</h6>
                 <div>
                     <CustomButton primary={true} onClick={this.handleClick}>Show Sequence</CustomButton>
                     <div><span><textarea className="text-area" value={this.state.showSequenceResponse}/></span></div>

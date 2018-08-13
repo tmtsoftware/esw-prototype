@@ -43,7 +43,7 @@ class ResultEventComponent extends Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <p className="result-title-area">Sequencer Results Stream</p>
+                <h6 className="right-title">Sequencer Results Stream</h6>
                 <div className="right-column">
                     {console.log(`${this.state.results.length}`)}
                     <ul className="result-text-area">

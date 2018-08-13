@@ -4,13 +4,14 @@ class HeaderComponent extends React.Component {
 
     public render() {
         return (
-            <div>
-                <div className="top-bar">
-                    <span className="brand-title">TMT</span>
-                    <span className="brand-tagline">Sequencer Component</span>
+            <nav className="teal">
+                <div className="nav-wrapper">
+                    <a href="#" className="brand-logo">TMT</a>
+                    <ul id="nav-mobile" className="right hide-on-med-and-down">
+                        <li><a href="https://github.com/tmtsoftware/esw-prototype">Github</a></li>
+                    </ul>
                 </div>
-                <a className="anchor" href="https://github.com/tmtsoftware/esw-prototype">Github</a>
-            </div>
+            </nav>
         );
     }
 }

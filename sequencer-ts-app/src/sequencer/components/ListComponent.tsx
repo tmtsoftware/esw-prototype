@@ -33,24 +33,22 @@ class ListComponent extends Component<IProps, IState> {
     public render() {
         return (
             <HashRouter>
-                <div className="list-comp">
-                    <div>
-                        Sequencers
-                        <ul>
-                            {
-                                this.state.sequencers.map(
-                                    (value, index) =>
-                                        <li key={index}><Link to={value}>{value}</Link></li>
-                                )
-                            }
-                        </ul>
-                    </div>
-                    Assemblies
-                    <ul>
+                <div>
+                    <ul className="list-comp collection with-header">
+                        <li className="collection-header">Sequencers</li>
+                        {
+                            this.state.sequencers.map(
+                                (value, index) =>
+                                    <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
+                            )
+                        }
+                    </ul>
+                    <ul className="list-comp collection with-header">
+                        <li className="collection-header">Assemblies</li>
                         {
                             this.state.assemblies.map(
                                 (value, index) =>
-                                    <li key={index}><Link to={value}>{value}</Link></li>
+                                    <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
                             )
                         }
 

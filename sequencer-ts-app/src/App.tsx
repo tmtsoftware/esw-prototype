@@ -29,12 +29,16 @@ class App extends React.Component {
             const editorClient = new EditorClient(`http://localhost:9090${sequencerPath}`);
             const resultClient = new ResultEventClient(`http://localhost:9090${sequencerPath}`);
 
-            return <div>
-                <FeederComponent client={feederClient} />
-                <PauseComponent client={editorClient} />
-                <ResumeComponent client={editorClient} />
-                <ShowSequenceComponent client={editorClient} />
-                <ResultEventComponent client={resultClient}/>
+            return <div className="row">
+                <div className="col s6">
+                    <FeederComponent client={feederClient} />
+                    <PauseComponent client={editorClient} />
+                    <ResumeComponent client={editorClient} />
+                    <ShowSequenceComponent client={editorClient} />
+                </div>
+                <div className="col s6">
+                    <ResultEventComponent client={resultClient}/>
+                </div>
             </div>
         };
 
