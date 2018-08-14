@@ -13,12 +13,11 @@ const CustomButton = styledButton`
         padding: 0.25em 1em;
         margin: 0 1em;
         background: transparent;
-        border: 2px solid teal;
+        border: 2px solid;
         width: auto;
         
         ${props => props.primary && css`
-        background: white;
-        color: teal;`}
+        background: white;`}
       `;
 
 interface IProps {
