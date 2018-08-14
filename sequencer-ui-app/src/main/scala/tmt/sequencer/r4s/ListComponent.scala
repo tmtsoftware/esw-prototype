@@ -3,7 +3,7 @@ package tmt.sequencer.r4s
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.ListComponentsClient
 import tmt.sequencer.models.WebRWSupport
-import tmt.sequencer.r4s.theme.OperationTitleCss
+import tmt.sequencer.r4s.theme.ListComponentCss
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -25,20 +25,29 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
 
   override def render(get: Get): ElementOrComponent = {
     E.div(
-      OperationTitleCss,
-      Text("Sequencers"),
       E.ul(
+        ListComponentCss,
+        A.className("collection", "with-header"),
+        E.li(
+          A.className("collection-header"),
+          Text("Sequencers")
+        ),
         Tags(
           get(sequencers).map(
-            sequencer => E.li(E.a(A.href(s"#$sequencer"), Text(sequencer)))
+            sequencer => E.li(A.className("collection-item"), E.a(A.href(s"#$sequencer"), Text(sequencer)))
           )
         )
       ),
-      Text("Assemblies"),
       E.ul(
+        ListComponentCss,
+        A.className("collection", "with-header"),
+        E.li(
+          A.className("collection-header"),
+          Text("Assemblies")
+        ),
         Tags(
           get(assemblies).map(
-            assembly => E.li(E.a(A.href(s"#$assembly"), Text(assembly)))
+            assembly => E.li(A.className("collection-item"), E.a(A.href(s"#$assembly"), Text(assembly)))
           )
         )
       )

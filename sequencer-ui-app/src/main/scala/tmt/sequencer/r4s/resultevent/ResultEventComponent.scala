@@ -20,14 +20,16 @@ case class ResultEventComponent(client: P[EventSource]) extends Component[NoEmit
   }
 
   override def render(get: Get): ElementOrComponent = E.div(
-    RightColumnCss,
-    E.p(
-      ResultTitleAreaCss,
-      Text("Server Result Stream")
+    E.h6(
+      RightTitleCss,
+      Text("Sequencer Result Stream")
     ),
-    E.ul(
-      ResultTextAreaCss,
-      Tags(get(streamDataListS).map(stream => E.li(Text(stream))))
+    E.div(
+      RightColumnCss,
+      E.ul(
+        ResultTextAreaCss,
+        Tags(get(streamDataListS).map(stream => E.li(Text(stream))))
+      )
     )
   )
 

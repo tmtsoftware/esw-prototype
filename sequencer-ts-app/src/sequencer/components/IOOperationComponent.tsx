@@ -51,8 +51,7 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div className="card-panel hoverable">
                 <h6>{componentNameProp} Request</h6>
-                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span>
-                </div>
+                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
                     <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
                 </div>

@@ -2,7 +2,7 @@ package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
-import tmt.sequencer.r4s.theme.{ButtonCss, OperationTitleCss, TextAreaCss}
+import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
 
 case class IOOperationComponent(componentNameProp: P[String], operation: P[String], output: P[String])
     extends Component[IOOperationComponent.Msg] {
@@ -11,32 +11,31 @@ case class IOOperationComponent(componentNameProp: P[String], operation: P[Strin
 
   override def render(get: Get): Node = {
     E.div(
+      A.className("card-panel", "hoverable"),
+      E.h6(
+        Text(s"${get(componentNameProp)} Request")
+      ),
       E.div(
-        OperationTitleCss,
-        Text(s"${get(componentNameProp)} Request"),
-        E.div(
-          E.span(
-            E.textarea(
-              TextAreaCss,
-              S.height.px(280),
-              A.onChangeText(input.set),
-              A.value(get(input))
-            )
-          )
-        ),
-        E.div(
-          E.button(
-            ButtonCss,
-            Text(get(operation)),
-            A.onClick { e =>
-              e.preventDefault()
-              emit(HandleClick(get(input)))
-            }
+        E.span(
+          E.textarea(
+            TextAreaCss,
+            S.height.px(280),
+            A.onChangeText(input.set),
+            A.value(get(input))
           )
         )
       ),
       E.div(
-        OperationTitleCss,
+        E.button(
+          ButtonCss,
+          Text(get(operation)),
+          A.onClick { e =>
+            e.preventDefault()
+            emit(HandleClick(get(input)))
+          }
+        )
+      ),
+      E.div(
         Text(s"${get(componentNameProp)} Response"),
         E.div(
           TextAreaCss,

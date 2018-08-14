@@ -10,9 +10,16 @@ case class SequencerComponent(sequencerInfo: P[SequencerInfo]) extends Component
 
   override def render(get: Get): ElementOrComponent = {
     E.div(
-      Component(FeederComponent, WebClients.feeder(get(sequencerInfo))),
-      Component(EditorComponent, WebClients.editor(get(sequencerInfo))),
-      Component(ResultEventComponent, WebClients.logger(get(sequencerInfo)))
+      A.className("row"),
+      E.div(
+        A.className("col s6"),
+        Component(FeederComponent, WebClients.feeder(get(sequencerInfo))),
+        Component(EditorComponent, WebClients.editor(get(sequencerInfo)))
+      ),
+      E.div(
+        A.className("col s6"),
+        Component(ResultEventComponent, WebClients.logger(get(sequencerInfo)))
+      )
     )
   }
 }
