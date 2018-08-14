@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {Component} from "react";
+import {Component} from 'react';
 import {ListComponentsClient} from "../client/ListComponentsClient";
-import {HashRouter, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 interface IProps {
     client: ListComponentsClient
@@ -32,7 +32,6 @@ class ListComponent extends Component<IProps, IState> {
 
     public render() {
         return (
-            <HashRouter>
                 <div>
                     <ul className="list-comp collection with-header">
                         <li className="collection-header">Sequencers</li>
@@ -54,8 +53,6 @@ class ListComponent extends Component<IProps, IState> {
 
                     </ul>
                 </div>
-            </HashRouter>
-
         )
     }
 
