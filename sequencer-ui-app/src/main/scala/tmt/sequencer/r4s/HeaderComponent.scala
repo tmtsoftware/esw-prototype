@@ -1,26 +1,27 @@
 package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.r4s.theme._
 
 case class HeaderComponent() extends Component[NoEmit] {
   override def render(get: Get): Node = {
-    E.div(
+    E.nav(
+      A.className("teal"),
       E.div(
-        TopBarCss,
-        E.span(
-          BrandTitleCss,
+        A.className("nav-wrapper"),
+        E.a(
+          A.href("#"),
+          A.className("brand-logo"),
           Text("TMT")
         ),
-        E.span(
-          BrandTaglineCss,
-          Text("Sequencer component")
+        E.ul(
+          A.className("right hide-on-med-and-down"),
+          E.li(
+            E.a(
+              A.href("https://github.com/tmtsoftware/esw-prototype"),
+              Text("Github")
+            )
+          )
         )
-      ),
-      E.a(
-        AnchorCss,
-        A.href("https://github.com/tmtsoftware/esw-prototype"),
-        Text("Github")
       )
     )
   }
