@@ -34,7 +34,7 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
         ),
         Tags(
           get(sequencers).map(
-            sequencer => E.li(A.className("collection-item"), E.a(A.href(s"#$sequencer"), Text(sequencer)))
+            sequencer => E.li(E.a(A.className("collection-item"), A.href(s"#$sequencer"), Text(sequencer)))
           )
         )
       ),
@@ -47,7 +47,7 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
         ),
         Tags(
           get(assemblies).map(
-            assembly => E.li(A.className("collection-item"), E.a(A.href(s"#$assembly"), Text(assembly)))
+            assembly => E.li(E.a(A.className("collection-item"), A.href(s"#$assembly"), Text(assembly)))
           )
         )
       )
