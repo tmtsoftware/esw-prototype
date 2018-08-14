@@ -24,7 +24,7 @@ class PauseComponent extends Component<IProps, IState> {
 
     public render() {
         return (
-            <div className="card-panel">
+            <div className="card-panel hoverable">
                 <h6>Sequence Editor Pause</h6>
                 <div>
                     <a className="btn-large">

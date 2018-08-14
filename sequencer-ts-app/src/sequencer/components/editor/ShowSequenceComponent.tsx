@@ -25,7 +25,7 @@ class ShowSequenceComponent extends Component<IProps, IState> {
 
     public render() {
         return (
-            <div className="card-panel">
+            <div className="card-panel hoverable">
                 <h6>Sequence Editor Show Sequence</h6>
                 <div>
                     <CustomButton primary={true} onClick={this.handleClick}>Show Sequence</CustomButton>
