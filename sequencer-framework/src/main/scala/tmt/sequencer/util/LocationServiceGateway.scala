@@ -1,9 +1,11 @@
 package tmt.sequencer.util
 
+import java.net.URI
+
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
-import csw.messages.location.Connection.AkkaConnection
+import csw.messages.location.Connection.{AkkaConnection, TcpConnection}
 import csw.messages.location.{AkkaLocation, ComponentId, ComponentType}
 import csw.messages.params.models.Prefix
 import csw.services.location.commons.ActorSystemFactory
@@ -51,4 +53,13 @@ class LocationServiceGateway(locationService: LocationService, system: ActorSyst
         case None =>
           throw new IllegalArgumentException(s"Could not find component - $componentName of type - $componentType")
       }
+
+  def redisUrI: Future[URI] = {
+    locationService
+      .resolve(TcpConnection(ComponentId("EventServer", ComponentType.Service)), 5.seconds)
+      .flatMap {
+        case Some(tcpLocation) => Future { tcpLocation.uri }
+        case None              => throw new IllegalArgumentException(s"Could not find component - Event server")
+      }
+  }
 }
