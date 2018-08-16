@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 import EditorClient from "../../client/EditorClient";
-import jss from "jss";
-import {buttonstyles} from "../../jss/butonstyles";
-import {textareastyles} from "../../jss/textareastyles";
+import {cssClasses} from "../../jss/customstyles";
 
 interface IState {
     showSequenceResponse: string
@@ -12,9 +10,6 @@ interface IState {
 interface IProps {
     client: EditorClient
 }
-
-const button = jss.createStyleSheet(buttonstyles).attach().classes.button;
-const textarea = jss.createStyleSheet(textareastyles).attach().classes.textArea;
 
 class ShowSequenceComponent extends Component<IProps, IState> {
 
@@ -32,8 +27,8 @@ class ShowSequenceComponent extends Component<IProps, IState> {
             <div className="card-panel hoverable">
                 <h6>Sequence Editor Show Sequence</h6>
                 <div>
-                    <button className={`${button}`} onClick={this.handleClick}>Show Sequence</button>
-                    <div><span><textarea className={`${textarea}`} value={this.state.showSequenceResponse}/></span></div>
+                    <button className={`${cssClasses.button}`} onClick={this.handleClick}>Show Sequence</button>
+                    <div><span><textarea className={`${cssClasses.textArea}`} value={this.state.showSequenceResponse}/></span></div>
                 </div>
             </div>
         );

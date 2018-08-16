@@ -1,11 +1,6 @@
 import * as React from 'react';
-import {Component} from "react";
-import jss from "jss";
-import {buttonstyles} from "../jss/butonstyles";
-import {textareastyles} from "../jss/textareastyles";
-
-const button = jss.createStyleSheet(buttonstyles).attach().classes.button;
-const textarea = jss.createStyleSheet(textareastyles).attach().classes.textArea;
+import {Component} from 'react';
+import {cssClasses} from "../jss/customstyles";
 
 interface IProps {
     componentNameProp: string
@@ -17,6 +12,7 @@ interface IProps {
 interface IState {
     input: string
 }
+
 
 class IOOperationComponent extends Component<IProps, IState> {
 
@@ -38,11 +34,11 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div className="card-panel hoverable">
                 <h6>{componentNameProp} Request</h6>
-                <div><span><textarea className={`${textarea}`} value={this.state.input} onChange={this.updateInput}/></span></div>
+                <div><span><textarea className={`${cssClasses.textArea}`} value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <button className={`${button}`} onClick={this.handleClick}>{operation}</button>
+                    <button className={`${cssClasses.button}`} onClick={this.handleClick}>{operation}</button>
                 </div>
-                <div><span><textarea className={`${textarea}`} value={output}/></span></div>
+                <div><span><textarea className={`${cssClasses.textArea}`} value={output}/></span></div>
             </div>
         );
     }
