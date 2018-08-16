@@ -107,6 +107,7 @@ lazy val `sequencer-gateway` = project
       Akka.`akka-http`,
       Akka.`akka-stream`,
       Csw.`csw-event-client`,
+      Csw.`romaine`,
       Libs.`akka-http-cors`,
       Csw.`csw-location`,
       Csw.`csw-command`
@@ -135,6 +136,7 @@ lazy val `sequencer-framework` = project
       Csw.`csw-location`,
       Csw.`csw-command`,
       Csw.`csw-event-client`,
+      Csw.`romaine`,
       SharedLibs.scalaTest.value % Test
     )
   )

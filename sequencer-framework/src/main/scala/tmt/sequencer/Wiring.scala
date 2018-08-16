@@ -38,7 +38,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
   lazy val engine                     = new Engine
-  lazy val cswServices                = new CswServices(sequencer, engine, locationServiceWrapper, eventService, sequencerId, observingMode)
+  lazy val cswServices                = new CswServices(sequencer, engine, locationServiceWrapper, eventService, ???, sequencerId, observingMode)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 

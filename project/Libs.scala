@@ -27,12 +27,13 @@ object Csw {
   //private val Version = "0.1-SNAPSHOT"
 
   private val Org     = "com.github.tmtsoftware.csw-prod"
-  private val Version = "64cd20e7c"
+  private val Version = "3f67bee"
 
   val `csw-location`     = Org %% "csw-location"     % Version
   val `csw-command`      = Org %% "csw-command"      % Version
   val `csw-messages`     = Org %% "csw-messages"     % Version
   val `csw-event-client` = Org %% "csw-event-client" % Version
+  val `romaine`          = Org %% "romaine"          % Version
 }
 
 object Ammonite {

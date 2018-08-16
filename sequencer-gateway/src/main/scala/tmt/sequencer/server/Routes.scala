@@ -7,14 +7,14 @@ import akka.http.scaladsl.server.Directives.{entity, _}
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import akka.util.Timeout
-import akka.{util, Done, NotUsed}
+import akka.{util, Done}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.{ControlCommand, SequenceCommand}
-import csw.messages.events.{Event, EventKey}
 import csw.messages.params.models.Id
-import csw.services.event.api.scaladsl.EventService
 import csw.services.location.internal.UpickleFormats
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
+import reactor.core.publisher.FluxSink.OverflowStrategy
+import romaine.reactive.{RedisSubscription, RedisSubscriptionApi}
 import tmt.assembly.api.AssemblyCommandWeb
 import tmt.sequencer.LocationServiceGateway
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class Routes(
     locationService: LocationServiceGateway,
-    eventService: EventService
+    redisSubscriptionApi: RedisSubscriptionApi[String, String],
 )(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
     extends UpickleSupport
     with UpickleRWSupport
@@ -34,10 +34,9 @@ class Routes(
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
-  def stream(sequencerId: String, observingMode: String): Source[Event, NotUsed] =
-    Source
-      .fromFuture(eventService.defaultSubscriber)
-      .flatMapConcat(_.subscribe(Set(EventKey(s"$sequencerId-$observingMode.result"))))
+  def stream(sequencerId: String, observingMode: String): Source[String, RedisSubscription] = {
+    redisSubscriptionApi.subscribe(List(s"$sequencerId-$observingMode.result"), OverflowStrategy.LATEST).map(_.value)
+  }
 
   val route: Route = cors() {
     SequencerExceptionHandler.route {
@@ -63,7 +62,7 @@ class Routes(
             path(SequenceResultsWeb.results) {
               complete {
                 stream(sequencerId, observingMode)
-                  .map(event => ServerSentEvent(event.paramSet.toString()))
+                  .map(event => ServerSentEvent(event))
                   .keepAlive(10.second, () => ServerSentEvent.heartbeat)
               }
             }

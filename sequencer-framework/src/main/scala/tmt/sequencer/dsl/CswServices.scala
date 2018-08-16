@@ -10,6 +10,7 @@ import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
 import org.tmt.macros.StrandEc
+import romaine.RedisAsyncScalaApi
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.client.SequenceFeederClient
 import tmt.sequencer.messages.SupervisorMsg
@@ -24,6 +25,7 @@ class CswServices(sequencer: Sequencer,
                   engine: Engine,
                   locationService: LocationServiceGateway,
                   eventService: EventService,
+                  redisAsyncScalaApi: RedisAsyncScalaApi[String, String],
                   val sequencerId: String,
                   val observingMode: String)(implicit system: ActorSystem)
     extends CommandDsl(sequencer) {
@@ -71,7 +73,7 @@ class CswServices(sequencer: Sequencer,
     new PublisherStream(eventualCancellable)
   }
 
-  def sendResult(msg: String): Unit = spawn {
-    eventService.defaultPublisher.await.publish(ResultEvent.createResultEvent(s"$sequencerId-$observingMode", msg)).await
+  def sendResult(msg: String): Unit = {
+    redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg)
   }
 }
