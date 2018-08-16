@@ -1,24 +1,11 @@
 import * as React from 'react';
 import {Component} from "react";
-import styled, {css, StyledFunction} from "styled-components";
+import jss from "jss";
+import {buttonstyles} from "../jss/butonstyles";
+import {textareastyles} from "../jss/textareastyles";
 
-interface IYourProps {
-    primary: boolean
-}
-
-const styledButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
-
-const CustomButton = styledButton`
-        border-radius: 3px;
-        padding: 0.25em 1em;
-        margin: 0 1em;
-        background: transparent;
-        border: 2px solid;
-        width: auto;
-        
-        ${props => props.primary && css`
-        background: white;`}
-      `;
+const button = jss.createStyleSheet(buttonstyles).attach().classes.button;
+const textarea = jss.createStyleSheet(textareastyles).attach().classes.textArea;
 
 interface IProps {
     componentNameProp: string
@@ -51,11 +38,11 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div className="card-panel hoverable">
                 <h6>{componentNameProp} Request</h6>
-                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span></div>
+                <div><span><textarea className={`${textarea}`} value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
+                    <button className={`${button}`} onClick={this.handleClick}>{operation}</button>
                 </div>
-                <div><span><textarea className="text-area" value={output}/></span></div>
+                <div><span><textarea className={`${textarea}`} value={output}/></span></div>
             </div>
         );
     }
@@ -71,4 +58,4 @@ class IOOperationComponent extends Component<IProps, IState> {
     };
 }
 
-export {IOOperationComponent, CustomButton}
+export {IOOperationComponent}

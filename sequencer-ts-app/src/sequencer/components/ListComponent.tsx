@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Component} from 'react';
 import {ListComponentsClient} from "../client/ListComponentsClient";
 import {Link} from "react-router-dom";
+import jss from 'jss';
 
 interface IProps {
     client: ListComponentsClient
@@ -11,6 +12,16 @@ interface IState {
     assemblies: string[]
     sequencers: string[]
 }
+
+const styles = {
+    listComp: {
+        'margin-bottom': '5%',
+        'margin-top': '5%',
+        width: '70%'
+    }
+};
+
+const {classes} = jss.createStyleSheet(styles).attach();
 
 class ListComponent extends Component<IProps, IState> {
 
@@ -32,27 +43,27 @@ class ListComponent extends Component<IProps, IState> {
 
     public render() {
         return (
-                <div>
-                    <ul className="list-comp collection with-header">
-                        <li className="collection-header">Sequencers</li>
-                        {
-                            this.state.sequencers.map(
-                                (value, index) =>
-                                    <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
-                            )
-                        }
-                    </ul>
-                    <ul className="list-comp collection with-header">
-                        <li className="collection-header">Assemblies</li>
-                        {
-                            this.state.assemblies.map(
-                                (value, index) =>
-                                    <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
-                            )
-                        }
+            <div>
+                <ul className={`${classes.listComp}collection with-header`}>
+                    <li className="collection-header">Sequencers</li>
+                    {
+                        this.state.sequencers.map(
+                            (value, index) =>
+                                <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
+                        )
+                    }
+                </ul>
+                <ul className={`${classes.listComp}collection with-header`}>
+                    <li className="collection-header">Assemblies</li>
+                    {
+                        this.state.assemblies.map(
+                            (value, index) =>
+                                <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
+                        )
+                    }
 
-                    </ul>
-                </div>
+                </ul>
+            </div>
         )
     }
 
