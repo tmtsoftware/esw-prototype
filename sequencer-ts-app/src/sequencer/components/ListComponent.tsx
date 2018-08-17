@@ -2,6 +2,13 @@ import * as React from 'react';
 import {Component} from 'react';
 import {ListComponentsClient} from "../client/ListComponentsClient";
 import {Link} from "react-router-dom";
+import styled from "styled-components";
+
+const List = styled.ul`
+   margin-top: 5%;
+   margin-bottom: 5%;
+   width: 70%;
+`;
 
 interface IProps {
     client: ListComponentsClient
@@ -33,7 +40,7 @@ class ListComponent extends Component<IProps, IState> {
     public render() {
         return (
                 <div>
-                    <ul className="list-comp collection with-header">
+                    <List className="collection with-header">
                         <li className="collection-header">Sequencers</li>
                         {
                             this.state.sequencers.map(
@@ -41,8 +48,8 @@ class ListComponent extends Component<IProps, IState> {
                                     <li key={index}><Link className="collection-item" to={value}>{value}</Link></li>
                             )
                         }
-                    </ul>
-                    <ul className="list-comp collection with-header">
+                    </List>
+                    <List className="collection with-header">
                         <li className="collection-header">Assemblies</li>
                         {
                             this.state.assemblies.map(
@@ -51,7 +58,7 @@ class ListComponent extends Component<IProps, IState> {
                             )
                         }
 
-                    </ul>
+                    </List>
                 </div>
         )
     }

@@ -1,6 +1,36 @@
 import * as React from 'react';
 import {Component} from 'react';
 import ResultEventClient from "../../client/ResultEventClient";
+import styled from "styled-components";
+
+const ResultDiv = styled.div`
+    left: 50%;
+    bottom: 1703px;
+    padding: 20px;
+    font-family: Verdana;
+    font-size: 16px;
+    color: rgb(30, 30, 30);
+    overflow-x: auto;
+`;
+
+const ResultList = styled.ul`
+   box-sizing: border-box;
+   background-color: rgb(255, 255, 255);
+   color: rgb(30, 30, 30);
+   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+   margin: 10px 0px 0px 10px;
+   padding: 10px;
+   font-family: monospace;
+   overflow: auto;
+   position: fixed;
+   top: 130px;
+   width: 100%;
+   height: 430px;
+`;
+
+const ResultTitle = styled.h6`
+   position: fixed;
+`;
 
 interface IState {
     results: string[]
@@ -9,7 +39,6 @@ interface IState {
 interface IProps {
     client: ResultEventClient
 }
-
 
 class ResultEventComponent extends Component<IProps, IState> {
 
@@ -43,12 +72,12 @@ class ResultEventComponent extends Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <h6 className="right-title">Sequencer Results Stream</h6>
-                <div className="right-column">
-                    <ul className="result-text-area">
+                <ResultTitle>Sequencer Results Stream</ResultTitle>
+                <ResultDiv>
+                    <ResultList>
                         {this.state.results.map((value: string, index: number) => <li key={index}>{value}</li>)}
-                    </ul>
-                </div>
+                    </ResultList>
+                </ResultDiv>
             </div>
         );
     }

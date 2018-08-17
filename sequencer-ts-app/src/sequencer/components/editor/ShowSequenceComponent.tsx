@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {Component} from 'react';
 import EditorClient from "../../client/EditorClient";
-import {CustomButton} from "../IOOperationComponent";
+import {Button} from "../IOOperationComponent";
+import {Textarea} from '../../styles/styles';
 
 interface IState {
     showSequenceResponse: string
@@ -28,8 +29,8 @@ class ShowSequenceComponent extends Component<IProps, IState> {
             <div className="card-panel hoverable">
                 <h6>Sequence Editor Show Sequence</h6>
                 <div>
-                    <CustomButton primary={true} onClick={this.handleClick}>Show Sequence</CustomButton>
-                    <div><span><textarea className="text-area" value={this.state.showSequenceResponse}/></span></div>
+                    <Button primary={true} onClick={this.handleClick}>Show Sequence</Button>
+                    <div><span><Textarea value={this.state.showSequenceResponse}/></span></div>
                 </div>
             </div>
         );

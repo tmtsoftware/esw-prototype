@@ -1,5 +1,4 @@
 import * as React from 'react';
-import './App.css'
 import EditorClient from "./sequencer/client/EditorClient";
 import FeederClient from "./sequencer/client/IFeederClient";
 import FeederComponent from './sequencer/components/feeder/FeederComponent';

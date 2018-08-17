@@ -1,24 +1,6 @@
 import * as React from 'react';
-import {Component} from "react";
-import styled, {css, StyledFunction} from "styled-components";
-
-interface IYourProps {
-    primary: boolean
-}
-
-const styledButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
-
-const CustomButton = styledButton`
-        border-radius: 3px;
-        padding: 0.25em 1em;
-        margin: 0 1em;
-        background: transparent;
-        border: 2px solid;
-        width: auto;
-        
-        ${props => props.primary && css`
-        background: white;`}
-      `;
+import {Component} from 'react';
+import {Textarea, Button} from '../styles/styles';
 
 interface IProps {
     componentNameProp: string
@@ -51,11 +33,19 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div className="card-panel hoverable">
                 <h6>{componentNameProp} Request</h6>
-                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
+                    <span>
+                        <Textarea value={this.state.input} onChange={this.updateInput}/>
+                    </span>
                 </div>
-                <div><span><textarea className="text-area" value={output}/></span></div>
+                <div>
+                    <Button primary={true} onClick={this.handleClick}>{operation}</Button>
+                </div>
+                <div>
+                    <span>
+                        <Textarea value={output}/>
+                    </span>
+                </div>
             </div>
         );
     }
@@ -71,4 +61,4 @@ class IOOperationComponent extends Component<IProps, IState> {
     };
 }
 
-export {IOOperationComponent, CustomButton}
+export {IOOperationComponent, Button}

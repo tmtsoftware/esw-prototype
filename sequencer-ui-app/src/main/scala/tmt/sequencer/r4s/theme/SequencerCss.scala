@@ -15,8 +15,7 @@ object RightColumnCss
 
 object RightTitleCss
     extends CssClass(
-      S.position.fixed(),
-      S.left.px(750)
+      S.position.fixed()
     )
 
 object TextAreaCss
@@ -43,7 +42,7 @@ object ResultTextAreaCss
       S.left("52%"),
       S.top.px(97),
       S.height.px(430),
-      S.overflow("auto")
+      S.width.percent(50)
     )
 
 object ButtonCss
