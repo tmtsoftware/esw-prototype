@@ -1,15 +1,14 @@
 package tmt.sequencer
+
 import java.net.URI
 import java.nio.ByteBuffer
 
 import com.typesafe.config.ConfigFactory
-import io.lettuce.core.api.async.RedisAsyncCommands
 import io.lettuce.core.codec.Utf8StringCodec
+import io.lettuce.core.pubsub.api.reactive.RedisPubSubReactiveCommands
 import io.lettuce.core.{RedisClient, RedisURI}
-import romaine.RedisAsyncScalaApi
-import romaine.reactive.RedisKeySpaceCodec
+import romaine.reactive.{RedisKeySpaceCodec, RedisPSubscribeScalaApi, RedisSubscriptionApi}
 import tmt.sequencer.RedisConnectionCodec.StringCodec
-import tmt.sequencer.util.LocationServiceGateway
 import ujson.Js
 import upickle.default.{read, write, writeJs, _}
 
@@ -22,19 +21,28 @@ class RedisConnectionFactory(locationServiceWrapper: LocationServiceGateway)(imp
 
   lazy val redisURI: Future[URI] = locationServiceWrapper.redisUrI
 
-  lazy val redisAsyncStringApiF: Future[RedisAsyncScalaApi[String, String]] = wrappedAsyncConnection(StringCodec)
-
   def redisClient: Future[RedisClient] = redisURI.map { uri =>
     RedisClient.create(RedisURI.Builder.sentinel(uri.getHost, uri.getPort, masterId).build())
   }
 
-  def asyncConnection[K, V](redisConnectionCodec: RedisConnectionCodec[K, V]): Future[RedisAsyncCommands[K, V]] =
-    redisURI.flatMap(
-      redisUri ⇒ redisClient.flatMap(_.connectAsync(redisConnectionCodec, RedisURI.create(redisUri)).toScala.map(_.async()))
-    )
+  def reactiveConnection[K, V](redisConCodec: RedisConnectionCodec[K, V]): Future[RedisPubSubReactiveCommands[K, V]] =
+    redisURI.flatMap { redisUri =>
+      redisClient.flatMap { client =>
+        client
+          .connectPubSubAsync(redisConCodec, RedisURI.create(redisUri))
+          .toScala
+          .map(_.reactive())
+      }
+    }
 
-  def wrappedAsyncConnection[K, V](redisConnectionCodec: RedisConnectionCodec[K, V]): Future[RedisAsyncScalaApi[K, V]] =
-    asyncConnection(redisConnectionCodec).map(new RedisAsyncScalaApi(_))
+  def wrappedReactiveConnection[K, V](redisConCodec: RedisConnectionCodec[K, V]): Future[RedisPSubscribeScalaApi[K, V]] =
+    reactiveConnection(redisConCodec).map(new RedisPSubscribeScalaApi(_))
+
+  lazy val redisSubscriptionApi: Future[RedisSubscriptionApi[String, String]] =
+    wrappedReactiveConnection(StringCodec)
+      .map { redisPSubscribeApi =>
+        new RedisSubscriptionApi(() => redisPSubscribeApi)
+      }
 }
 
 class RedisConnectionCodec[K: ReadWriter, V: ReadWriter] extends RedisKeySpaceCodec[K, V] {

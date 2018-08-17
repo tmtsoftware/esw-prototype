@@ -25,7 +25,7 @@ class CswServices(sequencer: Sequencer,
                   engine: Engine,
                   locationService: LocationServiceGateway,
                   eventService: EventService,
-                  redisAsyncScalaApi: RedisAsyncScalaApi[String, String],
+                  redisAsyncScalaApi: Future[RedisAsyncScalaApi[String, String]],
                   val sequencerId: String,
                   val observingMode: String)(implicit system: ActorSystem)
     extends CommandDsl(sequencer) {
@@ -74,6 +74,6 @@ class CswServices(sequencer: Sequencer,
   }
 
   def sendResult(msg: String): Unit = {
-    redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg)
+    redisAsyncScalaApi.map(_.publish(s"$sequencerId-$observingMode", msg))(system.dispatcher)
   }
 }

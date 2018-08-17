@@ -21,6 +21,7 @@ class Wiring(port: Option[Int]) {
   lazy val eventService: EventService                     = new EventServiceFactory().make(locationService)
 
   lazy val configs = new Configs(port)
-  lazy val routes  = new Routes(locationServiceWrapper, ???)
-  lazy val server  = new Server(configs, routes)
+
+  lazy val routes = new Routes(locationServiceWrapper, ???)
+  lazy val server = new Server(configs, routes)
 }

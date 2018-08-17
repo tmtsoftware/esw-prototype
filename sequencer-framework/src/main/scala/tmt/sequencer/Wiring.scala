@@ -9,13 +9,14 @@ import csw.services.event.api.scaladsl.EventService
 import csw.services.event.EventServiceFactory
 import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
+import romaine.RedisAsyncScalaApi
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationDouble
 
 class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
@@ -38,7 +39,12 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
   lazy val engine                     = new Engine
-  lazy val cswServices                = new CswServices(sequencer, engine, locationServiceWrapper, eventService, ???, sequencerId, observingMode)
+
+  private val redisAsyncStringApiF: Future[RedisAsyncScalaApi[String, String]] =
+    new RedisConnectionFactory(locationServiceWrapper).redisAsyncStringApiF
+
+  lazy val cswServices =
+    new CswServices(sequencer, engine, locationServiceWrapper, eventService, redisAsyncStringApiF, sequencerId, observingMode)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
