@@ -5,7 +5,6 @@ import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives.{entity, _}
 import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.Source
 import akka.util.Timeout
 import akka.{util, Done}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
@@ -13,30 +12,24 @@ import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.params.models.Id
 import csw.services.location.internal.UpickleFormats
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
-import reactor.core.publisher.FluxSink.OverflowStrategy
-import romaine.reactive.{RedisSubscription, RedisSubscriptionApi}
 import tmt.assembly.api.AssemblyCommandWeb
-import tmt.sequencer.LocationServiceGateway
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
 import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
+import tmt.sequencer.{LocationServiceGateway, SequencerMonitor}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 
 class Routes(
     locationService: LocationServiceGateway,
-    redisSubscriptionApi: RedisSubscriptionApi[String, String],
+    sequencerMonitor: SequencerMonitor,
 )(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
     extends UpickleSupport
     with UpickleRWSupport
     with UpickleFormats {
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
-
-  def stream(sequencerId: String, observingMode: String): Source[String, RedisSubscription] = {
-    redisSubscriptionApi.subscribe(List(s"$sequencerId-$observingMode.result"), OverflowStrategy.LATEST).map(_.value)
-  }
 
   val route: Route = cors() {
     SequencerExceptionHandler.route {
@@ -61,7 +54,8 @@ class Routes(
           get {
             path(SequenceResultsWeb.results) {
               complete {
-                stream(sequencerId, observingMode)
+                sequencerMonitor
+                  .watch(sequencerId, observingMode)
                   .map(event => ServerSentEvent(event))
                   .keepAlive(10.second, () => ServerSentEvent.heartbeat)
               }

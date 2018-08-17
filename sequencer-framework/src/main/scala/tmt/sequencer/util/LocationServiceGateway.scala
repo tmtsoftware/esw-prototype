@@ -1,7 +1,5 @@
 package tmt.sequencer.util
 
-import java.net.URI
-
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
@@ -12,6 +10,7 @@ import csw.services.location.commons.ActorSystemFactory
 import csw.services.location.models.AkkaRegistration
 import csw.services.location.scaladsl.LocationService
 import csw.services.logging.messages.LogControlMessages
+import io.lettuce.core.RedisURI
 import tmt.sequencer.messages.SupervisorMsg
 
 import scala.concurrent.duration.DurationDouble
@@ -54,12 +53,13 @@ class LocationServiceGateway(locationService: LocationService, system: ActorSyst
           throw new IllegalArgumentException(s"Could not find component - $componentName of type - $componentType")
       }
 
-  def redisUrI: Future[URI] = {
+  def redisUrI(masterId: String): Future[RedisURI] = {
     locationService
       .resolve(TcpConnection(ComponentId("EventServer", ComponentType.Service)), 5.seconds)
       .flatMap {
-        case Some(tcpLocation) => Future { tcpLocation.uri }
-        case None              => throw new IllegalArgumentException(s"Could not find component - Event server")
+        case Some(tcpLocation) =>
+          Future { RedisURI.Builder.sentinel(tcpLocation.uri.getHost, tcpLocation.uri.getPort, masterId).build() }
+        case None => throw new IllegalArgumentException(s"Could not find component - Event server")
       }
   }
 }

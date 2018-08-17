@@ -4,13 +4,16 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.actor.{typed, ActorSystem, Cancellable}
 import akka.util.Timeout
 import akka.{util, Done}
+import com.typesafe.config.ConfigFactory
 import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
+import io.lettuce.core.RedisURI
 import org.tmt.macros.StrandEc
-import romaine.RedisAsyncScalaApi
+import romaine.RomaineFactory
+import romaine.async.RedisAsyncScalaApi
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.client.SequenceFeederClient
 import tmt.sequencer.messages.SupervisorMsg
@@ -21,18 +24,27 @@ import scala.async.Async._
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
 import scala.concurrent.{Await, Future}
 
-class CswServices(sequencer: Sequencer,
-                  engine: Engine,
-                  locationService: LocationServiceGateway,
-                  eventService: EventService,
-                  redisAsyncScalaApi: Future[RedisAsyncScalaApi[String, String]],
-                  val sequencerId: String,
-                  val observingMode: String)(implicit system: ActorSystem)
+class CswServices(
+    sequencer: Sequencer,
+    engine: Engine,
+    locationService: LocationServiceGateway,
+    eventService: EventService,
+    romaineFactory: RomaineFactory,
+    val sequencerId: String,
+    val observingMode: String
+)(implicit system: ActorSystem)
     extends CommandDsl(sequencer) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
   implicit val strandEc: StrandEc = StrandEc.create()
+
+  private lazy val masterId: String = ConfigFactory.load().getString("csw-event.redis.masterId")
+
+  private lazy val redisAsyncScalaApi: Future[RedisAsyncScalaApi[String, String]] = async {
+    val uri: RedisURI = await(locationService.redisUrI(masterId))
+    await(romaineFactory.redisAsyncScalaApi(uri))
+  }(system.dispatcher)
 
   def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder = {
     val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
@@ -74,6 +86,6 @@ class CswServices(sequencer: Sequencer,
   }
 
   def sendResult(msg: String): Unit = {
-    redisAsyncScalaApi.map(_.publish(s"$sequencerId-$observingMode", msg))(system.dispatcher)
+    redisAsyncScalaApi.flatMap(_.publish(s"$sequencerId-$observingMode", msg))(system.dispatcher)
   }
 }
