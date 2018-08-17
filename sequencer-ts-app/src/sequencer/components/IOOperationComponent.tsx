@@ -1,11 +1,24 @@
 import * as React from 'react';
 import {Component} from "react";
-import jss from "jss";
-import {buttonstyles} from "../jss/butonstyles";
-import {textareastyles} from "../jss/textareastyles";
+import styled, {css, StyledFunction} from "styled-components";
 
-const button = jss.createStyleSheet(buttonstyles).attach().classes.button;
-const textarea = jss.createStyleSheet(textareastyles).attach().classes.textArea;
+interface IYourProps {
+    primary: boolean
+}
+
+const styledButton: StyledFunction<IYourProps & React.HTMLProps<HTMLButtonElement>> = styled.button;
+
+const CustomButton = styledButton`
+        border-radius: 3px;
+        padding: 0.25em 1em;
+        margin: 0 1em;
+        background: transparent;
+        border: 2px solid;
+        width: auto;
+        
+        ${props => props.primary && css`
+        background: white;`}
+      `;
 
 interface IProps {
     componentNameProp: string
@@ -38,11 +51,11 @@ class IOOperationComponent extends Component<IProps, IState> {
         return (
             <div className="card-panel hoverable">
                 <h6>{componentNameProp} Request</h6>
-                <div><span><textarea className={`${textarea}`} value={this.state.input} onChange={this.updateInput}/></span></div>
+                <div><span><textarea className="text-area" value={this.state.input} onChange={this.updateInput}/></span></div>
                 <div>
-                    <button className={`${button}`} onClick={this.handleClick}>{operation}</button>
+                    <CustomButton primary={true} onClick={this.handleClick}>{operation}</CustomButton>
                 </div>
-                <div><span><textarea className={`${textarea}`} value={output}/></span></div>
+                <div><span><textarea className="text-area" value={output}/></span></div>
             </div>
         );
     }
@@ -58,4 +71,4 @@ class IOOperationComponent extends Component<IProps, IState> {
     };
 }
 
-export {IOOperationComponent}
+export {IOOperationComponent, CustomButton}
