@@ -1,14 +1,14 @@
 import Client from "./Client";
 
 class FeederClient extends Client {
-    protected baseUrl: string;
+    protected resourcePath: string;
 
-    constructor(baseUrl: string) {
-        super(baseUrl)
+    constructor(resourcePath: string) {
+        super(resourcePath)
     }
 
     public feedApi(input: string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}feeder/feed`, callback, input)
+        this.post(`${this.resourcePath}feeder/feed`, callback, input)
     }
 }
 

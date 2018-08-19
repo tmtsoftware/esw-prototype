@@ -1,10 +1,12 @@
-class ResultEventClient {
-    protected baseUrl: string;
+import Client from "./Client";
+
+class ResultEventClient extends Client{
+    protected resourcePath: string;
     protected eventSource: EventSource;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
-        this.eventSource = new EventSource(`${this.baseUrl}results`);
+    constructor(resourcePath: string) {
+       super(resourcePath);
+        this.eventSource = new EventSource(`${this.resourcePath}results`);
     }
 
     public onMessage(callback: (evt: MessageEvent) => any) {

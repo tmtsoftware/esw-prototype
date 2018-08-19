@@ -1,6 +1,6 @@
 import * as React from 'react';
 import EditorClient from "./sequencer/client/EditorClient";
-import FeederClient from "./sequencer/client/IFeederClient";
+import FeederClient from "./sequencer/client/FeederClient";
 import FeederComponent from './sequencer/components/feeder/FeederComponent';
 import PauseComponent from "./sequencer/components/editor/PauseComponent";
 import ResumeComponent from "./sequencer/components/editor/ResumeComponent";
@@ -18,15 +18,15 @@ class App extends React.Component {
 
     public render() {
         const List = () => {
-            const listClient = new ListComponentsClient('http://localhost:9090');
+            const listClient = new ListComponentsClient("/locations");
             return <ListComponent client={listClient}/>
         };
 
         const Sequencer = (props: any) => {
             const sequencerPath = `${props.location.pathname}`;
-            const feederClient = new FeederClient(`http://localhost:9090${sequencerPath}`);
-            const editorClient = new EditorClient(`http://localhost:9090${sequencerPath}`);
-            const resultClient = new ResultEventClient(`http://localhost:9090${sequencerPath}`);
+            const feederClient = new FeederClient(sequencerPath);
+            const editorClient = new EditorClient(sequencerPath);
+            const resultClient = new ResultEventClient(sequencerPath);
 
             return <div className="row">
                 <div className="col s6">
@@ -43,7 +43,7 @@ class App extends React.Component {
 
         const Assembly = (props: any) => {
             const assemblyPath = props.location.pathname;
-            const assemblyClient = new AssemblyCommandWebClient(`http://localhost:9090${assemblyPath}`);
+            const assemblyClient = new AssemblyCommandWebClient(assemblyPath);
 
             return <div>
                 <AssemblyCommandComponent client={assemblyClient}/>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Component} from 'react';
-import FeederClient from "../../client/IFeederClient";
+import FeederClient from "../../client/FeederClient";
 import {IOOperationComponent} from '../IOOperationComponent';
 
 interface IState {

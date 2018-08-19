@@ -1,10 +1,11 @@
 import * as request from "superagent";
 
 class Client {
-    protected baseUrl: string;
+    protected resourcePath: string;
+    private gatewayHost: string = "http://localhost:9090";
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(resourcePath: string) {
+        this.resourcePath = `${this.gatewayHost}${resourcePath}`;
     }
 
     public post(url: string, callback: (res: string) => void, input: string = "") {
@@ -26,6 +27,21 @@ class Client {
                         callback("Oops something went wrong !!")
                     }
                 }
+            );
+    }
+
+    public get(url: string, callback: (responses: string[]) => void) {
+        request
+            .get(url)
+            .set('Content-Type', 'application/json')
+            .send()
+            .then(res => {
+                    console.log(res.text);
+                    if (res.body) {
+                        callback(res.body)
+                    }
+                }, err => console.log(err)
+
             );
     }
 }

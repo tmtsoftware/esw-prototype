@@ -1,14 +1,14 @@
 import Client from "./Client";
 
 class AssemblyCommandWebClient extends Client {
-    protected baseUrl: string;
+    protected resourcePath: string;
 
-    constructor(baseUrl: string) {
-        super(baseUrl)
+    constructor(resourcePath: string) {
+        super(resourcePath)
     }
 
     public submit(input: string, callback: (res: string) => void) {
-        this.post(`${this.baseUrl}Submit`, callback, input)
+        this.post(`${this.resourcePath}Submit`, callback, input)
     }
 }
 

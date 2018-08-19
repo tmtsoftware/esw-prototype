@@ -2,20 +2,20 @@ import Client from "./Client";
 
 class EditorClient extends Client {
 
-    constructor(baseUrl: string) {
-        super(baseUrl)
+    constructor(resourcePath: string) {
+        super(resourcePath)
     }
 
     public pause(callback: (res: string) => void) {
-        this.post(`${this.baseUrl}editor/pause`, callback)
+        this.post(`${this.resourcePath}editor/pause`, callback)
     };
 
     public resume(callback: (res: string) => void) {
-        this.post(`${this.baseUrl}editor/resume`, callback)
+        this.post(`${this.resourcePath}editor/resume`, callback)
     };
 
     public showSequence(callback: (res: string) => void) {
-        this.post(`${this.baseUrl}editor/sequence`, callback)
+        this.post(`${this.resourcePath}editor/sequence`, callback)
     }
 }
 
