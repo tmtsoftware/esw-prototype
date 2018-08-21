@@ -8,6 +8,7 @@ import csw.services.location.commons.ActorSystemFactory
 import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
+import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
 import tmt.sequencer.server.{Routes, Server}
 
 import scala.concurrent.ExecutionContext
@@ -28,7 +29,9 @@ class Wiring(port: Option[Int]) {
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   lazy val sequencerMonitor = new SequencerMonitor(locationServiceWrapper, romaineFactory)
+  lazy val assemblyService  = new AssemblyService(locationServiceWrapper)
+  lazy val positionTracker  = new PositionTracker(assemblyService)
 
-  lazy val routes = new Routes(locationServiceWrapper, sequencerMonitor)
+  lazy val routes = new Routes(locationServiceWrapper, sequencerMonitor, positionTracker, assemblyService)
   lazy val server = new Server(configs, routes)
 }

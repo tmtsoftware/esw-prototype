@@ -2,14 +2,15 @@ package tmt.assembly.r4s
 
 import com.github.ahnfelt.react4s._
 import tmt.assembly.client.AssemblyCommandWebClient
-import tmt.sequencer.models.{ControlCommandWeb, WebRWSupport}
+import tmt.sequencer.codecs.SequencerWebRWSupport
+import tmt.sequencer.models.ControlCommandWeb
 import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
-case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with WebRWSupport {
+case class AssemblyCommandComponent(client: P[AssemblyCommandWebClient]) extends Component[NoEmit] with SequencerWebRWSupport {
 
   val submitResponse = State("")
 

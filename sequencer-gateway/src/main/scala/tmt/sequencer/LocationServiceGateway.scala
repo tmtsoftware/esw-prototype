@@ -1,6 +1,6 @@
 package tmt.sequencer
 
-import akka.actor.ActorSystem
+import akka.actor.{typed, ActorSystem}
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import csw.messages.location.Connection.{AkkaConnection, TcpConnection}
 import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location}
@@ -17,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceGateway(locationService: LocationService)(implicit ec: ExecutionContext, system: ActorSystem) {
 
-  implicit val typedSystem = system.toTyped
+  private implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
   def resolve[T](componentName: String, componentType: ComponentType)(f: AkkaLocation => Future[T]): Future[T] =
     locationService
@@ -50,9 +50,11 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
   }
 
   def commandServiceFor(assemblyName: String): Future[CommandService] = {
-    resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
-      async(new CommandService(akkaLocation))
-    }
+    akkaLocationFor(assemblyName).map(new CommandService(_))
+  }
+
+  def akkaLocationFor(assemblyName: String): Future[AkkaLocation] = {
+    resolve(assemblyName, ComponentType.Assembly)(Future.successful)
   }
 
   def listSequencers(): Future[List[Location]] = locationService.list(ComponentType.Sequencer)

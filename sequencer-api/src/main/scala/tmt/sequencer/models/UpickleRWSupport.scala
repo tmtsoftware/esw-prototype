@@ -5,9 +5,12 @@ import csw.messages.commands.CommandResponse._
 import csw.messages.commands._
 import csw.messages.params.generics.Parameter
 import csw.messages.params.models.{Id, ObsId, Prefix}
+import tmt.assembly.codecs.AssemblyWebRWSupport
+import tmt.sequencer.codecs.SequencerWebRWSupport
+import tmt.utils.UpickleFormatAdapter
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
-trait UpickleRWSupport extends WebRWSupport {
+trait UpickleRWSupport extends SequencerWebRWSupport with AssemblyWebRWSupport {
   import csw.messages.params.formats.JsonSupport._
 
   implicit lazy val idRW: RW[Id]                      = UpickleFormatAdapter.playJsonToUpickle

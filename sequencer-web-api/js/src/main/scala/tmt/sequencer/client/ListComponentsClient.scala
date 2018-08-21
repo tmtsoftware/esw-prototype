@@ -1,11 +1,11 @@
 package tmt.sequencer.client
 
 import tmt.WebGateway
-import tmt.sequencer.models.WebRWSupport
+import tmt.sequencer.codecs.SequencerWebRWSupport
 
 import scala.concurrent.Future
 
-class ListComponentsClient(gateway: WebGateway) extends WebRWSupport {
+class ListComponentsClient(gateway: WebGateway) extends SequencerWebRWSupport {
   def listSequencers: Future[List[String]] =
     gateway.get(
       "/locations/sequencers",

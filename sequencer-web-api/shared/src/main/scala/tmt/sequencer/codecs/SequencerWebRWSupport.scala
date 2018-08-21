@@ -1,9 +1,10 @@
-package tmt.sequencer.models
+package tmt.sequencer.codecs
 
-import tmt.sequencer.utils.EnumUpickleSupport
-import upickle.default.{macroRW, ReadWriter => RW}
+import tmt.sequencer.models._
+import tmt.utils.EnumUpickleSupport
+import upickle.default.{ReadWriter => RW, _}
 
-trait WebRWSupport {
+trait SequencerWebRWSupport {
   implicit lazy val aggregateResponseWebRW: RW[AggregateResponseWeb] = macroRW[AggregateResponseWeb]
   implicit lazy val commandListWebRW: RW[CommandListWeb]             = macroRW[CommandListWeb]
   implicit lazy val commandResponseWebRW: RW[CommandResponseWeb]     = macroRW[CommandResponseWeb]
