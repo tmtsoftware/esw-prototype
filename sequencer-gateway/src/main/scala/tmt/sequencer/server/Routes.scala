@@ -14,6 +14,7 @@ import csw.services.location.internal.UpickleFormats
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import tmt.assembly.api.AssemblyCommandWeb
 import tmt.assembly.models.RequestComponent
+import tmt.assembly.models.RequestComponent.FilterWheel
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
 import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
 import tmt.sequencer.models._

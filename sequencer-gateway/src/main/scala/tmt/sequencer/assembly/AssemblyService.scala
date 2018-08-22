@@ -46,6 +46,6 @@ class AssemblyService(locationServiceGateway: LocationServiceGateway)(implicit e
           }
       }
       .filter(cs ⇒ cs.stateName.name == stateMatcher.stateName && cs.prefixStr == stateMatcher.prefix)
-      .takeWhile(stateMatcher.check, inclusive = true)
+      .takeWhile(x => !stateMatcher.check(x), inclusive = true)
   }
 }
