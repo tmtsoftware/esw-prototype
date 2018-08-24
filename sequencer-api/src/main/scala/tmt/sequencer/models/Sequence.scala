@@ -42,8 +42,7 @@ case class Sequence(steps: List[Step]) { outer =>
   def pause: Sequence  = nextPending.map(step => updateStep(step.addBreakpoint())).flat
   def resume: Sequence = nextPending.map(step => updateStep(step.removeBreakpoint())).flat
 
-  def updateStep(step: Step): Sequence                             = update(step.id, _ => step)
-  def update(id: Id, f: Step => Step): Sequence                    = updateAll(Set(id), f)
+  def updateStep(step: Step): Sequence                             = updateAll(Set(step.id), _ => step)
   def updateStatus(ids: Set[Id], stepStatus: StepStatus): Sequence = updateAll(ids, _.withStatus(stepStatus))
 
   def updateAll(ids: Set[Id], f: Step => Step): Sequence = copy {
