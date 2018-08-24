@@ -10,10 +10,9 @@ import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
-import io.lettuce.core.RedisURI
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
-import romaine.async.RedisAsyncScalaApi
+import romaine.async.RedisAsyncApi
 import tmt.sequencer.api.SequenceFeeder
 import tmt.sequencer.client.SequenceFeederClient
 import tmt.sequencer.messages.SupervisorMsg
@@ -41,10 +40,9 @@ class CswServices(
 
   private lazy val masterId: String = ConfigFactory.load().getString("csw-event.redis.masterId")
 
-  private lazy val redisAsyncScalaApi: Future[RedisAsyncScalaApi[String, String]] = async {
-    val uri: RedisURI = await(locationService.redisUrI(masterId))
-    await(romaineFactory.redisAsyncScalaApi(uri))
-  }(system.dispatcher)
+  private lazy val redisAsyncScalaApi: RedisAsyncApi[String, String] = {
+    romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
+  }
 
   def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder = {
     val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
@@ -69,23 +67,17 @@ class CswServices(
     }
   }
 
-  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done): SubscriptionStream = {
+  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")
-    val eventualSubscription: Future[EventSubscription] = spawn {
-      eventService.defaultSubscriber.await.subscribeAsync(eventKeys, e => spawn(callback(e)))
-    }
-    new SubscriptionStream(eventualSubscription)
+    eventService.defaultSubscriber.subscribeAsync(eventKeys, e => spawn(callback(e)))
   }
 
-  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): PublisherStream = {
+  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): Cancellable = {
     println(s"=========================> Publishing event $eventGeneratorBlock every $every")
-    val eventualCancellable: Future[Cancellable] = spawn {
-      eventService.defaultPublisher.await.publish(eventGeneratorBlock, every)
-    }
-    new PublisherStream(eventualCancellable)
+    eventService.defaultPublisher.publish(eventGeneratorBlock, every)
   }
 
-  def sendResult(msg: String): Unit = {
-    redisAsyncScalaApi.flatMap(_.publish(s"$sequencerId-$observingMode", msg))(system.dispatcher)
+  def sendResult(msg: String): Future[Done] = {
+    redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
   }
 }

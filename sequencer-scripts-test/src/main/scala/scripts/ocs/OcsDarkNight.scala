@@ -79,8 +79,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscriptionStream.cancel().await
-    publisherStream.cancel().await
+    subscriptionStream.unsubscribe().await
+    publisherStream.cancel()
     println("shutdown ocs")
     Done
   }

@@ -2,7 +2,7 @@ package tmt.sequencer.assembly
 
 import akka.util.Timeout
 import csw.messages.commands.matchers.DemandMatcher
-import csw.messages.params.generics.KeyType.{IntKey, LongKey}
+import csw.messages.params.generics.KeyType.IntKey
 import csw.messages.params.models.Prefix
 import csw.messages.params.states.{DemandState, StateName}
 
