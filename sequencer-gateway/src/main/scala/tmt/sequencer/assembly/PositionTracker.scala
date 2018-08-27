@@ -1,12 +1,12 @@
 package tmt.sequencer.assembly
 
 import akka.NotUsed
-import akka.stream.scaladsl.{Merge, Source}
+import akka.stream.scaladsl.Source
 import csw.messages.params.generics.Key
 import csw.messages.params.generics.KeyType.{IntKey, StringKey}
 import csw.messages.params.states.CurrentState
-import tmt.assembly.models.{PositionResponse, RequestComponent}
 import tmt.assembly.models.RequestComponent.{Disperser, FilterWheel}
+import tmt.assembly.models.{PositionResponse, RequestComponent}
 
 class PositionTracker(assemblyService: AssemblyService) {
 
@@ -14,9 +14,9 @@ class PositionTracker(assemblyService: AssemblyService) {
   private def compKey(name: String): Key[Int] = IntKey.make(s"$name-position")
 
   def track(assemblyName: String): Source[PositionResponse, NotUsed] = {
-    val stream1 = assemblyService.subscribe(assemblyName, Matchers.FilterMatcher)
-    val stream2 = assemblyService.subscribe(assemblyName, Matchers.DisperserMatcher)
-    Source.combine(stream1, stream2)(Merge(_)).map(positionResponse)
+    val filterStateStream    = assemblyService.subscribe(assemblyName, Matchers.FilterMatcher)
+    val disperserStateStream = assemblyService.subscribe(assemblyName, Matchers.DisperserMatcher)
+    filterStateStream.merge(disperserStateStream).map(positionResponse)
   }
 
   def positionResponse(currentState: CurrentState): PositionResponse = {
