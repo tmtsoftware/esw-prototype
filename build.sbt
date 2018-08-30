@@ -100,6 +100,7 @@ lazy val `sequencer-api` = project
   )
 
 lazy val `sequencer-gateway` = project
+  .enablePlugins(DeployApp)
   .dependsOn(`sequencer-api`)
   .settings(
     libraryDependencies ++= Seq(
