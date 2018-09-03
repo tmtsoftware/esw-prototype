@@ -18,7 +18,7 @@ object WebClients {
 
   def feeder(sequencerInfo: SequencerInfo): SequenceFeederWebClient = new SequenceFeederWebClient(sequencerClient(sequencerInfo))
   def editor(sequencerInfo: SequencerInfo): SequenceEditorWebClient = new SequenceEditorWebClient(sequencerClient(sequencerInfo))
-  def logger(sequencerInfo: SequencerInfo): EventSource =
+  def results(sequencerInfo: SequencerInfo): EventSource =
     new EventSource(s"${sequencerPath(sequencerInfo)}${SequenceResultsWeb.results}")
 
   private def sequencerClient(sequencerInfo: SequencerInfo) = new WebGateway(sequencerPath(sequencerInfo))

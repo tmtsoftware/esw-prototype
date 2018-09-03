@@ -18,7 +18,7 @@ case class SequencerComponent(sequencerInfo: P[SequencerInfo]) extends Component
       ),
       E.div(
         A.className("col s6"),
-        Component(ResultEventComponent, WebClients.logger(get(sequencerInfo)))
+        Component(ResultEventComponent, WebClients.results(get(sequencerInfo)))
       )
     )
   }
