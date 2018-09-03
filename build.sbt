@@ -47,7 +47,8 @@ lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(
     libraryDependencies ++= Seq(
       Libs.`scalajs-dom`.value,
-    )
+    ),
+    scalaJSUseMainModuleInitializer := true
   )
 
 lazy val `sequencer-web-api-js` = `sequencer-web-api`.js

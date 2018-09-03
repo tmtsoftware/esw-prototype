@@ -1,4 +1,5 @@
 package tmt.sequencer.util
+import tmt.trial.IF
 
 object SequencerUtil {
   val sequencerLocationDelimeter = "@"
@@ -17,4 +18,7 @@ object SequencerUtil {
     val assemblyArgs = location.split("-")
     s"assembly/${assemblyArgs(0)}/"
   }
+
+  import tmt.trial.IFInstances._
+  private val value: List[Int] = IF[Int].toPb(10)
 }
