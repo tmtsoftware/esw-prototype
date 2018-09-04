@@ -1,11 +1,11 @@
 package tmt.sequencer.dsl
 
 import akka.actor.typed.scaladsl.adapter._
-import akka.actor.{typed, ActorSystem, Cancellable}
+import akka.actor.{ActorSystem, Cancellable, typed}
 import akka.util.Timeout
-import akka.{util, Done}
+import akka.{Done, util}
 import com.typesafe.config.ConfigFactory
-import csw.messages.commands.{CommandResponse, SequenceCommand, Setup}
+import csw.messages.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
 import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
@@ -61,6 +61,28 @@ class CswServices(
         val setupCommand: Setup       = CswCommandAdapter.setupCommandFrom(command)
         implicit val timeout: Timeout = util.Timeout(10.seconds)
         val response                  = await(new CommandService(akkaLocation).submit(setupCommand))
+        println(s"Response - $response")
+        response
+      }(system.dispatcher)
+    }
+  }
+
+  def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
+    locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
+      async {
+        implicit val timeout: Timeout = util.Timeout(10.seconds)
+        val response                  = await(new CommandService(akkaLocation).submit(command))
+        println(s"Response - $response")
+        response
+      }(system.dispatcher)
+    }
+  }
+
+  def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
+    locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
+      async {
+        implicit val timeout: Timeout = util.Timeout(10.seconds)
+        val response                  = await(new CommandService(akkaLocation).oneway(command))
         println(s"Response - $response")
         response
       }(system.dispatcher)
