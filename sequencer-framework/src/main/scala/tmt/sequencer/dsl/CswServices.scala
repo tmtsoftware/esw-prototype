@@ -99,6 +99,11 @@ class CswServices(
     eventService.defaultPublisher.publish(eventGeneratorBlock, every)
   }
 
+  def publish(event: Event): Unit = {
+    println(s"=========================> Publishing event $event")
+    eventService.defaultPublisher.publish(event)
+  }
+
   def sendResult(msg: String): Future[Done] = {
     redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
   }
