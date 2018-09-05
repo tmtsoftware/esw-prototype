@@ -27,7 +27,7 @@ object Csw {
   //private val Version = "0.1-SNAPSHOT"
 
   private val Org     = "com.github.tmtsoftware.csw-prod"
-  private val Version = "3280fca"
+  private val Version = "fc2a4605d"
 
   val `csw-location`     = Org %% "csw-location"     % Version
   val `csw-command`      = Org %% "csw-command"      % Version
