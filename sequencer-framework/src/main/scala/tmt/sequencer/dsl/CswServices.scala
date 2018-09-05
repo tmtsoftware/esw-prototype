@@ -78,6 +78,17 @@ class CswServices(
     }
   }
 
+  def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
+    locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
+      async {
+        implicit val timeout: Timeout = util.Timeout(10.seconds)
+        val response                  = await(new CommandService(akkaLocation).submitAndSubscribe(command))
+        println(s"Response - $response")
+        response
+      }(system.dispatcher)
+    }
+  }
+
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
     locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
       async {
