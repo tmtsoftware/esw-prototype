@@ -10,7 +10,7 @@ object Libs {
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
   val `scala-async`        = dep("org.scala-lang.modules" %% "scala-async" % "0.9.7")
   val `akka-http-cors`     = "ch.megard" %% "akka-http-cors" % "0.3.0"
-  val `play-json`          = dep("com.typesafe.play" %%% "play-json" % "2.6.9") //Apache 2.0
+  val `play-json`          = dep("com.typesafe.play" %%% "play-json" % "2.6.10") //Apache 2.0
   val `upickle`            = dep("com.lihaoyi" %%% "upickle" % "0.6.6")
   val `monix`              = dep("io.monix" %%% "monix" % "3.0.0-RC1")
   val `scalajs-dom`        = dep("org.scala-js" %%% "scalajs-dom" % "0.9.6")
@@ -27,11 +27,14 @@ object Csw {
   //private val Version = "0.1-SNAPSHOT"
 
   private val Org     = "com.github.tmtsoftware.csw-prod"
-  private val Version = "fc2a4605d"
+  private val Version = "0581dc77e"
 
-  val `csw-location`     = Org %% "csw-location"     % Version
-  val `csw-command`      = Org %% "csw-command"      % Version
-  val `csw-messages`     = Org %% "csw-messages"     % Version
+  val `csw-location` = Org %% "csw-location" % Version
+  val `csw-command`  = Org %% "csw-command"  % Version
+  val `csw-messages` = Org %% "csw-messages" % Version
+
+  val `csw-params` = dep(Org %%% "csw-params" % Version)
+
   val `csw-event-client` = Org %% "csw-event-client" % Version
   val `romaine`          = Org %% "romaine"          % Version
 }

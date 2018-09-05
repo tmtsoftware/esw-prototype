@@ -1,11 +1,12 @@
 package tmt.assembly.api
 
-import tmt.sequencer.models.{CommandResponseWeb, ControlCommandWeb}
+import csw.messages.commands.ControlCommand
+import tmt.sequencer.models.CommandResponseWeb
 
 import scala.concurrent.Future
 
 trait AssemblyCommandWeb {
-  def submit(controlCommandWeb: ControlCommandWeb): Future[CommandResponseWeb]
+  def submit(controlCommand: ControlCommand): Future[CommandResponseWeb]
 }
 
 object AssemblyCommandWeb {

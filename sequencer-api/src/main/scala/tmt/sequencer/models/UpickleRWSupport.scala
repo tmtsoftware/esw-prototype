@@ -5,17 +5,18 @@ import csw.messages.commands.CommandResponse._
 import csw.messages.commands._
 import csw.messages.params.generics.Parameter
 import csw.messages.params.models.{Id, ObsId, Prefix}
+import play.api.libs.json.Format
 import tmt.assembly.codecs.AssemblyWebRWSupport
-import tmt.sequencer.codecs.SequencerWebRWSupport
+import tmt.sequencer.codecs.SequencerRWSupport
 import tmt.utils.UpickleFormatAdapter
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
-trait UpickleRWSupport extends SequencerWebRWSupport with AssemblyWebRWSupport {
-  import csw.messages.params.formats.JsonSupport._
+trait UpickleRWSupport extends SequencerRWSupport with AssemblyWebRWSupport {
 
-  implicit lazy val idRW: RW[Id]                      = UpickleFormatAdapter.playJsonToUpickle
-  implicit lazy val resultRW: RW[Result]              = UpickleFormatAdapter.playJsonToUpickle
-  implicit lazy val paramSetRW: RW[Set[Parameter[_]]] = UpickleFormatAdapter.playJsonToUpickle(paramSetFormat)
+  implicit lazy val idRW: RW[Id]         = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val resultRW: RW[Result] = UpickleFormatAdapter.playJsonToUpickle
+  implicit lazy val paramSetRW: RW[Set[Parameter[_]]] =
+    UpickleFormatAdapter.playJsonToUpickle(implicitly[Format[Set[Parameter[_]]]])
 
   implicit lazy val aggregateResponseRW: RW[AggregateResponse] = macroRW
   implicit lazy val commandListRW: RW[CommandList]             = macroRW
@@ -88,35 +89,5 @@ trait UpickleRWSupport extends SequencerWebRWSupport with AssemblyWebRWSupport {
     macroRW[Cancelled],
     macroRW[CommandNotAvailable],
     macroRW[NotAllowed]
-  )
-
-  implicit lazy val controlCommandRW: RW[ControlCommand] = readwriter[ControlCommandWeb].bimap(
-    command =>
-      ControlCommandWeb(
-        command.getClass.getSimpleName,
-        command.source.prefix,
-        command.commandName.name,
-        command.maybeObsId.map(_.obsId),
-        writeJs(command.paramSet)(paramSetRW).arr,
-        Option(command.runId.id)
-    ),
-    command =>
-      command.kind match {
-        case "Setup" =>
-          Setup(
-            Prefix(command.source),
-            CommandName(command.commandName),
-            command.maybeObsId.map(v => ObsId(v)),
-            readJs(command.paramSet)(paramSetRW)
-          )
-        case "Observe" =>
-          Observe(
-            Prefix(command.source),
-            CommandName(command.commandName),
-            command.maybeObsId.map(v => ObsId(v)),
-            readJs(command.paramSet)(paramSetRW)
-          )
-        case _ => ???
-    }
   )
 }

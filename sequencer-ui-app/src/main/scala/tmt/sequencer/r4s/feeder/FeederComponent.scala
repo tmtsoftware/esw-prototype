@@ -2,7 +2,7 @@ package tmt.sequencer.r4s.feeder
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.SequenceFeederWebClient
-import tmt.sequencer.codecs.SequencerWebRWSupport
+import tmt.sequencer.codecs.SequencerRWSupport
 import tmt.sequencer.models.CommandListWeb
 import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
@@ -10,7 +10,7 @@ import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
-case class FeederComponent(client: P[SequenceFeederWebClient]) extends Component[NoEmit] with SequencerWebRWSupport {
+case class FeederComponent(client: P[SequenceFeederWebClient]) extends Component[NoEmit] with SequencerRWSupport {
 
   val feedResponse = State("")
 

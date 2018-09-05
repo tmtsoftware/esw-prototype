@@ -40,6 +40,7 @@ lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies ++= Seq(
       Libs.`play-json`.value,
       Libs.`upickle`.value,
+      Csw.`csw-params`.value,
       Enumeratum.`enumeratum`.value,
       SharedLibs.scalaTest.value % Test,
     )
