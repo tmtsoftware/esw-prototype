@@ -110,7 +110,7 @@ class CswServices(
     eventService.defaultPublisher.publish(eventGeneratorBlock, every)
   }
 
-  def publish(event: Event): Unit = {
+  def publish(event: Event): Future[Done] = {
     println(s"=========================> Publishing event $event")
     eventService.defaultPublisher.publish(event)
   }
