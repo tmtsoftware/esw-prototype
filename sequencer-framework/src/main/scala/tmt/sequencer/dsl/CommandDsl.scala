@@ -6,11 +6,12 @@ import tmt.sequencer.Sequencer
 import tmt.sequencer.models.AggregateResponse
 
 import scala.concurrent.Future
+import scala.reflect.ClassTag
 
 abstract class CommandDsl(sequencer: Sequencer) extends ScriptDsl {
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
-  private def handle[T <: SequenceCommand](name: String)(handler: T => Future[AggregateResponse]): Unit = {
+  private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[AggregateResponse]): Unit = {
     commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
   }
 
