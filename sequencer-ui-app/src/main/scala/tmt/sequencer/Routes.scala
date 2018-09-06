@@ -19,7 +19,11 @@ object Routes {
     path(
       "assembly",
       Assemblies,
-      path(string, Assembly)
+      path(
+        string,
+        Assembly,
+        path(string, FilterAssembly)
+      )
     )
   )
 }
