@@ -10,17 +10,13 @@ import scala.concurrent.Future
 abstract class CommandDsl(sequencer: Sequencer) extends ScriptDsl {
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
-  def handleCommand(name: String)(handler: SequenceCommand => Future[AggregateResponse]): Unit = {
-    commandHandlerBuilder.addHandler[SequenceCommand](_.commandName.name == name)(handler)
+  private def handle[T <: SequenceCommand](name: String)(handler: T => Future[AggregateResponse]): Unit = {
+    commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
   }
 
-  def handleSetupCommand(name: String)(handler: Setup => Future[AggregateResponse]): Unit = {
-    commandHandlerBuilder.addHandler[Setup](_.commandName.name == name)(handler)
-  }
-
-  def handleObserveCommand(name: String)(handler: Observe => Future[AggregateResponse]): Unit = {
-    commandHandlerBuilder.addHandler[Observe](_.commandName.name == name)(handler)
-  }
+  def handleCommand(name: String)(handler: SequenceCommand => Future[AggregateResponse]): Unit = handle(name)(handler)
+  def handleSetupCommand(name: String)(handler: Setup => Future[AggregateResponse]): Unit      = handle(name)(handler)
+  def handleObserveCommand(name: String)(handler: Observe => Future[AggregateResponse]): Unit  = handle(name)(handler)
 
   def nextIf(f: SequenceCommand => Boolean)(implicit strandEc: StrandEc): Future[Option[SequenceCommand]] =
     spawn {

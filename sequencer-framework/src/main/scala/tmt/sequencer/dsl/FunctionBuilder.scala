@@ -8,8 +8,8 @@ class FunctionBuilder[I, O] {
 
   lazy val combinedHandler: PartialFunction[I, O] = handlers.foldLeft(PartialFunction.empty[I, O])(_ orElse _)
 
-  def addHandler[T <: I : ClassTag](p: T => Boolean)(handler: T => O): Unit = handlers += {
-    case input: T if p(input) => handler(input)
+  def addHandler[T <: I](handler: T => O)(iff: T => Boolean): Unit = handlers += {
+    case input: T if iff(input) => handler(input)
   }
 
   def build(default: I => O): I => O = input => combinedHandler.lift(input).getOrElse(default(input))
