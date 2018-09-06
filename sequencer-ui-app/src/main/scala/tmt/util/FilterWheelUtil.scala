@@ -6,11 +6,15 @@ import csw.messages.params.models.{ObsId, Prefix}
 object FilterWheelUtil {
   def createMoveCommand(commandType: String, movePosition: Int): ControlCommand = {
     val positionKey = IntKey.make("position")
+    val prefix      = Prefix("test-prefix")
+    val commandName = CommandName("move")
+    val someObsId   = Some(ObsId("test-obsId"))
+
     commandType match {
       case "Setup" =>
-        Setup(Prefix("test-prefix"), CommandName("move"), Some(ObsId("test-obsId")), Set(positionKey.set(movePosition)))
+        Setup(prefix, commandName, someObsId, Set(positionKey.set(movePosition)))
       case "Observe" =>
-        Observe(Prefix("test-prefix"), CommandName("move"), Some(ObsId("test-obsId")), Set(positionKey.set(movePosition)))
+        Observe(prefix, commandName, someObsId, Set(positionKey.set(movePosition)))
     }
   }
 }
