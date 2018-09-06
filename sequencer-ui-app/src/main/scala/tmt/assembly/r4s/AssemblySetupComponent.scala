@@ -1,11 +1,10 @@
 package tmt.assembly.r4s
 
 import com.github.ahnfelt.react4s._
-import csw.messages.commands.{CommandName, Observe, Setup}
-import csw.messages.params.models.{ObsId, Prefix}
 import tmt.assembly.client.AssemblyCommandWebClient
 import tmt.sequencer.codecs.SequencerRWSupport
 import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
+import tmt.util.FilterWheelUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -13,17 +12,13 @@ import scala.util.{Failure, Success}
 case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyCommandWebClient])
     extends Component[NoEmit]
     with SequencerRWSupport {
+  val submitResponse           = State("")
+  val commandType              = State("")
+  val movePosition: State[Int] = State(0)
 
-  val submitResponse = State("")
-  val commandType    = State("")
-  val commandName    = State("")
-
-  def handleSubmit(client: AssemblyCommandWebClient, commandType: String, commandName: String): Unit = {
+  def handleSubmit(client: AssemblyCommandWebClient, commandType: String, movePosition: Int): Unit = {
     submitResponse.set("Waiting for Response ....")
-    val command = commandType match {
-      case "Setup"   => Setup(Prefix("test-prefix"), CommandName(commandName), Some(ObsId("test-obsid")))
-      case "Observe" => Observe(Prefix("test-prefix"), CommandName(commandName), Some(ObsId("test-obsid")))
-    }
+    val command = FilterWheelUtil.createMoveCommand(commandType, movePosition)
     client.submit(command).onComplete {
       case Success(response) => submitResponse.set(upickle.default.write(response, 2))
       case Failure(ex)       => submitResponse.set(ex.getMessage)
@@ -44,11 +39,11 @@ case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyComma
         )
       ),
       E.div(
-        Text("Command Name"),
+        Text("Move position coordinate"),
         E.span(
           E.input(
-            A.onChangeText(commandName.set),
-            A.value(get(commandName))
+            A.onChangeText(x => movePosition.set(x.toInt)),
+            A.value(get(movePosition).toString)
           )
         )
       ),
@@ -57,7 +52,7 @@ case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyComma
         Text("Submit"),
         A.onClick { e =>
           e.preventDefault()
-          handleSubmit(get(client), get(commandType), get(commandName))
+          handleSubmit(get(client), get(commandType), get(movePosition))
         }
       ),
       E.div(
