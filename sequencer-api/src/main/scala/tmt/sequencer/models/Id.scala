@@ -36,7 +36,7 @@ object CommandList {
   def empty: CommandList                            = CommandList(Nil)
 }
 
-case class AggregateResponse(childResponses: Set[CommandResponse]) {
+case class AggregateResponse private[sequencer] (childResponses: Set[CommandResponse]) {
   def ids: Set[Id]                                                 = childResponses.map(_.runId)
   def add(commandResponses: CommandResponse*): AggregateResponse   = copy(childResponses ++ commandResponses.toSet)
   def add(maybeResponse: Set[CommandResponse]): AggregateResponse  = copy(childResponses ++ maybeResponse)
@@ -47,4 +47,8 @@ case class AggregateResponse(childResponses: Set[CommandResponse]) {
   def markSuccessful(maybeCommand: Option[SequenceCommand]): AggregateResponse = markSuccessful(maybeCommand.toList: _*)
 }
 
-object AggregateResponse extends AggregateResponse(Set.empty)
+object AggregateResponse {
+  private[sequencer] def empty                                                          = new AggregateResponse(Set.empty)
+  def single(commandResponse: CommandResponse): AggregateResponse                       = new AggregateResponse(Set(commandResponse))
+  private[sequencer] def apply(childResponses: Set[CommandResponse]): AggregateResponse = new AggregateResponse(childResponses)
+}

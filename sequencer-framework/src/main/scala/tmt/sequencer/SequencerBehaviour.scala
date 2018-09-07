@@ -13,7 +13,7 @@ object SequencerBehaviour {
     var stepRefOpt: Option[ActorRef[Step]]                       = None
     var sequence: Sequence                                       = Sequence.empty
     var responseRefOpt: Option[ActorRef[Try[AggregateResponse]]] = None
-    var aggregateResponse: AggregateResponse                     = AggregateResponse
+    var aggregateResponse: AggregateResponse                     = AggregateResponse.empty
 
     def sendNext(replyTo: ActorRef[Step]): Unit = sequence.next match {
       case Some(step) => setInFlight(replyTo, step)
@@ -47,7 +47,7 @@ object SequencerBehaviour {
         println("Sequence is finished")
         responseRefOpt.foreach(x => x ! Success(aggregateResponse))
         sequence = Sequence.empty
-        aggregateResponse = AggregateResponse
+        aggregateResponse = AggregateResponse.empty
         responseRefOpt = None
         stepRefOpt = None
       }

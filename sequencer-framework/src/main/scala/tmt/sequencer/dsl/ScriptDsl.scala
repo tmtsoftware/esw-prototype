@@ -15,7 +15,7 @@ trait ScriptDsl {
   def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
   def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
     val aggregateResponses = Future.sequence(fs.toSet).await
-    aggregateResponses.foldLeft(AggregateResponse: AggregateResponse)(_ add _)
+    aggregateResponses.foldLeft(AggregateResponse.empty)(_ add _)
   }
 
   implicit class RichF[T](t: Future[T]) {

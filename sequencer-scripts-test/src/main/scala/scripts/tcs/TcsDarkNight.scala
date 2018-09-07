@@ -23,7 +23,7 @@ class TcsDarkNight(cs: CswServices) extends Script(cs) {
       }
 
       val response = AggregateResponse
-        .add(firstAssemblyResponse)
+        .single(firstAssemblyResponse)
         .add(restAssemblyResponses)
         .markSuccessful(command)
 
