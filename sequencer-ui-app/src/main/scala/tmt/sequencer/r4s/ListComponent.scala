@@ -47,7 +47,18 @@ case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEm
         ),
         Tags(
           get(assemblies).map(
-            assembly => E.li(E.a(A.className("collection-item"), A.href(s"#$assembly"), Text(assembly)))
+            assembly => {
+              E.li(E.a(A.className("collection-item"), A.href(s"#$assembly"), Text(assembly)))
+            }
+          )
+        ),
+        Tags(
+          get(assemblies).map(
+            assembly => {
+              E.li(
+                E.a(A.className("collection-item"), A.href(s"#${assembly}filter"), Text(s"Filter Wheel Demo $assembly"))
+              )
+            }
           )
         )
       )
