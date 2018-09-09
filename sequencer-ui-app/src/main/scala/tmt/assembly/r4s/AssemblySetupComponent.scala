@@ -1,8 +1,9 @@
 package tmt.assembly.r4s
 
 import com.github.ahnfelt.react4s._
+import play.api.libs.json.Json
 import tmt.assembly.client.AssemblyCommandWebClient
-import tmt.sequencer.codecs.SequencerRWSupport
+import tmt.sequencer.codecs.SequencerWebJsonSupport
 import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
 import tmt.util.FilterWheelUtil
 
@@ -11,7 +12,7 @@ import scala.util.{Failure, Success}
 
 case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyCommandWebClient])
     extends Component[NoEmit]
-    with SequencerRWSupport {
+    with SequencerWebJsonSupport {
   val submitResponse           = State("")
   val commandType              = State("")
   val movePosition: State[Int] = State(0)
@@ -20,7 +21,7 @@ case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyComma
     submitResponse.set("Waiting for Response ....")
     val command = FilterWheelUtil.createMoveCommand(commandType, movePosition)
     client.submit(command).onComplete {
-      case Success(response) => submitResponse.set(upickle.default.write(response, 2))
+      case Success(response) => submitResponse.set(Json.prettyPrint(Json.toJson(response)))
       case Failure(ex)       => submitResponse.set(ex.getMessage)
     }
   }

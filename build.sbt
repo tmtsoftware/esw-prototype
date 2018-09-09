@@ -1,6 +1,6 @@
 import sbt.Keys.{libraryDependencies, resolvers}
-import sbtcrossproject.{CrossType, crossProject}
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
+import sbtcrossproject.CrossType
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 inThisBuild(List(
   organization := "org.tmt",
@@ -39,7 +39,7 @@ lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
   .settings(
     libraryDependencies ++= Seq(
       Libs.`play-json`.value,
-      Libs.`upickle`.value,
+      Libs.`play-json-derived-codecs`.value,
       Csw.`csw-params`.value,
       Enumeratum.`enumeratum`.value,
       SharedLibs.scalaTest.value % Test,

@@ -10,8 +10,8 @@ import akka.{util, Done}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.params.models.Id
-import csw.services.location.internal.UpickleFormats
-import de.heikoseeberger.akkahttpupickle.UpickleSupport
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import play.api.libs.json.Json
 import tmt.assembly.api.AssemblyCommandWeb
 import tmt.assembly.models.RequestComponent
 import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
@@ -19,7 +19,6 @@ import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
 import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
 import tmt.sequencer.{LocationServiceGateway, SequencerMonitor}
-import upickle.default.write
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,9 +29,10 @@ class Routes(
     positionTracker: PositionTracker,
     assemblyService: AssemblyService
 )(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
-    extends UpickleSupport
-    with UpickleRWSupport
-    with UpickleFormats {
+    extends PlayJsonSupport
+    with WebJsonSupport {
+
+  import csw.messages.params.formats.JsonSupport.{sequenceCommandFormat => _, _}
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
@@ -141,7 +141,7 @@ class Routes(
         val commandService = locationService.commandServiceFor(assemblyName)
         get {
           path("track") {
-            complete(positionTracker.track(assemblyName).map(x => write(x)).map(x => ServerSentEvent(x)))
+            complete(positionTracker.track(assemblyName).map(x => Json.toJson(x).toString()).map(x => ServerSentEvent(x)))
           }
         } ~
         post {
