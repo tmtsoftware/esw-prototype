@@ -2,23 +2,23 @@ package tmt.sequencer.r4s.feeder
 
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
-import tmt.sequencer.client.SequenceFeederWebClient
-import tmt.sequencer.codecs.SequencerWebJsonSupport
-import tmt.sequencer.models.CommandListWeb
+import tmt.sequencer.client.SequenceFeederClient
+import tmt.sequencer.codecs.SequencerJsonSupport
+import tmt.sequencer.models.CommandList
 import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
-case class FeederComponent(client: P[SequenceFeederWebClient]) extends Component[NoEmit] with SequencerWebJsonSupport {
+case class FeederComponent(client: P[SequenceFeederClient]) extends Component[NoEmit] with SequencerJsonSupport {
 
   val feedResponse = State("")
 
-  def handleFeed(client: SequenceFeederWebClient, msg: IOOperationComponent.Msg): Unit = msg match {
+  def handleFeed(client: SequenceFeederClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       feedResponse.set("Waiting for Response ....")
-      Try(Json.parse(request).as[CommandListWeb])
+      Try(Json.parse(request).as[CommandList])
         .map(
           input =>
             client.feed(input).onComplete {

@@ -1,17 +1,17 @@
 package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.client.SequenceEditorWebClient
-import tmt.sequencer.codecs.SequencerWebJsonSupport
+import tmt.sequencer.client.SequenceEditorClient
+import tmt.sequencer.codecs.SequencerJsonSupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class PauseComponent(client: P[SequenceEditorWebClient]) extends Component[NoEmit] with SequencerWebJsonSupport {
+case class PauseComponent(client: P[SequenceEditorClient]) extends Component[NoEmit] with SequencerJsonSupport {
 
   val pauseResponse = State("")
 
-  def handlePause(client: SequenceEditorWebClient): Unit = client.pause().onComplete {
+  def handlePause(client: SequenceEditorClient): Unit = client.pause().onComplete {
     case Success(_)  => pauseResponse.set("Operation Successful")
     case Failure(ex) => pauseResponse.set(ex.getMessage)
   }

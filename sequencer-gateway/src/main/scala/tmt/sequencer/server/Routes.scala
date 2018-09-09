@@ -12,10 +12,11 @@ import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import play.api.libs.json.Json
-import tmt.assembly.api.AssemblyCommandWeb
+import tmt.assembly.api.AssemblyFeeder
 import tmt.assembly.models.RequestComponent
-import tmt.sequencer.api.{SequenceEditorWeb, SequenceFeederWeb, SequenceResultsWeb}
+import tmt.sequencer.api.{SequenceEditor, SequenceFeeder, SequenceResultsWeb}
 import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
+import tmt.sequencer.codecs.SequencerJsonSupport
 import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
 import tmt.sequencer.{LocationServiceGateway, SequencerMonitor}
@@ -30,9 +31,9 @@ class Routes(
     assemblyService: AssemblyService
 )(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
     extends PlayJsonSupport
-    with WebJsonSupport {
+    with SequencerJsonSupport {
 
-  import csw.messages.params.formats.JsonSupport.{sequenceCommandFormat => _, _}
+  import csw.messages.params.formats.JsonSupport._
 
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
@@ -68,70 +69,70 @@ class Routes(
         post {
           val sequenceFeeder = locationService.sequenceFeeder(sequencerId, observingMode)
           val sequenceEditor = locationService.sequenceEditor(sequencerId, observingMode)
-          pathPrefix(SequenceFeederWeb.ApiName) {
-            path(SequenceFeederWeb.Feed) {
+          pathPrefix(SequenceFeeder.ApiName) {
+            path(SequenceFeeder.Feed) {
               entity(as[CommandList]) { commandList =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
                   validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {
-                    sequenceFeeder.map(_.feed(commandList))
+                    sequenceFeeder.map(_.submit(commandList))
                     complete(HttpResponse(StatusCodes.Accepted, entity = "Done"))
                   }
                 }
               }
             }
           } ~
-          pathPrefix(SequenceEditorWeb.ApiName) {
-            path(SequenceEditorWeb.AddAll) {
+          pathPrefix(SequenceEditor.ApiName) {
+            path(SequenceEditor.AddAll) {
               entity(as[List[SequenceCommand]]) { commands =>
                 complete(sequenceEditor.flatMap(_.addAll(commands).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.Sequence) {
+            path(SequenceEditor.Sequence) {
               val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
               complete(eventualSequence)
             } ~
-            path(SequenceEditorWeb.Pause) {
+            path(SequenceEditor.Pause) {
               complete(sequenceEditor.flatMap(_.pause().map(_ => Done)))
             } ~
-            path(SequenceEditorWeb.Resume) {
+            path(SequenceEditor.Resume) {
               complete(sequenceEditor.flatMap(_.resume().map(_ => Done)))
             } ~
-            path(SequenceEditorWeb.Reset) {
+            path(SequenceEditor.Reset) {
               complete(sequenceEditor.flatMap(_.reset().map(_ => Done)))
             } ~
-            path(SequenceEditorWeb.Delete) {
+            path(SequenceEditor.Delete) {
               entity(as[List[Id]]) { ids =>
                 complete(sequenceEditor.flatMap(_.delete(ids).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.AddBreakpoints) {
+            path(SequenceEditor.AddBreakpoints) {
               entity(as[List[Id]]) { ids =>
                 complete(sequenceEditor.flatMap(_.addBreakpoints(ids).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.RemoveBreakpoints) {
+            path(SequenceEditor.RemoveBreakpoints) {
               entity(as[List[Id]]) { ids =>
                 complete(sequenceEditor.flatMap(_.removeBreakpoints(ids).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.Prepend) {
+            path(SequenceEditor.Prepend) {
               entity(as[List[SequenceCommand]]) { commands =>
                 complete(sequenceEditor.flatMap(_.prepend(commands).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.Replace) {
+            path(SequenceEditor.Replace) {
               entity(as[(Id, List[SequenceCommand])]) {
                 case (id, commands) =>
                   complete(sequenceEditor.flatMap(_.replace(id, commands).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.InsertAfter) {
+            path(SequenceEditor.InsertAfter) {
               entity(as[(Id, List[SequenceCommand])]) {
                 case (id, commands) =>
                   complete(sequenceEditor.flatMap(_.insertAfter(id, commands).map(_ => Done)))
               }
             } ~
-            path(SequenceEditorWeb.Shutdown) {
+            path(SequenceEditor.Shutdown) {
               complete(sequenceEditor.flatMap(_.shutdown().map(_ => Done)))
             }
           }
@@ -145,7 +146,7 @@ class Routes(
           }
         } ~
         post {
-          path(AssemblyCommandWeb.Submit) {
+          path(AssemblyFeeder.Submit) {
             entity(as[ControlCommand]) { command =>
               implicit val timeout: Timeout = util.Timeout(10.seconds)
               complete(commandService.flatMap(_.submit(command)))

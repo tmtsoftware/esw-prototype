@@ -9,12 +9,14 @@ import tmt.sequencer.messages.SupervisorMsg
 
 // find a workaround for server not hanging after multiple connects/disconnects
 // explore timeout thing
-class RemoteRepl(commandService: CswServices,
-                 sequencer: Sequencer,
-                 supervisor: ActorRef[SupervisorMsg],
-                 sequenceFeeder: SequenceFeeder,
-                 sequenceEditor: SequenceEditor,
-                 rpcConfigs: Configs) {
+class RemoteRepl(
+    commandService: CswServices,
+    sequencer: Sequencer,
+    supervisor: ActorRef[SupervisorMsg],
+    sequenceFeeder: SequenceFeeder,
+    sequenceEditor: SequenceEditor,
+    rpcConfigs: Configs
+) {
 
   def server() = new SshdRepl(
     SshServerConfig(

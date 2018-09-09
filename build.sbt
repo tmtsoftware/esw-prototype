@@ -2,39 +2,40 @@ import sbt.Keys.{libraryDependencies, resolvers}
 import sbtcrossproject.CrossType
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-inThisBuild(List(
-  organization := "org.tmt",
-  scalaVersion := "2.12.6",
-  version := "0.1.0-SNAPSHOT",
-  resolvers += "jitpack" at "https://jitpack.io",
-  scalacOptions ++= Seq(
-    "-encoding",
-    "UTF-8",
-    "-feature",
-    "-unchecked",
-    "-deprecation",
-    //"-Xfatal-warnings",
-    "-Xlint",
-    "-Yno-adapted-args",
-    "-Ywarn-dead-code",
-    "-Xfuture",
-    //      "-Xprint:typer"
+inThisBuild(
+  List(
+    organization := "org.tmt",
+    scalaVersion := "2.12.6",
+    version := "0.1.0-SNAPSHOT",
+    resolvers += "jitpack" at "https://jitpack.io",
+    scalacOptions ++= Seq(
+      "-encoding",
+      "UTF-8",
+      "-feature",
+      "-unchecked",
+      "-deprecation",
+      //"-Xfatal-warnings",
+      "-Xlint",
+      "-Yno-adapted-args",
+      "-Ywarn-dead-code",
+      "-Xfuture",
+      //      "-Xprint:typer"
+    )
   )
-))
+)
 
 lazy val `esw-prototype` = project
   .in(file("."))
   .aggregate(
-    `sequencer-web-api-js`,
-    `sequencer-web-api-jvm`,
+    `sequencer-api-js`,
+    `sequencer-api-jvm`,
     `sequencer-macros`,
-    `sequencer-api`,
     `sequencer-framework`,
     `sequencer-ui-app`,
     `sequencer-gateway`
   )
 
-lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
+lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .settings(
     libraryDependencies ++= Seq(
@@ -50,18 +51,24 @@ lazy val `sequencer-web-api` = crossProject(JSPlatform, JVMPlatform)
       Libs.`scalajs-dom`.value,
     )
   )
+  .jvmSettings(
+    libraryDependencies ++= Seq(
+      Akka.`akka-typed`,
+      Csw.`csw-messages`
+    )
+  )
 
-lazy val `sequencer-web-api-js` = `sequencer-web-api`.js
-lazy val `sequencer-web-api-jvm` = `sequencer-web-api`.jvm
+lazy val `sequencer-api-js`  = `sequencer-api`.js
+lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
 lazy val `sequencer-ui-app` = project
   .enablePlugins(ScalaJSBundlerPlugin)
-  .dependsOn(`sequencer-web-api-js`)
+  .dependsOn(`sequencer-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     resolvers += Resolver.sonatypeRepo("snapshots"),
     npmDependencies in Compile ++= Seq(
-      "react" -> "16.4.1",
+      "react"     -> "16.4.1",
       "react-dom" -> "16.4.1"
     ),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
@@ -74,9 +81,7 @@ lazy val `sequencer-ui-app` = project
     version in webpack := "4.8.1",
     version in startWebpackDevServer := "3.1.4",
 //    webpackConfigFile in fastOptJS := Some(baseDirectory.value / "my.custom.webpack.config.js"),
-    webpackResources := webpackResources.value +++
-        PathFinder(Seq(baseDirectory.value/ "index.html")) ** "*.*",
-
+    webpackResources := webpackResources.value +++ PathFinder(Seq(baseDirectory.value / "index.html")) ** "*.*",
     webpackDevServerExtraArgs in fastOptJS ++= Seq(
       "--content-base",
       baseDirectory.value.getAbsolutePath
@@ -91,18 +96,9 @@ lazy val `sequencer-macros` = project
     )
   )
 
-lazy val `sequencer-api` = project
-  .dependsOn(`sequencer-web-api-jvm`)
-  .settings(
-    libraryDependencies ++= Seq(
-      Akka.`akka-typed`,
-      Csw.`csw-messages`
-    )
-  )
-
 lazy val `sequencer-gateway` = project
   .enablePlugins(DeployApp)
-  .dependsOn(`sequencer-api`)
+  .dependsOn(`sequencer-api-jvm`)
   .settings(
     libraryDependencies ++= Seq(
       Csw.`csw-messages`,
@@ -118,7 +114,7 @@ lazy val `sequencer-gateway` = project
 
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-web-api-jvm`, `sequencer-api`)
+  .dependsOn(`sequencer-macros`, `sequencer-api-jvm`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(

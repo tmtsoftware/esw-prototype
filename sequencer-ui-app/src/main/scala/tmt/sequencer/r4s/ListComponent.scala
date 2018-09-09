@@ -2,13 +2,13 @@ package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.ListComponentsClient
-import tmt.sequencer.codecs.SequencerWebJsonSupport
+import tmt.sequencer.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.theme.ListComponentCss
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEmit] with SequencerWebJsonSupport {
+case class ListComponent(client: P[ListComponentsClient]) extends Component[NoEmit] with SequencerJsonSupport {
 
   val sequencers: State[List[String]] = State(List.empty[String])
   val assemblies: State[List[String]] = State(List.empty[String])
