@@ -14,7 +14,7 @@ import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import tmt.sequencer.api.SequenceFeeder
-import tmt.sequencer.client.SequenceFeederClient
+import tmt.sequencer.client.SequenceFeederJvmClient
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.util._
 import tmt.sequencer.{Engine, Sequencer}
@@ -49,7 +49,7 @@ class CswServices(
     val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceFeederClient(supervisorRef)
+        new SequenceFeederJvmClient(supervisorRef)
       }(system.dispatcher)
     }
     Await.result(eventualFeederImpl, 5.seconds)

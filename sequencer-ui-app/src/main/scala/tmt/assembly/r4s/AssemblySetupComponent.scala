@@ -2,7 +2,7 @@ package tmt.assembly.r4s
 
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
-import tmt.assembly.client.AssemblyFeederClient
+import tmt.assembly.client.AssemblyFeederJsClient
 import tmt.sequencer.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
 import tmt.util.FilterWheelUtil
@@ -10,14 +10,14 @@ import tmt.util.FilterWheelUtil
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyFeederClient])
+case class AssemblySetupComponent(filterName: P[String], client: P[AssemblyFeederJsClient])
     extends Component[NoEmit]
     with SequencerJsonSupport {
   val submitResponse           = State("")
   val commandType              = State("")
   val movePosition: State[Int] = State(0)
 
-  def handleSubmit(client: AssemblyFeederClient, commandType: String, movePosition: Int): Unit = {
+  def handleSubmit(client: AssemblyFeederJsClient, commandType: String, movePosition: Int): Unit = {
     submitResponse.set("Waiting for Response ....")
     val command = FilterWheelUtil.createMoveCommand(commandType, movePosition)
     client.submit(command).onComplete {

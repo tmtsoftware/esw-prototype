@@ -8,11 +8,11 @@ import tmt.sequencer.models.{AggregateResponse, CommandList}
 
 import scala.concurrent.Future
 
-class SequenceFeederClient(gateway: WebGateway) extends SequenceFeeder with SequencerJsonSupport {
-  override def submit(commandList: CommandList): Future[Unit] = gateway.post(
+class SequenceFeederJsClient(gateway: WebGateway) extends SequenceFeeder with SequencerJsonSupport {
+  override def feed(commandList: CommandList): Future[Unit] = gateway.post(
     url = s"${SequenceFeeder.ApiName}/${SequenceFeeder.Feed}",
     data = Json.toJson(commandList).toString()
   )
 
-  override def feed(commandList: CommandList): Future[AggregateResponse] = ???
+  override def submit(commandList: CommandList): Future[AggregateResponse] = ???
 }

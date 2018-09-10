@@ -10,7 +10,7 @@ import tmt.sequencer.models._
 
 import scala.concurrent.Future
 
-class SequenceEditorClient(gateway: WebGateway) extends SequenceEditor with SequencerJsonSupport {
+class SequenceEditorJsClient(gateway: WebGateway) extends SequenceEditor with SequencerJsonSupport {
 
   import csw.messages.params.formats.JsonSupport._
 

@@ -1,10 +1,10 @@
 package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
-import tmt.sequencer.client.SequenceEditorClient
+import tmt.sequencer.client.SequenceEditorJsClient
 import tmt.sequencer.codecs.SequencerJsonSupport
 
-case class EditorComponent(editorClient: P[SequenceEditorClient]) extends Component[NoEmit] with SequencerJsonSupport {
+case class EditorComponent(editorClient: P[SequenceEditorJsClient]) extends Component[NoEmit] with SequencerJsonSupport {
 
   override def render(get: Get): ElementOrComponent = {
     val client = get(editorClient)

@@ -8,7 +8,7 @@ import tmt.sequencer.codecs.SequencerJsonSupport
 
 import scala.concurrent.Future
 
-class AssemblyFeederClient(gateway: WebGateway) extends AssemblyFeeder with SequencerJsonSupport {
+class AssemblyFeederJsClient(gateway: WebGateway) extends AssemblyFeeder with SequencerJsonSupport {
   import csw.messages.params.formats.JsonSupport._
 
   override def submit(controlCommand: ControlCommand): Future[CommandResponse] = gateway.post(

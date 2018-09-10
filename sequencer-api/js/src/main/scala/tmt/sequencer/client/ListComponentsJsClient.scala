@@ -6,7 +6,7 @@ import tmt.sequencer.codecs.SequencerJsonSupport
 
 import scala.concurrent.Future
 
-class ListComponentsClient(gateway: WebGateway) extends SequencerJsonSupport {
+class ListComponentsJsClient(gateway: WebGateway) extends SequencerJsonSupport {
   def listSequencers: Future[List[String]] =
     gateway.get(
       "/locations/sequencers",

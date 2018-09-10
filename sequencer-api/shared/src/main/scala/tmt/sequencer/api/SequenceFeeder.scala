@@ -5,8 +5,8 @@ import tmt.sequencer.models.{AggregateResponse, CommandList}
 import scala.concurrent.Future
 
 trait SequenceFeeder {
-  def submit(commandList: CommandList): Future[Unit]
-  def feed(commandList: CommandList): Future[AggregateResponse]
+  def feed(commandList: CommandList): Future[Unit]
+  def submit(commandList: CommandList): Future[AggregateResponse]
 }
 
 object SequenceFeeder {

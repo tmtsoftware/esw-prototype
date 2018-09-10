@@ -1,9 +1,9 @@
 package tmt
 
 import org.scalajs.dom.raw.EventSource
-import tmt.assembly.client.AssemblyFeederClient
+import tmt.assembly.client.AssemblyFeederJsClient
 import tmt.sequencer.api.SequenceResultsWeb
-import tmt.sequencer.client.{ListComponentsClient, SequenceEditorClient, SequenceFeederClient}
+import tmt.sequencer.client.{ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}
 import tmt.sequencer.models.SequencerInfo
 
 object WebClients {
@@ -11,13 +11,13 @@ object WebClients {
 
   private val gatewayHost = "http://localhost:9090"
 
-  lazy val listSequencers: ListComponentsClient = new ListComponentsClient(new WebGateway(gatewayHost))
+  lazy val listSequencers: ListComponentsJsClient = new ListComponentsJsClient(new WebGateway(gatewayHost))
 
-  def assemblyCommandClient(assemblyName: String): AssemblyFeederClient =
-    new AssemblyFeederClient(new WebGateway(s"$gatewayHost/assembly/$assemblyName/"))
+  def assemblyCommandClient(assemblyName: String): AssemblyFeederJsClient =
+    new AssemblyFeederJsClient(new WebGateway(s"$gatewayHost/assembly/$assemblyName/"))
 
-  def feeder(sequencerInfo: SequencerInfo): SequenceFeederClient = new SequenceFeederClient(sequencerClient(sequencerInfo))
-  def editor(sequencerInfo: SequencerInfo): SequenceEditorClient = new SequenceEditorClient(sequencerClient(sequencerInfo))
+  def feeder(sequencerInfo: SequencerInfo): SequenceFeederJsClient = new SequenceFeederJsClient(sequencerClient(sequencerInfo))
+  def editor(sequencerInfo: SequencerInfo): SequenceEditorJsClient = new SequenceEditorJsClient(sequencerClient(sequencerInfo))
   def results(sequencerInfo: SequencerInfo): EventSource =
     new EventSource(s"${sequencerPath(sequencerInfo)}${SequenceResultsWeb.results}")
 

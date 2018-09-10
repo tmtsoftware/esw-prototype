@@ -7,7 +7,7 @@ import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location
 import csw.services.command.scaladsl.CommandService
 import csw.services.location.scaladsl.LocationService
 import io.lettuce.core.RedisURI
-import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
+import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.util.SequencerUtil
 
@@ -29,22 +29,22 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
           throw new IllegalArgumentException(s"Could not find component - $componentName of type - $componentType")
       }
 
-  def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeederClient] = {
+  def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeederJvmClient] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceFeederClient(supervisorRef)
+        new SequenceFeederJvmClient(supervisorRef)
       }(system.dispatcher)
     }
   }
 
-  def sequenceEditor(sequencerId: String, observingMode: String): Future[SequenceEditorClient] = {
+  def sequenceEditor(sequencerId: String, observingMode: String): Future[SequenceEditorJvmClient] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceEditorClient(supervisorRef)
+        new SequenceEditorJvmClient(supervisorRef)
       }(system.dispatcher)
     }
   }

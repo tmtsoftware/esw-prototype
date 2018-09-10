@@ -12,7 +12,7 @@ import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.client.{SequenceEditorClient, SequenceFeederClient}
+import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
@@ -49,8 +49,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
-  lazy val sequenceEditor: SequenceEditor = new SequenceEditorClient(supervisorRef)
-  lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederClient(supervisorRef)
+  lazy val sequenceEditor: SequenceEditor = new SequenceEditorJvmClient(supervisorRef)
+  lazy val sequenceFeeder: SequenceFeeder = new SequenceFeederJvmClient(supervisorRef)
 
   lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)
 }

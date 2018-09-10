@@ -33,7 +33,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
       val commandList = subCommandsB.add(commandA)
 
-      val response = iris.feed(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
+      val response = iris.submit(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
       println(s"[Ocs] Received response: $response")
       cs.sendResult(s"$response")
       response
@@ -54,8 +54,8 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val irisSequence = CommandList.from(commandC)
 
       val aggregateResponse = parAggregate(
-        iris.feed(irisSequence),
-        tcs.feed(tcsSequence)
+        iris.submit(irisSequence),
+        tcs.submit(tcsSequence)
       ).await
 
       val response = aggregateResponse.markSuccessful(commandC).markSuccessful(maybeCommandD)
@@ -70,7 +70,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
     spawn {
       println(s"[Ocs] Received command: ${command.commandName}")
 
-      val responseE = tcs.feed(CommandList.from(command)).await.markSuccessful(command)
+      val responseE = tcs.submit(CommandList.from(command)).await.markSuccessful(command)
 
       println(s"[Ocs] Received response: $responseE")
       cs.sendResult(s"$responseE")
