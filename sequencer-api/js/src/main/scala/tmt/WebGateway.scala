@@ -19,11 +19,13 @@ class WebGateway(baseUri: String)(implicit ec: ExecutionContext) {
       .post(
         url = s"$baseUri$url",
         data = Json.toJson(entity).toString(),
-        headers = Map("Content-Type" -> "application/json")
+        headers = Map("content-type" -> "application/json")
       )
       .map { xhr =>
-        println(xhr.responseText)
-        Json.parse(xhr.responseText).as[Response]
+        xhr.getResponseHeader("content-type") match {
+          case "application/json" => Json.parse(xhr.responseText).as[Response]
+          case _                  => JsString(xhr.responseText).as[Response]
+        }
       }
       .recover {
         case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)

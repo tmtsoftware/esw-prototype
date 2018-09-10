@@ -11,5 +11,5 @@ trait AssemblyJsonSupport extends JsonSupport {
   implicit lazy val commandResponseFormat: OFormat[CommandResponse]   = derived.flat.oformat((__ \ "type").format[String])
   implicit lazy val requestComponentFormat: OFormat[RequestComponent] = derived.flat.oformat((__ \ "type").format[String])
   implicit lazy val positionResponseFormat: OFormat[PositionResponse] = Json.format
-  implicit val unitReads: Reads[Unit]                                 = Reads(_ => JsSuccess(()))
+  implicit lazy val unitReads: Reads[Unit]                            = Reads(_ => JsSuccess(()))
 }
