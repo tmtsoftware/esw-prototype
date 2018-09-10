@@ -1,16 +1,14 @@
 ### Send POST request with json body
-POST http://localhost:8000/feeder/feed
+POST http://localhost:9090/sequencer/iris/darknight/feeder/feed
 Content-Type: application/json
 
 {
   "commands": [
     {
-      "kind": "Setup",
+      "type": "Setup",
       "source": "test1",
       "commandName": "setup-iris",
-      "maybeObsId": [
-        "test-obsId1"
-      ],
+      "maybeObsId": "test-obsId1",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -25,37 +23,20 @@ Content-Type: application/json
                     "12:13:14.1"
                   ],
                   "units": "NoUnits"
-                },
-                {
-                  "keyName": "dec",
-                  "keyType": "StringKey",
-                  "values": [
-                    "32:33:34.4"
-                  ],
-                  "units": "NoUnits"
-                },
-                {
-                  "keyName": "epoch",
-                  "keyType": "DoubleKey",
-                  "values": [
-                    1950.0
-                  ],
-                  "units": "NoUnits"
                 }
               ]
             }
           ],
           "units": "NoUnits"
         }
-      ]
+      ],
+      "runId": "196e0354-ea0f-4547-a3df-e04633b704f8"
     },
     {
-      "kind": "Setup",
+      "type": "Setup",
       "source": "test1",
       "commandName": "setup-iris",
-      "maybeObsId": [
-        "test-obsId1"
-      ],
+      "maybeObsId": "test-obsId1",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -92,15 +73,14 @@ Content-Type: application/json
           ],
           "units": "NoUnits"
         }
-      ]
+      ],
+      "runId": "196e0354-ea0f-4547-a3df-e04633b704f9"
     },
     {
-      "kind": "Setup",
+      "type": "Setup",
       "source": "test1",
       "commandName": "setup-iris",
-      "maybeObsId": [
-        "test-obsId1"
-      ],
+      "maybeObsId": "test-obsId1",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -137,23 +117,22 @@ Content-Type: application/json
           ],
           "units": "NoUnits"
         }
-      ]
+      ],
+      "runId": "196e0354-ea0f-4547-a3df-e04633b704f6"
     }
   ]
 }
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/addAll
+POST http://localhost:9090/sequencer/iris/darknight/editor/addAll
 Content-Type: application/json
 
  [
     {
-      "kind": "Setup",
+      "type": "Setup",
       "source": "test1",
       "commandName": "setup-iris",
-      "maybeObsId": [
-        "test-obsId1"
-      ],
+      "maybeObsId": "test-obsId1",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -190,41 +169,40 @@ Content-Type: application/json
           ],
           "units": "NoUnits"
         }
-      ]
+      ],
+      "runId": "196e0354-ea0f-4547-a3df-e04633b704f3"
     }
 ]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/pause
+POST http://localhost:9090/sequencer/iris/darknight/editor/pause
 Content-Type: application/json
 
 {}
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/resume
+POST http://localhost:9090/sequencer/iris/darknight/editor/resume
 Content-Type: application/json
 
 {}
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/reset
+POST http://localhost:9090/sequencer/iris/darknight/editor/reset
 Content-Type: application/json
 
 {}
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/prepend
+POST http://localhost:9090/sequencer/iris/darknight/editor/prepend
 Content-Type: application/json
 
 
 [
   {
-    "kind": "Setup",
+    "type": "Setup",
     "source": "test1",
     "commandName": "setup-iris",
-    "maybeObsId": [
-      "test-obsId1"
-    ],
+    "maybeObsId": "test-obsId1",
     "paramSet": [
       {
         "keyName": "myStruct",
@@ -261,22 +239,21 @@ Content-Type: application/json
         ],
         "units": "NoUnits"
       }
-    ]
+    ],
+    "runId": "196e0354-ea0f-4547-a3df-e04633b612f8"
   }
  ]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/prepend
+POST http://localhost:9090/sequencer/iris/darknight/editor/prepend
 Content-Type: application/json
 
 [
   {
-    "kind": "Setup",
+    "type": "Setup",
     "source": "test1",
     "commandName": "setup-iris",
-    "maybeObsId": [
-      "test-obsId1"
-    ],
+    "maybeObsId": "test-obsId1",
     "paramSet": [
       {
         "keyName": "myStruct",
@@ -313,52 +290,51 @@ Content-Type: application/json
         ],
         "units": "NoUnits"
       }
-    ]
+    ],
+    "runId": "196e0354-ea0f-4547-c3df-e04633b704e8"
   }
 ]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/shutdown
+POST http://localhost:9090/sequencer/iris/darknight/editor/shutdown
 Content-Type: application/json
 
 {}
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/sequence
+POST http://localhost:9090/sequencer/iris/darknight/editor/sequence
 Content-Type: application/json
 
 {}
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/addBreakpoints
+POST http://localhost:9090/sequencer/iris/darknight/editor/addBreakpoints
 Content-Type: application/json
 
-["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+["196e0354-ea0f-4547-a3df-e04633b704f9"]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/removeBreakpoints
+POST http://localhost:9090/sequencer/iris/darknight/editor/removeBreakpoints
 Content-Type: application/json
 
-["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+["196e0354-ea0f-4547-a3df-e04633b704f9"]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/delete
+POST http://localhost:9090/sequencer/iris/darknight/editor/delete
 Content-Type: application/json
 
-["48cb20b7-da84-49db-8fba-c8dde5d1436b"]
+["196e0354-ea0f-4547-a3df-e04633b704f9"]
 
 ### Send POST request with json body
-POST http://localhost:8000/editor/replace
+POST http://localhost:9090/sequencer/iris/darknight/editor/replace
 Content-Type: application/json
 
 [ "ac37a334-fbda-4234-9166-f14020c52ac8",
     [{
-      "kind": "Setup",
+      "type": "Setup",
       "source": "test1",
       "commandName": "setup-iris",
-      "maybeObsId": [
-        "test-replace"
-      ],
+      "maybeObsId": "test-replace",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -395,7 +371,8 @@ Content-Type: application/json
           ],
           "units": "NoUnits"
         }
-      ]
+      ],
+      "runId": "196e0354-eb0f-4547-a3ef-e04633b704g8"
     }]
 ]
 
