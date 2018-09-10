@@ -33,8 +33,6 @@ class Routes(
     extends PlayJsonSupport
     with SequencerJsonSupport {
 
-  import csw.messages.params.formats.JsonSupport._
-
   import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
 
   val route: Route = cors() {

@@ -13,8 +13,6 @@ import scala.util.{Failure, Success, Try}
 
 case class AssemblyCommandComponent(client: P[AssemblyFeederJsClient]) extends Component[NoEmit] with SequencerJsonSupport {
 
-  import csw.messages.params.formats.JsonSupport._
-
   val submitResponse = State("")
 
   def handleSubmit(client: AssemblyFeederJsClient, msg: IOOperationComponent.Msg): Unit = msg match {

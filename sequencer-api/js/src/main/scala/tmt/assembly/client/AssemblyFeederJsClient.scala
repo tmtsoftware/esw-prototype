@@ -1,19 +1,15 @@
 package tmt.assembly.client
 
 import csw.messages.commands.{CommandResponse, ControlCommand}
-import play.api.libs.json.Json
 import tmt.WebGateway
 import tmt.assembly.api.AssemblyFeeder
-import tmt.sequencer.codecs.SequencerJsonSupport
+import tmt.assembly.codecs.AssemblyJsonSupport
 
 import scala.concurrent.Future
 
-class AssemblyFeederJsClient(gateway: WebGateway) extends AssemblyFeeder with SequencerJsonSupport {
-  import csw.messages.params.formats.JsonSupport._
-
-  override def submit(controlCommand: ControlCommand): Future[CommandResponse] = gateway.post(
-    url = s"${AssemblyFeeder.Submit}",
-    data = Json.toJson(controlCommand).toString(),
-    transform = x => Json.parse(x).as[CommandResponse]
+class AssemblyFeederJsClient(gateway: WebGateway) extends AssemblyFeeder with AssemblyJsonSupport {
+  override def submit(controlCommand: ControlCommand): Future[CommandResponse] = gateway.post[ControlCommand, CommandResponse](
+    s"${AssemblyFeeder.Submit}",
+    controlCommand
   )
 }

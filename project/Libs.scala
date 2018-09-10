@@ -24,11 +24,12 @@ object Enumeratum {
 
 object Csw {
   //for testing local changes use following
+
 //  private val Org     = "org.tmt"
 //  private val Version = "0.1-SNAPSHOT"
 
   private val Org     = "com.github.tmtsoftware.csw-prod"
-  private val Version = "6845e21"
+  private val Version = "8d4a4a5"
 
   val `csw-location` = Org %% "csw-location" % Version
   val `csw-command`  = Org %% "csw-command"  % Version
