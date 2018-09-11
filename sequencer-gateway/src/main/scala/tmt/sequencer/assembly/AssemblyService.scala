@@ -6,6 +6,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import akka.util.Timeout
 import csw.messages.ComponentCommonMessage.ComponentStateSubscription
+import csw.messages.ComponentMessage
 import csw.messages.commands.matchers.StateMatcher
 import csw.messages.commands.{CommandName, CommandResponse, Setup}
 import csw.messages.framework.PubSub.Subscribe
@@ -42,7 +43,7 @@ class AssemblyService(locationServiceGateway: LocationServiceGateway)(implicit e
         Source
           .actorRef[CurrentState](256, OverflowStrategy.fail)
           .mapMaterializedValue { ref ⇒
-            akkaLocation.componentRef ! ComponentStateSubscription(Subscribe(ref))
+            akkaLocation.typedRef[ComponentMessage] ! ComponentStateSubscription(Subscribe(ref))
           }
       }
       .filter(cs ⇒ cs.stateName.name == stateMatcher.stateName && cs.prefixStr == stateMatcher.prefix)

@@ -1,11 +1,11 @@
 package tmt.sequencer
 
-import akka.actor.{typed, ActorSystem}
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import csw.messages.location.Connection.{AkkaConnection, TcpConnection}
-import csw.messages.location.{AkkaLocation, ComponentId, ComponentType, Location}
+import akka.actor.{typed, ActorSystem}
 import csw.services.command.scaladsl.CommandService
-import csw.services.location.scaladsl.LocationService
+import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnection}
+import csw.services.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
+import csw.services.location.api.scaladsl.LocationService
 import io.lettuce.core.RedisURI
 import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import tmt.sequencer.messages.SupervisorMsg

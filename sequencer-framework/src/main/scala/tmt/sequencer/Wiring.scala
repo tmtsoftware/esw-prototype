@@ -7,8 +7,9 @@ import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import csw.services.event.EventServiceFactory
 import csw.services.event.api.scaladsl.EventService
+import csw.services.location.api.scaladsl.LocationService
 import csw.services.location.commons.ClusterSettings
-import csw.services.location.scaladsl.{LocationService, LocationServiceFactory}
+import csw.services.location.scaladsl.LocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}

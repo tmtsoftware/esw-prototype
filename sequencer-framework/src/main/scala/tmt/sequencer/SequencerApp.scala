@@ -1,6 +1,6 @@
 package tmt.sequencer
 
-import csw.messages.location.ComponentType
+import csw.services.location.api.models.ComponentType
 import csw.services.logging.scaladsl.LoggingSystemFactory
 import tmt.sequencer.util.SequencerUtil
 
@@ -12,9 +12,11 @@ object SequencerApp {
     LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequencer, script)
 
-    locationServiceWrapper.register(SequencerUtil.getComponentName(sequencerId, observingMode),
-                                    ComponentType.Sequencer,
-                                    supervisorRef)
+    locationServiceWrapper.register(
+      SequencerUtil.getComponentName(sequencerId, observingMode),
+      ComponentType.Sequencer,
+      supervisorRef
+    )
 
     Thread.sleep(4000)
     remoteRepl.server().start()

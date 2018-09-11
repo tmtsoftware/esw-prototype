@@ -3,12 +3,11 @@ package tmt.sequencer.util
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
-import csw.messages.location.Connection.{AkkaConnection, TcpConnection}
-import csw.messages.location.{AkkaLocation, ComponentId, ComponentType}
 import csw.messages.params.models.Prefix
+import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnection}
+import csw.services.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
+import csw.services.location.api.scaladsl.LocationService
 import csw.services.location.commons.ActorSystemFactory
-import csw.services.location.models.AkkaRegistration
-import csw.services.location.scaladsl.LocationService
 import csw.services.logging.messages.LogControlMessages
 import io.lettuce.core.RedisURI
 import tmt.sequencer.messages.SupervisorMsg

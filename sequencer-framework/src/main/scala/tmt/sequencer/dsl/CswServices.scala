@@ -7,9 +7,9 @@ import akka.{util, Done}
 import com.typesafe.config.ConfigFactory
 import csw.messages.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
-import csw.messages.location.ComponentType
 import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
+import csw.services.location.api.models.ComponentType
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
