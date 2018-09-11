@@ -19,7 +19,7 @@ import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
 import tmt.sequencer.codecs.SequencerJsonSupport
 import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
-import tmt.sequencer.{LocationServiceGateway, SequencerMonitor}
+import tmt.sequencer.{EventMonitor, LocationServiceGateway, SequencerMonitor}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,7 +28,8 @@ class Routes(
     locationService: LocationServiceGateway,
     sequencerMonitor: SequencerMonitor,
     positionTracker: PositionTracker,
-    assemblyService: AssemblyService
+    assemblyService: AssemblyService,
+    eventMonitor: EventMonitor
 )(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
     extends PlayJsonSupport
     with SequencerJsonSupport {
@@ -50,6 +51,18 @@ class Routes(
             val eventualAssemblyPaths =
               eventualLocations.map(_.map(location => SequencerUtil.parseAssemblyLocation(location.connection.name)))
             complete(eventualAssemblyPaths)
+          }
+        } ~
+        pathPrefix("events") {
+          path("subscribe" / "subsystem" / Segment) { subsystem =>
+            parameters("component".?, "event".?) { (component, event) =>
+              complete {
+                eventMonitor
+                  .subscribe(subsystem, component, event)
+                  .map(evt => ServerSentEvent(Json.stringify(Json.toJson(evt))))
+                  .keepAlive(10.second, () => ServerSentEvent.heartbeat)
+              }
+            }
           }
         }
       } ~

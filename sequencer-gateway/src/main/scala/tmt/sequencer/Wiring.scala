@@ -29,9 +29,10 @@ class Wiring(port: Option[Int]) {
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   lazy val sequencerMonitor = new SequencerMonitor(locationServiceWrapper, romaineFactory)
+  lazy val eventMonitor     = new EventMonitor(eventService)
   lazy val assemblyService  = new AssemblyService(locationServiceWrapper)
   lazy val positionTracker  = new PositionTracker(assemblyService)
 
-  lazy val routes = new Routes(locationServiceWrapper, sequencerMonitor, positionTracker, assemblyService)
+  lazy val routes = new Routes(locationServiceWrapper, sequencerMonitor, positionTracker, assemblyService, eventMonitor)
   lazy val server = new Server(configs, routes)
 }
