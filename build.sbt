@@ -46,20 +46,20 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
       SharedLibs.scalaTest.value % Test,
     )
   )
-  .jsSettings(
+
+lazy val `sequencer-api-js` = `sequencer-api`.js
+  .settings(
     libraryDependencies ++= Seq(
       Libs.`scalajs-dom`.value,
     )
   )
-  .jvmSettings(
+lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
+  .settings(
     libraryDependencies ++= Seq(
       Akka.`akka-typed`,
       Csw.`csw-messages`
     )
   )
-
-lazy val `sequencer-api-js`  = `sequencer-api`.js
-lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
 lazy val `sequencer-ui-app` = project
   .enablePlugins(ScalaJSBundlerPlugin)
