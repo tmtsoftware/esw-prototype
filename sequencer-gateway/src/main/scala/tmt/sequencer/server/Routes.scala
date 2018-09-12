@@ -12,12 +12,10 @@ import csw.messages.commands.{ControlCommand, SequenceCommand}
 import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import play.api.libs.json.Json
-import tmt.assembly.api.AssemblyFeeder
-import tmt.assembly.models.RequestComponent
-import tmt.sequencer.api.{SequenceEditor, SequenceFeeder, SequenceResultsWeb}
+import tmt.ocs.api.{AssemblyFeeder, SequenceEditor, SequenceFeeder, SequenceResultsWeb}
+import tmt.ocs.codecs.SequencerJsonSupport
+import tmt.ocs.models._
 import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
-import tmt.sequencer.codecs.SequencerJsonSupport
-import tmt.sequencer.models._
 import tmt.sequencer.util.SequencerUtil
 import tmt.sequencer.{EventMonitor, LocationServiceGateway, SequencerMonitor}
 

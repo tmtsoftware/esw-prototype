@@ -1,8 +1,8 @@
-package tmt.sequencer.models
+package tmt.ocs.models
 
 import csw.messages.commands.{CommandResponse, SequenceCommand}
 import csw.messages.params.models.Id
-import tmt.sequencer.models.StepStatus._
+import tmt.ocs.models.StepStatus._
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {
   def id: Id              = command.runId
@@ -36,7 +36,7 @@ object CommandList {
   def empty: CommandList                            = CommandList(Nil)
 }
 
-case class AggregateResponse private[sequencer] (childResponses: Set[CommandResponse]) {
+case class AggregateResponse private[tmt] (childResponses: Set[CommandResponse]) {
   def ids: Set[Id]                                                 = childResponses.map(_.runId)
   def add(commandResponses: CommandResponse*): AggregateResponse   = copy(childResponses ++ commandResponses.toSet)
   def add(maybeResponse: Set[CommandResponse]): AggregateResponse  = copy(childResponses ++ maybeResponse)
@@ -48,7 +48,7 @@ case class AggregateResponse private[sequencer] (childResponses: Set[CommandResp
 }
 
 object AggregateResponse {
-  private[sequencer] def empty                                       = new AggregateResponse(Set.empty)
+  private[tmt] def empty                                             = new AggregateResponse(Set.empty)
   def apply(commandResponse: CommandResponse): AggregateResponse     = new AggregateResponse(Set(commandResponse))
   def apply(childResponses: Set[CommandResponse]): AggregateResponse = new AggregateResponse(childResponses)
 }

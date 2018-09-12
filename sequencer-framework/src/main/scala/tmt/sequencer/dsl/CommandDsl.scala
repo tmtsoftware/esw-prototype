@@ -3,7 +3,7 @@ package tmt.sequencer.dsl
 import csw.messages.commands.{Observe, SequenceCommand, Setup}
 import org.tmt.macros.StrandEc
 import tmt.sequencer.Sequencer
-import tmt.sequencer.models.AggregateResponse
+import tmt.ocs.models.AggregateResponse
 
 import scala.concurrent.Future
 import scala.reflect.ClassTag

@@ -3,7 +3,7 @@ package tmt.sequencer.dsl
 import akka.Done
 import csw.messages.commands.SequenceCommand
 import org.tmt.macros.StrandEc
-import tmt.sequencer.models.AggregateResponse
+import tmt.ocs.models.AggregateResponse
 
 import scala.concurrent.Future
 

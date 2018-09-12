@@ -4,7 +4,7 @@ import akka.actor.typed.ActorRef
 import csw.messages.TMTSerializable
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
-import tmt.sequencer.models._
+import tmt.ocs.models._
 
 import scala.util.Try
 

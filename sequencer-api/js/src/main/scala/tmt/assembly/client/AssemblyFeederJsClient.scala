@@ -2,8 +2,8 @@ package tmt.assembly.client
 
 import csw.messages.commands.{CommandResponse, ControlCommand}
 import tmt.WebGateway
-import tmt.assembly.api.AssemblyFeeder
-import tmt.assembly.codecs.AssemblyJsonSupport
+import tmt.ocs.api.AssemblyFeeder
+import tmt.ocs.codecs.AssemblyJsonSupport
 
 import scala.concurrent.Future
 

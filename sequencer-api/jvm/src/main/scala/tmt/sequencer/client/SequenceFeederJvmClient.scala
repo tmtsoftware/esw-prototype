@@ -4,10 +4,10 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
-import tmt.sequencer.api.SequenceFeeder
+import tmt.ocs.api.SequenceFeeder
 import tmt.sequencer.messages.SequencerMsg.ProcessSequence
 import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.models.{AggregateResponse, CommandList}
+import tmt.ocs.models.{AggregateResponse, CommandList}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong

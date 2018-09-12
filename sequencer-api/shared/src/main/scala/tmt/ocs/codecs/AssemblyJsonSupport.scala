@@ -1,10 +1,9 @@
-package tmt.assembly.codecs
-
+package tmt.ocs.codecs
 import csw.messages.commands.{CommandIssue, CommandResponse}
 import csw.messages.params.formats.JsonSupport
 import julienrf.json.derived
 import play.api.libs.json._
-import tmt.assembly.models.{PositionResponse, RequestComponent}
+import tmt.ocs.models.{PositionResponse, RequestComponent}
 
 trait AssemblyJsonSupport extends JsonSupport {
   implicit lazy val commandIssueFormat: OFormat[CommandIssue]         = derived.flat.oformat((__ \ "type").format[String])

@@ -1,4 +1,4 @@
-package tmt.assembly.api
+package tmt.ocs.api
 
 import csw.messages.commands.{CommandResponse, ControlCommand}
 

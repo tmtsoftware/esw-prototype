@@ -1,4 +1,4 @@
-package tmt.sequencer.models
+package tmt.ocs.models
 
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id

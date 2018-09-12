@@ -1,4 +1,4 @@
-package tmt.sequencer.models
+package tmt.ocs.models
 
 import enumeratum.{Enum, EnumEntry}
 
@@ -14,3 +14,11 @@ object StepStatus extends Enum[StepStatus] {
 }
 
 case class SequencerInfo(id: String, mode: String)
+
+sealed trait RequestComponent
+object RequestComponent {
+  case class FilterWheel(name: String) extends RequestComponent
+  case class Disperser(name: String)   extends RequestComponent
+}
+
+case class PositionResponse(requestComponent: RequestComponent, position: Int)

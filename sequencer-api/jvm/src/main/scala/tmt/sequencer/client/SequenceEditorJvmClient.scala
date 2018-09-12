@@ -6,11 +6,11 @@ import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
-import tmt.sequencer.api.SequenceEditor
+import tmt.ocs.api.SequenceEditor
 import tmt.sequencer.messages.SequencerMsg._
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.messages.SupervisorMsg.ControlCommand
-import tmt.sequencer.models.Sequence
+import tmt.ocs.models.Sequence
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong

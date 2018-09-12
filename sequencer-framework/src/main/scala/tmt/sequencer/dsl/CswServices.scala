@@ -13,7 +13,7 @@ import csw.services.location.api.models.ComponentType
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
-import tmt.sequencer.api.SequenceFeeder
+import tmt.ocs.api.SequenceFeeder
 import tmt.sequencer.client.SequenceFeederJvmClient
 import tmt.sequencer.messages.SupervisorMsg
 import tmt.sequencer.util._

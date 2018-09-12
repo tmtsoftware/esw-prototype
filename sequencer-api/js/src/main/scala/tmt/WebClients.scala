@@ -2,9 +2,9 @@ package tmt
 
 import org.scalajs.dom.raw.EventSource
 import tmt.assembly.client.AssemblyFeederJsClient
-import tmt.sequencer.api.SequenceResultsWeb
+import tmt.ocs.api.SequenceResultsWeb
 import tmt.sequencer.client.{ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}
-import tmt.sequencer.models.SequencerInfo
+import tmt.ocs.models.SequencerInfo
 
 object WebClients {
   import scala.concurrent.ExecutionContext.Implicits.global

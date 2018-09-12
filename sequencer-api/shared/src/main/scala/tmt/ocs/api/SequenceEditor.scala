@@ -1,8 +1,8 @@
-package tmt.sequencer.api
+package tmt.ocs.api
 
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
-import tmt.sequencer.models.Sequence
+import tmt.ocs.models.Sequence
 
 import scala.concurrent.Future
 

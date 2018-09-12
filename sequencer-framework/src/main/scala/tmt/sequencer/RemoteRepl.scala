@@ -3,7 +3,7 @@ package tmt.sequencer
 import akka.actor.typed.ActorRef
 import ammonite.sshd._
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
-import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
+import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.CswServices
 import tmt.sequencer.messages.SupervisorMsg
 
@@ -32,7 +32,7 @@ class RemoteRepl(
          |import csw.messages.commands._
          |import tmt.sequencer.messages.SequencerMsg._
          |import tmt.sequencer.messages.SupervisorMsg._
-         |import tmt.sequencer.models.CommandList
+         |import tmt.ocs.models.CommandList
          |implicit class RichFuture[T](val f: Future[T]) {
          |  def get: T = Await.result(f, Duration.Inf)
          |}

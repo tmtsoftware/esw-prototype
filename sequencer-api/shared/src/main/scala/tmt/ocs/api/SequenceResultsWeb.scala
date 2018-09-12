@@ -1,4 +1,4 @@
-package tmt.sequencer.api
+package tmt.ocs.api
 
 object SequenceResultsWeb {
   val ApiName = "sequencer"

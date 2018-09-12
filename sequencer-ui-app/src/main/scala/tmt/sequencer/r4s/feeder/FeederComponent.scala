@@ -3,8 +3,8 @@ package tmt.sequencer.r4s.feeder
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
 import tmt.sequencer.client.SequenceFeederJsClient
-import tmt.sequencer.codecs.SequencerJsonSupport
-import tmt.sequencer.models.CommandList
+import tmt.ocs.codecs.SequencerJsonSupport
+import tmt.ocs.models.CommandList
 import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick
 

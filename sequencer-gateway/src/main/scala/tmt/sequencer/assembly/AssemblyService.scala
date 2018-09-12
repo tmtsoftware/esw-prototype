@@ -13,7 +13,7 @@ import csw.messages.framework.PubSub.Subscribe
 import csw.messages.params.generics.KeyType.StringKey
 import csw.messages.params.models.Prefix
 import csw.messages.params.states.CurrentState
-import tmt.assembly.models.RequestComponent
+import tmt.ocs.models.RequestComponent
 import tmt.sequencer.LocationServiceGateway
 
 import scala.concurrent.duration.DurationInt

@@ -12,7 +12,7 @@ import csw.services.location.commons.ClusterSettings
 import csw.services.location.scaladsl.LocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
-import tmt.sequencer.api.{SequenceEditor, SequenceFeeder}
+import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import tmt.sequencer.dsl.{CswServices, Script}
 import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}

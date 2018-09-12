@@ -2,7 +2,7 @@ package tmt.sequencer.r4s
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.ListComponentsJsClient
-import tmt.sequencer.codecs.SequencerJsonSupport
+import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.theme.ListComponentCss
 
 import scala.concurrent.ExecutionContext.Implicits.global

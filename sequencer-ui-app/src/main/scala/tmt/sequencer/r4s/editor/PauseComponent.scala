@@ -2,7 +2,7 @@ package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
 import tmt.sequencer.client.SequenceEditorJsClient
-import tmt.sequencer.codecs.SequencerJsonSupport
+import tmt.ocs.codecs.SequencerJsonSupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}

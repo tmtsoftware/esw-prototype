@@ -6,7 +6,7 @@ import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
 import tmt.sequencer.messages.SequencerMsg
 import tmt.sequencer.messages.SequencerMsg._
-import tmt.sequencer.models._
+import tmt.ocs.models._
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong

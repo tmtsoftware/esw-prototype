@@ -3,7 +3,7 @@ package tmt.assembly.r4s
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
 import tmt.assembly.client.AssemblyFeederJsClient
-import tmt.sequencer.codecs.SequencerJsonSupport
+import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
 import tmt.util.FilterWheelUtil
 

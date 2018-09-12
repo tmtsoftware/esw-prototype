@@ -3,9 +3,9 @@ package tmt.sequencer.client
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
 import tmt.WebGateway
-import tmt.sequencer.api.SequenceEditor
-import tmt.sequencer.codecs.SequencerJsonSupport
-import tmt.sequencer.models._
+import tmt.ocs.api.SequenceEditor
+import tmt.ocs.codecs.SequencerJsonSupport
+import tmt.ocs.models._
 
 import scala.concurrent.Future
 

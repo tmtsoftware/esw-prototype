@@ -4,7 +4,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import tmt.sequencer.messages.SequencerMsg
 import tmt.sequencer.messages.SequencerMsg._
-import tmt.sequencer.models._
+import tmt.ocs.models._
 
 import scala.util.{Failure, Success, Try}
 

@@ -1,9 +1,9 @@
 package tmt.sequencer.client
 
 import tmt.WebGateway
-import tmt.sequencer.api.SequenceFeeder
-import tmt.sequencer.codecs.SequencerJsonSupport
-import tmt.sequencer.models.{AggregateResponse, CommandList}
+import tmt.ocs.api.SequenceFeeder
+import tmt.ocs.codecs.SequencerJsonSupport
+import tmt.ocs.models.{AggregateResponse, CommandList}
 
 import scala.concurrent.Future
 

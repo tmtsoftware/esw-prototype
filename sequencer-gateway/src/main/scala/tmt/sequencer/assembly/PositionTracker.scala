@@ -5,8 +5,8 @@ import akka.stream.scaladsl.Source
 import csw.messages.params.generics.Key
 import csw.messages.params.generics.KeyType.{IntKey, StringKey}
 import csw.messages.params.states.CurrentState
-import tmt.assembly.models.RequestComponent.{Disperser, FilterWheel}
-import tmt.assembly.models.{PositionResponse, RequestComponent}
+import tmt.ocs.models.RequestComponent.{Disperser, FilterWheel}
+import tmt.ocs.models.{PositionResponse, RequestComponent}
 
 class PositionTracker(assemblyService: AssemblyService) {
 
