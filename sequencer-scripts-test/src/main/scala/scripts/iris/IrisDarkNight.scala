@@ -28,7 +28,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
       println(s"[Iris] Received command: ${command.commandName}")
       flag = false
       setupAssemblyLoop
-      AggregateResponse.single(CommandResponse.Completed(command.runId)).markSuccessful(command)
+      AggregateResponse(CommandResponse.Completed(command.runId)).markSuccessful(command)
     }
   }
 
@@ -36,7 +36,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
       flag = true
-      AggregateResponse.single(CommandResponse.Completed(command.runId)).markSuccessful(command)
+      AggregateResponse(CommandResponse.Completed(command.runId)).markSuccessful(command)
     }
   }
 
@@ -54,8 +54,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
         }
       }.await
 
-      val response = AggregateResponse
-        .single(firstAssemblyResponse)
+      val response = AggregateResponse(firstAssemblyResponse)
         .markSuccessful(command)
 
       println(s"[Iris] Received response: $response")

@@ -48,7 +48,7 @@ case class AggregateResponse private[sequencer] (childResponses: Set[CommandResp
 }
 
 object AggregateResponse {
-  private[sequencer] def empty                                                          = new AggregateResponse(Set.empty)
-  def single(commandResponse: CommandResponse): AggregateResponse                       = new AggregateResponse(Set(commandResponse))
-  private[sequencer] def apply(childResponses: Set[CommandResponse]): AggregateResponse = new AggregateResponse(childResponses)
+  private[sequencer] def empty                                       = new AggregateResponse(Set.empty)
+  def apply(commandResponse: CommandResponse): AggregateResponse     = new AggregateResponse(Set(commandResponse))
+  def apply(childResponses: Set[CommandResponse]): AggregateResponse = new AggregateResponse(childResponses)
 }

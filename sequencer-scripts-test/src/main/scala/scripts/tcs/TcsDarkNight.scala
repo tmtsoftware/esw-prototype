@@ -22,8 +22,7 @@ class TcsDarkNight(cs: CswServices) extends Script(cs) {
         Set(cs.setup("Sample1Assembly", command3).await)
       }
 
-      val response = AggregateResponse
-        .single(firstAssemblyResponse)
+      val response = AggregateResponse(firstAssemblyResponse)
         .add(restAssemblyResponses)
         .markSuccessful(command)
 
