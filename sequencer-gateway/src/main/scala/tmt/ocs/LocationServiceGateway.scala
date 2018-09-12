@@ -1,4 +1,4 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}

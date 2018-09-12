@@ -1,4 +1,4 @@
-package tmt.sequencer.assembly
+package tmt.ocs.assembly
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source

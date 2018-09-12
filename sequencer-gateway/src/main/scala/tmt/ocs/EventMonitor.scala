@@ -1,4 +1,4 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.stream.scaladsl.Source
 import csw.messages.events.{Event, EventKey, EventName}

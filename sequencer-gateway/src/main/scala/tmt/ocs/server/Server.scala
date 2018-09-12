@@ -1,10 +1,10 @@
-package tmt.sequencer.server
+package tmt.ocs.server
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteResult._
 import akka.stream.ActorMaterializer
-import tmt.sequencer.Configs
+import tmt.ocs.Configs
 
 import scala.concurrent.Future
 

@@ -1,4 +1,4 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
@@ -9,8 +9,8 @@ import csw.services.location.commons.ActorSystemFactory
 import csw.services.location.scaladsl.LocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
-import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
-import tmt.sequencer.server.{Routes, Server}
+import tmt.ocs.assembly.{AssemblyService, PositionTracker}
+import tmt.ocs.server.{Routes, Server}
 
 import scala.concurrent.ExecutionContext
 

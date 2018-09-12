@@ -1,4 +1,4 @@
-package tmt.sequencer.assembly
+package tmt.ocs.assembly
 
 import akka.util.Timeout
 import csw.messages.commands.matchers.DemandMatcher

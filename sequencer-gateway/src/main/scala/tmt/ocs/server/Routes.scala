@@ -1,4 +1,4 @@
-package tmt.sequencer.server
+package tmt.ocs.server
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.sse.ServerSentEvent
@@ -13,11 +13,11 @@ import csw.messages.params.models.Id
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import play.api.libs.json.Json
 import tmt.ocs.api.{AssemblyFeeder, SequenceEditor, SequenceFeeder, SequenceResultsWeb}
+import tmt.ocs.assembly.{AssemblyService, PositionTracker}
 import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.ocs.models._
-import tmt.sequencer.assembly.{AssemblyService, PositionTracker}
+import tmt.ocs.{EventMonitor, LocationServiceGateway, SequencerMonitor}
 import tmt.sequencer.util.SequencerUtil
-import tmt.sequencer.{EventMonitor, LocationServiceGateway, SequencerMonitor}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}

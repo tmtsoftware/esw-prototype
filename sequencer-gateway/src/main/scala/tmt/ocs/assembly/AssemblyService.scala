@@ -1,4 +1,4 @@
-package tmt.sequencer.assembly
+package tmt.ocs.assembly
 
 import akka.NotUsed
 import akka.actor.typed.scaladsl.adapter._
@@ -13,8 +13,8 @@ import csw.messages.framework.PubSub.Subscribe
 import csw.messages.params.generics.KeyType.StringKey
 import csw.messages.params.models.Prefix
 import csw.messages.params.states.CurrentState
+import tmt.ocs.LocationServiceGateway
 import tmt.ocs.models.RequestComponent
-import tmt.sequencer.LocationServiceGateway
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
