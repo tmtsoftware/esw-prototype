@@ -51,7 +51,7 @@ class Routes(
           }
         } ~
         pathPrefix("events") {
-          path("subscribe" / "subsystem" / Segment) { subsystem =>
+          path("subscribe" / Segment) { subsystem =>
             parameters("component".?, "event".?) { (component, event) =>
               complete {
                 eventMonitor
@@ -64,6 +64,9 @@ class Routes(
         }
       } ~
       pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
+        val sequenceFeeder = locationService.sequenceFeeder(sequencerId, observingMode)
+        val sequenceEditor = locationService.sequenceEditor(sequencerId, observingMode)
+
         get {
           path(SequenceResultsWeb.results) {
             complete {
@@ -72,11 +75,13 @@ class Routes(
                 .map(event => ServerSentEvent(event))
                 .keepAlive(10.second, () => ServerSentEvent.heartbeat)
             }
+          } ~
+          path(SequenceEditor.Sequence) {
+            val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
+            complete(eventualSequence)
           }
         } ~
         post {
-          val sequenceFeeder = locationService.sequenceFeeder(sequencerId, observingMode)
-          val sequenceEditor = locationService.sequenceEditor(sequencerId, observingMode)
           pathPrefix(SequenceFeeder.ApiName) {
             path(SequenceFeeder.Feed) {
               entity(as[CommandList]) { commandList =>
@@ -94,10 +99,6 @@ class Routes(
               entity(as[List[SequenceCommand]]) { commands =>
                 complete(sequenceEditor.flatMap(_.addAll(commands).map(_ => Done)))
               }
-            } ~
-            path(SequenceEditor.Sequence) {
-              val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
-              complete(eventualSequence)
             } ~
             path(SequenceEditor.Pause) {
               complete(sequenceEditor.flatMap(_.pause().map(_ => Done)))
@@ -129,15 +130,15 @@ class Routes(
               }
             } ~
             path(SequenceEditor.Replace) {
-              entity(as[(Id, List[SequenceCommand])]) {
-                case (id, commands) =>
-                  complete(sequenceEditor.flatMap(_.replace(id, commands).map(_ => Done)))
+              entity(as[CommandsWithTargetId]) { commandsWithTargetId =>
+                import commandsWithTargetId._
+                complete(sequenceEditor.flatMap(_.replace(targetId, commands).map(_ => Done)))
               }
             } ~
             path(SequenceEditor.InsertAfter) {
-              entity(as[(Id, List[SequenceCommand])]) {
-                case (id, commands) =>
-                  complete(sequenceEditor.flatMap(_.insertAfter(id, commands).map(_ => Done)))
+              entity(as[CommandsWithTargetId]) { commandsWithTargetId =>
+                import commandsWithTargetId._
+                complete(sequenceEditor.flatMap(_.insertAfter(targetId, commands).map(_ => Done)))
               }
             } ~
             path(SequenceEditor.Shutdown) {

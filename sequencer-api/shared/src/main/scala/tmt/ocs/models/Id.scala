@@ -52,3 +52,5 @@ object AggregateResponse {
   def apply(commandResponse: CommandResponse): AggregateResponse     = new AggregateResponse(Set(commandResponse))
   def apply(childResponses: Set[CommandResponse]): AggregateResponse = new AggregateResponse(childResponses)
 }
+
+case class CommandsWithTargetId(targetId: Id, commands: List[SequenceCommand])
