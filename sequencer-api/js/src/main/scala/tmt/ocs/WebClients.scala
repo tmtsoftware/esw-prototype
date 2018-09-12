@@ -1,9 +1,7 @@
-package tmt
-
+package tmt.ocs
 import org.scalajs.dom.raw.EventSource
-import tmt.assembly.client.AssemblyFeederJsClient
 import tmt.ocs.api.SequenceResultsWeb
-import tmt.sequencer.client.{ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}
+import tmt.ocs.client.{AssemblyFeederJsClient, ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}
 import tmt.ocs.models.SequencerInfo
 
 object WebClients {

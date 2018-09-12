@@ -1,4 +1,4 @@
-package tmt.sequencer.messages
+package tmt.ocs.messages
 
 import akka.actor.typed.ActorRef
 import csw.messages.TMTSerializable

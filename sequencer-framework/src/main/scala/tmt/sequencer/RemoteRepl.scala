@@ -5,7 +5,7 @@ import ammonite.sshd._
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
 import tmt.sequencer.dsl.CswServices
-import tmt.sequencer.messages.SupervisorMsg
+import tmt.ocs.messages.SupervisorMsg
 
 // find a workaround for server not hanging after multiple connects/disconnects
 // explore timeout thing
@@ -30,8 +30,8 @@ class RemoteRepl(
          |import csw.messages.params.generics.KeyType._
          |import csw.messages.params.models._
          |import csw.messages.commands._
-         |import tmt.sequencer.messages.SequencerMsg._
-         |import tmt.sequencer.messages.SupervisorMsg._
+         |import tmt.ocs.messages.SequencerMsg._
+         |import tmt.ocs.messages.SupervisorMsg._
          |import tmt.ocs.models.CommandList
          |implicit class RichFuture[T](val f: Future[T]) {
          |  def get: T = Await.result(f, Duration.Inf)

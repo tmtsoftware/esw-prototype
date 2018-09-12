@@ -16,8 +16,7 @@ import tmt.ocs.api.{AssemblyFeeder, SequenceEditor, SequenceFeeder, SequenceResu
 import tmt.ocs.assembly.{AssemblyService, PositionTracker}
 import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.ocs.models._
-import tmt.ocs.{EventMonitor, LocationServiceGateway, SequencerMonitor}
-import tmt.sequencer.util.SequencerUtil
+import tmt.ocs.{EventMonitor, LocationServiceGateway, SequencerMonitor, SequencerUtil}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}

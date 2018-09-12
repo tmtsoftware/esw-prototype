@@ -1,4 +1,4 @@
-package tmt
+package tmt.ocs
 
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import play.api.libs.json._

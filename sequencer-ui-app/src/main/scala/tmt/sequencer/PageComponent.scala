@@ -1,8 +1,8 @@
 package tmt.sequencer
 
 import com.github.ahnfelt.react4s._
-import tmt.WebClients
 import tmt.assembly.r4s.{AssemblyCommandComponent, AssemblySetupComponent}
+import tmt.ocs.WebClients
 import tmt.ocs.models.SequencerInfo
 import tmt.sequencer.r4s.ListComponent
 

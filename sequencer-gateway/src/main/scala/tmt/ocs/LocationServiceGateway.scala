@@ -7,9 +7,8 @@ import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnectio
 import csw.services.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
 import csw.services.location.api.scaladsl.LocationService
 import io.lettuce.core.RedisURI
-import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
-import tmt.sequencer.messages.SupervisorMsg
-import tmt.sequencer.util.SequencerUtil
+import tmt.ocs.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
+import tmt.ocs.messages.SupervisorMsg
 
 import scala.async.Async.async
 import scala.concurrent.duration.DurationDouble

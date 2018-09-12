@@ -1,6 +1,5 @@
-package tmt.sequencer.client
-
-import tmt.WebGateway
+package tmt.ocs.client
+import tmt.ocs.WebGateway
 import tmt.ocs.codecs.SequencerJsonSupport
 
 import scala.concurrent.Future

@@ -1,7 +1,7 @@
-package tmt.assembly.client
+package tmt.ocs.client
 
 import csw.messages.commands.{CommandResponse, ControlCommand}
-import tmt.WebGateway
+import tmt.ocs.WebGateway
 import tmt.ocs.api.AssemblyFeeder
 import tmt.ocs.codecs.AssemblyJsonSupport
 

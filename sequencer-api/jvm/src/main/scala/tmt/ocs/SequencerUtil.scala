@@ -1,4 +1,4 @@
-package tmt.sequencer.util
+package tmt.ocs
 
 object SequencerUtil {
   val sequencerLocationDelimeter = "@"

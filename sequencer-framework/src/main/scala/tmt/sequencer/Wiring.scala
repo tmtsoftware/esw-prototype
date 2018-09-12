@@ -13,9 +13,9 @@ import csw.services.location.scaladsl.LocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
+import tmt.ocs.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
+import tmt.ocs.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.dsl.{CswServices, Script}
-import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
 import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
 
 import scala.concurrent.ExecutionContext

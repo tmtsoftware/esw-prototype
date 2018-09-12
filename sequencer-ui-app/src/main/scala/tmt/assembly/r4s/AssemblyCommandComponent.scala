@@ -3,7 +3,7 @@ package tmt.assembly.r4s
 import com.github.ahnfelt.react4s._
 import csw.messages.commands.ControlCommand
 import play.api.libs.json.Json
-import tmt.assembly.client.AssemblyFeederJsClient
+import tmt.ocs.client.AssemblyFeederJsClient
 import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.IOOperationComponent
 import tmt.sequencer.r4s.IOOperationComponent.HandleClick

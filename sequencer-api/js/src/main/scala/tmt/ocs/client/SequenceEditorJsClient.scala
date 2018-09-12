@@ -1,8 +1,8 @@
-package tmt.sequencer.client
+package tmt.ocs.client
 
 import csw.messages.commands.SequenceCommand
 import csw.messages.params.models.Id
-import tmt.WebGateway
+import tmt.ocs.WebGateway
 import tmt.ocs.api.SequenceEditor
 import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.ocs.models._

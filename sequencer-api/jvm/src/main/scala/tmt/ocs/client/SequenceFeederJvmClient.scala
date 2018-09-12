@@ -1,13 +1,13 @@
-package tmt.sequencer.client
+package tmt.ocs.client
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
 import tmt.ocs.api.SequenceFeeder
-import tmt.sequencer.messages.SequencerMsg.ProcessSequence
-import tmt.sequencer.messages.SupervisorMsg
 import tmt.ocs.models.{AggregateResponse, CommandList}
+import tmt.ocs.messages.SequencerMsg.ProcessSequence
+import tmt.ocs.messages.SupervisorMsg
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong

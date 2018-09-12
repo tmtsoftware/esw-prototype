@@ -10,7 +10,7 @@ import csw.services.location.api.scaladsl.LocationService
 import csw.services.location.commons.ActorSystemFactory
 import csw.services.logging.messages.LogControlMessages
 import io.lettuce.core.RedisURI
-import tmt.sequencer.messages.SupervisorMsg
+import tmt.ocs.messages.SupervisorMsg
 
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{ExecutionContext, Future}

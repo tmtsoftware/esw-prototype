@@ -2,7 +2,7 @@ package tmt.sequencer.r4s.editor
 
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
-import tmt.sequencer.client.SequenceEditorJsClient
+import tmt.ocs.client.SequenceEditorJsClient
 import tmt.ocs.codecs.SequencerJsonSupport
 import tmt.sequencer.r4s.theme.{ButtonCss, TextAreaCss}
 

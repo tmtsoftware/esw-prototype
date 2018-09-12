@@ -2,8 +2,7 @@ package tmt.sequencer
 
 import csw.services.location.api.models.ComponentType
 import csw.services.logging.scaladsl.LoggingSystemFactory
-import tmt.sequencer.util.SequencerUtil
-
+import tmt.ocs.SequencerUtil
 object SequencerApp {
   def run(sequencerId: String, observingMode: String, replPort: Int): Unit = {
     val wiring = new Wiring(sequencerId, observingMode, replPort)

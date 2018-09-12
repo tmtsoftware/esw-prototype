@@ -3,9 +3,9 @@ package tmt.sequencer
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import tmt.sequencer.ScriptImports.Script
-import tmt.sequencer.messages.SequencerMsg.ExternalSequencerMsg
-import tmt.sequencer.messages.SupervisorMsg.ControlCommand
-import tmt.sequencer.messages.{SequencerMsg, SupervisorMsg}
+import tmt.ocs.messages.SequencerMsg.ExternalSequencerMsg
+import tmt.ocs.messages.SupervisorMsg.ControlCommand
+import tmt.ocs.messages.{SequencerMsg, SupervisorMsg}
 
 object SupervisorBehavior {
   def behavior(sequencerRef: ActorRef[SequencerMsg], script: Script): Behaviors.Receive[SupervisorMsg] =
