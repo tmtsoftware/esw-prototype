@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import com.github.ahnfelt.react4s._
 
 case class HeaderComponent() extends Component[NoEmit] {

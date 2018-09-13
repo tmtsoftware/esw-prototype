@@ -1,4 +1,5 @@
 package tmt.ocs.assembly
+
 import com.github.ahnfelt.react4s._
 import play.api.libs.json.Json
 import tmt.ocs.client.AssemblyFeederJsClient

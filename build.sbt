@@ -31,7 +31,7 @@ lazy val `esw-prototype` = project
     `ocs-api-jvm`,
     `sequencer-macros`,
     `sequencer-framework`,
-    `sequencer-ui-app`,
+    `ocs-react4s-app`,
     `sequencer-gateway`
   )
 
@@ -61,7 +61,7 @@ lazy val `ocs-api-jvm` = `ocs-api`.jvm
     )
   )
 
-lazy val `sequencer-ui-app` = project
+lazy val `ocs-react4s-app` = project
   .enablePlugins(ScalaJSBundlerPlugin)
   .dependsOn(`ocs-api-js`)
   .settings(

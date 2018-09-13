@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import com.github.ahnfelt.react4s._
 import tmt.ocs.models.SequencerInfo
 import tmt.ocs.sequencer.editor.EditorComponent

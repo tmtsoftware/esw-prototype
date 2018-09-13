@@ -1,4 +1,5 @@
 package tmt.ocs.util
+
 import csw.messages.commands.{CommandName, ControlCommand, Observe, Setup}
 import csw.messages.params.generics.KeyType.IntKey
 import csw.messages.params.models.{ObsId, Prefix}

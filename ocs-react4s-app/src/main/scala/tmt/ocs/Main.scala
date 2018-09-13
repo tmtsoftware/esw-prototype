@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import com.github.ahnfelt.react4s.Component
 import tmt.ocs.sequencer.facade.NpmReactBridge
 
