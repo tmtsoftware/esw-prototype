@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import org.scalajs.dom.raw.EventSource
 import tmt.ocs.api.SequenceResultsWeb
 import tmt.ocs.client.{AssemblyFeederJsClient, ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}

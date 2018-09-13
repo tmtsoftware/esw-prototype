@@ -27,15 +27,15 @@ inThisBuild(
 lazy val `esw-prototype` = project
   .in(file("."))
   .aggregate(
-    `sequencer-api-js`,
-    `sequencer-api-jvm`,
+    `ocs-api-js`,
+    `ocs-api-jvm`,
     `sequencer-macros`,
     `sequencer-framework`,
     `sequencer-ui-app`,
     `sequencer-gateway`
   )
 
-lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
+lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .settings(
     libraryDependencies ++= Seq(
@@ -47,13 +47,13 @@ lazy val `sequencer-api` = crossProject(JSPlatform, JVMPlatform)
     )
   )
 
-lazy val `sequencer-api-js` = `sequencer-api`.js
+lazy val `ocs-api-js` = `ocs-api`.js
   .settings(
     libraryDependencies ++= Seq(
       Libs.`scalajs-dom`.value,
     )
   )
-lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
+lazy val `ocs-api-jvm` = `ocs-api`.jvm
   .settings(
     libraryDependencies ++= Seq(
       Akka.`akka-typed`,
@@ -63,7 +63,7 @@ lazy val `sequencer-api-jvm` = `sequencer-api`.jvm
 
 lazy val `sequencer-ui-app` = project
   .enablePlugins(ScalaJSBundlerPlugin)
-  .dependsOn(`sequencer-api-js`)
+  .dependsOn(`ocs-api-js`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     resolvers += Resolver.sonatypeRepo("snapshots"),
@@ -98,7 +98,7 @@ lazy val `sequencer-macros` = project
 
 lazy val `sequencer-gateway` = project
   .enablePlugins(DeployApp)
-  .dependsOn(`sequencer-api-jvm`)
+  .dependsOn(`ocs-api-jvm`)
   .settings(
     libraryDependencies ++= Seq(
       Csw.`csw-messages`,
@@ -114,7 +114,7 @@ lazy val `sequencer-gateway` = project
 
 lazy val `sequencer-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `sequencer-api-jvm`)
+  .dependsOn(`sequencer-macros`, `ocs-api-jvm`)
   .settings(
     name := "sequencer-framework",
     libraryDependencies ++= Seq(

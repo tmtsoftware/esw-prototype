@@ -1,4 +1,5 @@
 package tmt.ocs.client
+
 import tmt.ocs.WebGateway
 import tmt.ocs.codecs.SequencerJsonSupport
 

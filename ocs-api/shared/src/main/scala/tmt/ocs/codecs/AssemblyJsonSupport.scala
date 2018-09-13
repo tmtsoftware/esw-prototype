@@ -1,4 +1,5 @@
 package tmt.ocs.codecs
+
 import csw.messages.commands.{CommandIssue, CommandResponse}
 import csw.messages.params.formats.JsonSupport
 import julienrf.json.derived
