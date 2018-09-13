@@ -1,9 +1,9 @@
 import * as React from 'react';
-import HeaderComponent from "./sequencer/components/header/HeaderComponent";
+import HeaderComponent from "./ocs/components/header/HeaderComponent";
 import {HashRouter, Route} from "react-router-dom";
-import {ListComponentPage} from "./sequencer/pages/ListComponentPage";
-import {SequencerPage} from "./sequencer/pages/SequencerPage";
-import {AssemblyPage} from "./sequencer/pages/AssemblyPage";
+import {ListComponentPage} from "./ocs/pages/ListComponentPage";
+import {SequencerPage} from "./ocs/pages/SequencerPage";
+import {AssemblyPage} from "./ocs/pages/AssemblyPage";
 
 class App extends React.Component {
     public render() {
