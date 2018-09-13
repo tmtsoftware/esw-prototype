@@ -3,11 +3,10 @@
 
 ## Subprojects
 
-* sequencer-api 
-* sequencer-framework
-* location-agent-simulator
-* sequencer-ui-app
-* sequencer-ui-gatway
+* ocs-api 
+* ocs-framework
+* ocs-react4s-app
+* ocs-gateway
 
 ## Build Instructions
 
@@ -46,22 +45,22 @@ ssh repl@localhost -p8000
 ```
   
 
-## Run Sequencer ui gateway
+## Run ocs gateway
 ```sbtshell
 sbt
-sequencer-ui-gateway/reStart
+ocs-gateway/reStart
 ```
 Default port for gateway is 9090 you can override it 
 e.g.
 ```sbtshell
 sbt
-sequencer-ui-gateway/reStart 9000
+ocs-gateway/reStart 9000
 ```
 
 ## Run scala.js app
 ```sbtshell
 sbt
-sequencer-ui-app/fastOptJS::startWebpackDevServer
+ocs-react4s-app/fastOptJS::startWebpackDevServer
 ```
 
 ### Open scala.js web app in browser
