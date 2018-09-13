@@ -116,7 +116,6 @@ lazy val `ocs-framework` = project
   .enablePlugins(JavaAppPackaging)
   .dependsOn(`sequencer-macros`, `ocs-api-jvm`)
   .settings(
-    name := "sequencer-framework",
     libraryDependencies ++= Seq(
       Libs.`scala-reflect`,
       Libs.`akka-http-cors`,
@@ -141,4 +140,3 @@ lazy val `ocs-framework` = project
 
 lazy val `sequencer-scripts-test` = project
   .dependsOn(`ocs-framework`)
-  .settings(name := "sequencer-scripts-test")
