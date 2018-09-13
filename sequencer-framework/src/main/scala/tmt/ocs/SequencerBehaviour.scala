@@ -1,10 +1,9 @@
-package tmt.sequencer
-
+package tmt.ocs
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import tmt.ocs.messages.SequencerMsg
 import tmt.ocs.messages.SequencerMsg._
-import tmt.ocs.models._
+import tmt.ocs.models.{AggregateResponse, Sequence, Step, StepStatus}
 
 import scala.util.{Failure, Success, Try}
 

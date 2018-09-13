@@ -1,5 +1,4 @@
-package tmt.sequencer
-
+package tmt.ocs
 import scala.concurrent.duration.DurationDouble
 import scala.language.implicitConversions
 
@@ -10,8 +9,8 @@ object ScriptImports {
   type Done = akka.Done
   val Done = akka.Done
 
-  type Script      = dsl.Script
-  type CswServices = dsl.CswServices
+  type Script      = tmt.ocs.dsl.Script
+  type CswServices = tmt.ocs.dsl.CswServices
 
   type SystemEvent = csw.messages.events.SystemEvent
   val SystemEvent = csw.messages.events.SystemEvent

@@ -1,6 +1,6 @@
 package scripts.iris
 
-import tmt.sequencer.ScriptImports._
+import tmt.ocs.ScriptImports._
 
 class IrisDarkNight(cs: CswServices) extends Script(cs) {
 

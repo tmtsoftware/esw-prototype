@@ -1,4 +1,4 @@
-package tmt.sequencer.dsl
+package tmt.ocs.dsl
 
 import akka.Done
 import csw.messages.commands.CommandResponse

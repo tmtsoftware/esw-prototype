@@ -1,6 +1,6 @@
 package scripts.tcs
 
-import tmt.sequencer.ScriptImports._
+import tmt.ocs.ScriptImports._
 
 class TcsDarkNight(cs: CswServices) extends Script(cs) {
 

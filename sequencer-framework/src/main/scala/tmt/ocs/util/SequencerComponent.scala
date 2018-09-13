@@ -1,4 +1,4 @@
-package tmt.sequencer.util
+package tmt.ocs.util
 
 import csw.messages.commands._
 

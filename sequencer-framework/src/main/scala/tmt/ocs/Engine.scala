@@ -1,9 +1,9 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.Done
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
-import tmt.sequencer.dsl.Script
+import tmt.ocs.dsl.Script
 
 import scala.async.Async._
 import scala.concurrent.Future

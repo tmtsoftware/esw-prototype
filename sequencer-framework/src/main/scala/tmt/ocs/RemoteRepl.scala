@@ -1,10 +1,10 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.actor.typed.ActorRef
 import ammonite.sshd._
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
-import tmt.sequencer.dsl.CswServices
+import tmt.ocs.dsl.CswServices
 import tmt.ocs.messages.SupervisorMsg
 
 // find a workaround for server not hanging after multiple connects/disconnects

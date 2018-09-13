@@ -1,4 +1,4 @@
-package tmt.sequencer.dsl
+package tmt.ocs.dsl
 
 import akka.actor.typed.scaladsl.adapter._
 import akka.actor.{typed, ActorSystem, Cancellable}
@@ -13,12 +13,11 @@ import csw.services.location.api.models.ComponentType
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
-import tmt.ocs.SequencerUtil
+import tmt.ocs.{Engine, Sequencer, SequencerUtil}
 import tmt.ocs.api.SequenceFeeder
 import tmt.ocs.client.SequenceFeederJvmClient
 import tmt.ocs.messages.SupervisorMsg
-import tmt.sequencer.util._
-import tmt.sequencer.{Engine, Sequencer}
+import tmt.ocs.util._
 
 import scala.async.Async._
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}

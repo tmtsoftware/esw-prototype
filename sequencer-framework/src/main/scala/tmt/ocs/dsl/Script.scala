@@ -1,4 +1,4 @@
-package tmt.sequencer.dsl
+package tmt.ocs.dsl
 
 import akka.Done
 import csw.messages.commands.SequenceCommand
@@ -25,7 +25,7 @@ abstract class Script(cs: CswServices) extends ScriptDsl {
 
   protected def onShutdown(): Future[Done] = spawn(Done)
 
-  private[sequencer] def shutdownEc(): Done = {
+  private[tmt] def shutdownEc(): Done = {
     strandEc.shutdown()
     Done
   }

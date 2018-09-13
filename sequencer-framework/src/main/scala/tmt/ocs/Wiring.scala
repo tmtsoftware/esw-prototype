@@ -1,4 +1,4 @@
-package tmt.sequencer
+package tmt.ocs
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
@@ -14,9 +14,9 @@ import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
 import tmt.ocs.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
+import tmt.ocs.dsl.{CswServices, Script}
 import tmt.ocs.messages.{SequencerMsg, SupervisorMsg}
-import tmt.sequencer.dsl.{CswServices, Script}
-import tmt.sequencer.util.{LocationServiceGateway, ScriptLoader}
+import tmt.ocs.util.{LocationServiceGateway, ScriptLoader}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble

@@ -1,8 +1,8 @@
-package tmt.sequencer.util
+package tmt.ocs.util
 
 import csw.messages.events.SystemEvent
 import csw.messages.params.generics.{Key, KeyType}
-import tmt.sequencer.ScriptImports.{EventName, Prefix}
+import tmt.ocs.ScriptImports.{EventName, Prefix}
 
 object ResultEvent {
   val resultMsgKey: Key[String] = KeyType.StringKey.make("sequencer-result")

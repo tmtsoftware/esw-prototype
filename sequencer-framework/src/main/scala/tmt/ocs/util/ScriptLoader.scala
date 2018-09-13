@@ -1,7 +1,6 @@
-package tmt.sequencer.util
-
-import tmt.sequencer.Configs
-import tmt.sequencer.dsl.{CswServices, Script}
+package tmt.ocs.util
+import tmt.ocs.Configs
+import tmt.ocs.dsl.{CswServices, Script}
 
 //merge with ScriptConfigs
 object ScriptLoader {

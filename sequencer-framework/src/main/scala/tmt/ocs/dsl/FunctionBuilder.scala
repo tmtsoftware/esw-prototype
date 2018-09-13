@@ -1,4 +1,4 @@
-package tmt.sequencer.dsl
+package tmt.ocs.dsl
 
 import scala.collection.mutable
 import scala.reflect.ClassTag
