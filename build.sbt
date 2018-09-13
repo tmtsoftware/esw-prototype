@@ -30,9 +30,9 @@ lazy val `esw-prototype` = project
     `ocs-api-js`,
     `ocs-api-jvm`,
     `sequencer-macros`,
-    `sequencer-framework`,
+    `ocs-framework`,
     `ocs-react4s-app`,
-    `sequencer-gateway`
+    `ocs-gateway`
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -96,7 +96,7 @@ lazy val `sequencer-macros` = project
     )
   )
 
-lazy val `sequencer-gateway` = project
+lazy val `ocs-gateway` = project
   .enablePlugins(DeployApp)
   .dependsOn(`ocs-api-jvm`)
   .settings(
@@ -112,7 +112,7 @@ lazy val `sequencer-gateway` = project
     )
   )
 
-lazy val `sequencer-framework` = project
+lazy val `ocs-framework` = project
   .enablePlugins(JavaAppPackaging)
   .dependsOn(`sequencer-macros`, `ocs-api-jvm`)
   .settings(
@@ -140,5 +140,5 @@ lazy val `sequencer-framework` = project
   )
 
 lazy val `sequencer-scripts-test` = project
-  .dependsOn(`sequencer-framework`)
+  .dependsOn(`ocs-framework`)
   .settings(name := "sequencer-scripts-test")

@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import scala.concurrent.duration.DurationDouble
 import scala.language.implicitConversions
 
