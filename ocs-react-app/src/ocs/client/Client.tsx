@@ -30,7 +30,7 @@ class Client {
             );
     }
 
-    public get(url: string, callback: (responses: string[]) => void) {
+    public get(url: string, callback: (responses: string) => void) {
         request
             .get(url)
             .set('Content-Type', 'application/json')
@@ -38,7 +38,7 @@ class Client {
             .then(res => {
                     console.log(res.text);
                     if (res.body) {
-                        callback(res.body)
+                        callback(res.text)
                     }
                 }, err => console.log(err)
 

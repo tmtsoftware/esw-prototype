@@ -63,15 +63,15 @@ class ListComponent extends Component<IProps, IState> {
         )
     }
 
-    private updateSequencerList(sequencers1: string[]) {
+    private updateSequencerList(sequencers1: string) {
         this.setState({
-            sequencers: sequencers1
+            sequencers: JSON.parse(sequencers1)
         })
     };
 
-    private updateAssemblyList(assemblies1: string[]) {
+    private updateAssemblyList(assemblies1: string) {
         this.setState({
-            assemblies: assemblies1
+            assemblies: JSON.parse(assemblies1)
         })
     };
 

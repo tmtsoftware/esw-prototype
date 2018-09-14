@@ -7,11 +7,11 @@ class ListComponentsClient extends Client {
         super(resourcePath);
     }
 
-    public listSequencers(callback: (sequencers: string[]) => void): void {
+    public listSequencers(callback: (sequencers: string) => void): void {
         this.get(`${this.resourcePath}/sequencers`, callback)
     }
 
-    public listAssemblies(callback: (assemblies: string[]) => void): void {
+    public listAssemblies(callback: (assemblies: string) => void): void {
         this.get(`${this.resourcePath}/assemblies`, callback)
     }
 }

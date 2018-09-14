@@ -15,7 +15,7 @@ class EditorClient extends Client {
     };
 
     public showSequence(callback: (res: string) => void) {
-        this.post(`${this.resourcePath}editor/sequence`, callback)
+        this.get(`${this.resourcePath}editor/sequence`, callback)
     }
 }
 

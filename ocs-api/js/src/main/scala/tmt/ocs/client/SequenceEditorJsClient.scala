@@ -28,7 +28,7 @@ class SequenceEditorJsClient(gateway: WebGateway) extends SequenceEditor with Se
     s"${SequenceEditor.ApiName}/${SequenceEditor.Reset}"
   )
 
-  override def sequence: Future[Sequence] = gateway.post[String, Sequence](
+  override def sequence: Future[Sequence] = gateway.get[Sequence](
     s"${SequenceEditor.ApiName}/${SequenceEditor.Sequence}"
   )
 

@@ -75,14 +75,10 @@ class Routes(
                 .map(event => ServerSentEvent(event))
                 .keepAlive(10.second, () => ServerSentEvent.heartbeat)
             }
-          } ~
-          path(SequenceEditor.Sequence) {
-            val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
-            complete(eventualSequence)
           }
         } ~
-        post {
-          pathPrefix(SequenceFeeder.ApiName) {
+        pathPrefix(SequenceFeeder.ApiName) {
+          post {
             path(SequenceFeeder.Feed) {
               entity(as[CommandList]) { commandList =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
@@ -93,8 +89,16 @@ class Routes(
                 }
               }
             }
+          }
+        } ~
+        pathPrefix(SequenceEditor.ApiName) {
+          get {
+            path(SequenceEditor.Sequence) {
+              val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
+              complete(eventualSequence)
+            }
           } ~
-          pathPrefix(SequenceEditor.ApiName) {
+          post {
             path(SequenceEditor.AddAll) {
               entity(as[List[SequenceCommand]]) { commands =>
                 complete(sequenceEditor.flatMap(_.addAll(commands).map(_ => Done)))
