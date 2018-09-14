@@ -178,24 +178,17 @@ Content-Type: application/json
 POST http://localhost:9090/sequencer/iris/darknight/editor/pause
 Content-Type: application/json
 
-{}
-
 ### Send POST request with json body
 POST http://localhost:9090/sequencer/iris/darknight/editor/resume
 Content-Type: application/json
-
-{}
 
 ### Send POST request with json body
 POST http://localhost:9090/sequencer/iris/darknight/editor/reset
 Content-Type: application/json
 
-{}
-
 ### Send POST request with json body
 POST http://localhost:9090/sequencer/iris/darknight/editor/prepend
 Content-Type: application/json
-
 
 [
   {
@@ -245,67 +238,12 @@ Content-Type: application/json
  ]
 
 ### Send POST request with json body
-POST http://localhost:9090/sequencer/iris/darknight/editor/prepend
-Content-Type: application/json
-
-[
-  {
-    "type": "Setup",
-    "source": "test1",
-    "commandName": "setup-iris",
-    "maybeObsId": "test-obsId1",
-    "paramSet": [
-      {
-        "keyName": "myStruct",
-        "keyType": "StructKey",
-        "values": [
-          {
-            "paramSet": [
-              {
-                "keyName": "ra",
-                "keyType": "StringKey",
-                "values": [
-                  "12:13:14.1"
-                ],
-                "units": "NoUnits"
-              },
-              {
-                "keyName": "dec",
-                "keyType": "StringKey",
-                "values": [
-                  "32:33:34.4"
-                ],
-                "units": "NoUnits"
-              },
-              {
-                "keyName": "epoch",
-                "keyType": "DoubleKey",
-                "values": [
-                  1950.0
-                ],
-                "units": "NoUnits"
-              }
-            ]
-          }
-        ],
-        "units": "NoUnits"
-      }
-    ],
-    "runId": "196e0354-ea0f-4547-c3df-e04633b704e8"
-  }
-]
-
-### Send POST request with json body
 POST http://localhost:9090/sequencer/iris/darknight/editor/shutdown
 Content-Type: application/json
 
-{}
-
-### Send POST request with json body
-POST http://localhost:9090/sequencer/iris/darknight/editor/sequence
+### Send GET request with json body
+GET http://localhost:9090/sequencer/iris/darknight/editor/sequence
 Content-Type: application/json
-
-{}
 
 ### Send POST request with json body
 POST http://localhost:9090/sequencer/iris/darknight/editor/addBreakpoints
@@ -329,12 +267,14 @@ Content-Type: application/json
 POST http://localhost:9090/sequencer/iris/darknight/editor/replace
 Content-Type: application/json
 
-[ "ac37a334-fbda-4234-9166-f14020c52ac8",
-    [{
+{
+  "targetId": "196e0354-ea0f-4547-a3df-e04633b704f3",
+  "commands": [
+    {
       "type": "Setup",
-      "source": "test1",
-      "commandName": "setup-iris",
+      "source": "test-source",
       "maybeObsId": "test-replace",
+      "commandName": "setup-iris",
       "paramSet": [
         {
           "keyName": "myStruct",
@@ -372,9 +312,13 @@ Content-Type: application/json
           "units": "NoUnits"
         }
       ],
-      "runId": "196e0354-eb0f-4547-a3ef-e04633b704g8"
-    }]
-]
+      "runId": "ac37a334-fbda-4234-1022-f14020c52ac8"
+    }
+  ]
+}
+
+###
+
 
 
 
