@@ -317,7 +317,38 @@ Content-Type: application/json
   ]
 }
 
-###
+### Send POST request with json body
+POST http://localhost:9090/assembly/Sample1Assembly/submit
+Content-Type: application/json
+
+{
+  "type": "Setup",
+  "source": "test-source",
+  "commandName": "setup-iris",
+  "maybeObsId": "test-obsId",
+  "paramSet": [
+    {
+      "keyName": "myStruct",
+      "keyType": "StructKey",
+      "values": [
+        {
+          "paramSet": [
+            {
+              "keyName": "ra",
+              "keyType": "StringKey",
+              "values": [
+                "12:13:14.1"
+              ],
+              "units": "NoUnits"
+            }
+          ]
+        }
+      ],
+      "units": "NoUnits"
+    }
+  ],
+  "runId": "ac37a334-fbda-4234-1022-f14020c52ac0"
+}
 
 
 

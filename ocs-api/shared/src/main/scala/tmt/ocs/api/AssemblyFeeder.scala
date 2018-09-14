@@ -9,5 +9,5 @@ trait AssemblyFeeder {
 }
 
 object AssemblyFeeder {
-  val Submit = "Submit"
+  val Submit = "submit"
 }

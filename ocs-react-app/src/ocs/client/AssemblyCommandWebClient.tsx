@@ -8,7 +8,7 @@ class AssemblyCommandWebClient extends Client {
     }
 
     public submit(input: string, callback: (res: string) => void) {
-        this.post(`${this.resourcePath}Submit`, callback, input)
+        this.post(`${this.resourcePath}submit`, callback, input)
     }
 }
 
