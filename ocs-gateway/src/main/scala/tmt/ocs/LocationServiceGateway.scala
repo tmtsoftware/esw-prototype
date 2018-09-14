@@ -2,7 +2,7 @@ package tmt.ocs
 
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
-import csw.services.command.scaladsl.CommandService
+import csw.command.scaladsl.CommandService
 import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.services.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
 import csw.services.location.api.scaladsl.LocationService

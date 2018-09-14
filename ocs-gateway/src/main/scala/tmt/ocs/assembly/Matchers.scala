@@ -1,7 +1,7 @@
 package tmt.ocs.assembly
 
 import akka.util.Timeout
-import csw.messages.commands.matchers.DemandMatcher
+import csw.command.models.matchers.DemandMatcher
 import csw.messages.params.generics.KeyType.IntKey
 import csw.messages.params.models.Prefix
 import csw.messages.params.states.{DemandState, StateName}

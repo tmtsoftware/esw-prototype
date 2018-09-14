@@ -52,7 +52,7 @@ class Routes(
         } ~
         pathPrefix("events") {
           path("subscribe" / Segment) { subsystem =>
-            parameters("component".?, "event".?) { (component, event) =>
+            parameters(("component".?, "event".?)) { (component, event) =>
               complete {
                 eventMonitor
                   .subscribe(subsystem, component, event)

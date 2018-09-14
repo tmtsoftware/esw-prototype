@@ -5,19 +5,19 @@ import akka.actor.{typed, ActorSystem, Cancellable}
 import akka.util.Timeout
 import akka.{util, Done}
 import com.typesafe.config.ConfigFactory
+import csw.command.scaladsl.CommandService
 import csw.messages.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.messages.events.{Event, EventKey}
-import csw.services.command.scaladsl.CommandService
 import csw.services.event.api.scaladsl.{EventService, EventSubscription}
 import csw.services.location.api.models.ComponentType
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
-import tmt.ocs.{Engine, Sequencer, SequencerUtil}
 import tmt.ocs.api.SequenceFeeder
 import tmt.ocs.client.SequenceFeederJvmClient
 import tmt.ocs.messages.SupervisorMsg
 import tmt.ocs.util._
+import tmt.ocs.{Engine, Sequencer, SequencerUtil}
 
 import scala.async.Async._
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
