@@ -27,9 +27,9 @@ class RemoteRepl(
     predef = """
          |import scala.concurrent.duration.Duration
          |import scala.concurrent.{Await, Future}
-         |import csw.messages.params.generics.KeyType._
-         |import csw.messages.params.models._
-         |import csw.messages.commands._
+         |import csw.params.core.generics.KeyType._
+         |import csw.params.commands._
+         |import csw.params.core.models._
          |import tmt.ocs.messages.SequencerMsg._
          |import tmt.ocs.messages.SupervisorMsg._
          |import tmt.ocs.models.CommandList
