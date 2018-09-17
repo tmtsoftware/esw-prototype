@@ -6,8 +6,10 @@ import scala.concurrent.Future
 
 trait AssemblyFeeder {
   def submit(controlCommand: ControlCommand): Future[CommandResponse]
+  def submitAndSubscribe(controlCommand: ControlCommand): Future[CommandResponse]
 }
 
 object AssemblyFeeder {
-  val Submit = "submit"
+  val Submit             = "submit"
+  val SubmitAndSubscribe = "submit-subscribe"
 }
