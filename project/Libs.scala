@@ -12,9 +12,11 @@ object Libs {
 
   val `scala-async`              = dep("org.scala-lang.modules" %% "scala-async"               % "0.9.7")
   val `play-json`                = dep("com.typesafe.play"      %%% "play-json"                % "2.6.10") //Apache 2.0
+  val `play-functional`          = dep("com.typesafe.play"      %%% "play-functional"          % "2.6.10") //Apache 2.0
   val `play-json-derived-codecs` = dep("org.julienrf"           %%% "play-json-derived-codecs" % "4.0.1")
   val `monix`                    = dep("io.monix"               %%% "monix"                    % "3.0.0-RC1")
   val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.6")
+  val `shapeless`                = dep("com.chuusai"            %% "shapeless"                 % "2.3.3")
 }
 
 object Enumeratum {
@@ -50,6 +52,7 @@ object Ammonite {
 object Akka {
   val Version = "2.5.14"
 
+  val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
   val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"         % Version
   val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.3"

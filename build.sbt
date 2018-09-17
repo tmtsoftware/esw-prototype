@@ -40,6 +40,8 @@ lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
   .settings(
     libraryDependencies ++= Seq(
       Libs.`play-json`.value,
+      Libs.`play-functional`.value,
+      Libs.`shapeless`.value,
       Libs.`play-json-derived-codecs`.value,
       Csw.`csw-params`.value,
       Enumeratum.`enumeratum`.value,
@@ -56,7 +58,8 @@ lazy val `ocs-api-js` = `ocs-api`.js
 lazy val `ocs-api-jvm` = `ocs-api`.jvm
   .settings(
     libraryDependencies ++= Seq(
-      Akka.`akka-typed`
+      Akka.`akka-typed`,
+      Akka.`akka-actor`
     )
   )
 
@@ -90,7 +93,6 @@ lazy val `ocs-react4s-app` = project
 lazy val `sequencer-macros` = project
   .settings(
     libraryDependencies ++= Seq(
-      Libs.`scala-async`.value,
       Libs.`scala-reflect`,
     )
   )
