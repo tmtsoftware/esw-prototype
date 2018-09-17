@@ -1,10 +1,11 @@
 package tmt.ocs.assembly
 
 import akka.util.Timeout
+
 import csw.command.models.matchers.DemandMatcher
-import csw.messages.params.generics.KeyType.IntKey
-import csw.messages.params.models.Prefix
-import csw.messages.params.states.{DemandState, StateName}
+import csw.params.core.generics.KeyType.IntKey
+import csw.params.core.models.Prefix
+import csw.params.core.states.{DemandState, StateName}
 
 import scala.concurrent.duration.DurationInt
 

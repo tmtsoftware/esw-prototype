@@ -1,7 +1,7 @@
 package tmt.ocs.models
 
-import csw.messages.commands.{CommandResponse, SequenceCommand}
-import csw.messages.params.models.Id
+import csw.params.commands.{CommandResponse, SequenceCommand}
+import csw.params.core.models.Id
 import tmt.ocs.models.StepStatus._
 
 case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boolean) {

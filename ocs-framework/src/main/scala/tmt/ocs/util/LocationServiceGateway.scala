@@ -3,12 +3,12 @@ package tmt.ocs.util
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
-import csw.messages.params.models.Prefix
-import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnection}
-import csw.services.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
-import csw.services.location.api.scaladsl.LocationService
-import csw.services.location.commons.ActorSystemFactory
-import csw.services.logging.messages.LogControlMessages
+import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
+import csw.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
+import csw.location.api.scaladsl.LocationService
+import csw.location.commons.ActorSystemFactory
+import csw.logging.messages.LogControlMessages
+import csw.params.core.models.Prefix
 import io.lettuce.core.RedisURI
 import tmt.ocs.messages.SupervisorMsg
 

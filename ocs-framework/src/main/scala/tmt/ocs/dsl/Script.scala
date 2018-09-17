@@ -1,7 +1,7 @@
 package tmt.ocs.dsl
 
 import akka.Done
-import csw.messages.commands.SequenceCommand
+import csw.params.commands.SequenceCommand
 import org.tmt.macros.StrandEc
 import tmt.ocs.models.AggregateResponse
 

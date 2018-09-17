@@ -1,7 +1,7 @@
 package tmt.ocs.util
 
-import csw.messages.events.SystemEvent
-import csw.messages.params.generics.{Key, KeyType}
+import csw.params.core.generics.{Key, KeyType}
+import csw.params.events.SystemEvent
 import tmt.ocs.ScriptImports.{EventName, Prefix}
 
 object ResultEvent {

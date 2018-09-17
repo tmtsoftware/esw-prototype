@@ -2,9 +2,9 @@ package tmt.ocs.assembly
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import csw.messages.params.generics.Key
-import csw.messages.params.generics.KeyType.{IntKey, StringKey}
-import csw.messages.params.states.CurrentState
+import csw.params.core.generics.Key
+import csw.params.core.generics.KeyType.{IntKey, StringKey}
+import csw.params.core.states.CurrentState
 import tmt.ocs.models.RequestComponent.{Disperser, FilterWheel}
 import tmt.ocs.models.{PositionResponse, RequestComponent}
 

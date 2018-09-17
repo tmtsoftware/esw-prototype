@@ -6,10 +6,10 @@ import akka.util.Timeout
 import akka.{util, Done}
 import com.typesafe.config.ConfigFactory
 import csw.command.scaladsl.CommandService
-import csw.messages.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
-import csw.messages.events.{Event, EventKey}
-import csw.services.event.api.scaladsl.{EventService, EventSubscription}
-import csw.services.location.api.models.ComponentType
+import csw.event.api.scaladsl.{EventService, EventSubscription}
+import csw.location.api.models.ComponentType
+import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
+import csw.params.events.{Event, EventKey}
 import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi

@@ -1,8 +1,9 @@
 package tmt.ocs.codecs
 
+import csw.params.extensions.Formats
 import play.api.libs.json._
 import tmt.ocs.models._
-import csw.messages.extensions.Formats
+
 trait SequencerJsonSupport extends AssemblyJsonSupport {
   implicit lazy val stepStatusFormat: Format[StepStatus]                      = Formats.enumFormat
   implicit lazy val aggregateResponseFormat: OFormat[AggregateResponse]       = Json.format

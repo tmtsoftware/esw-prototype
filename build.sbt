@@ -56,8 +56,7 @@ lazy val `ocs-api-js` = `ocs-api`.js
 lazy val `ocs-api-jvm` = `ocs-api`.jvm
   .settings(
     libraryDependencies ++= Seq(
-      Akka.`akka-typed`,
-      Csw.`csw-messages`
+      Akka.`akka-typed`
     )
   )
 
@@ -101,7 +100,6 @@ lazy val `ocs-gateway` = project
   .dependsOn(`ocs-api-jvm`)
   .settings(
     libraryDependencies ++= Seq(
-      Csw.`csw-messages`,
       Akka.`akka-http`,
       Akka.`akka-stream`,
       Csw.`csw-event-client`,

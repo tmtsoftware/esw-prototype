@@ -1,9 +1,9 @@
 package tmt.ocs
 
 import akka.stream.scaladsl.Source
-import csw.messages.events.{Event, EventKey, EventName}
-import csw.messages.params.models.{Prefix, Subsystem}
-import csw.services.event.api.scaladsl.{EventService, EventSubscription}
+import csw.event.api.scaladsl.{EventService, EventSubscription}
+import csw.params.core.models.{Prefix, Subsystem}
+import csw.params.events.{Event, EventKey, EventName}
 
 class EventMonitor(eventService: EventService) {
   def subscribe(subsystem: String, component: Option[String], event: Option[String]): Source[Event, EventSubscription] = {

@@ -1,6 +1,6 @@
 package tmt.ocs.api
 
-import csw.messages.commands.{CommandResponse, ControlCommand}
+import csw.params.commands.{CommandResponse, ControlCommand}
 
 import scala.concurrent.Future
 

@@ -1,7 +1,7 @@
 package tmt.ocs.codecs
 
-import csw.messages.commands.{CommandIssue, CommandResponse}
-import csw.messages.params.formats.JsonSupport
+import csw.params.commands.{CommandIssue, CommandResponse}
+import csw.params.core.formats.JsonSupport
 import julienrf.json.derived
 import play.api.libs.json._
 import tmt.ocs.models.{PositionResponse, RequestComponent}

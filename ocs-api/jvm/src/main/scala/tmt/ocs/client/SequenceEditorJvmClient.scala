@@ -4,8 +4,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
-import csw.messages.commands.SequenceCommand
-import csw.messages.params.models.Id
+import csw.params.commands.SequenceCommand
+import csw.params.core.models.Id
 import tmt.ocs.api.SequenceEditor
 import tmt.ocs.models.Sequence
 import tmt.ocs.messages.SequencerMsg._

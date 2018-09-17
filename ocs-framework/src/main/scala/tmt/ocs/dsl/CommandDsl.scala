@@ -1,6 +1,6 @@
 package tmt.ocs.dsl
 
-import csw.messages.commands.{Observe, SequenceCommand, Setup}
+import csw.params.commands.{Observe, SequenceCommand, Setup}
 import org.tmt.macros.StrandEc
 import tmt.ocs.Sequencer
 import tmt.ocs.models.AggregateResponse

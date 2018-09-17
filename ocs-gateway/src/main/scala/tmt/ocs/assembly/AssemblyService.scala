@@ -9,10 +9,10 @@ import csw.command.messages.ComponentCommonMessage.ComponentStateSubscription
 import csw.command.messages.ComponentMessage
 import csw.command.models.framework.PubSub.Subscribe
 import csw.command.models.matchers.StateMatcher
-import csw.messages.commands.{CommandName, CommandResponse, Setup}
-import csw.messages.params.generics.KeyType.StringKey
-import csw.messages.params.models.Prefix
-import csw.messages.params.states.CurrentState
+import csw.params.commands.{CommandName, CommandResponse, Setup}
+import csw.params.core.generics.KeyType.StringKey
+import csw.params.core.models.Prefix
+import csw.params.core.states.CurrentState
 import tmt.ocs.LocationServiceGateway
 import tmt.ocs.models.RequestComponent
 

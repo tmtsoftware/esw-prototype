@@ -8,8 +8,8 @@ import akka.http.scaladsl.server.Route
 import akka.util.Timeout
 import akka.{util, Done}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import csw.messages.commands.{ControlCommand, SequenceCommand}
-import csw.messages.params.models.Id
+import csw.params.commands.{ControlCommand, SequenceCommand}
+import csw.params.core.models.Id
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import play.api.libs.json.Json
 import tmt.ocs.api.{AssemblyFeeder, SequenceEditor, SequenceFeeder, SequenceResultsWeb}

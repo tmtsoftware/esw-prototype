@@ -13,38 +13,38 @@ object ScriptImports {
   type Script      = tmt.ocs.dsl.Script
   type CswServices = tmt.ocs.dsl.CswServices
 
-  type SystemEvent = csw.messages.events.SystemEvent
-  val SystemEvent = csw.messages.events.SystemEvent
+  type SystemEvent = csw.params.events.SystemEvent
+  val SystemEvent = csw.params.events.SystemEvent
 
-  type ObserveEvent = csw.messages.events.ObserveEvent
-  val ObserveEvent = csw.messages.events.ObserveEvent
+  type ObserveEvent = csw.params.events.ObserveEvent
+  val ObserveEvent = csw.params.events.ObserveEvent
 
-  type EventName = csw.messages.events.EventName
-  val EventName = csw.messages.events.EventName
+  type EventName = csw.params.events.EventName
+  val EventName = csw.params.events.EventName
 
-  type EventKey = csw.messages.events.EventKey
-  val EventKey = csw.messages.events.EventKey
+  type EventKey = csw.params.events.EventKey
+  val EventKey = csw.params.events.EventKey
 
-  type Setup = csw.messages.commands.Setup
-  val Setup = csw.messages.commands.Setup
+  type Setup = csw.params.commands.Setup
+  val Setup = csw.params.commands.Setup
 
-  type Observe = csw.messages.commands.Observe
-  val Observe = csw.messages.commands.Observe
+  type Observe = csw.params.commands.Observe
+  val Observe = csw.params.commands.Observe
 
-  type Wait = csw.messages.commands.Wait
-  val Wait = csw.messages.commands.Wait
+  type Wait = csw.params.commands.Wait
+  val Wait = csw.params.commands.Wait
 
-  type Prefix = csw.messages.params.models.Prefix
-  val Prefix = csw.messages.params.models.Prefix
+  type Prefix = csw.params.core.models.Prefix
+  val Prefix = csw.params.core.models.Prefix
 
-  type ObsId = csw.messages.params.models.ObsId
-  val ObsId = csw.messages.params.models.ObsId
+  type ObsId = csw.params.core.models.ObsId
+  val ObsId = csw.params.core.models.ObsId
 
-  type CommandName = csw.messages.commands.CommandName
-  val CommandName = csw.messages.commands.CommandName
+  type CommandName = csw.params.commands.CommandName
+  val CommandName = csw.params.commands.CommandName
 
-  type CommandResponse = csw.messages.commands.CommandResponse
-  val CommandResponse = csw.messages.commands.CommandResponse
+  type CommandResponse = csw.params.commands.CommandResponse
+  val CommandResponse = csw.params.commands.CommandResponse
 
   type AggregateResponse = tmt.ocs.models.AggregateResponse
   val AggregateResponse = tmt.ocs.models.AggregateResponse
@@ -52,10 +52,10 @@ object ScriptImports {
   type CommandList = tmt.ocs.models.CommandList
   val CommandList = tmt.ocs.models.CommandList
 
-  type SequenceCommand = csw.messages.commands.SequenceCommand
+  type SequenceCommand = csw.params.commands.SequenceCommand
 
   type Future[T] = scala.concurrent.Future[T]
 
-  type Id = csw.messages.params.models.Id
-  val Id = csw.messages.params.models.Id
+  type Id = csw.params.core.models.Id
+  val Id = csw.params.core.models.Id
 }

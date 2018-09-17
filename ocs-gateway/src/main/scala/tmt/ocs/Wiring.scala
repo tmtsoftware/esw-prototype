@@ -2,11 +2,11 @@ package tmt.ocs
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
-import csw.services.event.EventServiceFactory
-import csw.services.event.api.scaladsl.EventService
-import csw.services.location.api.scaladsl.LocationService
-import csw.services.location.commons.ActorSystemFactory
-import csw.services.location.scaladsl.LocationServiceFactory
+import csw.event.EventServiceFactory
+import csw.event.api.scaladsl.EventService
+import csw.location.api.scaladsl.LocationService
+import csw.location.commons.ActorSystemFactory
+import csw.location.scaladsl.LocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.assembly.{AssemblyService, PositionTracker}

@@ -3,9 +3,9 @@ package tmt.ocs
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
 import csw.command.scaladsl.CommandService
-import csw.services.location.api.models.Connection.{AkkaConnection, TcpConnection}
-import csw.services.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
-import csw.services.location.api.scaladsl.LocationService
+import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
+import csw.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
+import csw.location.api.scaladsl.LocationService
 import io.lettuce.core.RedisURI
 import tmt.ocs.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import tmt.ocs.messages.SupervisorMsg

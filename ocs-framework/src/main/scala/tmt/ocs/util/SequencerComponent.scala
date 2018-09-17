@@ -1,6 +1,6 @@
 package tmt.ocs.util
 
-import csw.messages.commands._
+import csw.params.commands.{Observe, SequenceCommand, Setup}
 
 //discuss wait or delte
 object CswCommandAdapter {

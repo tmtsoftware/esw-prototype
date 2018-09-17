@@ -1,7 +1,6 @@
 package tmt.ocs
-
-import csw.services.location.api.models.ComponentType
-import csw.services.logging.scaladsl.LoggingSystemFactory
+import csw.location.api.models.ComponentType
+import csw.logging.scaladsl.LoggingSystemFactory
 
 object SequencerApp {
   def run(sequencerId: String, observingMode: String, replPort: Int): Unit = {
