@@ -50,12 +50,12 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.14"
+  val Version = "2.5.16"
 
   val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
   val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"         % Version
-  val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.3"
+  val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.4"
   val `akka-typed-testkit`  = "com.typesafe.akka" %% "akka-actor-testkit-typed" % Version
   val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json"      % "1.21.0" //Apache 2.0
 }

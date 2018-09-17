@@ -118,18 +118,12 @@ lazy val `ocs-framework` = project
   .settings(
     libraryDependencies ++= Seq(
       Libs.`scala-reflect`,
-      Libs.`akka-http-cors`,
       Libs.`scala-compiler`,
       Akka.`akka-stream`,
-      Akka.`akka-typed`,
       Akka.`akka-typed-testkit` % Test,
       Ammonite.`ammonite`,
       Ammonite.`ammonite-sshd`,
       Libs.`scala-async`.value,
-      Libs.`akka-http-cors`,
-      Akka.`akka-http`,
-      Libs.`play-json`.value,
-      Akka.`akka-http-play-json`,
       Csw.`csw-location`,
       Csw.`csw-command`,
       Csw.`csw-event-client`,
