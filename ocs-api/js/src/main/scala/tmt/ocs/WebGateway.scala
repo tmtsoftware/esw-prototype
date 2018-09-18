@@ -1,5 +1,6 @@
 package tmt.ocs
 
+import org.scalajs.dom.EventSource
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import play.api.libs.json._
 
@@ -32,7 +33,7 @@ class WebGateway(baseUri: String)(implicit ec: ExecutionContext) {
       }
   }
 
-  def get[Response: Reads](url: String = ""): Future[Response] = {
+  def get[Response: Reads](url: String): Future[Response] = {
     Ajax
       .get(
         url = s"$baseUri$url"
@@ -44,5 +45,14 @@ class WebGateway(baseUri: String)(implicit ec: ExecutionContext) {
       .recover {
         case NonFatal(AjaxException(req)) => throw new RuntimeException(req.responseText)
       }
+  }
+
+  def stream[Response: Reads](url: String): EventStream[Response] = {
+    val eventSource = new EventSource(s"$baseUri$url")
+    new EventStream(eventSource)
+  }
+
+  def eventSource(url: String): EventSource = {
+    new EventSource(s"$baseUri$url")
   }
 }

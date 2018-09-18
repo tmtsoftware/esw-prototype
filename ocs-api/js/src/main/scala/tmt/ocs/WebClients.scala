@@ -15,12 +15,11 @@ object WebClients {
   def assemblyCommandClient(assemblyName: String): AssemblyFeederJsClient =
     new AssemblyFeederJsClient(new WebGateway(s"$gatewayHost/assembly/$assemblyName/"))
 
-  def feeder(sequencerInfo: SequencerInfo): SequenceFeederJsClient = new SequenceFeederJsClient(sequencerClient(sequencerInfo))
-  def editor(sequencerInfo: SequencerInfo): SequenceEditorJsClient = new SequenceEditorJsClient(sequencerClient(sequencerInfo))
-  def results(sequencerInfo: SequencerInfo): EventSource =
-    new EventSource(s"${sequencerPath(sequencerInfo)}${SequenceResultsWeb.results}")
+  def feeder(sequencerInfo: SequencerInfo): SequenceFeederJsClient = new SequenceFeederJsClient(makeGateway(sequencerInfo))
+  def editor(sequencerInfo: SequencerInfo): SequenceEditorJsClient = new SequenceEditorJsClient(makeGateway(sequencerInfo))
+  def results(sequencerInfo: SequencerInfo): EventSource           = makeGateway(sequencerInfo).eventSource(SequenceResultsWeb.results)
 
-  private def sequencerClient(sequencerInfo: SequencerInfo) = new WebGateway(sequencerPath(sequencerInfo))
+  private def makeGateway(sequencerInfo: SequencerInfo) =
+    new WebGateway(s"$gatewayHost/sequencer/${sequencerInfo.id}/${sequencerInfo.mode}/")
 
-  private def sequencerPath(sequencerInfo: SequencerInfo) = s"$gatewayHost/sequencer/${sequencerInfo.id}/${sequencerInfo.mode}/"
 }
