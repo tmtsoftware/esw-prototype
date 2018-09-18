@@ -1,4 +1,4 @@
-package tmt.ocs.sequencer.facade
+package tmt.r4s.facade
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport

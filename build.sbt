@@ -31,6 +31,7 @@ lazy val `esw-prototype` = project
     `ocs-api-jvm`,
     `sequencer-macros`,
     `ocs-framework`,
+    `react4s-facade`,
     `ocs-react4s-app`,
     `ocs-gateway`
   )
@@ -63,9 +64,20 @@ lazy val `ocs-api-jvm` = `ocs-api`.jvm
     )
   )
 
+lazy val `react4s-facade` = project
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    scalacOptions += "-P:scalajs:sjsDefinedByDefault",
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    libraryDependencies ++= Seq(
+      SharedLibs.scalaTest.value % Test,
+      React4s.`react4s`.value,
+    )
+  )
+
 lazy val `ocs-react4s-app` = project
   .enablePlugins(ScalaJSBundlerPlugin)
-  .dependsOn(`ocs-api-js`)
+  .dependsOn(`ocs-api-js`, `react4s-facade`)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     resolvers += Resolver.sonatypeRepo("snapshots"),
@@ -82,7 +94,6 @@ lazy val `ocs-react4s-app` = project
     ),
     version in webpack := "4.8.1",
     version in startWebpackDevServer := "3.1.4",
-//    webpackConfigFile in fastOptJS := Some(baseDirectory.value / "my.custom.webpack.config.js"),
     webpackResources := webpackResources.value +++ PathFinder(Seq(baseDirectory.value / "index.html")) ** "*.*",
     webpackDevServerExtraArgs in fastOptJS ++= Seq(
       "--content-base",

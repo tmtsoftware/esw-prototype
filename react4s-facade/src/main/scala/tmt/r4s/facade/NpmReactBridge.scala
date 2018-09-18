@@ -1,5 +1,4 @@
-package tmt.ocs.sequencer.facade
-
+package tmt.r4s.facade
 import com.github.ahnfelt.react4s.ReactBridge
 
 object NpmReactBridge extends ReactBridge(React, ReactDOM)
