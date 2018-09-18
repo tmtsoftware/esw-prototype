@@ -2,8 +2,8 @@ package tmt.ocs
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
-import csw.event.EventServiceFactory
 import csw.event.api.scaladsl.EventService
+import csw.event.client.EventServiceFactory
 import csw.location.api.scaladsl.LocationService
 import csw.location.commons.ActorSystemFactory
 import csw.location.scaladsl.LocationServiceFactory

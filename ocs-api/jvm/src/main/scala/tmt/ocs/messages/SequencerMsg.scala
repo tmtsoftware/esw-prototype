@@ -1,9 +1,9 @@
 package tmt.ocs.messages
 
 import akka.actor.typed.ActorRef
-import csw.params.TMTSerializable
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
+import csw.serializable.TMTSerializable
 import tmt.ocs.models._
 
 import scala.util.Try
