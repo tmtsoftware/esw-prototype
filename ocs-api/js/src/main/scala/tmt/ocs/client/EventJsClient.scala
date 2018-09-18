@@ -10,7 +10,7 @@ class EventJsClient(gateway: WebGateway) extends AssemblyJsonSupport {
     val eventAttr     = event.map(e => s"event=$e")
     val attrs         = componentAttr ++ eventAttr.mkString("&")
     val attrStr       = if (attrs.isEmpty) "" else s"?$attrs"
-    val url           = s"/$subsystem$attrStr"
+    val url           = s"/event/subscribe/$subsystem$attrStr"
     gateway.stream[Event](url)
   }
 }
