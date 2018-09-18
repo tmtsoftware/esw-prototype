@@ -7,7 +7,7 @@ import play.api.libs.json._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class WebGateway(baseUri: String)(implicit ec: ExecutionContext) {
+class WebGateway(baseUri: String = "http://localhost:9090")(implicit ec: ExecutionContext) {
 
   implicit val unitReads: Reads[Unit] = Reads(_ => JsSuccess(()))
 
