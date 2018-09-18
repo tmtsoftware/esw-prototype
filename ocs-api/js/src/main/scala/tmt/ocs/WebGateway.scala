@@ -46,12 +46,6 @@ class WebGateway(baseUri: String = "http://localhost:9090")(implicit ec: Executi
       }
   }
 
-  def stream[Response: Reads](url: String): EventStream[Response] = {
-    val eventSource = new EventSource(s"$baseUri$url")
-    new EventStream(eventSource)
-  }
-
-  def eventSource(url: String): EventSource = {
-    new EventSource(s"$baseUri$url")
-  }
+  def source(url: String): EventSource                            = new EventSource(s"$baseUri$url")
+  def stream[Response: Reads](url: String): EventStream[Response] = new EventStream(source(url))
 }

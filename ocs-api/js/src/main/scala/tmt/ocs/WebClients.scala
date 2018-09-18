@@ -17,7 +17,7 @@ object WebClients {
 
   def feeder(sequencerInfo: SequencerInfo): SequenceFeederJsClient = new SequenceFeederJsClient(makeGateway(sequencerInfo))
   def editor(sequencerInfo: SequencerInfo): SequenceEditorJsClient = new SequenceEditorJsClient(makeGateway(sequencerInfo))
-  def results(sequencerInfo: SequencerInfo): EventSource           = makeGateway(sequencerInfo).eventSource(SequenceResultsWeb.results)
+  def results(sequencerInfo: SequencerInfo): EventSource           = makeGateway(sequencerInfo).source(SequenceResultsWeb.results)
 
   private def makeGateway(sequencerInfo: SequencerInfo) =
     new WebGateway(s"$gatewayHost/sequencer/${sequencerInfo.id}/${sequencerInfo.mode}/")
