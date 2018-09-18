@@ -39,7 +39,6 @@ class WebGateway(baseUri: String = "http://localhost:9090")(implicit ec: Executi
         url = s"$baseUri$url"
       )
       .map { xhr =>
-        println(xhr.responseText)
         Json.parse(xhr.responseText).as[Response]
       }
       .recover {

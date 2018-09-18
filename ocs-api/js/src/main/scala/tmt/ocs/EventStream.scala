@@ -12,7 +12,6 @@ class EventStream[T: Reads](eventSource: EventSource) {
   eventSource.onmessage = { messageEvent =>
     val data = messageEvent.data.toString
     if (data.nonEmpty) {
-      println(s"**********$data")
       val event = Json.parse(data).as[T]
       onNext(event)
     }
