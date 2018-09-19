@@ -145,3 +145,9 @@ lazy val `ocs-framework` = project
 
 lazy val `sequencer-scripts-test` = project
   .dependsOn(`ocs-framework`)
+  .settings(
+    libraryDependencies ++= Seq(
+      Libs.`mockito-core`,
+      SharedLibs.`scalaTest`.value % Test
+    )
+  )
