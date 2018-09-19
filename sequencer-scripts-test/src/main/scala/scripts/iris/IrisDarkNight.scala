@@ -13,30 +13,10 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
     Done
   }
 
-  var flag = true
-  def setupAssemblyLoop = loop {
+  loop(minimumInterval = 2.second) {
     spawn {
       println("************ loop **************")
-      val command = Setup(Prefix("test"), CommandName("test-command"), None)
-      cs.setup("Sample1Assembly", command).await
-      stopWhen(flag)
-    }
-  }
-
-  cs.handleCommand("setup-start-loop") { command =>
-    spawn {
-      println(s"[Iris] Received command: ${command.commandName}")
-      flag = false
-      setupAssemblyLoop
-      AggregateResponse(CommandResponse.Completed(command.runId)).markSuccessful(command)
-    }
-  }
-
-  cs.handleCommand("setup-stop-loop") { command =>
-    spawn {
-      println(s"[Iris] Received command: ${command.commandName}")
-      flag = true
-      AggregateResponse(CommandResponse.Completed(command.runId)).markSuccessful(command)
+      stopWhen(false)
     }
   }
 

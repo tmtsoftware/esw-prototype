@@ -5,6 +5,7 @@ import csw.params.commands.CommandResponse
 import org.tmt.macros.{AsyncMacros, StrandEc}
 import tmt.ocs.models.AggregateResponse
 
+import scala.concurrent.duration.{DurationDouble, FiniteDuration}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.experimental.macros
 
@@ -24,8 +25,13 @@ trait ScriptDsl {
 
   def spawn[T](body: => T)(implicit strandEc: StrandEc): Future[T] = macro AsyncMacros.asyncStrand[T]
 
-  def loop(block: => Future[Boolean]): Future[Done] = spawn {
-    if (block.await) Done else loop(block).await
+  def loop(block: => Future[Boolean]): Future[Done] = loop(10.millis)(block)
+
+  def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
+    loopWithoutDelay(FutureUtils.delay(block, minimumInterval max 10.millis))
+
+  private def loopWithoutDelay(block: => Future[Boolean]): Future[Done] = spawn {
+    if (block.await) Done else loopWithoutDelay(block).await
   }
 
   def stopWhen(condition: Boolean): Boolean = condition
