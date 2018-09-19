@@ -12,8 +12,10 @@ import scala.language.experimental.macros
 trait ScriptDsl {
   implicit def strandEc: StrandEc
   private implicit def toEc: ExecutionContext = strandEc.ec
+  private val loopInterval: FiniteDuration    = 50.millis
 
   def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
+
   def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
     val aggregateResponses = Future.sequence(fs.toSet).await
     aggregateResponses.foldLeft(AggregateResponse.empty)(_ add _)
@@ -24,11 +26,10 @@ trait ScriptDsl {
   }
 
   def spawn[T](body: => T)(implicit strandEc: StrandEc): Future[T] = macro AsyncMacros.asyncStrand[T]
-
-  def loop(block: => Future[Boolean]): Future[Done] = loop(10.millis)(block)
+  def loop(block: => Future[Boolean]): Future[Done] = loop(loopInterval)(block)
 
   def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
-    loopWithoutDelay(FutureUtils.delay(block, minimumInterval max 10.millis))
+    loopWithoutDelay(FutureUtils.delay(block, minimumInterval max loopInterval))
 
   private def loopWithoutDelay(block: => Future[Boolean]): Future[Done] = spawn {
     if (block.await) Done else loopWithoutDelay(block).await
