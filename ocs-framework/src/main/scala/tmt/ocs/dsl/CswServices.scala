@@ -10,28 +10,27 @@ import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.location.api.models.ComponentType
 import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.params.events.{Event, EventKey}
+import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import tmt.ocs.api.SequenceFeeder
 import tmt.ocs.client.SequenceFeederJvmClient
 import tmt.ocs.messages.SupervisorMsg
 import tmt.ocs.util._
-import tmt.ocs.{Engine, Sequencer, SequencerUtil}
+import tmt.ocs.{Sequencer, SequencerUtil}
 
 import scala.async.Async._
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
 import scala.concurrent.{Await, Future}
 
 class CswServices(
-    sequencer: Sequencer,
-    engine: Engine,
+    val sequencerId: String,
+    val observingMode: String,
+    private[ocs] val sequencer: Sequencer, //this param is carried only to be passed to the CommandDsl constructor via Script
     locationService: LocationServiceGateway,
     eventService: EventService,
-    romaineFactory: RomaineFactory,
-    val sequencerId: String,
-    val observingMode: String
-)(implicit system: ActorSystem)
-    extends ScriptDsl {
+    romaineFactory: RomaineFactory
+)(implicit system: ActorSystem) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
@@ -97,9 +96,9 @@ class CswServices(
     }
   }
 
-  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done): EventSubscription = {
+  def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")
-    eventService.defaultSubscriber.subscribeAsync(eventKeys, e => spawn(callback(e)))
+    eventService.defaultSubscriber.subscribeAsync(eventKeys, e => Future(callback(e))(strandEc.ec))
   }
 
   def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): Cancellable = {

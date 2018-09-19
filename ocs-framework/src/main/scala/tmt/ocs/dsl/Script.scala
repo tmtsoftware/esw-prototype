@@ -2,16 +2,14 @@ package tmt.ocs.dsl
 
 import akka.Done
 import csw.params.commands.SequenceCommand
-import org.tmt.macros.StrandEc
 import tmt.ocs.models.AggregateResponse
 
 import scala.concurrent.Future
 
-abstract class Script(csw: CswServices, cs: CommandDsl) extends ScriptDsl {
+//constructor takes cswService instead of sequencer so that it is a bit easier for script-writer to pass as an argument to super
+abstract class Script(csw: CswServices) extends CommandDsl(csw.sequencer) {
 
-  override implicit val strandEc: StrandEc = csw.strandEc
-
-  private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = cs.commandHandlerBuilder.build { input =>
+  private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
     spawn(AggregateResponse.empty)
   }

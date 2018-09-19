@@ -1,9 +1,8 @@
 package scripts.iris
 
 import tmt.ocs.ScriptImports._
-import tmt.ocs.dsl.CommandDsl
 
-class IrisDarkNight(csw: CswServices, cs: CommandDsl) extends Script(csw, cs) {
+class IrisDarkNight(csw: CswServices) extends Script(csw) {
 
   val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
@@ -21,7 +20,7 @@ class IrisDarkNight(csw: CswServices, cs: CommandDsl) extends Script(csw, cs) {
     }
   }
 
-  cs.handleCommand("setup-iris") { command =>
+  handleCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
       var firstAssemblyResponse: CommandResponse = null

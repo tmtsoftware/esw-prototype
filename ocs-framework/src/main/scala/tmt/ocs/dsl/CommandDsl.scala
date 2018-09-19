@@ -8,7 +8,7 @@ import tmt.ocs.models.AggregateResponse
 import scala.concurrent.Future
 import scala.reflect.ClassTag
 
-class CommandDsl(sequencer: Sequencer) extends ScriptDsl {
+abstract class CommandDsl(sequencer: Sequencer) extends ControlDsl {
   val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
 
   private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[AggregateResponse]): Unit = {

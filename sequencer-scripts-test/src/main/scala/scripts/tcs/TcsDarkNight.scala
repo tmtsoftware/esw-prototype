@@ -1,14 +1,13 @@
 package scripts.tcs
 
 import tmt.ocs.ScriptImports._
-import tmt.ocs.dsl.CommandDsl
 
-class TcsDarkNight(csw: CswServices, cs: CommandDsl) extends Script(csw, cs) {
+class TcsDarkNight(csw: CswServices) extends Script(csw) {
 
   var eventCount   = 0
   var commandCount = 0
 
-  cs.handleCommand("setup-tcs") { command =>
+  handleCommand("setup-tcs") { command =>
     spawn {
       println(s"[Tcs] Received command: ${command.commandName}")
 
