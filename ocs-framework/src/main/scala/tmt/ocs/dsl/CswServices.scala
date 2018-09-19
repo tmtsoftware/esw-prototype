@@ -10,7 +10,6 @@ import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.location.api.models.ComponentType
 import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.params.events.{Event, EventKey}
-import org.tmt.macros.StrandEc
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import tmt.ocs.api.SequenceFeeder
@@ -32,11 +31,9 @@ class CswServices(
     val sequencerId: String,
     val observingMode: String
 )(implicit system: ActorSystem)
-    extends CommandDsl(sequencer) {
+    extends ScriptDsl {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
-
-  implicit val strandEc: StrandEc = StrandEc.create()
 
   private lazy val masterId: String = ConfigFactory.load().getString("csw-event.redis.masterId")
 

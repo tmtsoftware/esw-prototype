@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.experimental.macros
 
 trait ScriptDsl {
-  implicit def strandEc: StrandEc
+  implicit def strandEc: StrandEc             = StrandEc.create()
   private implicit def toEc: ExecutionContext = strandEc.ec
   private val loopInterval: FiniteDuration    = 50.millis
 

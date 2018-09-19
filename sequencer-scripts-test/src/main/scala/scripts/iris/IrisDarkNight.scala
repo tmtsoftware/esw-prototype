@@ -1,14 +1,15 @@
 package scripts.iris
 
 import tmt.ocs.ScriptImports._
+import tmt.ocs.dsl.CommandDsl
 
-class IrisDarkNight(cs: CswServices) extends Script(cs) {
+class IrisDarkNight(csw: CswServices, cs: CommandDsl) extends Script(csw, cs) {
 
-  val publisherStream = cs.publish(10.seconds) {
+  val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
   }
 
-  val subscriptionStream = cs.subscribe(Set(EventKey("iris-test.system"))) { _ =>
+  val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { _ =>
     println(s"------------------> received-event for ocs on key-------------------->")
     Done
   }
@@ -28,7 +29,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
       loop {
         spawn {
           counter += 1
-          firstAssemblyResponse = cs.setup("Sample1Assembly", command).await
+          firstAssemblyResponse = csw.setup("Sample1Assembly", command).await
           println(counter)
           stopWhen(counter > 2)
         }
@@ -38,7 +39,7 @@ class IrisDarkNight(cs: CswServices) extends Script(cs) {
         .markSuccessful(command)
 
       println(s"[Iris] Received response: $response")
-      cs.sendResult(s"$response")
+      csw.sendResult(s"$response")
       response
     }
   }

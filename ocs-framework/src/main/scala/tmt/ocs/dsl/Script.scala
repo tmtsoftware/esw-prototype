@@ -7,9 +7,9 @@ import tmt.ocs.models.AggregateResponse
 
 import scala.concurrent.Future
 
-abstract class Script(cs: CswServices) extends ScriptDsl {
+abstract class Script(csw: CswServices, cs: CommandDsl) extends ScriptDsl {
 
-  override implicit val strandEc: StrandEc = cs.strandEc
+  override implicit val strandEc: StrandEc = csw.strandEc
 
   private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = cs.commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")

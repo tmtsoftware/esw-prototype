@@ -1,20 +1,21 @@
 package scripts.ocs
 
 import tmt.ocs.ScriptImports._
+import tmt.ocs.dsl.CommandDsl
 
-class OcsDarkNight(cs: CswServices) extends Script(cs) {
+class OcsDarkNight(csw: CswServices, cs: CommandDsl) extends Script(csw, cs) {
 
-  val iris = cs.sequenceFeeder("iris")
-  val tcs  = cs.sequenceFeeder("tcs")
+  val iris = csw.sequenceFeeder("iris")
+  val tcs  = csw.sequenceFeeder("tcs")
 
   var eventCount   = 0
   var commandCount = 0
 
-  val publisherStream = cs.publish(10.seconds) {
+  val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("ocs-test"), EventName("system"))
   }
 
-  val subscriptionStream = cs.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+  val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1
     println(s"------------------> received-event for ocs on key: $eventKey")
     Done
@@ -23,7 +24,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
   cs.handleCommand("setup-iris") { commandA =>
     spawn {
       println(s"[Ocs] Received command: ${commandA.commandName}")
-      cs.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
+      csw.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
       val maybeCommandB = cs.nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
         val commandB  = maybeCommandB.get
@@ -35,7 +36,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
 
       val response = iris.submit(commandList).await.markSuccessful(commandA).markSuccessful(maybeCommandB)
       println(s"[Ocs] Received response: $response")
-      cs.sendResult(s"$response")
+      csw.sendResult(s"$response")
       response
     }
   }
@@ -61,7 +62,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val response = aggregateResponse.markSuccessful(commandC).markSuccessful(maybeCommandD)
 
       println(s"[Ocs] Received response: $response")
-      cs.sendResult(s"$response")
+      csw.sendResult(s"$response")
       response
     }
   }
@@ -73,7 +74,7 @@ class OcsDarkNight(cs: CswServices) extends Script(cs) {
       val responseE = tcs.submit(CommandList.from(command)).await.markSuccessful(command)
 
       println(s"[Ocs] Received response: $responseE")
-      cs.sendResult(s"$responseE")
+      csw.sendResult(s"$responseE")
       responseE
     }
   }

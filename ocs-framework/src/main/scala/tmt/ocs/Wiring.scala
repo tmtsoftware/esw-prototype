@@ -14,7 +14,7 @@ import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
 import tmt.ocs.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
-import tmt.ocs.dsl.{CswServices, Script}
+import tmt.ocs.dsl.{CommandDsl, CswServices, Script}
 import tmt.ocs.messages.{SequencerMsg, SupervisorMsg}
 import tmt.ocs.util.{LocationServiceGateway, ScriptLoader}
 
@@ -39,7 +39,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val eventService: EventService = new EventServiceFactory().make(locationService)
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
-  lazy val script: Script             = ScriptLoader.load(configs, cswServices)
+  lazy val script: Script             = ScriptLoader.load(configs, cswServices, commandDsl)
   lazy val engine                     = new Engine
 
   lazy val redisClient: RedisClient       = RedisClient.create()
@@ -47,6 +47,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val cswServices =
     new CswServices(sequencer, engine, locationServiceWrapper, eventService, romaineFactory, sequencerId, observingMode)
+
+  lazy val commandDsl = new CommandDsl(sequencer)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
