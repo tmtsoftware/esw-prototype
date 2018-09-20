@@ -9,6 +9,7 @@ object Libs {
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
   val `akka-http-cors`     = "ch.megard"              %% "akka-http-cors"     % "0.3.0"
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
+  val `mockito-core`       = "org.mockito"            % "mockito-core"        % "2.21.0" //MIT License
 
   val `scala-async`              = dep("org.scala-lang.modules" %% "scala-async"               % "0.9.7")
   val `play-json`                = dep("com.typesafe.play"      %%% "play-json"                % "2.6.10") //Apache 2.0

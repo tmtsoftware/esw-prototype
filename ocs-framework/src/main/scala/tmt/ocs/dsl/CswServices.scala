@@ -26,7 +26,7 @@ import scala.concurrent.{Await, Future}
 class CswServices(
     val sequencerId: String,
     val observingMode: String,
-    private[ocs] val sequencer: Sequencer, //this param is carried only to be passed to the CommandDsl constructor via Script
+    val sequencer: Sequencer, //this param is carried only to be passed to the CommandDsl constructor via Script
     locationService: LocationServiceGateway,
     eventService: EventService,
     romaineFactory: RomaineFactory
