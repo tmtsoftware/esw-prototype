@@ -7,8 +7,8 @@ import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
-import csw.location.api.commons.ClusterSettings
 import csw.location.api.scaladsl.LocationService
+import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
@@ -23,9 +23,8 @@ import scala.concurrent.duration.DurationDouble
 
 class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
-  lazy val clusterSettings           = ClusterSettings()
 
-  lazy implicit val system: ActorSystem                     = clusterSettings.system
+  lazy implicit val system: ActorSystem                     = ActorSystemFactory.remote()
   lazy implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
   lazy implicit val materializer: Materializer              = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext      = system.dispatcher
