@@ -7,9 +7,9 @@ import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
+import csw.location.api.commons.ClusterSettings
 import csw.location.api.scaladsl.LocationService
-import csw.location.commons.ClusterSettings
-import csw.location.scaladsl.LocationServiceFactory
+import csw.location.client.scaladsl.HttpLocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.api.{SequenceEditor, SequenceFeeder}
@@ -33,7 +33,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
-  lazy val locationService: LocationService               = LocationServiceFactory.makeLocalHttpClient
+  lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
 
   lazy val eventService: EventService = new EventServiceFactory().make(locationService)

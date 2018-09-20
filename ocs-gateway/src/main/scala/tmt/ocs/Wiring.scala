@@ -5,8 +5,8 @@ import akka.stream.{ActorMaterializer, Materializer}
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.location.api.scaladsl.LocationService
-import csw.location.commons.ActorSystemFactory
-import csw.location.scaladsl.LocationServiceFactory
+import csw.location.client.ActorSystemFactory
+import csw.location.client.scaladsl.HttpLocationServiceFactory
 import io.lettuce.core.RedisClient
 import romaine.RomaineFactory
 import tmt.ocs.assembly.{AssemblyService, PositionTracker}
@@ -20,7 +20,7 @@ class Wiring(port: Option[Int]) {
   lazy implicit val materializer: Materializer         = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext = system.dispatcher
 
-  lazy val locationService: LocationService               = LocationServiceFactory.makeLocalHttpClient
+  lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService)
   lazy val eventService: EventService                     = new EventServiceFactory().make(locationService)
 

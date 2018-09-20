@@ -1,7 +1,7 @@
 package tmt.ocs.util
 
 import tmt.ocs.Configs
-import tmt.ocs.dsl.{CommandDsl, CswServices, Script}
+import tmt.ocs.dsl.{CswServices, Script}
 
 //merge with ScriptConfigs
 object ScriptLoader {

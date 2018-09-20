@@ -6,7 +6,7 @@ import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
 import csw.location.api.scaladsl.LocationService
-import csw.location.commons.ActorSystemFactory
+import csw.location.client.ActorSystemFactory
 import csw.logging.messages.LogControlMessages
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisURI
