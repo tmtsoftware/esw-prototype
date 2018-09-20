@@ -35,25 +35,30 @@ object CancellableMock extends Cancellable {
   override def isCancelled: Boolean = true
 }
 
+class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Sequencer)(implicit system: ActorSystem)
+    extends CswServices(sequencerId, observingMode, sequencer, null, null, null) {
+  val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
+
+  override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock
+  override def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse]             = commandResponseF
+  override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
+  override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
+  override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
+  override def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription =
+    EventSubscriptionMock
+  override def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): Cancellable = CancellableMock
+  override def publish(event: Event): Future[Done]                                        = Future.successful(Done)
+  override def sendResult(msg: String): Future[Done]                                      = Future.successful(Done)
+}
+
 object CswServicesMock {
-  def createSequencer(system: ActorSystem): Sequencer = {
+  def create(sequencer: Sequencer)(implicit system: ActorSystem): CswServices =
+    new CswServicesMock("sequencer1", "mode1", sequencer)
+}
+
+object SequencerFactory {
+  def create()(implicit system: ActorSystem): Sequencer = {
     lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
     new Sequencer(sequencerRef, system)
   }
-
-  def create()(implicit system: ActorSystem): CswServices =
-    new CswServices(null, null, createSequencer(system), null, null, null) {
-      val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
-
-      override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock
-      override def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse]             = commandResponseF
-      override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
-      override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
-      override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
-      override def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription =
-        EventSubscriptionMock
-      override def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): Cancellable = CancellableMock
-      override def publish(event: Event): Future[Done]                                        = Future.successful(Done)
-      override def sendResult(msg: String): Future[Done]                                      = Future.successful(Done)
-    }
 }

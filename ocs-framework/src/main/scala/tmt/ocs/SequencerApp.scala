@@ -1,4 +1,5 @@
 package tmt.ocs
+
 import csw.location.api.models.ComponentType
 import csw.logging.scaladsl.LoggingSystemFactory
 
