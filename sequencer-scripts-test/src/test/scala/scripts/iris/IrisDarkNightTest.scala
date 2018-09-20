@@ -13,7 +13,6 @@ class IrisDarkNightTest extends FunSuite {
     val irisDarkNight   = new IrisDarkNight(mockCswServices)
 
     val eventualResponse = irisDarkNight.execute(Setup(Prefix("sequencer"), CommandName("setup-iris"), None))
-
     Await.result(eventualResponse, 10.seconds)
   }
 }

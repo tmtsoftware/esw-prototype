@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import csw.event.api.scaladsl.EventSubscription
-import csw.location.commons.ClusterSettings
 import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
@@ -33,17 +32,17 @@ object CswServicesMock extends Matchers with MockitoSugar {
     when(mockCswServices.publish(any[Event])).thenReturn(Future.successful(Done))
     when(mockCswServices.sendResult(any[String])).thenReturn(Future.successful(Done))
     when(mockCswServices.sequencer).thenReturn(getSequencer)
-    when(mockCswServices.subscribe(any[Set[EventKey]])(any())(any[StrandEc])).thenReturn(new EventSubscription {
-      override def unsubscribe(): Future[Done] = Future.successful(Done)
-      override def ready(): Future[Done]       = Future.successful(Done)
-    })
+    when(mockCswServices.subscribe(any[Set[EventKey]])(any())(any[StrandEc]))
+      .thenReturn(new EventSubscription {
+        override def unsubscribe(): Future[Done] = Future.successful(Done)
+        override def ready(): Future[Done]       = Future.successful(Done)
+      })
 
     mockCswServices
   }
 
   private def getSequencer: Sequencer = {
-    lazy val clusterSettings                      = ClusterSettings()
-    lazy implicit val system: ActorSystem         = clusterSettings.system
+    lazy implicit val system: ActorSystem         = ActorSystem("test")
     lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
     new Sequencer(sequencerRef, system)
   }
