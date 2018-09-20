@@ -4,10 +4,10 @@ import tmt.ocs.ScriptImports._
 
 class TcsDarkNight(csw: CswServices) extends Script(csw) {
 
-  var eventCount   = 0
-  var commandCount = 0
+  private var eventCount   = 0
+  private var commandCount = 0
 
-  handleCommand("setup-tcs") { command =>
+  handleSetupCommand("setup-tcs") { command =>
     spawn {
       println(s"[Tcs] Received command: ${command.commandName}")
 

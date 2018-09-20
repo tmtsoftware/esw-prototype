@@ -14,26 +14,34 @@ trait ControlDsl {
   private implicit lazy val toEc: ExecutionContext = strandEc.ec
   private val loopInterval: FiniteDuration         = 50.millis
 
-  def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
+  protected def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
 
-  def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
+  protected def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
     val aggregateResponses = Future.sequence(fs.toSet).await
     aggregateResponses.foldLeft(AggregateResponse.empty)(_ add _)
   }
 
-  implicit class RichF[T](t: Future[T]) {
+  protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await
   }
 
-  def spawn[T](body: => T)(implicit strandEc: StrandEc): Future[T] = macro AsyncMacros.asyncStrand[T]
-  def loop(block: => Future[Boolean]): Future[Done] = loop(loopInterval)(block)
+  protected def spawn[T](body: => T)(implicit strandEc: StrandEc): Future[T] = macro AsyncMacros.asyncStrand[T]
+  protected def loop(block: => Future[Boolean]): Future[Done] = loop(loopInterval)(block)
 
-  def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
+  protected def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
     loopWithoutDelay(FutureUtils.delay(block, minimumInterval max loopInterval))
 
   private def loopWithoutDelay(block: => Future[Boolean]): Future[Done] = spawn {
     if (block.await) Done else loopWithoutDelay(block).await
   }
 
-  def stopWhen(condition: Boolean): Boolean = condition
+  protected def stopWhen(condition: Boolean): Boolean = condition
+
+  def shutdown(): Future[Done] = spawn {
+    onShutdown().await
+    strandEc.shutdown()
+    Done
+  }
+
+  protected def onShutdown(): Future[Done] = spawn(Done)
 }

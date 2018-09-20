@@ -4,23 +4,23 @@ import tmt.ocs.ScriptImports._
 
 class OcsDarkNight(csw: CswServices) extends Script(csw) {
 
-  val iris = csw.sequenceFeeder("iris")
-  val tcs  = csw.sequenceFeeder("tcs")
+  private val iris = csw.sequenceFeeder("iris")
+  private val tcs  = csw.sequenceFeeder("tcs")
 
-  var eventCount   = 0
-  var commandCount = 0
+  private var eventCount   = 0
+  private var commandCount = 0
 
-  val publisherStream = csw.publish(10.seconds) {
+  private val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("ocs-test"), EventName("system"))
   }
 
-  val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+  private val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1
     println(s"------------------> received-event for ocs on key: $eventKey")
     Done
   }
 
-  handleCommand("setup-iris") { commandA =>
+  handleSetupCommand("setup-iris") { commandA =>
     spawn {
       println(s"[Ocs] Received command: ${commandA.commandName}")
       csw.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
@@ -40,7 +40,7 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
     }
   }
 
-  handleCommand("setup-iris-tcs") { commandC =>
+  handleSetupCommand("setup-iris-tcs") { commandC =>
     spawn {
       val maybeCommandD = nextIf(c2 => c2.commandName.name == "setup-iris-tcs").await
       val tcsSequence = if (maybeCommandD.isDefined) {
@@ -66,7 +66,7 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
     }
   }
 
-  handleCommand("setup-tcs") { command =>
+  handleSetupCommand("setup-tcs") { command =>
     spawn {
       println(s"[Ocs] Received command: ${command.commandName}")
 

@@ -20,7 +20,7 @@ class IrisDarkNight(csw: CswServices) extends Script(csw) {
     }
   }
 
-  handleCommand("setup-iris") { command =>
+  handleSetupCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
       var firstAssemblyResponse: CommandResponse = null
