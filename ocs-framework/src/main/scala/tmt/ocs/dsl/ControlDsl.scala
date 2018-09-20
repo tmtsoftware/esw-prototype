@@ -10,9 +10,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.experimental.macros
 
 trait ControlDsl {
-  implicit def strandEc: StrandEc             = StrandEc.create()
-  private implicit def toEc: ExecutionContext = strandEc.ec
-  private val loopInterval: FiniteDuration    = 50.millis
+  implicit lazy val strandEc: StrandEc             = StrandEc.create()
+  private implicit lazy val toEc: ExecutionContext = strandEc.ec
+  private val loopInterval: FiniteDuration         = 50.millis
 
   def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
 

@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 
 class StrandEc(val executorService: ScheduledExecutorService) {
   val ec: ExecutionContext = ExecutionContext.fromExecutorService(executorService)
-  def shutdown(): Unit     = executorService.shutdown()
+  def shutdown(): Unit     = executorService.shutdownNow()
 }
 
 object StrandEc {
