@@ -10,8 +10,7 @@ case class EditorComponent(editorClient: P[SequenceEditorJsClient]) extends Comp
     val client = get(editorClient)
     E.div(
       Component(ShowSequenceComponent, client),
-      Component(PauseComponent, client),
-      Component(ResumeComponent, client),
+      Component(PauseResumeComponent, client),
       Component(ResetComponent, client)
     )
   }
