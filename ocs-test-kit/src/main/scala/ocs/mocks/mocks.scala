@@ -1,4 +1,4 @@
-package scripts.mocks
+package ocs.mocks
 
 import akka.Done
 import akka.actor.typed.ActorRef

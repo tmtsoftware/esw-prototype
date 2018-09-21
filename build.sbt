@@ -31,6 +31,7 @@ lazy val `esw-prototype` = project
     `ocs-api-jvm`,
     `sequencer-macros`,
     `ocs-framework`,
+    `ocs-test-kit`,
     `react4s-facade`,
     `ocs-react4s-app`,
     `ocs-gateway`
@@ -143,8 +144,12 @@ lazy val `ocs-framework` = project
     )
   )
 
-lazy val `sequencer-scripts-test` = project
+lazy val `ocs-test-kit` = project
   .dependsOn(`ocs-framework`)
+
+
+lazy val `sequencer-scripts-test` = project
+  .dependsOn(`ocs-framework`, `ocs-test-kit`)
   .settings(
     libraryDependencies ++= Seq(
       Libs.`mockito-core`,
