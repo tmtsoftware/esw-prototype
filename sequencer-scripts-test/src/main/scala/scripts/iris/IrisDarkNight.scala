@@ -4,11 +4,11 @@ import tmt.ocs.ScriptImports._
 
 class IrisDarkNight(csw: CswServices) extends Script(csw) {
 
-  val publisherStream = csw.publish(10.seconds) {
+  private val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
   }
 
-  val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { _ =>
+  private val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { _ =>
     println(s"------------------> received-event for ocs on key-------------------->")
     Done
   }
