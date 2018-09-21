@@ -51,6 +51,14 @@ case class ListComponent(client: P[ListComponentsJsClient]) extends Component[No
               E.li(E.a(A.className("collection-item"), A.href(s"#$assembly"), Text(assembly)))
             }
           )
+        )
+      ),
+      E.ul(
+        ListComponentCss,
+        A.className("collection", "with-header"),
+        E.li(
+          A.className("collection-header"),
+          Text("Demo App")
         ),
         Tags(
           get(assemblies).map(

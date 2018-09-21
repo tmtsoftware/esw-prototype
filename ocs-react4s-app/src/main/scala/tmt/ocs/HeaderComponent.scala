@@ -5,7 +5,7 @@ import com.github.ahnfelt.react4s._
 case class HeaderComponent() extends Component[NoEmit] {
   override def render(get: Get): Node = {
     E.nav(
-      A.className("teal"),
+      A.className("indigo"),
       E.div(
         A.className("nav-wrapper"),
         E.a(
