@@ -33,7 +33,7 @@ case class PauseResumeComponent(client: P[SequenceEditorJsClient]) extends Compo
       E.h6(Text("Sequence Editor Pause/Resume")),
       E.div(
         E.a(
-          A.className("btn-large"),
+          A.className("btn-large indigo"),
           E.i(
             A.className("material-icons"),
             Text(get(buttonText)),

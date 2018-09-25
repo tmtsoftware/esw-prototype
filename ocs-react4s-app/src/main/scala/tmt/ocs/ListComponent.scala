@@ -64,7 +64,7 @@ case class ListComponent(client: P[ListComponentsJsClient]) extends Component[No
           get(assemblies).map(
             assembly => {
               E.li(
-                E.a(A.className("collection-item"), A.href(s"#${assembly}filter"), Text(s"Filter Wheel Demo $assembly"))
+                E.a(A.className("collection-item"), A.href(s"#${assembly}filter"), Text(assembly))
               )
             }
           )
