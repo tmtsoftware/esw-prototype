@@ -34,7 +34,8 @@ lazy val `esw-prototype` = project
     `ocs-test-kit`,
     `react4s-facade`,
     `ocs-react4s-app`,
-    `ocs-gateway`
+    `ocs-gateway`,
+    `sequencer-scripts-test`
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -149,6 +150,7 @@ lazy val `ocs-test-kit` = project
 
 
 lazy val `sequencer-scripts-test` = project
+  .enablePlugins(DeployApp)
   .dependsOn(`ocs-framework`, `ocs-test-kit`)
   .settings(
     libraryDependencies ++= Seq(

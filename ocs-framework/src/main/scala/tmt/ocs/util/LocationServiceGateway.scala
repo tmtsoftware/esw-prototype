@@ -17,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceGateway(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
-  def register(componentName: String, componentType: ComponentType, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
+  def register(componentName: String, componentType: ComponentType, supervisorRef: ActorRef[SupervisorMsg]): Future[Unit] = {
     val dummyLogAdminActorRef: typed.ActorRef[LogControlMessages] =
       ActorSystemFactory.remote().spawn(Behavior.empty, "dummy-log-admin-actor-ref")
 
@@ -28,7 +28,7 @@ class LocationServiceGateway(locationService: LocationService, system: ActorSyst
                        dummyLogAdminActorRef)
 
     println(s"Registering [${registration.logAdminActorRef.path}]")
-    locationService.register(registration).foreach { registrationResult =>
+    locationService.register(registration).map { registrationResult =>
       println(s"Successfully registered $componentName - $registrationResult")
 
       CoordinatedShutdown(system).addTask(
