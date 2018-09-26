@@ -15,11 +15,7 @@ class Client {
             .send(input)
             .then(res => {
                     console.log(res.text);
-                    if (res.text.includes("Done")) {
                         callback("Operation Successful")
-                    } else {
-                        callback(JSON.stringify(res.body, null, 2))
-                    }
                 }, err => {
                     if (err.response) {
                         callback(err.response.text)
