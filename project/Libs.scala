@@ -2,6 +2,8 @@ import sbt._
 import Def.{setting => dep}
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
+import scala.io.Source
+
 object Libs {
   val ScalaVersion = "2.12.6"
 
@@ -32,7 +34,7 @@ object Csw {
 //  private val Version = "0.1-SNAPSHOT"
 
   private val Org     = "com.github.tmtsoftware.csw"
-  private val Version = "3b30f85e3"
+  private val Version = Source.fromFile(file("project") / "csw-version.txt").mkString.trim
 
   val `csw-location-client` = Org %% "csw-location-client" % Version
   val `csw-command`         = Org %% "csw-command"         % Version
