@@ -1,13 +1,10 @@
 package tmt.ocs.util
 
-import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.{typed, ActorSystem, CoordinatedShutdown}
+import akka.actor.typed.ActorRef
+import akka.actor.{ActorSystem, CoordinatedShutdown}
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
 import csw.location.api.scaladsl.LocationService
-import csw.location.client.ActorSystemFactory
-import csw.logging.messages.LogControlMessages
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisURI
 import tmt.ocs.messages.SupervisorMsg
@@ -18,16 +15,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class LocationServiceGateway(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
   def register(componentName: String, componentType: ComponentType, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
-    val dummyLogAdminActorRef: typed.ActorRef[LogControlMessages] =
-      ActorSystemFactory.remote().spawn(Behavior.empty, "dummy-log-admin-actor-ref")
-
     val registration =
-      AkkaRegistration(AkkaConnection(ComponentId(componentName, componentType)),
-                       Prefix("sequencer"),
-                       supervisorRef,
-                       dummyLogAdminActorRef)
+      AkkaRegistration(
+        AkkaConnection(ComponentId(componentName, componentType)),
+        Prefix("sequencer"),
+        supervisorRef,
+      )
 
-    println(s"Registering [${registration.logAdminActorRef.path}]")
+    println(s"Registering [${registration.actorRef.path}]")
     locationService.register(registration).foreach { registrationResult =>
       println(s"Successfully registered $componentName - $registrationResult")
 
