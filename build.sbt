@@ -34,7 +34,7 @@ lazy val `esw-prototype` = project
     `ocs-testkit`,
     `react4s-facade`,
     `ocs-react4s-app`,
-    `ocs-gateway`
+    `ocs-gateway`,
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -147,7 +147,6 @@ lazy val `ocs-framework` = project
 lazy val `ocs-testkit` = project
   .dependsOn(`ocs-framework`)
 
-
 lazy val `sequencer-scripts-test` = project
   .dependsOn(`ocs-framework`, `ocs-testkit`)
   .settings(
@@ -155,7 +154,13 @@ lazy val `sequencer-scripts-test` = project
       Libs.`mockito-core`,
       SharedLibs.`scalaTest`.value % Test
     ),
-    scalaSource in Compile := { (baseDirectory in Compile)(_ / "scripts") }.value,
-    scalaSource in Test := { (baseDirectory in Test)(_ / "tests") }.value,
-    resourceDirectory in Compile := { (baseDirectory in Compile)(_ / "configs") }.value,
+    unmanagedSourceDirectories in Compile := Seq({
+      (baseDirectory in Compile) (_ / "scripts")
+    }.value),
+    unmanagedSourceDirectories in Test := Seq({
+      (baseDirectory in Test) (_ / "tests")
+    }.value),
+    unmanagedResourceDirectories in Compile := Seq({
+      (baseDirectory in Compile) (_ / "configs")
+    }.value),
   )

@@ -1,4 +1,4 @@
-package sequencer.scripts.iris
+package iris
 
 import ocs.framework.ScriptImports._
 import ocs.framework.dsl

@@ -1,11 +1,10 @@
-package scripts.iris
+package iris
 
 import akka.actor.ActorSystem
 import csw.params.commands.{CommandName, Setup}
 import csw.params.core.models.Prefix
 import ocs.testkit.mocks.{CswServicesMock, SequencerFactory}
 import org.scalatest.FunSuite
-import sequencer.scripts.iris.IrisDarkNight
 
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationDouble

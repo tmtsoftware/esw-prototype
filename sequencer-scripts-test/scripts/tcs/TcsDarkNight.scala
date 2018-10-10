@@ -1,4 +1,4 @@
-package sequencer.scripts.tcs
+package tcs
 
 import ocs.framework.ScriptImports._
 import ocs.framework.dsl
