@@ -36,7 +36,7 @@ object CancellableMock extends Cancellable {
 }
 
 class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Sequencer)(implicit system: ActorSystem)
-    extends CswServices(sequencerId, observingMode, sequencer, null, null, null) {
+    extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
   override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock
