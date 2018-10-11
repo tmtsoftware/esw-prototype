@@ -15,7 +15,7 @@ import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.framework.dsl.{CswServices, Script}
-import ocs.framework.util.{CommandServiceWrapper, LocationServiceGateway, ScriptLoader}
+import ocs.framework.util.{CommandServiceWrapper, LocationServiceWrapper, ScriptLoader}
 import romaine.RomaineFactory
 
 import scala.concurrent.ExecutionContext
@@ -33,7 +33,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val sequencer                            = new Sequencer(sequencerRef, system)
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
-  lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
+  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
   lazy val commandServiceWrapper = new CommandServiceWrapper(locationServiceWrapper)
 
