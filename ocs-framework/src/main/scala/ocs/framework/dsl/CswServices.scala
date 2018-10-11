@@ -4,26 +4,23 @@ import akka.Done
 import akka.actor.{ActorSystem, Cancellable}
 import com.typesafe.config.ConfigFactory
 import csw.event.api.scaladsl.{EventService, EventSubscription}
-import csw.location.api.models.ComponentType
 import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.events.{Event, EventKey}
-import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
-import ocs.api.messages.SupervisorMsg
-import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
+import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.framework.Sequencer
-import ocs.framework.util.{CommandServiceWrapper, LocationServiceWrapper}
+import ocs.framework.wrapper.{CommandServiceWrapper, LocationServiceWrapper, SequencerApiWrapper}
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import sequencer.macros.StrandEc
 
-import scala.async.Async._
-import scala.concurrent.duration.{DurationDouble, FiniteDuration}
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 class CswServices(
     val sequencerId: String,
     val observingMode: String,
     val sequencer: Sequencer, //this param is carried only to be passed to the Script
+    sequencerApiWrapper: SequencerApiWrapper,
     locationService: LocationServiceWrapper,
     commandService: CommandServiceWrapper,
     eventService: EventService,
@@ -36,27 +33,11 @@ class CswServices(
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
 
-  def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder = {
-    val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
-    val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      async {
-        val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceFeederJvmClient(supervisorRef)
-      }(system.dispatcher)
-    }
-    Await.result(eventualFeederImpl, 5.seconds)
-  }
+  def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder =
+    sequencerApiWrapper.sequenceFeeder(subSystemSequencerId, observingMode)
 
-  def sequenceEditor(subSystemSequencerId: String): SequenceEditor = {
-    val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
-    val eventualEditorImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      async {
-        val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceEditorJvmClient(supervisorRef)
-      }(system.dispatcher)
-    }
-    Await.result(eventualEditorImpl, 5.seconds)
-  }
+  def sequenceEditor(subSystemSequencerId: String): SequenceEditor =
+    sequencerApiWrapper.sequenceEditor(subSystemSequencerId, observingMode)
 
   def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
     commandService.submit(assemblyName, command)

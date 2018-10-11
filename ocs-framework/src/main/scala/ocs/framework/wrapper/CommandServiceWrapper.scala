@@ -1,4 +1,4 @@
-package ocs.framework.util
+package ocs.framework.wrapper
 
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
