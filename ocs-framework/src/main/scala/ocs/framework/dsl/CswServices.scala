@@ -11,7 +11,7 @@ import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
 import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
 import ocs.framework.Sequencer
-import ocs.framework.util.{CommandServiceWrapper, LocationServiceGateway}
+import ocs.framework.util.{CommandServiceWrapper, LocationServiceWrapper}
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import sequencer.macros.StrandEc
@@ -24,8 +24,8 @@ class CswServices(
     val sequencerId: String,
     val observingMode: String,
     val sequencer: Sequencer, //this param is carried only to be passed to the Script
-    locationService: LocationServiceGateway,
-    commandServiceWrapper: CommandServiceWrapper,
+    locationService: LocationServiceWrapper,
+    commandService: CommandServiceWrapper,
     eventService: EventService,
     romaineFactory: RomaineFactory
 )(implicit system: ActorSystem) {
@@ -59,13 +59,13 @@ class CswServices(
   }
 
   def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    commandServiceWrapper.submit(assemblyName, command)
+    commandService.submit(assemblyName, command)
 
   def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    commandServiceWrapper.submitAndSubscribe(assemblyName, command)
+    commandService.submitAndSubscribe(assemblyName, command)
 
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    commandServiceWrapper.oneway(assemblyName, command)
+    commandService.oneway(assemblyName, command)
 
   def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")

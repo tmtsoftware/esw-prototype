@@ -12,7 +12,7 @@ import ocs.api.messages.SupervisorMsg
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{ExecutionContext, Future}
 
-class LocationServiceGateway(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
+class LocationServiceWrapper(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
   def register(componentName: String, componentType: ComponentType, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
     val registration =

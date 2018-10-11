@@ -1,4 +1,5 @@
 package ocs.framework.util
+
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
 import akka.util
@@ -11,7 +12,7 @@ import scala.async.Async.{async, await}
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
-class CommandServiceWrapper(locationService: LocationServiceGateway)(implicit system: ActorSystem) {
+class CommandServiceWrapper(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
