@@ -15,7 +15,7 @@ import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.framework.dsl.{CswServices, Script}
-import ocs.framework.util.{LocationServiceGateway, ScriptLoader}
+import ocs.framework.util.{CommandServiceWrapper, LocationServiceGateway, ScriptLoader}
 import romaine.RomaineFactory
 
 import scala.concurrent.ExecutionContext
@@ -35,6 +35,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceGateway = new LocationServiceGateway(locationService, system)
 
+  lazy val commandServiceWrapper = new CommandServiceWrapper(locationServiceWrapper)
+
   lazy val eventService: EventService = new EventServiceFactory().make(locationService)
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
@@ -44,7 +46,13 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   lazy val cswServices =
-    new CswServices(sequencerId, observingMode, sequencer, locationServiceWrapper, eventService, romaineFactory)
+    new CswServices(sequencerId,
+                    observingMode,
+                    sequencer,
+                    locationServiceWrapper,
+                    commandServiceWrapper,
+                    eventService,
+                    romaineFactory)
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
