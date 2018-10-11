@@ -8,13 +8,13 @@ import com.typesafe.config.ConfigFactory
 import csw.command.scaladsl.CommandService
 import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.location.api.models.ComponentType
-import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
+import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.events.{Event, EventKey}
-import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
+import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
 import ocs.framework.Sequencer
-import ocs.framework.util.{CswCommandAdapter, LocationServiceGateway}
+import ocs.framework.util.LocationServiceGateway
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import sequencer.macros.StrandEc
@@ -60,18 +60,6 @@ class CswServices(
       }(system.dispatcher)
     }
     Await.result(eventualEditorImpl, 5.seconds)
-  }
-
-  def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse] = {
-    locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
-      async {
-        val setupCommand: Setup       = CswCommandAdapter.setupCommandFrom(command)
-        implicit val timeout: Timeout = util.Timeout(10.seconds)
-        val response                  = await(new CommandService(akkaLocation).submit(setupCommand))
-        println(s"Response - $response")
-        response
-      }(system.dispatcher)
-    }
   }
 
   def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {

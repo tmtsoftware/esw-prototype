@@ -5,14 +5,14 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, Cancellable}
 import csw.event.api.scaladsl.EventSubscription
-import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand}
+import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.SequenceFeeder
 import ocs.api.messages.SequencerMsg
 import ocs.api.models.{AggregateResponse, CommandList}
-import ocs.framework.{Sequencer, SequencerBehaviour}
 import ocs.framework.dsl.CswServices
+import ocs.framework.{Sequencer, SequencerBehaviour}
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
@@ -40,7 +40,6 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
   override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock
-  override def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse]             = commandResponseF
   override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
   override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
   override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF

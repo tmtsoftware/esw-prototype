@@ -29,7 +29,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
       loop {
         spawn {
           counter += 1
-          firstAssemblyResponse = csw.setup("Sample1Assembly", command).await
+          firstAssemblyResponse = csw.submit("Sample1Assembly", command).await
           println(counter)
           stopWhen(counter > 2)
         }
