@@ -10,8 +10,8 @@ import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.location.api.models.ComponentType
 import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand, Setup}
 import csw.params.events.{Event, EventKey}
-import ocs.api.{SequenceFeeder, SequencerUtil}
-import ocs.api.client.SequenceFeederJvmClient
+import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
+import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
 import ocs.framework.Sequencer
 import ocs.framework.util.{CswCommandAdapter, LocationServiceGateway}
@@ -49,6 +49,17 @@ class CswServices(
       }(system.dispatcher)
     }
     Await.result(eventualFeederImpl, 5.seconds)
+  }
+
+  def sequenceEditor(subSystemSequencerId: String): SequenceEditor = {
+    val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
+    val eventualEditorImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
+      async {
+        val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+        new SequenceEditorJvmClient(supervisorRef)
+      }(system.dispatcher)
+    }
+    Await.result(eventualEditorImpl, 5.seconds)
   }
 
   def setup(assemblyName: String, command: SequenceCommand): Future[CommandResponse] = {
