@@ -26,13 +26,8 @@ object Enumeratum {
 }
 
 object Csw {
-  //for testing local changes use following
-
-//  private val Org     = "org.tmt"
-//  private val Version = "0.1-SNAPSHOT"
-
   private val Org     = "com.github.tmtsoftware.csw"
-  private val Version = "ed3094a13"
+  private val Version = "58d069e03" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
 
   val `csw-location-client` = Org %% "csw-location-client" % Version
   val `csw-command`         = Org %% "csw-command"         % Version
