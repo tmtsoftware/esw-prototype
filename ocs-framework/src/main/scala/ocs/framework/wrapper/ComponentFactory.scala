@@ -8,41 +8,38 @@ import ocs.api.messages.SupervisorMsg
 import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
 
 import scala.async.Async.async
-import scala.concurrent.Await
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.Future
 
 class ComponentFactory(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
-  def commandService(assemblyName: String): CommandService = {
+  def commandService(assemblyName: String): Future[CommandService] = {
     val eventualCommandService = locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
       async {
         new CommandService(akkaLocation)
       }(system.dispatcher)
     }
-    Await.result(eventualCommandService, 5.seconds)
+    eventualCommandService
   }
 
-  def sequenceFeeder(sequencerId: String, observingMode: String): SequenceFeeder = {
+  def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeeder] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
-    val eventualFeederImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
+    locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
         new SequenceFeederJvmClient(supervisorRef)
       }(system.dispatcher)
     }
-    Await.result(eventualFeederImpl, 5.seconds)
   }
 
-  def sequenceEditor(subSystemSequencerId: String, observingMode: String): SequenceEditor = {
+  def sequenceEditor(subSystemSequencerId: String, observingMode: String): Future[SequenceEditor] = {
     val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
-    val eventualEditorImpl = locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
+    locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       async {
         val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
         new SequenceEditorJvmClient(supervisorRef)
       }(system.dispatcher)
     }
-    Await.result(eventualEditorImpl, 5.seconds)
   }
 }

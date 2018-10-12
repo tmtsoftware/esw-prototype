@@ -36,21 +36,21 @@ class CswServices(
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
 
-  def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder =
+  def sequenceFeeder(subSystemSequencerId: String): Future[SequenceFeeder] =
     componentFactory.sequenceFeeder(subSystemSequencerId, observingMode)
 
-  def sequenceEditor(subSystemSequencerId: String): SequenceEditor =
+  def sequenceEditor(subSystemSequencerId: String): Future[SequenceEditor] =
     componentFactory.sequenceEditor(subSystemSequencerId, observingMode)
 
   def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
-    componentFactory.commandService(assemblyName).submit(command)
+    componentFactory.commandService(assemblyName).flatMap(_.submit(command))(system.dispatcher)
   }
 
   def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.commandService(assemblyName).submitAndSubscribe(command)
+    componentFactory.commandService(assemblyName).flatMap(_.submitAndSubscribe(command))(system.dispatcher)
 
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.commandService(assemblyName).oneway(command)
+    componentFactory.commandService(assemblyName).flatMap(_.oneway(command))(system.dispatcher)
 
   def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")

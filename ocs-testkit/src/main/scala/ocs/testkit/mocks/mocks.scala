@@ -39,7 +39,7 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
     extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
-  override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock
+  override def sequenceFeeder(subSystemSequencerId: String): Future[SequenceFeeder]                       = Future.successful(SequenceFeederMock)
   override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
   override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
   override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
