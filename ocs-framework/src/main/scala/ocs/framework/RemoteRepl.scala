@@ -4,6 +4,7 @@ import akka.actor.typed.ActorRef
 import ammonite.sshd._
 import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.api.messages.SupervisorMsg
+import ocs.framework.core.Sequencer
 import ocs.framework.dsl.CswServices
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 

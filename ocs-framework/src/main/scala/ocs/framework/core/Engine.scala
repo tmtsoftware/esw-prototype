@@ -1,4 +1,4 @@
-package ocs.framework
+package ocs.framework.core
 
 import akka.Done
 import akka.stream.Materializer

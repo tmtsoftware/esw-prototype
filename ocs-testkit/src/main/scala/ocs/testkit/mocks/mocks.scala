@@ -12,7 +12,7 @@ import ocs.api.SequenceFeeder
 import ocs.api.messages.SequencerMsg
 import ocs.api.models.{AggregateResponse, CommandList}
 import ocs.framework.dsl.CswServices
-import ocs.framework.{Sequencer, SequencerBehaviour}
+import ocs.framework.core.{Sequencer, SequencerBehaviour}
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ object CancellableMock extends Cancellable {
 }
 
 class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Sequencer)(implicit system: ActorSystem)
-    extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null, null) {
+    extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
   override def sequenceFeeder(subSystemSequencerId: String): SequenceFeeder                               = SequenceFeederMock

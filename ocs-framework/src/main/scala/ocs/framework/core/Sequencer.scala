@@ -1,4 +1,4 @@
-package ocs.framework
+package ocs.framework.core
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._

@@ -1,5 +1,4 @@
-package ocs.framework
-
+package ocs.framework.core
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import ocs.api.messages.SequencerMsg

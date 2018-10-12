@@ -24,9 +24,8 @@ object TestAmmoniteApp {
            |}
            """.stripMargin)
       .run(
-        "locationService" -> locationServiceWrapper,
-        "commandService"  -> commandServiceWrapper,
-        "sequencerApi"    -> sequencerApiWrapper
+        "locationService"  -> locationServiceWrapper,
+        "componentFactory" -> componentFactory
       )
   }
 }

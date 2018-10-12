@@ -11,12 +11,13 @@ import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
 import io.lettuce.core.RedisClient
-import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
+import ocs.api.{SequenceEditor, SequenceFeeder}
+import ocs.framework.core.{Engine, Sequencer, SequencerBehaviour, SupervisorBehavior}
 import ocs.framework.dsl.{CswServices, Script}
 import ocs.framework.util.ScriptLoader
-import ocs.framework.wrapper.{CommandServiceWrapper, LocationServiceWrapper, SequencerApiWrapper}
+import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
 import romaine.RomaineFactory
 
 import scala.concurrent.ExecutionContext
@@ -36,9 +37,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
-  lazy val commandServiceWrapper = new CommandServiceWrapper(locationServiceWrapper)
-
-  lazy val sequencerApiWrapper = new SequencerApiWrapper(locationServiceWrapper)
+  lazy val sequencerApiWrapper = new ComponentFactory(locationServiceWrapper)
 
   lazy val eventService: EventService = new EventServiceFactory().make(locationService)
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
@@ -54,7 +53,6 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
                     sequencer,
                     sequencerApiWrapper,
                     locationServiceWrapper,
-                    commandServiceWrapper,
                     eventService,
                     romaineFactory)
 

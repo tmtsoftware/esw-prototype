@@ -6,7 +6,7 @@ import akka.util.Timeout
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
-import ocs.framework.wrapper.{CommandServiceWrapper, LocationServiceWrapper, SequencerApiWrapper}
+import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
@@ -21,7 +21,5 @@ class TestAmmoniteWiring() {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
-  lazy val commandServiceWrapper = new CommandServiceWrapper(locationServiceWrapper)
-
-  lazy val sequencerApiWrapper = new SequencerApiWrapper(locationServiceWrapper)
+  lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
 }

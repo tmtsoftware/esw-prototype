@@ -1,5 +1,7 @@
 package ocs.framework.wrapper
-import akka.actor.ActorSystem
+import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
+import akka.actor.{typed, ActorSystem}
+import csw.command.scaladsl.CommandService
 import csw.location.api.models.ComponentType
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
@@ -9,7 +11,18 @@ import scala.async.Async.async
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-class SequencerApiWrapper(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
+class ComponentFactory(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
+
+  implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
+
+  def commandService(assemblyName: String): CommandService = {
+    val eventualCommandService = locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
+      async {
+        new CommandService(akkaLocation)
+      }(system.dispatcher)
+    }
+    Await.result(eventualCommandService, 5.seconds)
+  }
 
   def sequenceFeeder(sequencerId: String, observingMode: String): SequenceFeeder = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)

@@ -1,10 +1,9 @@
-package ocs.framework
-
+package ocs.framework.core
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import ocs.api.messages.SequencerMsg.ExternalSequencerMsg
-import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.api.messages.SupervisorMsg.ControlCommand
+import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.framework.dsl.Script
 
 object SupervisorBehavior {
