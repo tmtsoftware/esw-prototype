@@ -5,6 +5,8 @@ import ocs.framework.dsl
 
 class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
+  var flag = true
+
   private val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("iris-test"), EventName("system"))
   }
@@ -25,13 +27,10 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
       var firstAssemblyResponse: CommandResponse = null
-      var counter                                = 0
       loop {
         spawn {
-          counter += 1
           firstAssemblyResponse = csw.submit("Sample1Assembly", command).await
-          println(counter)
-          stopWhen(counter > 2)
+          stopWhen(flag)
         }
       }.await
 
@@ -48,6 +47,16 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
     subscriptionStream.unsubscribe().await
     publisherStream.cancel()
     println("shutdown iris")
+    Done
+  }
+
+  override def onStart(): Future[Done] = spawn {
+    flag = false
+    Done
+  }
+
+  override def onStop(): Future[Done] = spawn {
+    flag = true
     Done
   }
 }
