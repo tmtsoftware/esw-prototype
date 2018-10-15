@@ -5,7 +5,7 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 inThisBuild(
   List(
     organization := "com.github.tmtsoftware.esw-prototype",
-    scalaVersion := "2.12.6",
+    scalaVersion := Libs.ScalaVersion,
     version := "0.1.0-SNAPSHOT",
     resolvers += "jitpack" at "https://jitpack.io",
     scalacOptions ++= Seq(

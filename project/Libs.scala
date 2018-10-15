@@ -3,11 +3,11 @@ import Def.{setting => dep}
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Libs {
-  val ScalaVersion = "2.12.6"
+  val ScalaVersion = "2.12.7"
 
   val `scala-reflect`      = "org.scala-lang"         % "scala-reflect"       % ScalaVersion
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
-  val `akka-http-cors`     = "ch.megard"              %% "akka-http-cors"     % "0.3.0"
+  val `akka-http-cors`     = "ch.megard"              %% "akka-http-cors"     % "0.3.1"
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
   val `mockito-core`       = "org.mockito"            % "mockito-core"        % "2.21.0" //MIT License
 
@@ -39,14 +39,14 @@ object Csw {
 }
 
 object Ammonite {
-  val Version = "1.1.2"
+  val Version = "1.2.1-16-48ce533"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
 }
 
 object Akka {
-  val Version = "2.5.16"
+  val Version = "2.5.17"
 
   val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version

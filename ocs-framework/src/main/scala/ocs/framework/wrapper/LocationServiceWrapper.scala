@@ -37,10 +37,10 @@ class LocationServiceWrapper(locationService: LocationService, system: ActorSyst
 
   }
 
-  def resolve[T](componentName: String, componentType: ComponentType)(f: AkkaLocation => Future[T]): Future[T] =
+  def resolve[T](componentName: String, componentType: ComponentType)(f: AkkaLocation => T): Future[T] =
     locationService
       .resolve(AkkaConnection(ComponentId(componentName, componentType)), 5.seconds)
-      .flatMap {
+      .map {
         case Some(akkaLocation) =>
           f(akkaLocation)
         case None =>

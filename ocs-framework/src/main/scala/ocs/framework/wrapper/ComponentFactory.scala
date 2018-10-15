@@ -1,4 +1,5 @@
 package ocs.framework.wrapper
+
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
 import csw.command.scaladsl.CommandService
@@ -7,39 +8,29 @@ import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
 import ocs.api.{SequenceEditor, SequenceFeeder, SequencerUtil}
 
-import scala.async.Async.async
 import scala.concurrent.Future
 
 class ComponentFactory(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
 
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
-  def commandService(assemblyName: String): Future[CommandService] = {
-    val eventualCommandService = locationService.resolve(assemblyName, ComponentType.Assembly) { akkaLocation =>
-      async {
-        new CommandService(akkaLocation)
-      }(system.dispatcher)
-    }
-    eventualCommandService
+  def assembly(assemblyName: String): Future[CommandService] = {
+    locationService.resolve(assemblyName, ComponentType.Assembly)(akkaLocation => new CommandService(akkaLocation))
   }
 
   def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeeder] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      async {
-        val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceFeederJvmClient(supervisorRef)
-      }(system.dispatcher)
+      val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+      new SequenceFeederJvmClient(supervisorRef)
     }
   }
 
   def sequenceEditor(subSystemSequencerId: String, observingMode: String): Future[SequenceEditor] = {
     val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      async {
-        val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
-        new SequenceEditorJvmClient(supervisorRef)
-      }(system.dispatcher)
+      val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+      new SequenceEditorJvmClient(supervisorRef)
     }
   }
 }

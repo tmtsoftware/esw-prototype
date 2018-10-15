@@ -43,14 +43,14 @@ class CswServices(
     componentFactory.sequenceEditor(subSystemSequencerId, observingMode)
 
   def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
-    componentFactory.commandService(assemblyName).flatMap(_.submit(command))(system.dispatcher)
+    componentFactory.assembly(assemblyName).flatMap(_.submit(command))(system.dispatcher)
   }
 
   def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.commandService(assemblyName).flatMap(_.submitAndSubscribe(command))(system.dispatcher)
+    componentFactory.assembly(assemblyName).flatMap(_.submitAndSubscribe(command))(system.dispatcher)
 
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.commandService(assemblyName).flatMap(_.oneway(command))(system.dispatcher)
+    componentFactory.assembly(assemblyName).flatMap(_.oneway(command))(system.dispatcher)
 
   def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")
