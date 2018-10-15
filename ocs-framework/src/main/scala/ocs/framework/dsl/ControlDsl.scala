@@ -44,4 +44,6 @@ trait ControlDsl {
   }
 
   protected def onShutdown(): Future[Done] = spawn(Done)
+  def onStart(): Future[Done]              = spawn(Done)
+  def onStop(): Future[Done]               = spawn(Done)
 }

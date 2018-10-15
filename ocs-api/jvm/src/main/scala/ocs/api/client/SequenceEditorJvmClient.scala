@@ -10,7 +10,7 @@ import ocs.api.SequenceEditor
 import ocs.api.messages.SupervisorMsg
 import ocs.api.models.StepList
 import ocs.api.messages.SequencerMsg._
-import ocs.api.messages.SupervisorMsg.Interrupt
+import ocs.api.messages.SupervisorMsg.Shutdown
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
@@ -55,7 +55,7 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
   override def removeBreakpoints(ids: List[Id]): Future[Unit] =
     responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => Interrupt("shutdown", x)))
+  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => Shutdown("shutdown", x)))
 
   override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
