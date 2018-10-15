@@ -33,7 +33,7 @@ class RemoteRepl(
          |import csw.params.core.models._
          |import ocs.api.messages.SequencerMsg._
          |import ocs.api.messages.SupervisorMsg._
-         |import ocs.api.models.CommandList
+         |import ocs.api.models.Sequence
          |implicit class RichFuture[T](val f: Future[T]) {
          |  def get: T = Await.result(f, Duration.Inf)
          |}
