@@ -80,7 +80,7 @@ class Routes(
         pathPrefix(SequenceFeeder.ApiName) {
           post {
             path(SequenceFeeder.Feed) {
-              entity(as[CommandList]) { commandList =>
+              entity(as[Sequence]) { commandList =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
                   validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {
                     sequenceFeeder.map(_.feed(commandList))
@@ -94,7 +94,7 @@ class Routes(
         pathPrefix(SequenceEditor.ApiName) {
           get {
             path(SequenceEditor.Sequence) {
-              val eventualSequence: Future[Sequence] = sequenceEditor.flatMap(_.sequence)
+              val eventualSequence: Future[StepList] = sequenceEditor.flatMap(_.sequence)
               complete(eventualSequence)
             }
           } ~

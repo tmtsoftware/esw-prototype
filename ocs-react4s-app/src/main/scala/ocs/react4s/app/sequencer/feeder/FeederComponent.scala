@@ -3,7 +3,7 @@ package ocs.react4s.app.sequencer.feeder
 import com.github.ahnfelt.react4s._
 import ocs.api.client.SequenceFeederJsClient
 import ocs.api.codecs.SequencerJsonSupport
-import ocs.api.models.CommandList
+import ocs.api.models.Sequence
 import ocs.react4s.app.IOOperationComponent
 import ocs.react4s.app.IOOperationComponent.HandleClick
 import play.api.libs.json.Json
@@ -18,7 +18,7 @@ case class FeederComponent(client: P[SequenceFeederJsClient]) extends Component[
   def handleFeed(client: SequenceFeederJsClient, msg: IOOperationComponent.Msg): Unit = msg match {
     case HandleClick(request) =>
       feedResponse.set("Waiting for Response ....")
-      Try(Json.parse(request).as[CommandList])
+      Try(Json.parse(request).as[Sequence])
         .map(
           input =>
             client.feed(input).onComplete {

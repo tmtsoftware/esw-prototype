@@ -14,7 +14,7 @@ import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.api.{SequenceEditor, SequenceFeeder}
-import ocs.framework.core.{Engine, Sequencer, SequencerBehaviour, SupervisorBehavior}
+import ocs.framework.core.{Engine, SequenceOperator, SequencerBehaviour, SupervisorBehavior}
 import ocs.framework.dsl.{CswServices, Script}
 import ocs.framework.util.ScriptLoader
 import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
@@ -32,7 +32,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy implicit val executionContext: ExecutionContext      = system.dispatcher
 
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
-  lazy val sequencer                            = new Sequencer(sequencerRef, system)
+  lazy val sequencer                            = new SequenceOperator(sequencerRef, system)
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)

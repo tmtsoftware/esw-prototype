@@ -10,17 +10,17 @@ import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.SequenceFeeder
 import ocs.api.messages.SequencerMsg
-import ocs.api.models.{AggregateResponse, CommandList}
+import ocs.api.models.{AggregateResponse, Sequence}
 import ocs.framework.dsl.CswServices
-import ocs.framework.core.{Sequencer, SequencerBehaviour}
+import ocs.framework.core.{SequenceOperator, SequencerBehaviour}
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 object SequenceFeederMock extends SequenceFeeder {
-  override def feed(commandList: CommandList): Future[Unit] = Future.successful(())
-  override def submit(commandList: CommandList): Future[AggregateResponse] = Future.successful(
+  override def feed(commandList: Sequence): Future[Unit] = Future.successful(())
+  override def submit(commandList: Sequence): Future[AggregateResponse] = Future.successful(
     AggregateResponse(CommandResponse.Completed(Id("dummy-id")))
   )
 }
@@ -35,7 +35,7 @@ object CancellableMock extends Cancellable {
   override def isCancelled: Boolean = true
 }
 
-class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Sequencer)(implicit system: ActorSystem)
+class CswServicesMock(sequencerId: String, observingMode: String, sequencer: SequenceOperator)(implicit system: ActorSystem)
     extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
@@ -51,13 +51,13 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
 }
 
 object CswServicesMock {
-  def create(sequencer: Sequencer)(implicit system: ActorSystem): CswServices =
+  def create(sequencer: SequenceOperator)(implicit system: ActorSystem): CswServices =
     new CswServicesMock("sequencer1", "mode1", sequencer)
 }
 
 object SequencerFactory {
-  def create()(implicit system: ActorSystem): Sequencer = {
+  def create()(implicit system: ActorSystem): SequenceOperator = {
     lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
-    new Sequencer(sequencerRef, system)
+    new SequenceOperator(sequencerRef, system)
   }
 }

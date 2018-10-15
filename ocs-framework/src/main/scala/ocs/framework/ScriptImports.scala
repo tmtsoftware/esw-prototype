@@ -49,8 +49,8 @@ object ScriptImports {
   type AggregateResponse = ocs.api.models.AggregateResponse
   val AggregateResponse = ocs.api.models.AggregateResponse
 
-  type CommandList = ocs.api.models.CommandList
-  val CommandList = ocs.api.models.CommandList
+  type CommandList = ocs.api.models.Sequence
+  val CommandList = ocs.api.models.Sequence
 
   type SequenceCommand = csw.params.commands.SequenceCommand
 

@@ -4,7 +4,7 @@ import akka.actor.typed.ActorRef
 import ammonite.sshd._
 import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.api.messages.SupervisorMsg
-import ocs.framework.core.Sequencer
+import ocs.framework.core.SequenceOperator
 import ocs.framework.dsl.CswServices
 import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 
@@ -12,7 +12,7 @@ import org.apache.sshd.server.auth.password.AcceptAllPasswordAuthenticator
 // explore timeout thing
 class RemoteRepl(
     commandService: CswServices,
-    sequencer: Sequencer,
+    sequencer: SequenceOperator,
     supervisor: ActorRef[SupervisorMsg],
     sequenceFeeder: SequenceFeeder,
     sequenceEditor: SequenceEditor,

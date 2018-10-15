@@ -2,7 +2,7 @@ package ocs.api
 
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
-import ocs.api.models.Sequence
+import ocs.api.models.StepList
 
 import scala.concurrent.Future
 
@@ -11,7 +11,7 @@ trait SequenceEditor {
   def pause(): Future[Unit]
   def resume(): Future[Unit]
   def reset(): Future[Unit]
-  def sequence: Future[Sequence]
+  def sequence: Future[StepList]
   def isAvailable: Future[Boolean]
   def delete(ids: List[Id]): Future[Unit]
   def addBreakpoints(ids: List[Id]): Future[Unit]

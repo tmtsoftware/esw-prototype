@@ -3,14 +3,14 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import ocs.api.messages.SequencerMsg
 import ocs.api.messages.SequencerMsg._
-import ocs.api.models.{AggregateResponse, Sequence, Step, StepStatus}
+import ocs.api.models.{AggregateResponse, Step, StepList, StepStatus}
 
 import scala.util.{Failure, Success, Try}
 
 object SequencerBehaviour {
   def behavior: Behavior[SequencerMsg] = Behaviors.setup { _ =>
     var stepRefOpt: Option[ActorRef[Step]]                       = None
-    var sequence: Sequence                                       = Sequence.empty
+    var sequence: StepList                                       = StepList.empty
     var responseRefOpt: Option[ActorRef[Try[AggregateResponse]]] = None
     var aggregateResponse: AggregateResponse                     = AggregateResponse.empty
 
@@ -45,14 +45,14 @@ object SequencerBehaviour {
       if (sequence.isFinished) {
         println("Sequence is finished")
         responseRefOpt.foreach(x => x ! Success(aggregateResponse))
-        sequence = Sequence.empty
+        sequence = StepList.empty
         aggregateResponse = AggregateResponse.empty
         responseRefOpt = None
         stepRefOpt = None
       }
     }
 
-    def updateAndSendResponse(newSequence: Sequence, replyTo: ActorRef[Try[Unit]]): Unit = {
+    def updateAndSendResponse(newSequence: StepList, replyTo: ActorRef[Try[Unit]]): Unit = {
       sequence = newSequence
       clearSequenceIfFinished()
       replyTo ! Success({})
@@ -62,7 +62,7 @@ object SequencerBehaviour {
       if (sequence.isFinished) {
         msg match {
           case ProcessSequence(Nil, replyTo)      => replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))
-          case ProcessSequence(commands, replyTo) => sequence = Sequence.from(commands); responseRefOpt = Some(replyTo)
+          case ProcessSequence(commands, replyTo) => sequence = StepList.from(commands); responseRefOpt = Some(replyTo)
           case GetSequence(replyTo)               => replyTo ! Success(sequence)
           case GetNext(replyTo)                   => sendNext(replyTo)
           case x: ExternalSequencerMsg =>

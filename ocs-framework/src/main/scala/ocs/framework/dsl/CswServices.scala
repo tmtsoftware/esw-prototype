@@ -9,7 +9,7 @@ import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.events.{Event, EventKey}
 import ocs.api.{SequenceEditor, SequenceFeeder}
 import ocs.framework.ScriptImports.toDuration
-import ocs.framework.core.Sequencer
+import ocs.framework.core.SequenceOperator
 import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
@@ -21,7 +21,7 @@ import scala.concurrent.duration.FiniteDuration
 class CswServices(
     val sequencerId: String,
     val observingMode: String,
-    val sequencer: Sequencer, //this param is carried only to be passed to the Script
+    val sequencer: SequenceOperator, //this param is carried only to be passed to the Script
     componentFactory: ComponentFactory,
     locationService: LocationServiceWrapper,
     eventService: EventService,

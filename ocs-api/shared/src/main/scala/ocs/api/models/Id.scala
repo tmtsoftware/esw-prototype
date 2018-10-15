@@ -26,14 +26,14 @@ object Step {
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
 }
 
-case class CommandList(commands: Seq[SequenceCommand]) {
-  def add(others: SequenceCommand*): CommandList = CommandList(commands ++ others)
-  def add(other: CommandList): CommandList       = CommandList(commands ++ other.commands)
+case class Sequence(commands: Seq[SequenceCommand]) {
+  def add(others: SequenceCommand*): Sequence = Sequence(commands ++ others)
+  def add(other: Sequence): Sequence          = Sequence(commands ++ other.commands)
 }
 
-object CommandList {
-  def from(commands: SequenceCommand*): CommandList = CommandList(commands.toList)
-  def empty: CommandList                            = CommandList(Nil)
+object Sequence {
+  def from(commands: SequenceCommand*): Sequence = Sequence(commands.toList)
+  def empty: Sequence                            = Sequence(Nil)
 }
 
 case class AggregateResponse private[ocs] (childResponses: Set[CommandResponse]) {

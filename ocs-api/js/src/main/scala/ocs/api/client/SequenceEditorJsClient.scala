@@ -3,7 +3,7 @@ package ocs.api.client
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
 import ocs.api.codecs.SequencerJsonSupport
-import ocs.api.models.Sequence
+import ocs.api.models.StepList
 import ocs.api.{SequenceEditor, WebGateway}
 
 import scala.concurrent.Future
@@ -27,7 +27,7 @@ class SequenceEditorJsClient(gateway: WebGateway) extends SequenceEditor with Se
     s"${SequenceEditor.ApiName}/${SequenceEditor.Reset}"
   )
 
-  override def sequence: Future[Sequence] = gateway.get[Sequence](
+  override def sequence: Future[StepList] = gateway.get[StepList](
     s"${SequenceEditor.ApiName}/${SequenceEditor.Sequence}"
   )
 

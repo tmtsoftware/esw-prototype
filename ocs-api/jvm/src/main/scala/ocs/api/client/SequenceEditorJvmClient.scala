@@ -8,9 +8,9 @@ import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
 import ocs.api.SequenceEditor
 import ocs.api.messages.SupervisorMsg
-import ocs.api.models.Sequence
+import ocs.api.models.StepList
 import ocs.api.messages.SequencerMsg._
-import ocs.api.messages.SupervisorMsg.ControlCommand
+import ocs.api.messages.SupervisorMsg.Interrupt
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
@@ -25,8 +25,8 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
 
   def sequenceCommandsFrom(commands: List[SequenceCommand]): List[SequenceCommand] = commands.map(cmd => cmd)
 
-  override def sequence: Future[Sequence] = {
-    val future: Future[Try[Sequence]] = supervisor ? (x => GetSequence(x))
+  override def sequence: Future[StepList] = {
+    val future: Future[Try[StepList]] = supervisor ? (x => GetSequence(x))
     future.map(_.get)
   }
 
@@ -55,7 +55,7 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
   override def removeBreakpoints(ids: List[Id]): Future[Unit] =
     responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => ControlCommand("shutdown", x)))
+  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => Interrupt("shutdown", x)))
 
   override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
