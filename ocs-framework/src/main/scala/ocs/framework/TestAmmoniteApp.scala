@@ -27,7 +27,6 @@ object TestAmmoniteApp {
                 | """.stripMargin
       )
       .run(
-        "locationService"  -> locationServiceWrapper,
         "componentFactory" -> componentFactory
       )
 

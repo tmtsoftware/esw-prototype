@@ -55,7 +55,7 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
   override def removeBreakpoints(ids: List[Id]): Future[Unit] =
     responseHelper(supervisor ? (x => RemoveBreakpoints(ids, x)))
 
-  override def shutdown(): Future[Unit] = responseHelper(supervisor ? (x => Shutdown("shutdown", x)))
+  override def shutdown(): Future[Unit] = responseHelper(supervisor ? Shutdown)
 
   override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
 }
