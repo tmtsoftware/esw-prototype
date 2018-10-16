@@ -1,6 +1,7 @@
 package ocs.framework.core
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
+import csw.params.commands.SequenceCommand
 import ocs.api.messages.SequencerMsg
 import ocs.api.messages.SequencerMsg._
 import ocs.api.models.{AggregateResponse, Step, StepList, StepStatus}
@@ -9,12 +10,12 @@ import scala.util.{Failure, Success, Try}
 
 object SequencerBehaviour {
   def behavior: Behavior[SequencerMsg] = Behaviors.setup { _ =>
-    var stepRefOpt: Option[ActorRef[Step]]                       = None
+    var stepRefOpt: Option[ActorRef[SequenceCommand]]            = None
     var sequence: StepList                                       = StepList.empty
     var responseRefOpt: Option[ActorRef[Try[AggregateResponse]]] = None
     var aggregateResponse: AggregateResponse                     = AggregateResponse.empty
 
-    def sendNext(replyTo: ActorRef[Step]): Unit = sequence.next match {
+    def sendNext(replyTo: ActorRef[SequenceCommand]): Unit = sequence.next match {
       case Some(step) => setInFlight(replyTo, step)
       case None       => stepRefOpt = Some(replyTo)
     }
@@ -29,10 +30,10 @@ object SequencerBehaviour {
       }
     }
 
-    def setInFlight(replyTo: ActorRef[Step], step: Step): Unit = {
+    def setInFlight(replyTo: ActorRef[SequenceCommand], step: Step): Unit = {
       val inFlightStep = step.withStatus(StepStatus.InFlight)
       sequence = sequence.updateStep(inFlightStep)
-      replyTo ! inFlightStep
+      replyTo ! inFlightStep.command
     }
 
     def update(_aggregateResponse: AggregateResponse): Unit = {
@@ -76,7 +77,7 @@ object SequencerBehaviour {
           case ProcessSequence(_, replyTo)        => replyTo ! Failure(new RuntimeException("previous sequence has not finished yet"))
           case GetSequence(replyTo)               => replyTo ! Success(sequence)
           case GetNext(replyTo)                   => sendNext(replyTo)
-          case MaybeNext(replyTo)                 => replyTo ! sequence.next
+          case MaybeNext(replyTo)                 => replyTo ! sequence.next.map(_.command)
           case Update(_aggregateResponse)         => update(_aggregateResponse)
           case Add(commands, replyTo)             => updateAndSendResponse(sequence.append(commands), replyTo)
           case Pause(replyTo)                     => updateAndSendResponse(sequence.pause, replyTo)
