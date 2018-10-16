@@ -8,9 +8,9 @@ import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.events.{Event, EventKey}
 import ocs.api.{SequenceEditor, SequenceFeeder}
+import ocs.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.framework.ScriptImports.toDuration
 import ocs.framework.core.SequenceOperator
-import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
 import sequencer.macros.StrandEc

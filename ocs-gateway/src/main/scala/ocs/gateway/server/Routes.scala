@@ -12,17 +12,19 @@ import csw.params.commands.{ControlCommand, SequenceCommand}
 import csw.params.core.models.Id
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import ocs.api._
-import play.api.libs.json.Json
 import ocs.api.codecs.SequencerJsonSupport
 import ocs.api.models._
-import ocs.gateway.{EventMonitor, LocationServiceGateway, SequencerMonitor}
+import ocs.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.gateway.assembly.{AssemblyService, PositionTracker}
+import ocs.gateway.{EventMonitor, SequencerMonitor}
+import play.api.libs.json.Json
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 
 class Routes(
-    locationService: LocationServiceGateway,
+    locationService: LocationServiceWrapper,
+    componentFactory: ComponentFactory,
     sequencerMonitor: SequencerMonitor,
     positionTracker: PositionTracker,
     assemblyService: AssemblyService,
@@ -64,8 +66,8 @@ class Routes(
         }
       } ~
       pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
-        val sequenceFeeder = locationService.sequenceFeeder(sequencerId, observingMode)
-        val sequenceEditor = locationService.sequenceEditor(sequencerId, observingMode)
+        val sequenceFeeder = componentFactory.sequenceFeeder(sequencerId, observingMode)
+        val sequenceEditor = componentFactory.sequenceEditor(sequencerId, observingMode)
 
         get {
           path(SequenceResultsWeb.results) {
@@ -152,7 +154,7 @@ class Routes(
         }
       } ~
       pathPrefix("assembly" / Segment) { assemblyName =>
-        val commandService = locationService.commandServiceFor(assemblyName)
+        val commandService = componentFactory.assembly(assemblyName)
         get {
           path("track") {
             complete(positionTracker.track(assemblyName).map(x => Json.toJson(x).toString()).map(x => ServerSentEvent(x)))

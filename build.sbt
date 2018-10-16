@@ -35,6 +35,7 @@ lazy val `esw-prototype` = project
     `react4s-facade`,
     `ocs-react4s-app`,
     `ocs-gateway`,
+    `ocs-factory`
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -109,24 +110,31 @@ lazy val `sequencer-macros` = project
     )
   )
 
+lazy val `ocs-factory` = project
+  .dependsOn(`ocs-api-jvm`)
+  .settings(
+    libraryDependencies ++= Seq(
+      Csw.`csw-location-client`,
+      Csw.`csw-command-client`,
+      Csw.`romaine`
+    )
+  )
+
 lazy val `ocs-gateway` = project
   .enablePlugins(DeployApp)
-  .dependsOn(`ocs-api-jvm`)
+  .dependsOn(`ocs-factory`)
   .settings(
     libraryDependencies ++= Seq(
       Akka.`akka-http`,
       Akka.`akka-stream`,
       Csw.`csw-event-client`,
-      Csw.`romaine`,
-      Libs.`akka-http-cors`,
-      Csw.`csw-location-client`,
-      Csw.`csw-command-client`
+      Libs.`akka-http-cors`
     )
   )
 
 lazy val `ocs-framework` = project
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(`sequencer-macros`, `ocs-api-jvm`)
+  .dependsOn(`sequencer-macros`, `ocs-factory`)
   .settings(
     libraryDependencies ++= Seq(
       Libs.`scala-reflect`,
@@ -136,10 +144,7 @@ lazy val `ocs-framework` = project
       Ammonite.`ammonite`,
       Ammonite.`ammonite-sshd`,
       Libs.`scala-async`.value,
-      Csw.`csw-location-client`,
-      Csw.`csw-command-client`,
       Csw.`csw-event-client`,
-      Csw.`romaine`,
       SharedLibs.scalaTest.value % Test
     )
   )

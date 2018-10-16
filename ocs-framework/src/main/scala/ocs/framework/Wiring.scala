@@ -14,10 +14,10 @@ import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
 import ocs.api.{SequenceEditor, SequenceFeeder}
+import ocs.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.framework.core.{Engine, SequenceOperator, SequencerBehaviour, SupervisorBehavior}
 import ocs.framework.dsl.{CswServices, Script}
 import ocs.framework.util.ScriptLoader
-import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
 import romaine.RomaineFactory
 
 import scala.concurrent.ExecutionContext

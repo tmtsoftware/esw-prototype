@@ -14,19 +14,21 @@ import csw.params.core.generics.KeyType.StringKey
 import csw.params.core.models.Prefix
 import csw.params.core.states.CurrentState
 import ocs.api.models.RequestComponent
-import ocs.gateway.LocationServiceGateway
+import ocs.factory.{ComponentFactory, LocationServiceWrapper}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 
-class AssemblyService(locationServiceGateway: LocationServiceGateway)(implicit ec: ExecutionContext) {
+class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentFactory: ComponentFactory)(
+    implicit ec: ExecutionContext
+) {
 
   private implicit val timeout: Timeout = Timeout(10.seconds)
   private val prefix                    = Prefix("sequencer1")
   private val nameKey                   = StringKey.make("name")
 
   def oneway(assemblyName: String, component: RequestComponent): Future[CommandResponse] = {
-    locationServiceGateway.commandServiceFor(assemblyName).flatMap { cs =>
+    componentFactory.assembly(assemblyName).flatMap { cs =>
       component match {
         case RequestComponent.FilterWheel(name) =>
           cs.oneway(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))

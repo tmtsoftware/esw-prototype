@@ -6,7 +6,7 @@ import akka.util.Timeout
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
-import ocs.framework.wrapper.{ComponentFactory, LocationServiceWrapper}
+import ocs.factory.{ComponentFactory, LocationServiceWrapper}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble

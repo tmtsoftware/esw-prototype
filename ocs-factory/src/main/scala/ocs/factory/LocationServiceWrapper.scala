@@ -1,9 +1,9 @@
-package ocs.framework.wrapper
+package ocs.factory
 
 import akka.actor.typed.ActorRef
 import akka.actor.{ActorSystem, CoordinatedShutdown}
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
-import csw.location.api.models.{AkkaLocation, AkkaRegistration, ComponentId, ComponentType}
+import csw.location.api.models._
 import csw.location.api.scaladsl.LocationService
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisURI
@@ -56,4 +56,11 @@ class LocationServiceWrapper(locationService: LocationService, system: ActorSyst
         case None => throw new IllegalArgumentException(s"Could not find component - Event server")
       }
   }
+
+  def akkaLocationFor(assemblyName: String): Future[AkkaLocation] = {
+    resolve(assemblyName, ComponentType.Assembly)(akkaLocation => akkaLocation)
+  }
+
+  def listSequencers(): Future[List[Location]] = locationService.list(ComponentType.Sequencer)
+  def listAssemblies(): Future[List[Location]] = locationService.list(ComponentType.Assembly)
 }
