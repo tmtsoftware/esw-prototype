@@ -47,7 +47,7 @@ class CswServices(
   }
 
   def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.assembly(assemblyName).flatMap(_.submitAndSubscribe(command))(system.dispatcher)
+    componentFactory.assembly(assemblyName).flatMap(_.complete(command))(system.dispatcher)
 
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
     componentFactory.assembly(assemblyName).flatMap(_.oneway(command))(system.dispatcher)

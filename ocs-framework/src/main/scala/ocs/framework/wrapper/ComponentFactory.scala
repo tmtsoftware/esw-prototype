@@ -2,7 +2,8 @@ package ocs.framework.wrapper
 
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
-import csw.command.scaladsl.CommandService
+import csw.command.api.scaladsl.CommandService
+import csw.command.client._
 import csw.location.api.models.ComponentType
 import ocs.api.client.{SequenceEditorJvmClient, SequenceFeederJvmClient}
 import ocs.api.messages.SupervisorMsg
@@ -15,7 +16,7 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
   implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
 
   def assembly(assemblyName: String): Future[CommandService] = {
-    locationService.resolve(assemblyName, ComponentType.Assembly)(akkaLocation => new CommandService(akkaLocation))
+    locationService.resolve(assemblyName, ComponentType.Assembly)(akkaLocation => CommandServiceFactory.make(akkaLocation))
   }
 
   def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequenceFeeder] = {

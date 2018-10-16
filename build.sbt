@@ -120,7 +120,7 @@ lazy val `ocs-gateway` = project
       Csw.`romaine`,
       Libs.`akka-http-cors`,
       Csw.`csw-location-client`,
-      Csw.`csw-command`
+      Csw.`csw-command-client`
     )
   )
 
@@ -137,7 +137,7 @@ lazy val `ocs-framework` = project
       Ammonite.`ammonite-sshd`,
       Libs.`scala-async`.value,
       Csw.`csw-location-client`,
-      Csw.`csw-command`,
+      Csw.`csw-command-client`,
       Csw.`csw-event-client`,
       Csw.`romaine`,
       SharedLibs.scalaTest.value % Test

@@ -1,8 +1,7 @@
 package ocs.gateway.assembly
 
 import akka.util.Timeout
-
-import csw.command.models.matchers.DemandMatcher
+import csw.command.client.internal.models.matchers.DemandMatcher
 import csw.params.core.generics.KeyType.IntKey
 import csw.params.core.models.Prefix
 import csw.params.core.states.{DemandState, StateName}

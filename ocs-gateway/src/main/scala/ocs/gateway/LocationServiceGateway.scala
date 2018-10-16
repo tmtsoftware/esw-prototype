@@ -2,7 +2,8 @@ package ocs.gateway
 
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
-import csw.command.scaladsl.CommandService
+import csw.command.api.scaladsl.CommandService
+import csw.command.client.CommandServiceFactory
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.location.api.models.{AkkaLocation, ComponentId, ComponentType, Location}
 import csw.location.api.scaladsl.LocationService
@@ -50,7 +51,7 @@ class LocationServiceGateway(locationService: LocationService)(implicit ec: Exec
   }
 
   def commandServiceFor(assemblyName: String): Future[CommandService] = {
-    akkaLocationFor(assemblyName).map(new CommandService(_))
+    akkaLocationFor(assemblyName).map(CommandServiceFactory.make)
   }
 
   def akkaLocationFor(assemblyName: String): Future[AkkaLocation] = {

@@ -162,7 +162,7 @@ class Routes(
           path(AssemblyFeeder.SubmitAndSubscribe) {
             entity(as[ControlCommand]) { command =>
               implicit val timeout: Timeout = util.Timeout(10.seconds)
-              complete(commandService.flatMap(_.submitAndSubscribe(command)))
+              complete(commandService.flatMap(_.complete(command)))
             }
           } ~
           path(AssemblyFeeder.Submit) {

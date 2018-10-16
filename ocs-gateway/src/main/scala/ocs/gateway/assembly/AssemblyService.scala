@@ -5,10 +5,10 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import akka.util.Timeout
-import csw.command.messages.ComponentCommonMessage.ComponentStateSubscription
-import csw.command.messages.ComponentMessage
-import csw.command.models.framework.PubSub.Subscribe
-import csw.command.models.matchers.StateMatcher
+import csw.command.api.scaladsl.StateMatcher
+import csw.command.client.internal.messages.ComponentCommonMessage.ComponentStateSubscription
+import csw.command.client.internal.messages.ComponentMessage
+import csw.command.client.internal.models.framework.PubSub.Subscribe
 import csw.params.commands.{CommandName, CommandResponse, Setup}
 import csw.params.core.generics.KeyType.StringKey
 import csw.params.core.models.Prefix
