@@ -57,9 +57,9 @@ class CswServices(
     eventService.defaultSubscriber.subscribeAsync(eventKeys, e => Future(callback(e))(strandEc.ec))
   }
 
-  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event): Cancellable = {
+  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: StrandEc): Cancellable = {
     println(s"=========================> Publishing event $eventGeneratorBlock every $every")
-    eventService.defaultPublisher.publish(eventGeneratorBlock, every)
+    eventService.defaultPublisher.publishAsync(Future(eventGeneratorBlock)(strandEc.ec), every)
   }
 
   def publish(event: Event): Future[Done] = {
