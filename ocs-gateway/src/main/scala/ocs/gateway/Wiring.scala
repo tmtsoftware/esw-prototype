@@ -8,7 +8,7 @@ import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
 import io.lettuce.core.RedisClient
-import ocs.factory.{ComponentFactory, LocationServiceWrapper}
+import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.gateway.assembly.{AssemblyService, PositionTracker}
 import ocs.gateway.server.{Routes, Server}
 import romaine.RomaineFactory

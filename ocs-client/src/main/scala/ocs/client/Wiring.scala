@@ -1,4 +1,4 @@
-package ocs.framework
+package ocs.client
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
@@ -6,12 +6,12 @@ import akka.util.Timeout
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
-import ocs.factory.{ComponentFactory, LocationServiceWrapper}
+import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class TestAmmoniteWiring() {
+class Wiring() {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
 
   lazy implicit val system: ActorSystem                = ActorSystemFactory.remote()

@@ -14,7 +14,7 @@ import csw.params.core.generics.KeyType.StringKey
 import csw.params.core.models.Prefix
 import csw.params.core.states.CurrentState
 import ocs.api.models.RequestComponent
-import ocs.factory.{ComponentFactory, LocationServiceWrapper}
+import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}

@@ -1,4 +1,4 @@
-package ocs.factory
+package ocs.client.factory
 
 import akka.actor.typed.ActorRef
 import akka.actor.{ActorSystem, CoordinatedShutdown}

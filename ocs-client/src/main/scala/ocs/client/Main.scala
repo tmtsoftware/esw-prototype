@@ -1,12 +1,11 @@
-package ocs.framework
-
+package ocs.client
 import ammonite.util.Res
 import csw.logging.scaladsl.LoggingSystemFactory
 
-object TestAmmoniteApp {
+object Main {
 
   def main(args: Array[String]): Unit = {
-    val wiring = new TestAmmoniteWiring()
+    val wiring = new Wiring()
     import wiring._
     LoggingSystemFactory.start("sample", "", "", system)
 

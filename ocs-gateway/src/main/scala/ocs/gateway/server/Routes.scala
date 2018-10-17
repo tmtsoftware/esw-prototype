@@ -14,7 +14,7 @@ import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import ocs.api._
 import ocs.api.codecs.SequencerJsonSupport
 import ocs.api.models._
-import ocs.factory.{ComponentFactory, LocationServiceWrapper}
+import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.gateway.assembly.{AssemblyService, PositionTracker}
 import ocs.gateway.{EventMonitor, SequencerMonitor}
 import play.api.libs.json.Json
