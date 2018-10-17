@@ -14,11 +14,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceWrapper(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
-  def register(componentName: String, componentType: ComponentType, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
+  def registerSequencer(prefix: Prefix, componentName: String, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
     val registration =
       AkkaRegistration(
-        AkkaConnection(ComponentId(componentName, componentType)),
-        Prefix("sequencer"),
+        AkkaConnection(ComponentId(componentName, ComponentType.Sequencer)),
+        prefix,
         supervisorRef,
       )
 
@@ -55,10 +55,6 @@ class LocationServiceWrapper(locationService: LocationService, system: ActorSyst
           Future { RedisURI.Builder.sentinel(tcpLocation.uri.getHost, tcpLocation.uri.getPort, masterId).build() }
         case None => throw new IllegalArgumentException(s"Could not find component - Event server")
       }
-  }
-
-  def akkaLocationFor(assemblyName: String): Future[AkkaLocation] = {
-    resolve(assemblyName, ComponentType.Assembly)(akkaLocation => akkaLocation)
   }
 
   def listSequencers(): Future[List[Location]] = locationService.list(ComponentType.Sequencer)

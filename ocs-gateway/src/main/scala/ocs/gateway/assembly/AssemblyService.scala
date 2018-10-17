@@ -28,7 +28,7 @@ class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentF
   private val nameKey                   = StringKey.make("name")
 
   def oneway(assemblyName: String, component: RequestComponent): Future[CommandResponse] = {
-    componentFactory.assembly(assemblyName).flatMap { cs =>
+    componentFactory.assemblyCommandService(assemblyName).flatMap { cs =>
       component match {
         case RequestComponent.FilterWheel(name) =>
           cs.oneway(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))
@@ -40,7 +40,7 @@ class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentF
 
   def subscribe(assemblyName: String, stateMatcher: StateMatcher): Source[CurrentState, NotUsed] = {
     Source
-      .fromFuture(locationServiceGateway.akkaLocationFor(assemblyName))
+      .fromFuture(componentFactory.assemblyLocation(assemblyName))
       .flatMapConcat { akkaLocation =>
         Source
           .actorRef[CurrentState](256, OverflowStrategy.fail)
@@ -48,7 +48,7 @@ class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentF
             akkaLocation.typedRef[ComponentMessage] ! ComponentStateSubscription(Subscribe(ref))
           }
       }
-      .filter(cs ⇒ cs.stateName.name == stateMatcher.stateName && cs.prefixStr == stateMatcher.prefix)
+      .filter(cs ⇒ cs.stateName == stateMatcher.stateName && cs.prefix == stateMatcher.prefix)
       .takeWhile(x => !stateMatcher.check(x), inclusive = true)
   }
 }

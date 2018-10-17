@@ -154,7 +154,7 @@ class Routes(
         }
       } ~
       pathPrefix("assembly" / Segment) { assemblyName =>
-        val commandService = componentFactory.assembly(assemblyName)
+        val commandService = componentFactory.assemblyCommandService(assemblyName)
         get {
           path("track") {
             complete(positionTracker.track(assemblyName).map(x => Json.toJson(x).toString()).map(x => ServerSentEvent(x)))

@@ -1,7 +1,7 @@
 package ocs.framework
 
-import csw.location.api.models.ComponentType
 import csw.logging.scaladsl.LoggingSystemFactory
+import csw.params.core.models.Prefix
 import ocs.api.SequencerUtil
 
 object SequencerApp {
@@ -12,9 +12,9 @@ object SequencerApp {
     LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequencer, script)
 
-    locationServiceWrapper.register(
+    locationServiceWrapper.registerSequencer(
+      Prefix("sequencer"),
       SequencerUtil.getComponentName(sequencerId, observingMode),
-      ComponentType.Sequencer,
       supervisorRef
     )
 
