@@ -4,11 +4,11 @@ import ocs.api.models.{AggregateResponse, Sequence}
 
 import scala.concurrent.Future
 
-trait SequenceFeeder {
+trait SequencerCommandService {
   def submit(commandList: Sequence): Future[AggregateResponse]
 }
 
-object SequenceFeeder {
+object SequencerCommandService {
   val ApiName = "feeder"
   val Feed    = "feed"
 }

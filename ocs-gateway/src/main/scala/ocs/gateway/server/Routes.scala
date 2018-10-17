@@ -79,9 +79,9 @@ class Routes(
             }
           }
         } ~
-        pathPrefix(SequenceFeeder.ApiName) {
+        pathPrefix(SequencerCommandService.ApiName) {
           post {
-            path(SequenceFeeder.Feed) {
+            path(SequencerCommandService.Feed) {
               entity(as[Sequence]) { commandList =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
                   validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {

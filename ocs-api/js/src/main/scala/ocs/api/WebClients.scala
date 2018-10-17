@@ -1,6 +1,6 @@
 package ocs.api
 
-import ocs.api.client.{AssemblyFeederJsClient, ListComponentsJsClient, SequenceEditorJsClient, SequenceFeederJsClient}
+import ocs.api.client.{AssemblyFeederJsClient, ListComponentsJsClient, SequenceEditorJsClient, SequencerCommandServiceJsClient}
 import ocs.api.models.SequencerInfo
 import org.scalajs.dom.raw.EventSource
 
@@ -14,7 +14,8 @@ object WebClients {
   def assemblyCommandClient(assemblyName: String): AssemblyFeederJsClient =
     new AssemblyFeederJsClient(new WebGateway(s"$gatewayHost/assembly/$assemblyName/"))
 
-  def feeder(sequencerInfo: SequencerInfo): SequenceFeederJsClient = new SequenceFeederJsClient(makeGateway(sequencerInfo))
+  def feeder(sequencerInfo: SequencerInfo): SequencerCommandServiceJsClient =
+    new SequencerCommandServiceJsClient(makeGateway(sequencerInfo))
   def editor(sequencerInfo: SequencerInfo): SequenceEditorJsClient = new SequenceEditorJsClient(makeGateway(sequencerInfo))
   def results(sequencerInfo: SequencerInfo): EventSource           = makeGateway(sequencerInfo).source(SequenceResultsWeb.results)
 

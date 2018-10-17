@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.events.{Event, EventKey}
-import ocs.api.{SequenceEditor, SequenceFeeder}
+import ocs.api.{SequenceEditor, SequencerCommandService}
 import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.framework.ScriptImports.toDuration
 import ocs.framework.core.SequenceOperator
@@ -36,7 +36,7 @@ class CswServices(
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
 
-  def sequenceFeeder(subSystemSequencerId: String): Future[SequenceFeeder] =
+  def sequenceFeeder(subSystemSequencerId: String): Future[SequencerCommandService] =
     componentFactory.sequenceFeeder(subSystemSequencerId, observingMode)
 
   def sequenceEditor(subSystemSequencerId: String): Future[SequenceEditor] =

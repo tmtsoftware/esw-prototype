@@ -4,7 +4,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
-import ocs.api.SequenceFeeder
+import ocs.api.SequencerCommandService
 import ocs.api.messages.SupervisorMsg
 import ocs.api.models.{AggregateResponse, Sequence}
 import ocs.api.messages.SequencerMsg.ProcessSequence
@@ -13,7 +13,8 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
-class SequenceFeederJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceFeeder {
+class SequencerCommandServiceJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem)
+    extends SequencerCommandService {
   private implicit val timeout: Timeout     = Timeout(10.hour)
   private implicit val scheduler: Scheduler = system.scheduler
 

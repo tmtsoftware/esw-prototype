@@ -2,7 +2,7 @@ package ocs.framework
 
 import akka.actor.typed.ActorRef
 import ammonite.sshd._
-import ocs.api.{SequenceEditor, SequenceFeeder}
+import ocs.api.{SequenceEditor, SequencerCommandService}
 import ocs.api.messages.SupervisorMsg
 import ocs.framework.core.SequenceOperator
 import ocs.framework.dsl.CswServices
@@ -14,7 +14,7 @@ class RemoteRepl(
     commandService: CswServices,
     sequencer: SequenceOperator,
     supervisor: ActorRef[SupervisorMsg],
-    sequenceFeeder: SequenceFeeder,
+    sequencerCommandService: SequencerCommandService,
     sequenceEditor: SequenceEditor,
     rpcConfigs: Configs
 ) {
@@ -39,11 +39,11 @@ class RemoteRepl(
          |}
       """.stripMargin,
     replArgs = Seq(
-      "cs"             -> commandService,
-      "sequencer"      -> sequencer,
-      "sequenceFeeder" -> sequenceFeeder,
-      "sequenceEditor" -> sequenceEditor,
-      "supervisor"     -> supervisor
+      "cs"                      -> commandService,
+      "sequencer"               -> sequencer,
+      "sequencerCommandService" -> sequencerCommandService,
+      "sequenceEditor"          -> sequenceEditor,
+      "supervisor"              -> supervisor
     )
   )
 }

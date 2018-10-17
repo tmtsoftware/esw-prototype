@@ -8,7 +8,7 @@ import csw.event.api.scaladsl.EventSubscription
 import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
-import ocs.api.SequenceFeeder
+import ocs.api.SequencerCommandService
 import ocs.api.messages.SequencerMsg
 import ocs.api.models.{AggregateResponse, Sequence}
 import ocs.framework.dsl.CswServices
@@ -18,7 +18,7 @@ import sequencer.macros.StrandEc
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-object SequenceFeederMock extends SequenceFeeder {
+object SequencerCommandServiceMock$ extends SequencerCommandService {
   override def submit(commandList: Sequence): Future[AggregateResponse] = Future.successful(
     AggregateResponse(CommandResponse.Completed(Id("dummy-id")))
   )
@@ -38,7 +38,8 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
     extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
-  override def sequenceFeeder(subSystemSequencerId: String): Future[SequenceFeeder]                       = Future.successful(SequenceFeederMock)
+  override def sequenceFeeder(subSystemSequencerId: String): Future[SequencerCommandService] =
+    Future.successful(SequencerCommandServiceMock$)
   override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
   override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
   override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF

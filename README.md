@@ -7,16 +7,21 @@
 * ocs-framework
 * ocs-react4s-app
 * ocs-gateway
+* ocs-client
+* ocs-react-app
+* ocs-testkit
+* react4s-facade
+
 
 ## Build Instructions
 
 The build is based on sbt and depends on libraries published to bintray from the 
-[csw-prod](https://github.com/tmtsoftware/csw-prod) project.
+[csw](https://github.com/tmtsoftware/csw) project.
 
 
 ## Pre-requisites before running Components
 
-run csw-services.sh script
+run csw-services.sh script using [tmt-deploy readme](https://github.com/tmtsoftware/tmt-deploy)
     - Clone csw-prod
     ```git checkout <sha>```
      (sha is mentioned in Libs.scala for csw-prod dependencies)
@@ -69,9 +74,25 @@ e.g - localhost:8080 (with webpack dev server)
 OR
 Open index.html from intelliJ
  
-## Run typescript app
+## Run typescript app (ocs-react-app)
 
 ```javascript 
 npm install
 npm start
 ```
+
+## ocs-client
+ocs-client module exposes componentFactory which is simpler API for resolving assembly or sequencer
+It also provides standalone app which grants access to components registered with Location service via componentFactory 
+
+```sbtshell
+sbt ocs-client/run
+```
+
+## ocs-testkit
+It provides mocks for cswServices and sequencerCommandService. It allows to unit test scripts logic by mocking cswServices.
+Find sample unit test case for script for iris [here](https://github.com/tmtsoftware/sequencer-scripts/blob/master/tests/iris/IrisSharedTest.scala)
+
+
+## react4s-facade
+This module provides facade/interface for reactJs and react-dom javascript libraries to be used in ScalaJs.
