@@ -5,10 +5,10 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import akka.util.Timeout
-import csw.command.api.scaladsl.StateMatcher
-import csw.command.client.internal.messages.ComponentCommonMessage.ComponentStateSubscription
-import csw.command.client.internal.messages.ComponentMessage
-import csw.command.client.internal.models.framework.PubSub.Subscribe
+import csw.command.api.StateMatcher
+import csw.command.client.messages.ComponentCommonMessage.ComponentStateSubscription
+import csw.command.client.messages.ComponentMessage
+import csw.command.client.models.framework.PubSub.Subscribe
 import csw.params.commands.{CommandName, CommandResponse, Setup}
 import csw.params.core.generics.KeyType.StringKey
 import csw.params.core.models.Prefix
@@ -31,9 +31,9 @@ class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentF
     componentFactory.assemblyCommandService(assemblyName).flatMap { cs =>
       component match {
         case RequestComponent.FilterWheel(name) =>
-          cs.oneway(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))
+          cs.send(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))
         case RequestComponent.Disperser(name) =>
-          cs.oneway(Setup(prefix, CommandName("disperser-move"), None, Set(nameKey.set(name))))
+          cs.send(Setup(prefix, CommandName("disperser-move"), None, Set(nameKey.set(name))))
       }
     }
   }
