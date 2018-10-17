@@ -23,7 +23,7 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
     locationService.resolve(assemblyName, ComponentType.Assembly)(identity)
   }
 
-  def sequenceFeeder(sequencerId: String, observingMode: String): Future[SequencerCommandService] = {
+  def sequenceCommandService(sequencerId: String, observingMode: String): Future[SequencerCommandService] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
       val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
