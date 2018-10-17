@@ -66,7 +66,7 @@ class Routes(
         }
       } ~
       pathPrefix("sequencer" / Segment / Segment) { (sequencerId, observingMode) =>
-        val sequenceFeeder = componentFactory.sequenceFeeder(sequencerId, observingMode)
+        val sequenceFeeder = componentFactory.sequenceCommandService(sequencerId, observingMode)
         val sequenceEditor = componentFactory.sequenceEditor(sequencerId, observingMode)
 
         get {

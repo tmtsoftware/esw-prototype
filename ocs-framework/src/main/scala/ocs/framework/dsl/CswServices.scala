@@ -37,7 +37,7 @@ class CswServices(
   }
 
   def sequenceFeeder(subSystemSequencerId: String): Future[SequencerCommandService] =
-    componentFactory.sequenceFeeder(subSystemSequencerId, observingMode)
+    componentFactory.sequenceCommandService(subSystemSequencerId, observingMode)
 
   def sequenceEditor(subSystemSequencerId: String): Future[SequenceEditor] =
     componentFactory.sequenceEditor(subSystemSequencerId, observingMode)
