@@ -19,7 +19,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 object SequenceFeederMock extends SequenceFeeder {
-  override def feed(commandList: Sequence): Future[Unit] = Future.successful(())
   override def submit(commandList: Sequence): Future[AggregateResponse] = Future.successful(
     AggregateResponse(CommandResponse.Completed(Id("dummy-id")))
   )

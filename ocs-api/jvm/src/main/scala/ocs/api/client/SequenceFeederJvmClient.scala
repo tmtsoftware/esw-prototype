@@ -19,11 +19,6 @@ class SequenceFeederJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
 
   import system.dispatcher
 
-  override def feed(commandList: Sequence): Future[Unit] = {
-    submit(commandList)
-    Future.successful(())
-  }
-
   override def submit(commandList: Sequence): Future[AggregateResponse] = {
     val future: Future[Try[AggregateResponse]] = supervisor ? (x => ProcessSequence(commandList.commands.toList, x))
     future.map(_.get)

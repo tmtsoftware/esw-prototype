@@ -85,7 +85,7 @@ class Routes(
               entity(as[Sequence]) { commandList =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
                   validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {
-                    sequenceFeeder.map(_.feed(commandList))
+                    sequenceFeeder.foreach(_.submit(commandList))
                     complete(HttpResponse(StatusCodes.Accepted, entity = "Done"))
                   }
                 }
