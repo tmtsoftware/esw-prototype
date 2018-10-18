@@ -39,7 +39,7 @@ object Csw {
 }
 
 object Ammonite {
-  val Version = "1.2.1-16-48ce533"
+  val Version = "1.3.0"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
