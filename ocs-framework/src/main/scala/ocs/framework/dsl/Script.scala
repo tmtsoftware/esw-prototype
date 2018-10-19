@@ -1,5 +1,6 @@
 package ocs.framework.dsl
 
+import akka.Done
 import akka.util.Timeout
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, Observe, SequenceCommand, Setup}
@@ -19,11 +20,11 @@ abstract class Script(csw: CswServices) extends ControlDsl {
       if (hasNext) Some(csw.sequencer.next.await.command) else None
     }
 
-  protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
+  protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[Done]] = new FunctionBuilder
 
-  private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = commandHandlerBuilder.build { input =>
+  private lazy val commandHandler: SequenceCommand => Future[Done] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
-    spawn(AggregateResponse())
+    spawn(Done)
   }
 
   def execute(command: SequenceCommand): Future[SubmitResponse] = {
@@ -35,10 +36,10 @@ abstract class Script(csw: CswServices) extends ControlDsl {
 
   def callback: SubmitResponse => Unit = response => CommandResponse.isFinal(response)
 
-  private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[AggregateResponse]): Unit = {
+  private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[Done]): Unit = {
     commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
   }
 
-  protected def handleSetupCommand(name: String)(handler: Setup => Future[AggregateResponse]): Unit     = handle(name)(handler)
-  protected def handleObserveCommand(name: String)(handler: Observe => Future[AggregateResponse]): Unit = handle(name)(handler)
+  protected def handleSetupCommand(name: String)(handler: Setup => Future[Done]): Unit     = handle(name)(handler)
+  protected def handleObserveCommand(name: String)(handler: Observe => Future[Done]): Unit = handle(name)(handler)
 }

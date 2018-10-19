@@ -47,6 +47,8 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
       response
+
+      Done
     }
   }
 
@@ -79,6 +81,8 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
       response
+
+      Done
     }
   }
 
@@ -89,10 +93,9 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       tcs.await.submit(Sequence.from(command)).await
 
       val response = AggregateResponse(Completed(command.runId))
-
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
-      response
+      Done
     }
   }
 

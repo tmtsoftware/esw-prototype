@@ -23,11 +23,14 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         Set(csw.submit("Sample1Assembly", command3).await)
       }
 
-      val response = AggregateResponse(Completed(command.runId))
+//      val response = AggregateResponse(firstAssemblyResponse)
+//        .add(restAssemblyResponses)
+//        .markSuccessful(command)
 
-      println(s"[Tcs] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      println(s"[Tcs] Received response: $firstAssemblyResponse")
+      csw.sendResult(s"$firstAssemblyResponse")
+      firstAssemblyResponse
+      Done
     }
   }
 }
