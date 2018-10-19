@@ -1,6 +1,7 @@
 package ocs.framework.core
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
+import csw.params.commands.CommandResponse.SubmitResponse
 import ocs.api.messages.SequencerMsg
 import ocs.api.messages.SequencerMsg._
 import ocs.api.models.{AggregateResponse, Step, StepList, StepStatus}
@@ -35,9 +36,9 @@ object SequencerBehaviour {
       replyTo ! inFlightStep
     }
 
-    def update(_aggregateResponse: AggregateResponse): Unit = {
-      sequence = sequence.updateStatus(_aggregateResponse.ids, StepStatus.Finished)
-      aggregateResponse = aggregateResponse.merge(_aggregateResponse)
+    def update(_submitResponse: SubmitResponse): Unit = {
+      sequence = sequence.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
+      aggregateResponse = aggregateResponse.merge(_submitResponse)
       clearSequenceIfFinished()
     }
 
