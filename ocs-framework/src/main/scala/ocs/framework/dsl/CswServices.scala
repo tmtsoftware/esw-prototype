@@ -46,7 +46,7 @@ class CswServices(
   def sequenceEditor(subSystemSequencerId: String): Future[SequenceEditor] =
     componentFactory.sequenceEditor(subSystemSequencerId, observingMode)
 
-  def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse] = {
+  def submit(assemblyName: String, command: ControlCommand): Future[SubmitResponse] = {
     componentFactory.assemblyCommandService(assemblyName).flatMap(_.submit(command))(system.dispatcher)
   }
 

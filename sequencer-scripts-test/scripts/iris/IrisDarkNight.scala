@@ -1,5 +1,6 @@
 package iris
 
+import csw.params.commands.CommandResponse.SubmitResponse
 import ocs.framework.ScriptImports._
 import ocs.framework.dsl
 
@@ -26,7 +27,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
   handleSetupCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
-      var firstAssemblyResponse: CommandResponse = null
+      var firstAssemblyResponse: SubmitResponse = null
       loop {
         spawn {
           firstAssemblyResponse = csw.submit("Sample1Assembly", command).await
@@ -34,11 +35,8 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
         }
       }.await
 
-      val response = AggregateResponse(Completed(command.runId))
-
-      println(s"[Iris] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      csw.addOrUpdateCommand(command.runId, firstAssemblyResponse)
+      Done
     }
   }
 

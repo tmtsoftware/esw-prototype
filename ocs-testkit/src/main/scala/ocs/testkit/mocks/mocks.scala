@@ -5,6 +5,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, Cancellable}
 import csw.event.api.scaladsl.EventSubscription
+import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, ControlCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
@@ -37,10 +38,11 @@ object CancellableMock extends Cancellable {
 class CswServicesMock(sequencerId: String, observingMode: String, sequencer: SequenceOperator)(implicit system: ActorSystem)
     extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
+  val submitResponseF: Future[SubmitResponse]   = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
   override def sequencerCommandService(subSystemSequencerId: String): Future[SequencerCommandService] =
     Future.successful(SequencerCommandServiceMock$)
-  override def submit(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
+  override def submit(assemblyName: String, command: ControlCommand): Future[SubmitResponse]              = submitResponseF
   override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
   override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
   override def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription =
