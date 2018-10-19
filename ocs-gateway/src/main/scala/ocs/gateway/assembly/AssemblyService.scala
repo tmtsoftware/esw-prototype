@@ -31,9 +31,9 @@ class AssemblyService(locationServiceGateway: LocationServiceWrapper, componentF
     componentFactory.assemblyCommandService(assemblyName).flatMap { cs =>
       component match {
         case RequestComponent.FilterWheel(name) =>
-          cs.send(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))
+          cs.oneway(Setup(prefix, CommandName("filter-move"), None, Set(nameKey.set(name))))
         case RequestComponent.Disperser(name) =>
-          cs.send(Setup(prefix, CommandName("disperser-move"), None, Set(nameKey.set(name))))
+          cs.oneway(Setup(prefix, CommandName("disperser-move"), None, Set(nameKey.set(name))))
       }
     }
   }

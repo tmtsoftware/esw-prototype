@@ -47,10 +47,10 @@ class CswServices(
   }
 
   def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.assemblyCommandService(assemblyName).flatMap(_.submitAndComplete(command))(system.dispatcher)
+    componentFactory.assemblyCommandService(assemblyName).flatMap(_.submit(command))(system.dispatcher)
 
   def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse] =
-    componentFactory.assemblyCommandService(assemblyName).flatMap(_.send(command))(system.dispatcher)
+    componentFactory.assemblyCommandService(assemblyName).flatMap(_.oneway(command))(system.dispatcher)
 
   def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription = {
     println(s"==========================> Subscribing event $eventKeys")

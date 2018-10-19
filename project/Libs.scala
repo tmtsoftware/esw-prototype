@@ -27,7 +27,7 @@ object Enumeratum {
 
 object Csw {
   private val Org     = "com.github.tmtsoftware.csw"
-  private val Version = "10e96b804" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
+  private val Version = "1f24aa7cd" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
 
   val `csw-location-client` = Org %% "csw-location-client" % Version
   val `csw-command-client`  = Org %% "csw-command-client"  % Version
@@ -39,7 +39,7 @@ object Csw {
 }
 
 object Ammonite {
-  val Version = "1.3.0"
+  val Version = "1.3.2"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
