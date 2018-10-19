@@ -4,8 +4,11 @@ import akka.Done
 import akka.actor.{ActorSystem, Cancellable}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
+import csw.command.client.{CommandResponseManager, CommandResponseSubscription}
 import csw.event.api.scaladsl.{EventService, EventSubscription}
+import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, ControlCommand}
+import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.{SequenceEditor, SequencerCommandService}
 import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
@@ -25,7 +28,8 @@ class CswServices(
     componentFactory: ComponentFactory,
     locationService: LocationServiceWrapper,
     eventService: EventService,
-    romaineFactory: RomaineFactory
+    romaineFactory: RomaineFactory,
+    commandResponseManager: CommandResponseManager
 )(implicit system: ActorSystem) {
 
   private lazy val masterId: String = ConfigFactory.load().getString("csw-event.redis.masterId")
@@ -36,7 +40,7 @@ class CswServices(
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
 
-  def sequenceFeeder(subSystemSequencerId: String): Future[SequencerCommandService] =
+  def sequencerCommandService(subSystemSequencerId: String): Future[SequencerCommandService] =
     componentFactory.sequenceCommandService(subSystemSequencerId, observingMode)
 
   def sequenceEditor(subSystemSequencerId: String): Future[SequenceEditor] =
@@ -69,5 +73,21 @@ class CswServices(
 
   def sendResult(msg: String): Future[Done] = {
     redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
+  }
+
+  def addOrUpdateCommand(runId: Id, cmdStatus: SubmitResponse): Unit = {
+    commandResponseManager.addOrUpdateCommand(runId, cmdStatus)
+  }
+
+  def addSubCommand(parentRunId: Id, childRunId: Id): Unit = {
+    commandResponseManager.addSubCommand(parentRunId, childRunId)
+  }
+
+  def updateSubCommand(subCommandId: Id, cmdStatus: SubmitResponse): Unit = {
+    commandResponseManager.updateSubCommand(subCommandId, cmdStatus)
+  }
+
+  def queryFinalCommandStatus(runId: Id)(implicit timeout: Timeout): Future[SubmitResponse] = {
+    commandResponseManager.queryFinal(runId)
   }
 }

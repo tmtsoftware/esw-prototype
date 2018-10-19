@@ -5,8 +5,8 @@ import ocs.framework.dsl
 
 class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
-  private val iris = csw.sequenceFeeder("iris")
-  private val tcs  = csw.sequenceFeeder("tcs")
+  private val iris = csw.sequencerCommandService("iris")
+  private val tcs  = csw.sequencerCommandService("tcs")
 
   private var eventCount   = 0
   private var commandCount = 0

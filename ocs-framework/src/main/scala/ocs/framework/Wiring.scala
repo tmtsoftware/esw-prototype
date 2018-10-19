@@ -5,11 +5,15 @@ import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{typed, ActorSystem}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
+import csw.command.client.CommandResponseManager
+import csw.command.client.internal.CommandResponseManagerFactory
+import csw.command.client.messages.CommandResponseManagerMessage
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
+import csw.logging.scaladsl.LoggerFactory
 import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
@@ -47,14 +51,22 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val redisClient: RedisClient       = RedisClient.create()
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
+  private val loggerFactory                                = new LoggerFactory("sequencer")
+  private val crmFactory                                   = new CommandResponseManagerFactory()
+  lazy val crmRef: ActorRef[CommandResponseManagerMessage] = system.spawn(crmFactory.makeBehavior(loggerFactory), "crm")
+  lazy val commandResponseManager: CommandResponseManager  = crmFactory.make(crmRef)
+
   lazy val cswServices =
-    new CswServices(sequencerId,
-                    observingMode,
-                    sequencer,
-                    sequencerApiWrapper,
-                    locationServiceWrapper,
-                    eventService,
-                    romaineFactory)
+    new CswServices(
+      sequencerId,
+      observingMode,
+      sequencer,
+      sequencerApiWrapper,
+      locationServiceWrapper,
+      eventService,
+      romaineFactory,
+      commandResponseManager
+    )
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
