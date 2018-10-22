@@ -1,5 +1,6 @@
 package tcs
 
+import csw.params.commands.CommandResponse.Completed
 import ocs.framework.ScriptImports._
 import ocs.framework.dsl
 
@@ -15,7 +16,7 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       val firstAssemblyResponse = csw.submit("Sample1Assembly", command).await
       val commandFailed         = firstAssemblyResponse.isInstanceOf[CommandResponse.Error]
 
-      val restAssemblyResponses = if (commandFailed) {
+      if (commandFailed) {
         val command2 = Setup(Prefix("test-command2"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))
         Set(csw.submit("Sample1Assembly", command2).await)
       } else {
@@ -23,8 +24,7 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         Set(csw.submit("Sample1Assembly", command3).await)
       }
 
-      val response = AggregateResponse(firstAssemblyResponse)
-        .add(restAssemblyResponses)
+      val response = AggregateResponse(Completed(command.runId))
         .markSuccessful(command)
 
       println(s"[Tcs] Received response: $response")
