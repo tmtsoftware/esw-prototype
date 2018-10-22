@@ -26,10 +26,9 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
     spawn {
       println(s"[Ocs] Received command: ${commandA.commandName}")
       csw.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
-      val maybeCommandB             = nextIf(c => c.commandName.name == "setup-iris").await
-      var commandB: SequenceCommand = null
+      val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
-        commandB = maybeCommandB.get
+        val commandB  = maybeCommandB.get
         val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
         CommandList.from(commandB, commandB1)
       } else CommandList.empty
@@ -38,7 +37,13 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
       iris.await.submit(commandList).await
 
-      val response = AggregateResponse(Completed(commandA.runId), Completed(commandB.runId))
+      val commandAResponse = Completed(commandA.runId)
+
+      val response = if (maybeCommandB.isDefined) {
+        AggregateResponse(commandAResponse, Completed(maybeCommandB.get.runId))
+      } else {
+        AggregateResponse(commandAResponse)
+      }
 
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
@@ -48,10 +53,9 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
   handleSetupCommand("setup-iris-tcs") { commandC =>
     spawn {
-      val maybeCommandD             = nextIf(c2 => c2.commandName.name == "setup-iris-tcs").await
-      var commandD: SequenceCommand = null
+      val maybeCommandD = nextIf(c2 => c2.commandName.name == "setup-iris-tcs").await
       val tcsSequence = if (maybeCommandD.isDefined) {
-        commandD = maybeCommandD.get
+        val commandD = maybeCommandD.get
         CommandList.from(commandD)
       } else {
         CommandList.empty
@@ -65,7 +69,13 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         tcs.await.submit(tcsSequence)
       ).await
 
-      val response = AggregateResponse(Completed(commandC.runId), Completed(commandD.runId))
+      val commandCResponse = Completed(commandC.runId)
+
+      val response = if (maybeCommandD.isDefined) {
+        AggregateResponse(commandCResponse, Completed(maybeCommandD.get.runId))
+      } else {
+        AggregateResponse(commandCResponse)
+      }
 
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
