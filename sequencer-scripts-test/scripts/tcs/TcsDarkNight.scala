@@ -1,6 +1,5 @@
 package tcs
 
-import csw.params.commands.CommandResponse.Completed
 import ocs.framework.ScriptImports._
 import ocs.framework.dsl
 

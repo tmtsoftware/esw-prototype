@@ -34,7 +34,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
         }
       }.await
 
-      val response = AggregateResponse(CommandResponse.Completed(command.runId))
+      val response = AggregateResponse(Completed(command.runId))
 
       println(s"[Iris] Received response: $response")
       csw.sendResult(s"$response")
