@@ -18,7 +18,7 @@ trait ControlDsl {
 
   protected def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
     val aggregateResponses = Future.sequence(fs.toSet).await
-    aggregateResponses.foldLeft(AggregateResponse.empty)(_ add _)
+    aggregateResponses.foldLeft(AggregateResponse())(_ merge _)
   }
 
   protected implicit class RichF[T](t: Future[T]) {

@@ -25,7 +25,6 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       }
 
       val response = AggregateResponse(Completed(command.runId))
-        .markSuccessful(command)
 
       println(s"[Tcs] Received response: $response")
       csw.sendResult(s"$response")

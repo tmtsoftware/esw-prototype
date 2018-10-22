@@ -20,7 +20,7 @@ abstract class Script(csw: CswServices) extends ControlDsl {
 
   private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
-    spawn(AggregateResponse.empty)
+    spawn(AggregateResponse())
   }
 
   def execute(command: SequenceCommand): Future[AggregateResponse] = spawn(commandHandler(command).await)
