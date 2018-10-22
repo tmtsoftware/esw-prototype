@@ -38,7 +38,7 @@ object SequencerBehaviour {
 
     def update(_submitResponse: SubmitResponse): Unit = {
       sequence = sequence.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
-      aggregateResponse = aggregateResponse.merge(_submitResponse)
+      aggregateResponse = aggregateResponse.merge(AggregateResponse(_submitResponse))
       clearSequenceIfFinished()
     }
 

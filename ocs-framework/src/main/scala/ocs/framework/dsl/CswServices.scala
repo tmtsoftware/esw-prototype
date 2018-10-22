@@ -4,7 +4,7 @@ import akka.Done
 import akka.actor.{ActorSystem, Cancellable}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-import csw.command.client.{CommandResponseManager, CommandResponseSubscription}
+import csw.command.client.CommandResponseManager
 import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, ControlCommand}

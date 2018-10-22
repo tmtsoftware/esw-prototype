@@ -4,7 +4,6 @@ import akka.Done
 import akka.util.Timeout
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, Observe, SequenceCommand, Setup}
-import ocs.api.models.AggregateResponse
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
