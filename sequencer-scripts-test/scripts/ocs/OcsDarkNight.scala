@@ -46,7 +46,6 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
-      response
 
       Done
     }
@@ -80,7 +79,6 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
       println(s"[Ocs] Received response: $response")
       csw.sendResult(s"$response")
-      response
 
       Done
     }

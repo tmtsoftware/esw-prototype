@@ -29,7 +29,6 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
       println(s"[Tcs] Received response: $firstAssemblyResponse")
       csw.sendResult(s"$firstAssemblyResponse")
-      firstAssemblyResponse
       Done
     }
   }
