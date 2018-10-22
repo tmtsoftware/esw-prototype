@@ -1,4 +1,5 @@
 package ocs.client
+import akka.actor.CoordinatedShutdown
 import ammonite.util.Res
 
 object Main {
@@ -27,7 +28,6 @@ object Main {
         "componentFactory" -> componentFactory
       )
 
-    println(paths)
-    println(result.asInstanceOf[Res.Exception].t.printStackTrace())
+    CoordinatedShutdown(system).run(CoordinatedShutdown.JvmExitReason)
   }
 }

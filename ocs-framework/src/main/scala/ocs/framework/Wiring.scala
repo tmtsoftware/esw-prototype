@@ -58,8 +58,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] = system.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
-  lazy val sequenceEditor: SequenceEditor          = new SequenceEditorJvmClient(supervisorRef)
-  lazy val sequenceFeeder: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
+  lazy val sequenceEditor: SequenceEditor                   = new SequenceEditorJvmClient(supervisorRef)
+  lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
 
-  lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequenceFeeder, sequenceEditor, configs)
+  lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequencerCommandService, sequenceEditor, configs)
 }
