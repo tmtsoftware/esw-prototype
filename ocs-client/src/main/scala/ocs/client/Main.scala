@@ -36,6 +36,8 @@ object Main {
         "componentFactory" -> componentFactory,
         "locationService"  -> locationService,
         "eventService"     -> eventService,
+        "subscriber"       -> eventService.defaultSubscriber,
+        "publisher"        -> eventService.defaultPublisher,
         "materializer"     -> materializer
       )
 
