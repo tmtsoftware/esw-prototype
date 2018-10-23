@@ -35,7 +35,10 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy implicit val materializer: Materializer              = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext      = system.dispatcher
 
-  lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
+  lazy val crmRef: ActorRef[CommandResponseManagerMessage] = system.spawn(crmFactory.makeBehavior(loggerFactory), "crm")
+  lazy val commandResponseManager: CommandResponseManager  = crmFactory.make(crmRef)
+
+  lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior(crmRef), "sequencer")
   lazy val sequencer                            = new SequenceOperator(sequencerRef, system)
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
@@ -51,10 +54,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val redisClient: RedisClient       = RedisClient.create()
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
-  private val loggerFactory                                = new LoggerFactory("sequencer")
-  private val crmFactory                                   = new CommandResponseManagerFactory()
-  lazy val crmRef: ActorRef[CommandResponseManagerMessage] = system.spawn(crmFactory.makeBehavior(loggerFactory), "crm")
-  lazy val commandResponseManager: CommandResponseManager  = crmFactory.make(crmRef)
+  private val loggerFactory = new LoggerFactory("sequencer")
+  private val crmFactory    = new CommandResponseManagerFactory()
 
   lazy val cswServices =
     new CswServices(

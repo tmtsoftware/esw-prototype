@@ -1,13 +1,11 @@
 package ocs.framework.dsl
 
 import akka.Done
-import akka.util.Timeout
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, Observe, SequenceCommand, Setup}
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
 import scala.reflect.ClassTag
 
 //constructor takes cswService instead of sequencer so that it is a bit easier for script-writer to pass as an argument to super
@@ -26,12 +24,7 @@ abstract class Script(csw: CswServices) extends ControlDsl {
     spawn(Done)
   }
 
-  def execute(command: SequenceCommand): Future[SubmitResponse] = {
-    implicit val timeout: Timeout = Timeout(10.seconds)
-    csw.addOrUpdateCommand(command.runId, CommandResponse.Started(command.runId))
-    spawn(commandHandler(command))
-    csw.queryFinalCommandStatus(command.runId)
-  }
+  def execute(command: SequenceCommand): Future[Done] = spawn(commandHandler(command).await)
 
   def callback: SubmitResponse => Unit = response => CommandResponse.isFinal(response)
 
