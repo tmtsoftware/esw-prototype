@@ -12,7 +12,7 @@ import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.{SequenceEditor, SequencerCommandService}
 import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
-import ocs.framework.ScriptImports.toDuration
+import ocs.framework.ScriptImports.{toDuration, AggregateResponse}
 import ocs.framework.core.SequenceOperator
 import romaine.RomaineFactory
 import romaine.async.RedisAsyncApi
@@ -89,5 +89,15 @@ class CswServices(
 
   def queryFinalCommandStatus(runId: Id)(implicit timeout: Timeout): Future[SubmitResponse] = {
     commandResponseManager.queryFinal(runId)
+  }
+
+  def addAggregateResponse(topLevelCommandIds: Set[Id], subCommandIds: Set[Id], aggregateResponse: AggregateResponse): Unit = {
+    aggregateResponse.childResponses.foreach {
+      case response if topLevelCommandIds.contains(response.runId) =>
+        commandResponseManager.addOrUpdateCommand(response.runId, response.asInstanceOf[SubmitResponse])
+      case response if subCommandIds.contains(response.runId) =>
+        commandResponseManager.updateSubCommand(response.runId, response.asInstanceOf[SubmitResponse])
+      case _ =>
+    }
   }
 }

@@ -1,5 +1,6 @@
 package ocs.api.models
 
+import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, SequenceCommand}
 import csw.params.core.models.Id
 import ocs.api.models.StepStatus._
