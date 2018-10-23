@@ -116,6 +116,7 @@ lazy val `ocs-client` = project
     libraryDependencies ++= Seq(
       Csw.`csw-location-client`,
       Csw.`csw-command-client`,
+      Csw.`csw-event-client`,
       Csw.`romaine`,
       Ammonite.`ammonite`,
     )

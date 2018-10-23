@@ -12,6 +12,9 @@ object Main {
       .Main(
         predefCode = """
                 |import scala.concurrent.duration.Duration
+                |import scala.concurrent.duration.Duration
+                |import akka.util.Timeout
+                |import scala.concurrent.duration.DurationDouble
                 |import scala.concurrent.{Await, Future}
                 |import csw.params.core.generics.KeyType._
                 |import csw.params.commands._
@@ -22,10 +25,13 @@ object Main {
                 |implicit class RichFuture[T](val f: Future[T]) {
                 |  def get: T = Await.result(f, Duration.Inf)
                 |}
-                | """.stripMargin
+                |implicit val timeout: Timeout = Timeout(10.seconds)
+                |""".stripMargin
       )
       .run(
-        "componentFactory" -> componentFactory
+        "componentFactory" -> componentFactory,
+        "locationService"  -> locationService,
+        "eventService"     -> eventService
       )
 
     CoordinatedShutdown(system).run(CoordinatedShutdown.JvmExitReason)

@@ -3,6 +3,8 @@ package ocs.client
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
+import csw.event.api.scaladsl.EventService
+import csw.event.client.EventServiceFactory
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
@@ -19,6 +21,7 @@ class Wiring() {
   lazy implicit val executionContext: ExecutionContext = system.dispatcher
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
+  lazy val eventService: EventService                     = new EventServiceFactory().make(locationService)
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
   lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
