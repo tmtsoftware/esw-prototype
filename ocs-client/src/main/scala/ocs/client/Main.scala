@@ -17,6 +17,9 @@ object Main {
                 |import scala.concurrent.duration.DurationDouble
                 |import scala.concurrent.{Await, Future}
                 |import csw.params.core.generics.KeyType._
+                |import csw.params.events.SystemEvent
+                |import csw.params.events.EventName
+                |import csw.params.events.EventKey
                 |import csw.params.commands._
                 |import csw.params.core.models._
                 |import ocs.api.messages.SequencerMsg._
@@ -25,13 +28,15 @@ object Main {
                 |implicit class RichFuture[T](val f: Future[T]) {
                 |  def get: T = Await.result(f, Duration.Inf)
                 |}
+                |implicit val mat = materializer
                 |implicit val timeout: Timeout = Timeout(10.seconds)
                 |""".stripMargin
       )
       .run(
         "componentFactory" -> componentFactory,
         "locationService"  -> locationService,
-        "eventService"     -> eventService
+        "eventService"     -> eventService,
+        "materializer"     -> materializer
       )
 
     CoordinatedShutdown(system).run(CoordinatedShutdown.JvmExitReason)
