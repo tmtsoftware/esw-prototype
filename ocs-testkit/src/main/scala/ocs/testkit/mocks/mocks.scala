@@ -60,7 +60,7 @@ object CswServicesMock {
 
 object SequencerFactory {
   def create()(implicit system: ActorSystem): SequenceOperator = {
-    lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior, "sequencer")
+    lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior(null), "sequencer")
     new SequenceOperator(sequencerRef, system)
   }
 }
