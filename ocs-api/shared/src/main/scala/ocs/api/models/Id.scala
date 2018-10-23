@@ -1,6 +1,5 @@
 package ocs.api.models
 
-import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, SequenceCommand}
 import csw.params.core.models.Id
 import ocs.api.models.StepStatus._
@@ -27,14 +26,14 @@ object Step {
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
 }
 
-case class Sequence(commands: Seq[SequenceCommand]) {
-  def add(others: SequenceCommand*): Sequence = Sequence(commands ++ others)
-  def add(other: Sequence): Sequence          = Sequence(commands ++ other.commands)
+case class Sequence(runId: Id, commands: Seq[SequenceCommand]) {
+  def add(others: SequenceCommand*): Sequence = Sequence(runId, commands ++ others)
+  def add(other: Sequence): Sequence          = Sequence(runId, commands ++ other.commands)
 }
 
 object Sequence {
-  def from(commands: SequenceCommand*): Sequence = Sequence(commands.toList)
-  def empty: Sequence                            = Sequence(Nil)
+  def from(commands: SequenceCommand*): Sequence = Sequence(Id(), commands.toList)
+  def empty: Sequence                            = Sequence(Id(), Nil)
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
