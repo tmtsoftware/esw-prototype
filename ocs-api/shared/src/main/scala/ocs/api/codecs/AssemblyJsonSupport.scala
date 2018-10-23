@@ -3,8 +3,8 @@ package ocs.api.codecs
 import csw.params.commands.{CommandIssue, CommandResponse}
 import csw.params.core.formats.JsonSupport
 import julienrf.json.derived
-import play.api.libs.json._
 import ocs.api.models.{PositionResponse, RequestComponent}
+import play.api.libs.json._
 
 trait AssemblyJsonSupport extends JsonSupport {
   implicit lazy val commandIssueFormat: OFormat[CommandIssue]         = derived.flat.oformat((__ \ "type").format[String])
