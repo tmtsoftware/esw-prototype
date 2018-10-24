@@ -2,7 +2,6 @@ package ocs.framework.dsl
 
 import akka.Done
 import csw.params.commands.CommandResponse
-import ocs.api.models.AggregateResponse
 import sequencer.macros.{AsyncMacros, StrandEc}
 
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
@@ -16,10 +15,11 @@ trait ControlDsl {
 
   protected def par(fs: Future[CommandResponse]*): Future[Set[CommandResponse]] = Future.sequence(fs.toSet)
 
-  protected def parAggregate(fs: Future[AggregateResponse]*): Future[AggregateResponse] = spawn {
-    val aggregateResponses = Future.sequence(fs.toSet).await
-    aggregateResponses.foldLeft(AggregateResponse())(_ merge _)
-  }
+//  TODO:
+//  protected def parAggregate(fs: Future[SubmitResponse]*): Future[SubmitResponse] = spawn {
+//    val submitResponses = Future.sequence(fs.toSet).await
+//    submitResponses.foldLeft(SubmitResponse)(_ merge _)
+//  }
 
   protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await

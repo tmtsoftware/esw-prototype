@@ -29,8 +29,7 @@ object SequencerMsg {
     def replyTo: ActorRef[Try[Nothing]]
   }
 
-  case class ProcessSequence(commands: List[SequenceCommand], replyTo: ActorRef[Try[AggregateResponse]])
-      extends ExternalSequencerMsg
+  case class ProcessSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]])        extends ExternalSequencerMsg
   case class Add(commands: List[SequenceCommand], replyTo: ActorRef[Try[Unit]])                 extends ExternalSequencerMsg
   case class Pause(replyTo: ActorRef[Try[Unit]])                                                extends ExternalSequencerMsg
   case class Resume(replyTo: ActorRef[Try[Unit]])                                               extends ExternalSequencerMsg

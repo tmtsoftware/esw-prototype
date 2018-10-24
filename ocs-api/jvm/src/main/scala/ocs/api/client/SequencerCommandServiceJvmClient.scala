@@ -4,10 +4,11 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
+import csw.params.commands.CommandResponse.SubmitResponse
 import ocs.api.SequencerCommandService
-import ocs.api.messages.SupervisorMsg
-import ocs.api.models.{AggregateResponse, Sequence}
 import ocs.api.messages.SequencerMsg.ProcessSequence
+import ocs.api.messages.SupervisorMsg
+import ocs.api.models.Sequence
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
@@ -20,8 +21,8 @@ class SequencerCommandServiceJvmClient(supervisor: ActorRef[SupervisorMsg])(impl
 
   import system.dispatcher
 
-  override def submit(commandList: Sequence): Future[AggregateResponse] = {
-    val future: Future[Try[AggregateResponse]] = supervisor ? (x => ProcessSequence(commandList.commands.toList, x))
+  override def submit(sequence: Sequence): Future[SubmitResponse] = {
+    val future: Future[Try[SubmitResponse]] = supervisor ? (x => ProcessSequence(sequence, x))
     future.map(_.get)
   }
 }

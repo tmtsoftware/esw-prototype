@@ -18,7 +18,6 @@ class RemoteRepl(
     sequenceEditor: SequenceEditor,
     rpcConfigs: Configs
 ) {
-
   def server() = new SshdRepl(
     SshServerConfig(
       address = "0.0.0.0",
@@ -34,6 +33,7 @@ class RemoteRepl(
          |import ocs.api.messages.SequencerMsg._
          |import ocs.api.messages.SupervisorMsg._
          |import ocs.api.models.Sequence
+         |import ocs.api.models.Sequence.{from, empty}
          |implicit class RichFuture[T](val f: Future[T]) {
          |  def get: T = Await.result(f, Duration.Inf)
          |}

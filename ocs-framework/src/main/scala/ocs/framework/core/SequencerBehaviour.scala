@@ -1,16 +1,14 @@
 package ocs.framework.core
+import akka.actor.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.{ActorSystem, Scheduler}
-import akka.util.Timeout
 import csw.command.client.messages.CommandResponseManagerMessage
-import csw.command.client.messages.CommandResponseManagerMessage.AddOrUpdateCommand
+import csw.command.client.messages.CommandResponseManagerMessage.{AddOrUpdateCommand, AddSubCommand}
 import csw.params.commands.CommandResponse
 import csw.params.commands.CommandResponse.SubmitResponse
 import ocs.api.messages.SequencerMsg
 import ocs.api.messages.SequencerMsg._
-import ocs.api.models.{AggregateResponse, Step, StepList, StepStatus}
-import ocs.framework.ScriptImports.toDuration
+import ocs.api.models._
 
 import scala.util.{Failure, Success, Try}
 
@@ -19,12 +17,12 @@ object SequencerBehaviour {
     Behaviors.setup { ctx =>
       val crmMapper: ActorRef[SubmitResponse] = ctx.messageAdapter(rsp ⇒ Update(rsp))
 
-      var stepRefOpt: Option[ActorRef[Step]]                       = None
-      var sequence: StepList                                       = StepList.empty
-      var responseRefOpt: Option[ActorRef[Try[AggregateResponse]]] = None
-      var aggregateResponse: AggregateResponse                     = AggregateResponse()
+      var stepRefOpt: Option[ActorRef[Step]]                    = None
+      var stepList: StepList                                    = StepList.empty
+      var responseRefOpt: Option[ActorRef[Try[SubmitResponse]]] = None
+      var sequenceResponse: SubmitResponse                      = null
 
-      def sendNext(replyTo: ActorRef[Step]): Unit = sequence.next match {
+      def sendNext(replyTo: ActorRef[Step]): Unit = stepList.next match {
         case Some(step) => setInFlight(replyTo, step)
         case None       => stepRefOpt = Some(replyTo)
       }
@@ -32,7 +30,7 @@ object SequencerBehaviour {
       def trySend(): Unit = {
         for {
           ref  <- stepRefOpt
-          step <- sequence.next
+          step <- stepList.next
         } {
           setInFlight(ref, step)
           stepRefOpt = None
@@ -40,45 +38,55 @@ object SequencerBehaviour {
       }
 
       def setInFlight(replyTo: ActorRef[Step], step: Step): Unit = {
-        implicit val timeout: Timeout     = Timeout(10.seconds)
-        implicit val scheduler: Scheduler = system.scheduler
-        val inFlightStep                  = step.withStatus(StepStatus.InFlight)
-        sequence = sequence.updateStep(inFlightStep)
+        val inFlightStep = step.withStatus(StepStatus.InFlight)
+        stepList = stepList.updateStep(inFlightStep)
         replyTo ! inFlightStep
         val runId = step.command.runId
+        crmRef ! AddSubCommand(stepList.runId, runId)
         crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
       }
 
       def update(_submitResponse: SubmitResponse): Unit = {
-        sequence = sequence.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
-        aggregateResponse = aggregateResponse.merge(AggregateResponse(_submitResponse))
+        stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
+        if (stepList.isFinished) {
+          sequenceResponse = _submitResponse
+        }
         clearSequenceIfFinished()
       }
 
       def clearSequenceIfFinished(): Unit = {
-        if (sequence.isFinished) {
+        if (stepList.isFinished) {
           println("Sequence is finished")
-          responseRefOpt.foreach(x => x ! Success(aggregateResponse))
-          sequence = StepList.empty
-          aggregateResponse = AggregateResponse()
+          responseRefOpt.foreach(x => x ! Success(sequenceResponse))
+          stepList = StepList.empty
+          sequenceResponse = null
           responseRefOpt = None
           stepRefOpt = None
         }
       }
 
       def updateAndSendResponse(newSequence: StepList, replyTo: ActorRef[Try[Unit]]): Unit = {
-        sequence = newSequence
+        stepList = newSequence
         clearSequenceIfFinished()
         replyTo ! Success({})
       }
 
+      def processSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]]): Unit = {
+        val runId = sequence.runId
+        stepList = StepList.from(runId, sequence.commands.toList)
+        crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
+        crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
+        responseRefOpt = Some(replyTo)
+      }
+
       Behaviors.receiveMessage[SequencerMsg] { msg =>
-        if (sequence.isFinished) {
+        if (stepList.isFinished) {
           msg match {
-            case ProcessSequence(Nil, replyTo)      => replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))
-            case ProcessSequence(commands, replyTo) => sequence = StepList.from(commands); responseRefOpt = Some(replyTo)
-            case GetSequence(replyTo)               => replyTo ! Success(sequence)
+            case ProcessSequence(null, replyTo) =>
+              replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))
+            case ProcessSequence(sequence, replyTo) => processSequence(sequence, replyTo)
+            case GetSequence(replyTo)               => replyTo ! Success(stepList)
             case GetNext(replyTo)                   => sendNext(replyTo)
             case x: ExternalSequencerMsg =>
               x.replyTo ! Failure(
@@ -89,20 +97,20 @@ object SequencerBehaviour {
         } else {
           msg match {
             case ProcessSequence(_, replyTo)        => replyTo ! Failure(new RuntimeException("previous sequence has not finished yet"))
-            case GetSequence(replyTo)               => replyTo ! Success(sequence)
+            case GetSequence(replyTo)               => replyTo ! Success(stepList)
             case GetNext(replyTo)                   => sendNext(replyTo)
-            case MaybeNext(replyTo)                 => replyTo ! sequence.next
-            case Update(_aggregateResponse)         => update(_aggregateResponse)
-            case Add(commands, replyTo)             => updateAndSendResponse(sequence.append(commands), replyTo)
-            case Pause(replyTo)                     => updateAndSendResponse(sequence.pause, replyTo)
-            case Resume(replyTo)                    => updateAndSendResponse(sequence.resume, replyTo)
-            case DiscardPending(replyTo)            => updateAndSendResponse(sequence.discardPending, replyTo)
-            case Replace(stepId, commands, replyTo) => updateAndSendResponse(sequence.replace(stepId, commands), replyTo)
-            case Prepend(commands, replyTo)         => updateAndSendResponse(sequence.prepend(commands), replyTo)
-            case Delete(ids, replyTo)               => updateAndSendResponse(sequence.delete(ids.toSet), replyTo)
-            case InsertAfter(id, commands, replyTo) => updateAndSendResponse(sequence.insertAfter(id, commands), replyTo)
-            case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(sequence.addBreakpoints(ids), replyTo)
-            case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(sequence.removeBreakpoints(ids), replyTo)
+            case MaybeNext(replyTo)                 => replyTo ! stepList.next
+            case Update(_submitResponse)            => update(_submitResponse)
+            case Add(commands, replyTo)             => updateAndSendResponse(stepList.append(commands), replyTo)
+            case Pause(replyTo)                     => updateAndSendResponse(stepList.pause, replyTo)
+            case Resume(replyTo)                    => updateAndSendResponse(stepList.resume, replyTo)
+            case DiscardPending(replyTo)            => updateAndSendResponse(stepList.discardPending, replyTo)
+            case Replace(stepId, commands, replyTo) => updateAndSendResponse(stepList.replace(stepId, commands), replyTo)
+            case Prepend(commands, replyTo)         => updateAndSendResponse(stepList.prepend(commands), replyTo)
+            case Delete(ids, replyTo)               => updateAndSendResponse(stepList.delete(ids.toSet), replyTo)
+            case InsertAfter(id, commands, replyTo) => updateAndSendResponse(stepList.insertAfter(id, commands), replyTo)
+            case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(stepList.addBreakpoints(ids), replyTo)
+            case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(stepList.removeBreakpoints(ids), replyTo)
           }
         }
         trySend()

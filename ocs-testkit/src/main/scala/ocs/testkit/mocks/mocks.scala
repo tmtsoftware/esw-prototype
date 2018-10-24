@@ -11,17 +11,17 @@ import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.SequencerCommandService
 import ocs.api.messages.SequencerMsg
-import ocs.api.models.{AggregateResponse, Sequence}
-import ocs.framework.dsl.CswServices
+import ocs.api.models.Sequence
 import ocs.framework.core.{SequenceOperator, SequencerBehaviour}
+import ocs.framework.dsl.CswServices
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 object SequencerCommandServiceMock$ extends SequencerCommandService {
-  override def submit(commandList: Sequence): Future[AggregateResponse] = Future.successful(
-    AggregateResponse(CommandResponse.Completed(Id("dummy-id")))
+  override def submit(commandList: Sequence): Future[SubmitResponse] = Future.successful(
+    CommandResponse.Completed(Id("dummy-id"))
   )
 }
 
