@@ -32,8 +32,8 @@ case class Sequence(runId: Id, commands: Seq[SequenceCommand]) {
 }
 
 object Sequence {
-  def from(commands: SequenceCommand*): Sequence = Sequence(Id(), commands.toList)
-  def empty: Sequence                            = Sequence(Id(), Nil)
+  def apply(commands: SequenceCommand*): Sequence = Sequence(Id(), commands.toList)
+  def empty: Sequence                             = Sequence(Id(), Nil)
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {
