@@ -149,6 +149,12 @@ class Routes(
             } ~
             path(SequenceEditor.Shutdown) {
               complete(sequenceEditor.flatMap(_.shutdown().map(_ => Done)))
+            } ~
+            path(SequenceEditor.Start) {
+              complete(sequenceEditor.flatMap(_.start().map(_ => Done)))
+            } ~
+            path(SequenceEditor.Stop) {
+              complete(sequenceEditor.flatMap(_.stop().map(_ => Done)))
             }
           }
         }

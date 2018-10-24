@@ -66,4 +66,12 @@ class SequenceEditorJsClient(gateway: WebGateway) extends SequenceEditor with Se
   override def shutdown(): Future[Unit] = gateway.postOneway(
     s"${SequenceEditor.ApiName}/${SequenceEditor.Shutdown}"
   )
+
+  override def start(): Future[Unit] = gateway.postOneway(
+    s"${SequenceEditor.ApiName}/${SequenceEditor.Start}"
+  )
+
+  override def stop(): Future[Unit] = gateway.postOneway(
+    s"${SequenceEditor.ApiName}/${SequenceEditor.Stop}"
+  )
 }
