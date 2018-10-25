@@ -92,9 +92,6 @@ class CswServices(
   }
 
   def addSequenceResponse(topLevelCommandIds: Set[Id], submitResponse: SubmitResponse): Unit = {
-    topLevelCommandIds.foreach(id => {
-      commandResponseManager.addOrUpdateCommand(id, CommandResponse.withRunId(id, submitResponse))
-      commandResponseManager.updateSubCommand(id, CommandResponse.withRunId(id, submitResponse))
-    })
+    topLevelCommandIds.foreach(id => commandResponseManager.addOrUpdateCommand(id, CommandResponse.withRunId(id, submitResponse)))
   }
 }

@@ -50,11 +50,12 @@ object SequencerBehaviour {
       }
 
       def update(_submitResponse: SubmitResponse): Unit = {
-        stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
+        crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
         if (stepList.isFinished || _submitResponse.runId.equals(stepList.runId)) {
           sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
           clearSequenceIfFinished()
         }
+        stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
       }
 
       def clearSequenceIfFinished(): Unit = {
