@@ -50,7 +50,7 @@ object SequencerBehaviour {
       def update(_submitResponse: SubmitResponse): Unit = {
         stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
         if (stepList.isFinished) {
-          sequenceResponse = _submitResponse
+          sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
         }
         clearSequenceIfFinished()
       }
