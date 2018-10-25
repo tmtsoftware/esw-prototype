@@ -3,9 +3,10 @@ import akka.actor.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import csw.command.client.messages.CommandResponseManagerMessage
-import csw.command.client.messages.CommandResponseManagerMessage.{AddOrUpdateCommand, AddSubCommand}
+import csw.command.client.messages.CommandResponseManagerMessage.{AddOrUpdateCommand, AddSubCommand, UpdateSubCommand}
 import csw.params.commands.CommandResponse
 import csw.params.commands.CommandResponse.SubmitResponse
+import csw.params.core.models.Id
 import ocs.api.messages.SequencerMsg
 import ocs.api.messages.SequencerMsg._
 import ocs.api.models._
@@ -21,6 +22,7 @@ object SequencerBehaviour {
       var stepList: StepList                                    = StepList.empty
       var responseRefOpt: Option[ActorRef[Try[SubmitResponse]]] = None
       var sequenceResponse: SubmitResponse                      = null
+      val emptyChildId                                          = Id("empty-child")
 
       def sendNext(replyTo: ActorRef[Step]): Unit = stepList.next match {
         case Some(step) => setInFlight(replyTo, step)
@@ -49,26 +51,25 @@ object SequencerBehaviour {
 
       def update(_submitResponse: SubmitResponse): Unit = {
         stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
-        if (stepList.isFinished) {
+        if (stepList.isFinished || _submitResponse.runId.equals(stepList.runId)) {
           sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
+          clearSequenceIfFinished()
         }
-        clearSequenceIfFinished()
       }
 
       def clearSequenceIfFinished(): Unit = {
-        if (stepList.isFinished) {
-          println("Sequence is finished")
-          responseRefOpt.foreach(x => x ! Success(sequenceResponse))
-          stepList = StepList.empty
-          sequenceResponse = null
-          responseRefOpt = None
-          stepRefOpt = None
-        }
+        println("Sequence is finished")
+        crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
+        responseRefOpt.foreach(x => x ! Success(sequenceResponse))
+        stepList = StepList.empty
+        sequenceResponse = null
+        responseRefOpt = None
+        stepRefOpt = None
       }
 
       def updateAndSendResponse(newSequence: StepList, replyTo: ActorRef[Try[Unit]]): Unit = {
         stepList = newSequence
-        clearSequenceIfFinished()
+        if (stepList.isFinished) { clearSequenceIfFinished() }
         replyTo ! Success({})
       }
 
@@ -77,6 +78,7 @@ object SequencerBehaviour {
         stepList = StepList.from(runId, sequence.commands.toList)
         crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
+        crmRef ! AddSubCommand(runId, emptyChildId)
         responseRefOpt = Some(replyTo)
       }
 
