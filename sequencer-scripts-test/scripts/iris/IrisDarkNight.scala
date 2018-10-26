@@ -49,12 +49,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
     Done
   }
 
-  override def onStart(): Future[Done] = spawn {
-    flag = false
-    Done
-  }
-
-  override def onStop(): Future[Done] = spawn {
+  override def abort(): Future[Done] = spawn {
     flag = true
     Done
   }

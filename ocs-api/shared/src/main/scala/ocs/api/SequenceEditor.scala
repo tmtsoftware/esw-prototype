@@ -20,8 +20,7 @@ trait SequenceEditor {
   def prepend(commands: List[SequenceCommand]): Future[Unit]
   def replace(id: Id, commands: List[SequenceCommand]): Future[Unit]
   def shutdown(): Future[Unit]
-  def start(): Future[Unit]
-  def stop(): Future[Unit]
+  def abort(): Future[Unit]
 }
 
 object SequenceEditor {
@@ -38,6 +37,5 @@ object SequenceEditor {
   val Prepend           = "prepend"
   val Replace           = "replace"
   val Shutdown          = "shutdown"
-  val Start             = "start"
-  val Stop              = "stop"
+  val Abort             = "abort"
 }

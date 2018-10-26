@@ -12,8 +12,7 @@ sealed trait SupervisorMsg extends TMTSerializable
 
 object SupervisorMsg {
   case class Shutdown(replyTo: ActorRef[Try[Unit]]) extends SupervisorMsg
-  case class Start(replyTo: ActorRef[Try[Unit]])    extends SupervisorMsg
-  case class Stop(replyTo: ActorRef[Try[Unit]])     extends SupervisorMsg
+  case class Abort(replyTo: ActorRef[Try[Unit]])    extends SupervisorMsg
 }
 
 sealed trait SequencerMsg extends TMTSerializable
