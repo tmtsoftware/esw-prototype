@@ -24,7 +24,7 @@ object SequencerMsg {
   case class GetNext(replyTo: ActorRef[Step])           extends InternalSequencerMsg
   case class MaybeNext(replyTo: ActorRef[Option[Step]]) extends InternalSequencerMsg
   case class Update(submitResponse: SubmitResponse)     extends InternalSequencerMsg
-  case class IfNotInFlight(replyTo: ActorRef[Unit])     extends InternalSequencerMsg
+  case class CanExecuteNext(replyTo: ActorRef[Unit])    extends InternalSequencerMsg
 
   sealed trait ExternalSequencerMsg extends SequencerMsg with SupervisorMsg {
     def replyTo: ActorRef[Try[Nothing]]

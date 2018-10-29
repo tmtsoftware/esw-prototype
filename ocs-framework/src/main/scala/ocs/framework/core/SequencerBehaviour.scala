@@ -19,6 +19,7 @@ object SequencerBehaviour {
       val crmMapper: ActorRef[SubmitResponse] = ctx.messageAdapter(rsp ⇒ Update(rsp))
 
       var stepRefOpt: Option[ActorRef[Step]]                    = None
+      var canExecuteNextRefOpt: Option[ActorRef[Unit]]          = None
       var stepList: StepList                                    = StepList.empty
       var responseRefOpt: Option[ActorRef[Try[SubmitResponse]]] = None
       var sequenceResponse: SubmitResponse                      = null
@@ -29,9 +30,11 @@ object SequencerBehaviour {
         case None       => stepRefOpt = Some(replyTo)
       }
 
-      def ifNotInFlight(replyTo: ActorRef[Unit]): Unit = {
+      def canExecuteNext(replyTo: ActorRef[Unit]): Unit = {
         if (!stepList.isInFlight) {
           replyTo ! {}
+        } else {
+          canExecuteNextRefOpt = Some(replyTo)
         }
       }
 
@@ -58,11 +61,12 @@ object SequencerBehaviour {
       def update(_submitResponse: SubmitResponse): Unit = {
         //why 2 level nesting for line below
         crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
+        stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
         if (stepList.isFinished || _submitResponse.runId.equals(stepList.runId)) {
           sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
           clearSequenceIfFinished()
         }
-        stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
+        canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
       }
 
       def clearSequenceIfFinished(): Unit = {
@@ -70,9 +74,11 @@ object SequencerBehaviour {
         crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
         responseRefOpt.foreach(x => x ! Success(sequenceResponse))
         stepList = StepList.empty
+        canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
         sequenceResponse = null
         responseRefOpt = None
         stepRefOpt = None
+        canExecuteNextRefOpt = None
       }
 
       def updateAndSendResponse(newSequence: StepList, replyTo: ActorRef[Try[Unit]]): Unit = {
@@ -98,6 +104,7 @@ object SequencerBehaviour {
             case ProcessSequence(sequence, replyTo) => processSequence(sequence, replyTo)
             case GetSequence(replyTo)               => replyTo ! Success(stepList)
             case GetNext(replyTo)                   => sendNext(replyTo)
+            case CanExecuteNext(replyTo)            => canExecuteNext(replyTo)
             case x: ExternalSequencerMsg =>
               x.replyTo ! Failure(
                 new RuntimeException(s"${x.getClass.getSimpleName} can not be applied on a finished sequence")
@@ -121,7 +128,7 @@ object SequencerBehaviour {
             case InsertAfter(id, commands, replyTo) => updateAndSendResponse(stepList.insertAfter(id, commands), replyTo)
             case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(stepList.addBreakpoints(ids), replyTo)
             case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(stepList.removeBreakpoints(ids), replyTo)
-            case IfNotInFlight(replyTo)             => ifNotInFlight(replyTo)
+            case CanExecuteNext(replyTo)            => canExecuteNext(replyTo)
           }
         }
         trySend()

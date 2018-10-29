@@ -17,7 +17,7 @@ class Engine(implicit mat: Materializer) {
 
   def processStep(sequenceOperator: SequenceOperator, script: Script): Future[Unit] = async {
     val step = await(sequenceOperator.next)
-    await(script.execute(step.command))
-    await(sequenceOperator.ifNotInFlight)
+    script.execute(step.command)
+    await(sequenceOperator.canExecuteNext)
   }
 }

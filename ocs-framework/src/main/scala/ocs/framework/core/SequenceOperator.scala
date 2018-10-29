@@ -18,5 +18,5 @@ class SequenceOperator(sequencer: ActorRef[InternalSequencerMsg], system: ActorS
   def next: Future[Step]                     = sequencer ? GetNext
   def maybeNext: Future[Option[Step]]        = sequencer ? MaybeNext
   def update(response: SubmitResponse): Unit = sequencer ! Update(response)
-  def ifNotInFlight: Future[Unit]            = sequencer ? IfNotInFlight
+  def canExecuteNext: Future[Unit]           = sequencer ? CanExecuteNext
 }
