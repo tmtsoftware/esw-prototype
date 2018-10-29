@@ -29,6 +29,12 @@ object SequencerBehaviour {
         case None       => stepRefOpt = Some(replyTo)
       }
 
+      def ifNotInFlight(replyTo: ActorRef[Unit]): Unit = {
+        if (!stepList.isInFlight) {
+          replyTo ! {}
+        }
+      }
+
       def trySend(): Unit = {
         for {
           ref  <- stepRefOpt
@@ -42,14 +48,15 @@ object SequencerBehaviour {
       def setInFlight(replyTo: ActorRef[Step], step: Step): Unit = {
         val inFlightStep = step.withStatus(StepStatus.InFlight)
         stepList = stepList.updateStep(inFlightStep)
-        replyTo ! inFlightStep
         val runId = step.command.runId
         crmRef ! AddSubCommand(stepList.runId, runId)
         crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
+        replyTo ! inFlightStep
       }
 
       def update(_submitResponse: SubmitResponse): Unit = {
+        //why 2 level nesting for line below
         crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
         if (stepList.isFinished || _submitResponse.runId.equals(stepList.runId)) {
           sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
@@ -114,6 +121,7 @@ object SequencerBehaviour {
             case InsertAfter(id, commands, replyTo) => updateAndSendResponse(stepList.insertAfter(id, commands), replyTo)
             case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(stepList.addBreakpoints(ids), replyTo)
             case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(stepList.removeBreakpoints(ids), replyTo)
+            case IfNotInFlight(replyTo)             => ifNotInFlight(replyTo)
           }
         }
         trySend()

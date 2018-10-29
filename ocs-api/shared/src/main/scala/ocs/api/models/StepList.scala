@@ -13,6 +13,7 @@ case class StepList(runId: Id, steps: List[Step]) { outer =>
   def isPaused: Boolean         = nextPending.exists(_.hasBreakpoint)
   def next: Option[Step]        = if (!isPaused) nextPending else None
   def isFinished: Boolean       = steps.forall(_.isFinished)
+  def isInFlight: Boolean       = steps.exists(_.isInFlight)
 
   //update
 

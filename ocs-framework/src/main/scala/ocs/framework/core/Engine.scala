@@ -11,12 +11,13 @@ import scala.concurrent.Future
 class Engine(implicit mat: Materializer) {
   import mat.executionContext
 
-  def start(sequencer: SequenceOperator, script: Script): Future[Done] = {
-    Source.repeat(()).mapAsync(1)(_ => processStep(sequencer, script)).runForeach(_ => ())
+  def start(sequenceOperator: SequenceOperator, script: Script): Future[Done] = {
+    Source.repeat(()).mapAsync(1)(_ => processStep(sequenceOperator, script)).runForeach(_ => ())
   }
 
-  def processStep(sequencer: SequenceOperator, script: Script): Future[Done] = async {
-    val step = await(sequencer.next)
+  def processStep(sequenceOperator: SequenceOperator, script: Script): Future[Unit] = async {
+    val step = await(sequenceOperator.next)
     await(script.execute(step.command))
+    await(sequenceOperator.ifNotInFlight)
   }
 }

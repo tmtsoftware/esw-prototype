@@ -8,6 +8,7 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
   def id: Id              = command.runId
   def isPending: Boolean  = status == StepStatus.Pending
   def isFinished: Boolean = status == StepStatus.Finished
+  def isInFlight: Boolean = status == StepStatus.InFlight
 
   def addBreakpoint(): Step    = if (isPending) copy(hasBreakpoint = true) else this
   def removeBreakpoint(): Step = copy(hasBreakpoint = false)
