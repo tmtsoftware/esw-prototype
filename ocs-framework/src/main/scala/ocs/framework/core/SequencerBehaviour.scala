@@ -22,7 +22,7 @@ object SequencerBehaviour {
       var canExecuteNextRefOpt: Option[ActorRef[Unit]]          = None
       var stepList: StepList                                    = StepList.empty
       var responseRefOpt: Option[ActorRef[Try[SubmitResponse]]] = None
-      var sequenceResponse: SubmitResponse                      = null
+      var latestResponse: SubmitResponse                        = null
       val emptyChildId                                          = Id("empty-child")
 
       def sendNext(replyTo: ActorRef[Step]): Unit = stepList.next match {
@@ -51,39 +51,44 @@ object SequencerBehaviour {
       def setInFlight(replyTo: ActorRef[Step], step: Step): Unit = {
         val inFlightStep = step.withStatus(StepStatus.InFlight)
         stepList = stepList.updateStep(inFlightStep)
-        val runId = step.command.runId
-        crmRef ! AddSubCommand(stepList.runId, runId)
-        crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
-        crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
+        val stepRunId = step.command.runId
+        crmRef ! AddSubCommand(stepList.runId, stepRunId)
+        crmRef ! AddOrUpdateCommand(stepRunId, CommandResponse.Started(stepRunId))
+        crmRef ! CommandResponseManagerMessage.Subscribe(stepRunId, crmMapper)
         replyTo ! inFlightStep
+      }
+
+      def isSequenceFinished: Boolean = {
+        stepList.isFinished || latestResponse.runId.equals(stepList.runId)
       }
 
       def update(_submitResponse: SubmitResponse): Unit = {
         //why 2 level nesting for line below
         crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
         stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
-        if (stepList.isFinished || _submitResponse.runId.equals(stepList.runId)) {
-          sequenceResponse = CommandResponse.withRunId(stepList.runId, _submitResponse)
-          clearSequenceIfFinished()
-        }
+        latestResponse = _submitResponse
+        clearIfSequenceFinished()
         canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
       }
 
-      def clearSequenceIfFinished(): Unit = {
-        println("Sequence is finished")
-        crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
-        responseRefOpt.foreach(x => x ! Success(sequenceResponse))
-        stepList = StepList.empty
-        canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
-        sequenceResponse = null
-        responseRefOpt = None
-        stepRefOpt = None
-        canExecuteNextRefOpt = None
+      def clearIfSequenceFinished(): Unit = {
+        if (isSequenceFinished) {
+          println("Sequence is finished")
+          val sequenceResponse = CommandResponse.withRunId(stepList.runId, latestResponse)
+          crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
+          responseRefOpt.foreach(x => x ! Success(sequenceResponse))
+          stepList = StepList.empty
+          canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
+          latestResponse = null
+          responseRefOpt = None
+          stepRefOpt = None
+          canExecuteNextRefOpt = None
+        }
       }
 
       def updateAndSendResponse(newSequence: StepList, replyTo: ActorRef[Try[Unit]]): Unit = {
         stepList = newSequence
-        if (stepList.isFinished) { clearSequenceIfFinished() }
+        clearIfSequenceFinished()
         replyTo ! Success({})
       }
 
