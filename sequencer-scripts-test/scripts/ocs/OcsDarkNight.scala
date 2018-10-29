@@ -11,6 +11,15 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
   private var eventCount   = 0
   private var commandCount = 0
 
+  private val publisherStream = csw.publish(10.seconds) {
+    SystemEvent(Prefix("ocs-test"), EventName("system"))
+  }
+  private val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
+    eventCount = eventCount + 1
+    println(s"------------------> received-event for ocs on key: $eventKey")
+    Done
+  }
+
   handleSetupCommand("setup-iris") { commandA =>
     spawn {
       println(s"[Ocs] Received command: ${commandA.commandName}")
@@ -84,6 +93,8 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
   override def onShutdown(): Future[Done] = spawn {
     println("shutdown ocs")
+    subscriptionStream.unsubscribe().await
+    publisherStream.cancel()
     Done
   }
 }
