@@ -42,9 +42,9 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
 
   override def sequencerCommandService(subSystemSequencerId: String): Future[SequencerCommandService] =
     Future.successful(SequencerCommandServiceMock$)
-  override def submit(assemblyName: String, command: ControlCommand): Future[SubmitResponse]              = submitResponseF
-  override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[CommandResponse] = commandResponseF
-  override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]             = commandResponseF
+  override def submit(assemblyName: String, command: ControlCommand): Future[SubmitResponse]             = submitResponseF
+  override def submitAndSubscribe(assemblyName: String, command: ControlCommand): Future[SubmitResponse] = submitResponseF
+  override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]            = commandResponseF
   override def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription =
     EventSubscriptionMock
   override def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: StrandEc): Cancellable =
