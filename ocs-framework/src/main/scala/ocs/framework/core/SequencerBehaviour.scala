@@ -1,6 +1,5 @@
 package ocs.framework.core
 import akka.Done
-import akka.actor.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
 import csw.command.client.messages.CommandResponseManagerMessage
@@ -15,7 +14,7 @@ import ocs.api.models._
 import scala.util.{Failure, Success, Try}
 
 object SequencerBehaviour {
-  def behavior(crmRef: ActorRef[CommandResponseManagerMessage])(implicit system: ActorSystem): Behavior[SequencerMsg] =
+  def behavior(crmRef: ActorRef[CommandResponseManagerMessage]): Behavior[SequencerMsg] =
     Behaviors.setup { ctx =>
       val crmMapper: ActorRef[SubmitResponse] = ctx.messageAdapter(rsp ⇒ Update(rsp))
 
@@ -84,9 +83,8 @@ object SequencerBehaviour {
           responseRefOpt.foreach(x => x ! Success(sequenceResponse))
           stepList = StepList.empty
           readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
-          latestResponse = null
+          latestResponse = None
           responseRefOpt = None
-          stepRefOpt = None
           readyToExecuteNextRefOpt = None
         }
       }
