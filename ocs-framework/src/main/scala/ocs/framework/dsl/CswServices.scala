@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import csw.command.client.CommandResponseManager
 import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.params.commands.CommandResponse.SubmitResponse
-import csw.params.commands.{CommandResponse, ControlCommand}
+import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.{SequenceEditor, SequencerCommandService}
@@ -79,12 +79,14 @@ class CswServices(
     commandResponseManager.addOrUpdateCommand(runId, cmdStatus)
   }
 
-  def addSubCommand(parentRunId: Id, childRunId: Id): Unit = {
-    commandResponseManager.addSubCommand(parentRunId, childRunId)
+  def addSubCommands(parentCommand: SequenceCommand, childCommands: Set[SequenceCommand]): Unit = {
+    childCommands.foreach(
+      childCommand => commandResponseManager.addSubCommand(parentCommand.runId, childCommand.runId)
+    )
   }
 
-  def updateSubCommand(subCommandId: Id, cmdStatus: SubmitResponse): Unit = {
-    commandResponseManager.updateSubCommand(subCommandId, cmdStatus)
+  def updateSubCommand(subCmdId: Id, subCmdResponse: SubmitResponse): Unit = {
+    commandResponseManager.updateSubCommand(subCmdId, subCmdResponse)
   }
 
   def queryFinalCommandStatus(runId: Id)(implicit timeout: Timeout): Future[SubmitResponse] = {

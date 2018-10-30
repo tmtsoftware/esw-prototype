@@ -14,9 +14,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
       val command1 = Setup(Prefix("test-commandA1"), CommandName("commandA1"), Some(ObsId("test-obsId")))
       val command2 = Setup(Prefix("test-commandA2"), CommandName("commandA2"), Some(ObsId("test-obsId")))
 
-      //TODO: use commands instead of ids. provide helpers for adding multiples
-      csw.addSubCommand(command.runId, command1.runId)
-      csw.addSubCommand(command.runId, command2.runId)
+      csw.addSubCommands(parentCommand = command, childCommands = Set(command1, command2))
 
       val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
       if (maybeCommandB.isDefined) {
@@ -24,21 +22,20 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
         val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
         val commandB2 = Setup(Prefix("test-commandB2"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
 
-        csw.addSubCommand(commandB.runId, commandB1.runId)
-        csw.addSubCommand(commandB.runId, commandB2.runId)
+        csw.addSubCommands(parentCommand = commandB, childCommands = Set(commandB1, commandB2))
 
         val assemblyResponse3 = csw.submit("Sample1Assembly", commandB1).await
-        csw.updateSubCommand(commandB1.runId, assemblyResponse3)
+        csw.updateSubCommand(subCmdId = commandB1.runId, subCmdResponse = assemblyResponse3)
 
         val assemblyResponse4 = csw.submit("Sample1Assembly", commandB2).await
-        csw.updateSubCommand(commandB2.runId, assemblyResponse4)
+        csw.updateSubCommand(subCmdId = commandB2.runId, subCmdResponse = assemblyResponse4)
       }
 
       val assemblyResponse1 = csw.submit("Sample1Assembly", command1).await
-      csw.updateSubCommand(command1.runId, assemblyResponse1)
+      csw.updateSubCommand(subCmdId = command1.runId, subCmdResponse = assemblyResponse1)
 
       val assemblyResponse2 = csw.submit("Sample1Assembly", command2).await
-      csw.updateSubCommand(command2.runId, assemblyResponse2)
+      csw.updateSubCommand(subCmdId = command2.runId, subCmdResponse = assemblyResponse2)
 
       Done
     }

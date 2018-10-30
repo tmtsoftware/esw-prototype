@@ -40,7 +40,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val commandResponseManager: CommandResponseManager  = crmFactory.make(crmRef)
 
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior(crmRef), "sequencer")
-  lazy val sequencer                            = new SequenceOperator(sequencerRef, system)
+  lazy val sequenceOperator                     = new SequenceOperator(sequencerRef, system)
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
@@ -62,7 +62,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
     new CswServices(
       sequencerId,
       observingMode,
-      sequencer,
+      sequenceOperator,
       componentFactory,
       locationServiceWrapper,
       eventService,
@@ -75,5 +75,6 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val sequenceEditor: SequenceEditor                   = new SequenceEditorJvmClient(supervisorRef)
   lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
 
-  lazy val remoteRepl = new RemoteRepl(cswServices, sequencer, supervisorRef, sequencerCommandService, sequenceEditor, configs)
+  lazy val remoteRepl =
+    new RemoteRepl(cswServices, sequenceOperator, supervisorRef, sequencerCommandService, sequenceEditor, configs)
 }

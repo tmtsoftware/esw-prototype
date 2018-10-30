@@ -1,7 +1,7 @@
 package ocs.framework.dsl
 
 import akka.Done
-import csw.params.commands.CommandResponse
+import csw.params.commands.CommandResponse.SubmitResponse
 import sequencer.macros.{AsyncMacros, StrandEc}
 
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
@@ -13,7 +13,7 @@ trait ControlDsl {
   private implicit lazy val toEc: ExecutionContext = strandEc.ec
   private val loopInterval: FiniteDuration         = 50.millis
 
-  def par(fs: Future[CommandResponse]*): Future[List[CommandResponse]] = Future.sequence(fs.toList)
+  def par(fs: Future[SubmitResponse]*): Future[List[SubmitResponse]] = Future.sequence(fs.toList)
 
   protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await
