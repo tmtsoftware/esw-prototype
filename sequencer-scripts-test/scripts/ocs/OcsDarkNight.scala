@@ -27,7 +27,7 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       var topLevelCommandIds: Set[Id] = Set(commandA.runId)
 
       val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
-      val subCommandsB = if (maybeCommandB.isDefined) {
+      val sequenceB = if (maybeCommandB.isDefined) {
         val commandB = maybeCommandB.get
         topLevelCommandIds += commandB.runId
 
@@ -37,8 +37,8 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         Sequence(commandB1, commandB2)
       } else Sequence.empty
 
-      val commandList = subCommandsB.add(commandA)
-      val response    = iris.await.submit(commandList).await
+      val sequence = sequenceB.add(commandA)
+      val response = iris.await.submit(sequence).await
 
       csw.addSequenceResponse(topLevelCommandIds, response)
       Done
