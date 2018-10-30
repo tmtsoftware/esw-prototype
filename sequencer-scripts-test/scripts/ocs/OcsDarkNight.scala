@@ -37,10 +37,10 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         Sequence(commandB1, commandB2)
       } else Sequence.empty
 
-      val commandList    = subCommandsB.add(commandA)
-      val submitResponse = iris.await.submit(commandList).await
+      val commandList = subCommandsB.add(commandA)
+      val response    = iris.await.submit(commandList).await
 
-      csw.addSequenceResponse(topLevelCommandIds, submitResponse)
+      csw.addSequenceResponse(topLevelCommandIds, response)
       Done
     }
   }
@@ -80,10 +80,9 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
     spawn {
       println(s"[Ocs] Received command: ${command.commandName}")
 
-      tcs.await.submit(Sequence(command)).await
+      val response = tcs.await.submit(Sequence(command)).await
 
-      val response = AggregateResponse(Completed(command.runId))
-      println(s"[Ocs] Received response: $response")
+      csw.addSequenceResponse(Set(command.runId), response)
       csw.sendResult(s"$response")
       Done
     }
