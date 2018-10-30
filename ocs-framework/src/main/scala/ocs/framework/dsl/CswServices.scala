@@ -24,7 +24,7 @@ import scala.concurrent.duration.FiniteDuration
 class CswServices(
     val sequencerId: String,
     val observingMode: String,
-    val sequencer: SequenceOperator, //this param is carried only to be passed to the Script
+    val sequenceOperator: SequenceOperator, //this param is carried only to be passed to the Script
     componentFactory: ComponentFactory,
     locationService: LocationServiceWrapper,
     eventService: EventService,

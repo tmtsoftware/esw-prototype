@@ -28,8 +28,8 @@ object Step {
 }
 
 case class Sequence(runId: Id, commands: Seq[SequenceCommand]) {
-  def add(others: SequenceCommand*): Sequence = Sequence(runId, commands ++ others)
-  def add(other: Sequence): Sequence          = Sequence(runId, commands ++ other.commands)
+  def add(others: SequenceCommand*): Sequence = copy(commands = commands ++ others)
+  def add(other: Sequence): Sequence          = copy(commands = commands ++ other.commands)
 }
 
 object Sequence {

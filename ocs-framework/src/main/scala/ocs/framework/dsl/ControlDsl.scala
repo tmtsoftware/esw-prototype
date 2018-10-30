@@ -13,24 +13,7 @@ trait ControlDsl {
   private implicit lazy val toEc: ExecutionContext = strandEc.ec
   private val loopInterval: FiniteDuration         = 50.millis
 
-  //It should return list
-  protected def par(fs: Future[CommandResponse]*): Future[List[CommandResponse]] = Future.sequence(fs.toList)
-
-  /*TODO: 1. SubmitResponse does not have empty constructor
-  2. usage of parAggregate
-       parAggregate(
-      iris.await.submit(irisSequence).await
-      tcs.await.submit(tcsSequence).await
-      ).await
-  In this case script writer should know logic of inferring final SubmitResponse depending on responses of iris and tcs
-  So as per new way par and parAggregate both should return List[SubmitResponse]. Then script writer should update that
-  in crm or infer on own
-
-  protected def parAggregate(fs: Future[SubmitResponse]*): Future[SubmitResponse] = spawn {
-    val submitResponses = Future.sequence(fs.toSet).await
-    submitResponses.foldLeft(SubmitResponse)(_ merge _)
-  }
-   */
+  def par(fs: Future[CommandResponse]*): Future[List[CommandResponse]] = Future.sequence(fs.toList)
 
   protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await

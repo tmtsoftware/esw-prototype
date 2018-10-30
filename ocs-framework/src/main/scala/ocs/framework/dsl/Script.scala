@@ -13,8 +13,8 @@ abstract class Script(csw: CswServices) extends ControlDsl {
 
   protected def nextIf(f: SequenceCommand => Boolean)(implicit strandEc: StrandEc): Future[Option[SequenceCommand]] =
     spawn {
-      val hasNext = csw.sequencer.maybeNext.await.map(_.command).exists(f)
-      if (hasNext) Some(csw.sequencer.next.await.command) else None
+      val hasNext = csw.sequenceOperator.maybeNext.await.map(_.command).exists(f)
+      if (hasNext) Some(csw.sequenceOperator.next.await.command) else None
     }
 
   protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[Done]] = new FunctionBuilder

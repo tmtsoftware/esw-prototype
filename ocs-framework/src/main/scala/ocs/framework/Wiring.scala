@@ -10,6 +10,7 @@ import csw.command.client.internal.CommandResponseManagerFactory
 import csw.command.client.messages.CommandResponseManagerMessage
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
+import csw.event.client.models.EventStores.RedisStore
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
@@ -44,14 +45,14 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
-  lazy val sequencerApiWrapper = new ComponentFactory(locationServiceWrapper)
+  lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
 
-  lazy val eventService: EventService = new EventServiceFactory().make(locationService)
+  lazy val redisClient: RedisClient   = RedisClient.create()
+  lazy val eventService: EventService = new EventServiceFactory(RedisStore(redisClient)).make(locationService)
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
-  lazy val engine                     = new Engine
 
-  lazy val redisClient: RedisClient       = RedisClient.create()
+  lazy val engine                         = new Engine
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   private val loggerFactory = new LoggerFactory("sequencer")
@@ -62,7 +63,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
       sequencerId,
       observingMode,
       sequencer,
-      sequencerApiWrapper,
+      componentFactory,
       locationServiceWrapper,
       eventService,
       romaineFactory,

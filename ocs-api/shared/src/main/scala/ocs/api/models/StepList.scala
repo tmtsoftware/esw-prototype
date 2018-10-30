@@ -60,6 +60,6 @@ case class StepList(runId: Id, steps: List[Step]) { outer =>
 }
 
 object StepList {
-  def empty                                            = StepList(Id(), List.empty)
-  def from(runId: Id, commands: List[SequenceCommand]) = StepList(runId, Step.from(commands))
+  def empty                    = StepList(Id(), List.empty)
+  def from(sequence: Sequence) = StepList(sequence.runId, Step.from(sequence.commands.toList))
 }

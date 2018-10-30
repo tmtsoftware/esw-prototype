@@ -1,5 +1,6 @@
 package ocs.api.messages
 
+import akka.Done
 import akka.actor.typed.ActorRef
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.SequenceCommand
@@ -21,10 +22,10 @@ sealed trait SequencerMsg extends TMTSerializable
 object SequencerMsg {
   sealed trait InternalSequencerMsg extends SequencerMsg
 
-  case class GetNext(replyTo: ActorRef[Step])           extends InternalSequencerMsg
-  case class MaybeNext(replyTo: ActorRef[Option[Step]]) extends InternalSequencerMsg
-  case class Update(submitResponse: SubmitResponse)     extends InternalSequencerMsg
-  case class CanExecuteNext(replyTo: ActorRef[Unit])    extends InternalSequencerMsg
+  case class GetNext(replyTo: ActorRef[Step])            extends InternalSequencerMsg
+  case class MaybeNext(replyTo: ActorRef[Option[Step]])  extends InternalSequencerMsg
+  case class Update(submitResponse: SubmitResponse)      extends InternalSequencerMsg
+  case class ReadyToExecuteNext(replyTo: ActorRef[Done]) extends InternalSequencerMsg
 
   sealed trait ExternalSequencerMsg extends SequencerMsg with SupervisorMsg {
     def replyTo: ActorRef[Try[Nothing]]

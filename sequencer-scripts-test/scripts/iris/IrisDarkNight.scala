@@ -14,6 +14,7 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
       val command1 = Setup(Prefix("test-commandA1"), CommandName("commandA1"), Some(ObsId("test-obsId")))
       val command2 = Setup(Prefix("test-commandA2"), CommandName("commandA2"), Some(ObsId("test-obsId")))
 
+      //TODO: use commands instead of ids. provide helpers for adding multiples
       csw.addSubCommand(command.runId, command1.runId)
       csw.addSubCommand(command.runId, command2.runId)
 

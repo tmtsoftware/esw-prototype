@@ -1,4 +1,5 @@
 package ocs.framework.core
+import akka.Done
 import akka.actor.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
@@ -19,10 +20,10 @@ object SequencerBehaviour {
       val crmMapper: ActorRef[SubmitResponse] = ctx.messageAdapter(rsp ⇒ Update(rsp))
 
       var stepRefOpt: Option[ActorRef[Step]]                    = None
-      var canExecuteNextRefOpt: Option[ActorRef[Unit]]          = None
+      var readyToExecuteNextRefOpt: Option[ActorRef[Done]]      = None
       var stepList: StepList                                    = StepList.empty
       var responseRefOpt: Option[ActorRef[Try[SubmitResponse]]] = None
-      var latestResponse: SubmitResponse                        = null
+      var latestResponse: Option[SubmitResponse]                = None
       val emptyChildId                                          = Id("empty-child")
 
       def sendNext(replyTo: ActorRef[Step]): Unit = stepList.next match {
@@ -30,11 +31,11 @@ object SequencerBehaviour {
         case None       => stepRefOpt = Some(replyTo)
       }
 
-      def canExecuteNext(replyTo: ActorRef[Unit]): Unit = {
+      def readyToExecuteNext(replyTo: ActorRef[Done]): Unit = {
         if (!stepList.isInFlight) {
-          replyTo ! {}
+          replyTo ! Done
         } else {
-          canExecuteNextRefOpt = Some(replyTo)
+          readyToExecuteNextRefOpt = Some(replyTo)
         }
       }
 
@@ -59,30 +60,34 @@ object SequencerBehaviour {
       }
 
       def isSequenceFinished: Boolean = {
-        stepList.isFinished || latestResponse.runId.equals(stepList.runId)
+        val isSequenceCrmFinal = latestResponse match {
+          case Some(res) => res.runId.equals(stepList.runId)
+          case None      => false
+        }
+        stepList.isFinished || isSequenceCrmFinal
       }
 
       def update(_submitResponse: SubmitResponse): Unit = {
         //why 2 level nesting for line below
         crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
         stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
-        latestResponse = _submitResponse
+        latestResponse = Some(_submitResponse)
         clearIfSequenceFinished()
-        canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
+        readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
       }
 
       def clearIfSequenceFinished(): Unit = {
         if (isSequenceFinished) {
           println("Sequence is finished")
-          val sequenceResponse = CommandResponse.withRunId(stepList.runId, latestResponse)
+          val sequenceResponse = CommandResponse.withRunId(stepList.runId, latestResponse.orNull) //whether this will be called with None latestresponse ever??
           crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
           responseRefOpt.foreach(x => x ! Success(sequenceResponse))
           stepList = StepList.empty
-          canExecuteNextRefOpt.foreach(x => canExecuteNext(x))
+          readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
           latestResponse = null
           responseRefOpt = None
           stepRefOpt = None
-          canExecuteNextRefOpt = None
+          readyToExecuteNextRefOpt = None
         }
       }
 
@@ -94,7 +99,7 @@ object SequencerBehaviour {
 
       def processSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]]): Unit = {
         val runId = sequence.runId
-        stepList = StepList.from(runId, sequence.commands.toList)
+        stepList = StepList.from(sequence)
         crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
         crmRef ! AddSubCommand(runId, emptyChildId)
@@ -109,7 +114,7 @@ object SequencerBehaviour {
             case ProcessSequence(sequence, replyTo) => processSequence(sequence, replyTo)
             case GetSequence(replyTo)               => replyTo ! Success(stepList)
             case GetNext(replyTo)                   => sendNext(replyTo)
-            case CanExecuteNext(replyTo)            => canExecuteNext(replyTo)
+            case ReadyToExecuteNext(replyTo)        => readyToExecuteNext(replyTo)
             case x: ExternalSequencerMsg =>
               x.replyTo ! Failure(
                 new RuntimeException(s"${x.getClass.getSimpleName} can not be applied on a finished sequence")
@@ -133,7 +138,7 @@ object SequencerBehaviour {
             case InsertAfter(id, commands, replyTo) => updateAndSendResponse(stepList.insertAfter(id, commands), replyTo)
             case AddBreakpoints(ids, replyTo)       => updateAndSendResponse(stepList.addBreakpoints(ids), replyTo)
             case RemoveBreakpoints(ids, replyTo)    => updateAndSendResponse(stepList.removeBreakpoints(ids), replyTo)
-            case CanExecuteNext(replyTo)            => canExecuteNext(replyTo)
+            case ReadyToExecuteNext(replyTo)        => readyToExecuteNext(replyTo)
           }
         }
         trySend()

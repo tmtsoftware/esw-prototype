@@ -1,5 +1,6 @@
 package ocs.framework.core
 
+import akka.Done
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.{ActorSystem, Scheduler}
@@ -18,5 +19,5 @@ class SequenceOperator(sequencer: ActorRef[InternalSequencerMsg], system: ActorS
   def next: Future[Step]                     = sequencer ? GetNext
   def maybeNext: Future[Option[Step]]        = sequencer ? MaybeNext
   def update(response: SubmitResponse): Unit = sequencer ! Update(response)
-  def canExecuteNext: Future[Unit]           = sequencer ? CanExecuteNext
+  def readyToExecuteNext: Future[Done]       = sequencer ? ReadyToExecuteNext
 }

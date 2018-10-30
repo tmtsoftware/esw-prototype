@@ -15,9 +15,9 @@ class Engine(implicit mat: Materializer) {
     Source.repeat(()).mapAsync(1)(_ => processStep(sequenceOperator, script)).runForeach(_ => ())
   }
 
-  def processStep(sequenceOperator: SequenceOperator, script: Script): Future[Unit] = async {
+  def processStep(sequenceOperator: SequenceOperator, script: Script): Future[Done] = async {
     val step = await(sequenceOperator.next)
     script.execute(step.command)
-    await(sequenceOperator.canExecuteNext)
+    await(sequenceOperator.readyToExecuteNext)
   }
 }
