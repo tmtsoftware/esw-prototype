@@ -1,6 +1,8 @@
 package ocs.api.messages
 
+import akka.Done
 import akka.actor.typed.ActorRef
+import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
 import csw.serializable.TMTSerializable
@@ -20,16 +22,16 @@ sealed trait SequencerMsg extends TMTSerializable
 object SequencerMsg {
   sealed trait InternalSequencerMsg extends SequencerMsg
 
-  case class GetNext(replyTo: ActorRef[Step])             extends InternalSequencerMsg
-  case class MaybeNext(replyTo: ActorRef[Option[Step]])   extends InternalSequencerMsg
-  case class Update(aggregateResponse: AggregateResponse) extends InternalSequencerMsg
+  case class GetNext(replyTo: ActorRef[Step])            extends InternalSequencerMsg
+  case class MaybeNext(replyTo: ActorRef[Option[Step]])  extends InternalSequencerMsg
+  case class Update(submitResponse: SubmitResponse)      extends InternalSequencerMsg
+  case class ReadyToExecuteNext(replyTo: ActorRef[Done]) extends InternalSequencerMsg
 
   sealed trait ExternalSequencerMsg extends SequencerMsg with SupervisorMsg {
     def replyTo: ActorRef[Try[Nothing]]
   }
 
-  case class ProcessSequence(commands: List[SequenceCommand], replyTo: ActorRef[Try[AggregateResponse]])
-      extends ExternalSequencerMsg
+  case class ProcessSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]])        extends ExternalSequencerMsg
   case class Add(commands: List[SequenceCommand], replyTo: ActorRef[Try[Unit]])                 extends ExternalSequencerMsg
   case class Pause(replyTo: ActorRef[Try[Unit]])                                                extends ExternalSequencerMsg
   case class Resume(replyTo: ActorRef[Try[Unit]])                                               extends ExternalSequencerMsg

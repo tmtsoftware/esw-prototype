@@ -18,7 +18,6 @@ class RemoteRepl(
     sequenceEditor: SequenceEditor,
     rpcConfigs: Configs
 ) {
-
   def server() = new SshdRepl(
     SshServerConfig(
       address = "0.0.0.0",

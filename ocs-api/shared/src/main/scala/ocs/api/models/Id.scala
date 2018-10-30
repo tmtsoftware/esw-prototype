@@ -8,6 +8,7 @@ case class Step(command: SequenceCommand, status: StepStatus, hasBreakpoint: Boo
   def id: Id              = command.runId
   def isPending: Boolean  = status == StepStatus.Pending
   def isFinished: Boolean = status == StepStatus.Finished
+  def isInFlight: Boolean = status == StepStatus.InFlight
 
   def addBreakpoint(): Step    = if (isPending) copy(hasBreakpoint = true) else this
   def removeBreakpoint(): Step = copy(hasBreakpoint = false)
@@ -26,14 +27,14 @@ object Step {
   def from(commands: List[SequenceCommand]): List[Step] = commands.map(command => from(command))
 }
 
-case class Sequence(commands: Seq[SequenceCommand]) {
-  def add(others: SequenceCommand*): Sequence = Sequence(commands ++ others)
-  def add(other: Sequence): Sequence          = Sequence(commands ++ other.commands)
+case class Sequence(runId: Id, commands: Seq[SequenceCommand]) {
+  def add(others: SequenceCommand*): Sequence = copy(commands = commands ++ others)
+  def add(other: Sequence): Sequence          = copy(commands = commands ++ other.commands)
 }
 
 object Sequence {
-  def from(commands: SequenceCommand*): Sequence = Sequence(commands.toList)
-  def empty: Sequence                            = Sequence(Nil)
+  def apply(commands: SequenceCommand*): Sequence = Sequence(Id(), commands.toList)
+  def empty: Sequence                             = Sequence(Id(), Nil)
 }
 
 case class AggregateResponse(childResponses: Set[CommandResponse]) {

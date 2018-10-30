@@ -1,7 +1,8 @@
 package ocs.framework.dsl
 
-import csw.params.commands.{Observe, SequenceCommand, Setup}
-import ocs.api.models.AggregateResponse
+import akka.Done
+import csw.params.commands.CommandResponse.SubmitResponse
+import csw.params.commands.{CommandResponse, Observe, SequenceCommand, Setup}
 import sequencer.macros.StrandEc
 
 import scala.concurrent.Future
@@ -12,23 +13,25 @@ abstract class Script(csw: CswServices) extends ControlDsl {
 
   protected def nextIf(f: SequenceCommand => Boolean)(implicit strandEc: StrandEc): Future[Option[SequenceCommand]] =
     spawn {
-      val hasNext = csw.sequencer.maybeNext.await.map(_.command).exists(f)
-      if (hasNext) Some(csw.sequencer.next.await.command) else None
+      val hasNext = csw.sequenceOperator.maybeNext.await.map(_.command).exists(f)
+      if (hasNext) Some(csw.sequenceOperator.next.await.command) else None
     }
 
-  protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[AggregateResponse]] = new FunctionBuilder
+  protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[Done]] = new FunctionBuilder
 
-  private lazy val commandHandler: SequenceCommand => Future[AggregateResponse] = commandHandlerBuilder.build { input =>
+  private lazy val commandHandler: SequenceCommand => Future[Done] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
-    spawn(AggregateResponse())
+    spawn(Done)
   }
 
-  def execute(command: SequenceCommand): Future[AggregateResponse] = spawn(commandHandler(command).await)
+  def execute(command: SequenceCommand): Future[Done] = spawn(commandHandler(command).await)
 
-  private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[AggregateResponse]): Unit = {
+  def callback: SubmitResponse => Unit = response => CommandResponse.isFinal(response)
+
+  private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[Done]): Unit = {
     commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
   }
 
-  protected def handleSetupCommand(name: String)(handler: Setup => Future[AggregateResponse]): Unit     = handle(name)(handler)
-  protected def handleObserveCommand(name: String)(handler: Observe => Future[AggregateResponse]): Unit = handle(name)(handler)
+  protected def handleSetupCommand(name: String)(handler: Setup => Future[Done]): Unit     = handle(name)(handler)
+  protected def handleObserveCommand(name: String)(handler: Observe => Future[Done]): Unit = handle(name)(handler)
 }

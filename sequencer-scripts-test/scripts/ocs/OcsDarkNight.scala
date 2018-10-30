@@ -5,8 +5,8 @@ import ocs.framework.dsl
 
 class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
-  private val iris = csw.sequenceFeeder("iris")
-  private val tcs  = csw.sequenceFeeder("tcs")
+  private val iris = csw.sequencerCommandService("iris")
+  private val tcs  = csw.sequencerCommandService("tcs")
 
   private var eventCount   = 0
   private var commandCount = 0
@@ -14,7 +14,6 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
   private val publisherStream = csw.publish(10.seconds) {
     SystemEvent(Prefix("ocs-test"), EventName("system"))
   }
-
   private val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1
     println(s"------------------> received-event for ocs on key: $eventKey")
@@ -25,28 +24,24 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
     spawn {
       println(s"[Ocs] Received command: ${commandA.commandName}")
       csw.sendResult(s"[Ocs] Received command: ${commandA.commandName}")
+      var topLevelCommandIds: Set[Id] = Set(commandA.runId)
+
       val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
       val subCommandsB = if (maybeCommandB.isDefined) {
-        val commandB  = maybeCommandB.get
+        val commandB = maybeCommandB.get
+        topLevelCommandIds += commandB.runId
+
         val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
-        Sequence.from(commandB, commandB1)
+        val commandB2 = Setup(Prefix("test-commandB2"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
+
+        Sequence(commandB1, commandB2)
       } else Sequence.empty
 
       val commandList = subCommandsB.add(commandA)
+      val response    = iris.await.submit(commandList).await
 
-      iris.await.submit(commandList).await
-
-      val commandAResponse = Completed(commandA.runId)
-
-      val response = if (maybeCommandB.isDefined) {
-        AggregateResponse(commandAResponse, Completed(maybeCommandB.get.runId))
-      } else {
-        AggregateResponse(commandAResponse)
-      }
-
-      println(s"[Ocs] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      csw.addSequenceResponse(topLevelCommandIds, response)
+      Done
     }
   }
 
@@ -55,30 +50,29 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
       val maybeCommandD = nextIf(c2 => c2.commandName.name == "setup-iris-tcs").await
       val tcsSequence = if (maybeCommandD.isDefined) {
         val commandD = maybeCommandD.get
-        Sequence.from(commandD)
+        Sequence(commandD)
       } else {
         Sequence.empty
       }
 
       println(s"[Ocs] Received command: ${commandC.commandName}")
-      val irisSequence = Sequence.from(commandC)
+      val irisSequence = Sequence(commandC)
 
-      parAggregate(
+      val responses = par(
         iris.await.submit(irisSequence),
         tcs.await.submit(tcsSequence)
       ).await
 
-      val commandCResponse = Completed(commandC.runId)
+      csw.addSequenceResponse(Set(commandC.runId), responses.head)
 
-      val response = if (maybeCommandD.isDefined) {
-        AggregateResponse(commandCResponse, Completed(maybeCommandD.get.runId))
-      } else {
-        AggregateResponse(commandCResponse)
+      if (maybeCommandD.isDefined) {
+        csw.addSequenceResponse(Set(maybeCommandD.get.runId), responses.last)
       }
 
-      println(s"[Ocs] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      println(s"[Ocs] Received response: $responses")
+      csw.sendResult(s"$responses")
+
+      Done
     }
   }
 
@@ -86,20 +80,18 @@ class OcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
     spawn {
       println(s"[Ocs] Received command: ${command.commandName}")
 
-      tcs.await.submit(Sequence.from(command)).await
+      val response = tcs.await.submit(Sequence(command)).await
 
-      val response = AggregateResponse(Completed(command.runId))
-
-      println(s"[Ocs] Received response: $response")
+      csw.addSequenceResponse(Set(command.runId), response)
       csw.sendResult(s"$response")
-      response
+      Done
     }
   }
 
   override def onShutdown(): Future[Done] = spawn {
+    println("shutdown ocs")
     subscriptionStream.unsubscribe().await
     publisherStream.cancel()
-    println("shutdown ocs")
     Done
   }
 }

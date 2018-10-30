@@ -17,17 +17,17 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
       if (commandFailed) {
         val command2 = Setup(Prefix("test-command2"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))
-        Set(csw.submit("Sample1Assembly", command2).await)
+        csw.submit("Sample1Assembly", command2).await
       } else {
         val command3 = Setup(Prefix("test-command3"), CommandName("setup-tcs"), Some(ObsId("test-obsId")))
-        Set(csw.submit("Sample1Assembly", command3).await)
+        csw.submit("Sample1Assembly", command3).await
       }
 
-      val response = AggregateResponse(Completed(command.runId))
+      csw.addOrUpdateCommand(command.runId, firstAssemblyResponse)
 
-      println(s"[Tcs] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      println(s"[Tcs] Received response: $firstAssemblyResponse")
+      csw.sendResult(s"$firstAssemblyResponse")
+      Done
     }
   }
 }

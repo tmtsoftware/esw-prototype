@@ -1,11 +1,12 @@
 package ocs.api
 
-import ocs.api.models.{AggregateResponse, Sequence}
+import csw.params.commands.CommandResponse.SubmitResponse
+import ocs.api.models.Sequence
 
 import scala.concurrent.Future
 
 trait SequencerCommandService {
-  def submit(commandList: Sequence): Future[AggregateResponse]
+  def submit(commandList: Sequence): Future[SubmitResponse]
 }
 
 object SequencerCommandService {

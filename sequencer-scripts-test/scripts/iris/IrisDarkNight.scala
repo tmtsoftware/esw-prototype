@@ -7,44 +7,41 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
 
   var flag = true
 
-  private val publisherStream = csw.publish(10.seconds) {
-    SystemEvent(Prefix("iris-test"), EventName("system"))
-  }
-
-  private val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { _ =>
-    println(s"------------------> received-event for ocs on key-------------------->")
-    Done
-  }
-
-  loop(minimumInterval = 2.second) {
-    spawn {
-      println("************ loop **************")
-      stopWhen(false)
-    }
-  }
-
   handleSetupCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")
-      var firstAssemblyResponse: CommandResponse = null
-      loop {
-        spawn {
-          firstAssemblyResponse = csw.submit("Sample1Assembly", command).await
-          stopWhen(flag)
-        }
-      }.await
 
-      val response = AggregateResponse(Completed(command.runId))
+      val command1 = Setup(Prefix("test-commandA1"), CommandName("commandA1"), Some(ObsId("test-obsId")))
+      val command2 = Setup(Prefix("test-commandA2"), CommandName("commandA2"), Some(ObsId("test-obsId")))
 
-      println(s"[Iris] Received response: $response")
-      csw.sendResult(s"$response")
-      response
+      csw.addSubCommands(parentCommand = command, childCommands = Set(command1, command2))
+
+      val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
+      if (maybeCommandB.isDefined) {
+        val commandB  = maybeCommandB.get
+        val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
+        val commandB2 = Setup(Prefix("test-commandB2"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
+
+        csw.addSubCommands(parentCommand = commandB, childCommands = Set(commandB1, commandB2))
+
+        val assemblyResponse3 = csw.submit("Sample1Assembly", commandB1).await
+        csw.updateSubCommand(subCmdId = commandB1.runId, subCmdResponse = assemblyResponse3)
+
+        val assemblyResponse4 = csw.submit("Sample1Assembly", commandB2).await
+        csw.updateSubCommand(subCmdId = commandB2.runId, subCmdResponse = assemblyResponse4)
+      }
+
+      val assemblyResponse1 = csw.submit("Sample1Assembly", command1).await
+      csw.updateSubCommand(subCmdId = command1.runId, subCmdResponse = assemblyResponse1)
+
+      val assemblyResponse2 = csw.submit("Sample1Assembly", command2).await
+      csw.updateSubCommand(subCmdId = command2.runId, subCmdResponse = assemblyResponse2)
+
+      Done
     }
   }
 
   override def onShutdown(): Future[Done] = spawn {
-    subscriptionStream.unsubscribe().await
-    publisherStream.cancel()
     println("shutdown iris")
     Done
   }
