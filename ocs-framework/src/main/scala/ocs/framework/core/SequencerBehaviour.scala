@@ -53,7 +53,7 @@ object SequencerBehaviour {
         stepList = stepList.updateStep(inFlightStep)
         val stepRunId = step.command.runId
         crmRef ! AddSubCommand(stepList.runId, stepRunId)
-        crmRef ! AddOrUpdateCommand(stepRunId, CommandResponse.Started(stepRunId))
+        crmRef ! AddOrUpdateCommand(CommandResponse.Started(stepRunId))
         crmRef ! CommandResponseManagerMessage.Subscribe(stepRunId, crmMapper)
         replyTo ! inFlightStep
       }
@@ -68,7 +68,7 @@ object SequencerBehaviour {
 
       def update(_submitResponse: SubmitResponse): Unit = {
         //why 2 level nesting for line below
-        crmRef ! UpdateSubCommand(_submitResponse.runId, CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
+        crmRef ! UpdateSubCommand(CommandResponse.withRunId(_submitResponse.runId, _submitResponse))
         stepList = stepList.updateStatus(Set(_submitResponse.runId), StepStatus.Finished)
         latestResponse = Some(_submitResponse)
         clearIfSequenceFinished()
@@ -79,7 +79,7 @@ object SequencerBehaviour {
         if (isSequenceFinished) {
           println("Sequence is finished")
           val sequenceResponse = CommandResponse.withRunId(stepList.runId, latestResponse.orNull) //whether this will be called with None latestresponse ever??
-          crmRef ! UpdateSubCommand(emptyChildId, sequenceResponse)
+          crmRef ! UpdateSubCommand(sequenceResponse)
           responseRefOpt.foreach(x => x ! Success(sequenceResponse))
           stepList = StepList.empty
           readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
@@ -98,7 +98,7 @@ object SequencerBehaviour {
       def processSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]]): Unit = {
         val runId = sequence.runId
         stepList = StepList.from(sequence)
-        crmRef ! AddOrUpdateCommand(runId, CommandResponse.Started(runId))
+        crmRef ! AddOrUpdateCommand(CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
         crmRef ! AddSubCommand(runId, emptyChildId)
         responseRefOpt = Some(replyTo)

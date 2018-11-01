@@ -25,17 +25,17 @@ class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
         csw.addSubCommands(parentCommand = commandB, childCommands = Set(commandB1, commandB2))
 
         val assemblyResponse3 = csw.submit("Sample1Assembly", commandB1).await
-        csw.updateSubCommand(subCmdId = commandB1.runId, subCmdResponse = assemblyResponse3)
+        csw.updateSubCommand(subCmdResponse = assemblyResponse3)
 
         val assemblyResponse4 = csw.submit("Sample1Assembly", commandB2).await
-        csw.updateSubCommand(subCmdId = commandB2.runId, subCmdResponse = assemblyResponse4)
+        csw.updateSubCommand(subCmdResponse = assemblyResponse4)
       }
 
       val assemblyResponse1 = csw.submit("Sample1Assembly", command1).await
-      csw.updateSubCommand(subCmdId = command1.runId, subCmdResponse = assemblyResponse1)
+      csw.updateSubCommand(subCmdResponse = assemblyResponse1)
 
       val assemblyResponse2 = csw.submit("Sample1Assembly", command2).await
-      csw.updateSubCommand(subCmdId = command2.runId, subCmdResponse = assemblyResponse2)
+      csw.updateSubCommand(subCmdResponse = assemblyResponse2)
 
       Done
     }

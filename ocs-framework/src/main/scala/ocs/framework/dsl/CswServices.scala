@@ -75,8 +75,8 @@ class CswServices(
     redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
   }
 
-  def addOrUpdateCommand(runId: Id, cmdStatus: SubmitResponse): Unit = {
-    commandResponseManager.addOrUpdateCommand(runId, cmdStatus)
+  def addOrUpdateCommand(cmdStatus: SubmitResponse): Unit = {
+    commandResponseManager.addOrUpdateCommand(cmdStatus)
   }
 
   def addSubCommands(parentCommand: SequenceCommand, childCommands: Set[SequenceCommand]): Unit = {
@@ -85,8 +85,8 @@ class CswServices(
     )
   }
 
-  def updateSubCommand(subCmdId: Id, subCmdResponse: SubmitResponse): Unit = {
-    commandResponseManager.updateSubCommand(subCmdId, subCmdResponse)
+  def updateSubCommand(subCmdResponse: SubmitResponse): Unit = {
+    commandResponseManager.updateSubCommand(subCmdResponse)
   }
 
   def queryFinalCommandStatus(runId: Id)(implicit timeout: Timeout): Future[SubmitResponse] = {
@@ -94,6 +94,6 @@ class CswServices(
   }
 
   def addSequenceResponse(topLevelCommandIds: Set[Id], submitResponse: SubmitResponse): Unit = {
-    topLevelCommandIds.foreach(id => commandResponseManager.addOrUpdateCommand(id, CommandResponse.withRunId(id, submitResponse)))
+    topLevelCommandIds.foreach(id => commandResponseManager.addOrUpdateCommand(CommandResponse.withRunId(id, submitResponse)))
   }
 }

@@ -23,7 +23,7 @@ class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
         csw.submit("Sample1Assembly", command3).await
       }
 
-      csw.addOrUpdateCommand(command.runId, firstAssemblyResponse)
+      csw.addOrUpdateCommand(firstAssemblyResponse)
 
       println(s"[Tcs] Received response: $firstAssemblyResponse")
       csw.sendResult(s"$firstAssemblyResponse")
