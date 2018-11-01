@@ -79,7 +79,7 @@ object SequencerBehaviour {
         if (isSequenceFinished) {
           println("Sequence is finished")
           val sequenceResponse = CommandResponse.withRunId(stepList.runId, latestResponse.orNull) //whether this will be called with None latestresponse ever??
-          crmRef ! UpdateSubCommand(sequenceResponse)
+          crmRef ! UpdateSubCommand(CommandResponse.withRunId(emptyChildId, sequenceResponse))
           responseRefOpt.foreach(x => x ! Success(sequenceResponse))
           stepList = StepList.empty
           readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
