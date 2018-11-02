@@ -111,14 +111,17 @@ lazy val `sequencer-macros` = project
   )
 
 lazy val `ocs-client` = project
+  .configs(IntegrationTest)
   .dependsOn(`ocs-api-jvm`)
   .settings(
+    Defaults.itSettings,
     libraryDependencies ++= Seq(
       Csw.`csw-location-client`,
       Csw.`csw-command-client`,
       Csw.`csw-event-client`,
       Csw.`romaine`,
       Ammonite.`ammonite`,
+      SharedLibs.`scalaTest`.value % "it,test",
     )
   )
 
