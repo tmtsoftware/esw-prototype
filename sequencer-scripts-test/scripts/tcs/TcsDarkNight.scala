@@ -1,9 +1,8 @@
 package tcs
 
 import ocs.framework.ScriptImports._
-import ocs.framework.dsl
 
-class TcsDarkNight(csw: CswServices) extends dsl.Script(csw) {
+class TcsDarkNight(csw: CswServices) extends Script(csw) {
 
   private var eventCount   = 0
   private var commandCount = 0

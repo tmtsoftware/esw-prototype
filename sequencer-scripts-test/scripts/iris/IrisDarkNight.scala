@@ -1,9 +1,8 @@
 package iris
 
 import ocs.framework.ScriptImports._
-import ocs.framework.dsl
 
-class IrisDarkNight(csw: CswServices) extends dsl.Script(csw) {
+class IrisDarkNight(csw: CswServices) extends Script(csw) {
 
   var flag = true
 
