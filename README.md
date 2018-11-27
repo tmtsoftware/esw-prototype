@@ -30,13 +30,9 @@ run csw-services.sh script using [tmt-deploy readme](https://github.com/tmtsoftw
     - ```$./csw-services.sh start -i en0```
 
 ### Run sample assembly
-Necessary environment variables  - 
-Export clusterSeeds=ip:5552 - Use your own ip
 Follow instructions in [readme](https://github.com/Poorva17/sample-assembly-hcd)
 
 ## Running esw-sequencer
-Necessary environment variables  -
-Export clusterSeeds=ip:5552 - Use your own ip
  - Run e.g. 
  ```sbtshell
 sbt 
