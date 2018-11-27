@@ -27,7 +27,8 @@ object Enumeratum {
 
 object Csw {
   private val Org     = "com.github.tmtsoftware.csw"
-  private val Version = "ef09b11" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
+//  private val Version = "ef09b11" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
+  private val Version = "0.1-SNAPSHOT" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
 
   val `csw-location-client` = Org %% "csw-location-client" % Version
   val `csw-command-client`  = Org %% "csw-command-client"  % Version
@@ -46,7 +47,7 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.17"
+  val Version = "2.5.18"
 
   val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
