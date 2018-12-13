@@ -3,7 +3,7 @@ import Def.{setting => dep}
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Libs {
-  val ScalaVersion = "2.12.7"
+  val ScalaVersion = "2.12.8"
 
   val `scala-reflect`      = "org.scala-lang"         % "scala-reflect"       % ScalaVersion
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
@@ -39,7 +39,7 @@ object Csw {
 }
 
 object Ammonite {
-  val Version = "1.3.2"
+  val Version = "1.5.0"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
