@@ -46,7 +46,7 @@ object Ammonite {
 }
 
 object Akka {
-  val Version = "2.5.18"
+  val Version = "2.5.19"
 
   val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version

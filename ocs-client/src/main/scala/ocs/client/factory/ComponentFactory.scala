@@ -26,7 +26,7 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
   def sequenceCommandService(sequencerId: String, observingMode: String): Future[SequencerCommandService] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+      val supervisorRef = akkaLocation.actorRef.unsafeUpcast[SupervisorMsg]
       new SequencerCommandServiceJvmClient(supervisorRef)
     }
   }
@@ -34,7 +34,7 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
   def sequenceEditor(subSystemSequencerId: String, observingMode: String): Future[SequenceEditor] = {
     val componentName = SequencerUtil.getComponentName(subSystemSequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
-      val supervisorRef = akkaLocation.actorRef.upcast[SupervisorMsg]
+      val supervisorRef = akkaLocation.actorRef.unsafeUpcast[SupervisorMsg]
       new SequenceEditorJvmClient(supervisorRef)
     }
   }
