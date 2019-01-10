@@ -26,17 +26,15 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
       var topLevelCommands: Set[SequenceCommand] = Set(commandA)
 
       val maybeCommandB = nextIf(c => c.commandName.name == "setup-iris").await
-      val sequenceB = if (maybeCommandB.isDefined) {
+      val sequence = if (maybeCommandB.isDefined) {
         val commandB = maybeCommandB.get
         topLevelCommands += commandB
 
         val commandB1 = Setup(Prefix("test-commandB1"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
-        val commandB2 = Setup(Prefix("test-commandB2"), CommandName("setup-iris"), Some(ObsId("test-obsId")))
 
-        Sequence(commandB1, commandB2)
+        Sequence(commandA, commandB, commandB1)
       } else Sequence.empty
 
-      val sequence = sequenceB.add(commandA)
       val response = iris.await.submit(sequence).await
 
       csw.addSequenceResponse(topLevelCommands, response)

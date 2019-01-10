@@ -3,6 +3,7 @@ POST http://localhost:9090/sequencer/iris/darknight/feeder/feed
 Content-Type: application/json
 
 {
+  "runId": "196e0354-ea0f-4547-a3df-e04633b704f89",
   "commands": [
     {
       "type": "Setup",
