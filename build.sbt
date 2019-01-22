@@ -111,6 +111,7 @@ lazy val `sequencer-macros` = project
   )
 
 lazy val `ocs-client` = project
+  .enablePlugins(DeployApp)
   .configs(IntegrationTest)
   .dependsOn(`ocs-api-jvm`)
   .settings(
