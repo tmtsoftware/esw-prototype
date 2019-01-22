@@ -19,6 +19,10 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
     locationService.resolve(assemblyName, ComponentType.Assembly)(akkaLocation => CommandServiceFactory.make(akkaLocation))
   }
 
+  def hcdCommandService(hcdName: String): Future[CommandService] = {
+    locationService.resolve(hcdName, ComponentType.HCD)(akkaLocation => CommandServiceFactory.make(akkaLocation))
+  }
+
   def assemblyLocation(assemblyName: String): Future[AkkaLocation] = {
     locationService.resolve(assemblyName, ComponentType.Assembly)(identity)
   }
