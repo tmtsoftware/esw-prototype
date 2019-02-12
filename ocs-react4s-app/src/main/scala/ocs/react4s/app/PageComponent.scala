@@ -5,14 +5,22 @@ import ocs.api.WebClients
 import ocs.api.models.SequencerInfo
 import ocs.react4s.app.assembly.{AssemblyCommandComponent, AssemblySetupComponent}
 
-case class PageComponent(page: P[Page]) extends Component[NoEmit] {
+case class PageComponent(page: P[String]) extends Component[NoEmit] {
+  import shapeless._
+
   override def render(get: Get): Node = {
     get(page) match {
-      case Home                                      => Component(ListComponent, WebClients.listSequencers)
-      case SequencerWithMode(mode, Sequencer(id, _)) => Component(SequencerComponent, SequencerInfo(id, mode))
-      case Assembly(assemblyName, _)                 => Component(AssemblyCommandComponent, WebClients.assemblyCommandClient(assemblyName))
-      case FilterAssembly(filterName, Assembly(assemblyName, _)) =>
-        Component(AssemblySetupComponent, filterName, WebClients.assemblyCommandClient(assemblyName))
+      case Routes.home => Component(ListComponent, WebClients.listSequencers)
+
+      case Routes.assemblyInfo(name :: HNil) =>
+        Component(AssemblyCommandComponent, WebClients.assemblyCommandClient(name.toString))
+
+      case Routes.sequencerInfo(id :: mode :: HNil) =>
+        Component(SequencerComponent, SequencerInfo(id.toString, mode.toString))
+
+      case Routes.filterAssemblyInfo(assemblyName :: filterName :: HNil) =>
+        Component(AssemblySetupComponent, filterName.toString, WebClients.assemblyCommandClient(assemblyName.toString))
+
       case _ => E.div(Text("invalid route"))
     }
   }

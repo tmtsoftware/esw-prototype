@@ -1,29 +1,10 @@
 package ocs.react4s.app
 
-import com.github.werk.router4s.Extra.string
-import com.github.werk.router4s.Router
-
 object Routes {
-  val path = new Router[Page]
-  val router = path(
-    Home,
-    path(
-      "sequencer",
-      Sequencers,
-      path(
-        string,
-        Sequencer,
-        path(string, SequencerWithMode)
-      )
-    ),
-    path(
-      "assembly",
-      Assemblies,
-      path(
-        string,
-        Assembly,
-        path(string, FilterAssembly)
-      )
-    )
-  )
+  import trail._
+
+  val home: String       = Root.url()
+  val sequencerInfo      = Root / "sequencer" / Arg[String] / Arg[String]
+  val assemblyInfo       = Root / "assembly" / Arg[String]
+  val filterAssemblyInfo = Root / "assembly" / Arg[String] / Arg[String]
 }

@@ -91,7 +91,7 @@ lazy val `ocs-react4s-app` = project
     libraryDependencies ++= Seq(
       SharedLibs.scalaTest.value % Test,
       React4s.`react4s`.value,
-      React4s.`router4s`.value,
+      Sparse.`trail`.value,
       Libs.`scala-async`.value
     ),
     version in webpack := "4.8.1",
