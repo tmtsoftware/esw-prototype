@@ -14,7 +14,7 @@ import csw.event.client.models.EventStores.RedisStore
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
-import csw.logging.scaladsl.LoggerFactory
+import csw.logging.client.scaladsl.LoggerFactory
 import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}

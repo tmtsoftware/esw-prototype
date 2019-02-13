@@ -2,7 +2,7 @@ package ocs.framework
 
 import akka.Done
 import akka.actor.CoordinatedShutdown
-import csw.logging.scaladsl.LoggingSystemFactory
+import csw.logging.client.scaladsl.LoggingSystemFactory
 import csw.params.core.models.Prefix
 import ocs.api.SequencerUtil
 
