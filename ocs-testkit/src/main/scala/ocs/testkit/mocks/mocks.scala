@@ -4,9 +4,10 @@ import akka.Done
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
 import akka.actor.{ActorSystem, Cancellable}
+import akka.util.Timeout
 import csw.event.api.scaladsl.EventSubscription
 import csw.params.commands.CommandResponse.SubmitResponse
-import csw.params.commands.{CommandResponse, ControlCommand}
+import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand}
 import csw.params.core.models.Id
 import csw.params.events.{Event, EventKey}
 import ocs.api.SequencerCommandService
@@ -51,6 +52,18 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
     CancellableMock
   override def publish(event: Event): Future[Done]   = Future.successful(Done)
   override def sendResult(msg: String): Future[Done] = Future.successful(Done)
+
+  override def addOrUpdateCommand(cmdStatus: SubmitResponse): Unit = {}
+
+  override def addSubCommands(parentCommand: SequenceCommand, childCommands: Set[SequenceCommand]): Unit = {}
+
+  override def updateSubCommand(subCmdResponse: SubmitResponse): Unit = {}
+
+  override def queryFinalCommandStatus(
+      command: SequenceCommand
+  )(implicit timeout: Timeout): Future[SubmitResponse] = submitResponseF
+
+  override def addSequenceResponse(topLevelCommands: Set[SequenceCommand], submitResponse: SubmitResponse): Unit = {}
 }
 
 object CswServicesMock {
