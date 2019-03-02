@@ -9,6 +9,7 @@ import csw.event.api.scaladsl.{EventService, EventSubscription}
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.{CommandResponse, ControlCommand, SequenceCommand}
 import csw.params.events.{Event, EventKey}
+import csw.time.scheduler.api.TimeServiceScheduler
 import ocs.api.{SequenceEditor, SequencerCommandService}
 import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
 import ocs.framework.ScriptImports.toDuration
@@ -27,6 +28,7 @@ class CswServices(
     componentFactory: ComponentFactory,
     locationService: LocationServiceWrapper,
     eventService: EventService,
+    timeServiceScheduler: TimeServiceScheduler,
     romaineFactory: RomaineFactory,
     commandResponseManager: CommandResponseManager
 )(implicit system: ActorSystem) {
@@ -60,7 +62,7 @@ class CswServices(
     eventService.defaultSubscriber.subscribeAsync(eventKeys, e => Future(callback(e))(strandEc.ec))
   }
 
-  def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: StrandEc): Cancellable = {
+  def publish(every: FiniteDuration)(eventGeneratorBlock: => Option[Event])(implicit strandEc: StrandEc): Cancellable = {
     println(s"=========================> Publishing event $eventGeneratorBlock every $every")
     eventService.defaultPublisher.publishAsync(Future(eventGeneratorBlock)(strandEc.ec), every)
   }
@@ -79,7 +81,7 @@ class CswServices(
     println(s"=========================> Getting events $eventKeys")
     eventService.defaultSubscriber.get(eventKeys)
   }
-
+  
   def sendResult(msg: String): Future[Done] = {
     redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
   }

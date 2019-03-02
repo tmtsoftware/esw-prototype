@@ -2,7 +2,7 @@ package ocs.framework
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import akka.actor.{typed, ActorSystem}
+import akka.actor.{ActorSystem, typed}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import csw.command.client.CommandResponseManager
@@ -15,6 +15,8 @@ import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
 import csw.logging.client.scaladsl.LoggerFactory
+import csw.time.scheduler.TimeServiceSchedulerFactory
+import csw.time.scheduler.api.TimeServiceScheduler
 import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
@@ -52,6 +54,8 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
 
+  lazy val timeServiceScheduler: TimeServiceScheduler = TimeServiceSchedulerFactory.make()
+
   lazy val engine                         = new Engine
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
@@ -66,6 +70,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
       componentFactory,
       locationServiceWrapper,
       eventService,
+      timeServiceScheduler,
       romaineFactory,
       commandResponseManager
     )
