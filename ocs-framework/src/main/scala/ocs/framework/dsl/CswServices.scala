@@ -40,6 +40,8 @@ class CswServices(
   private lazy val redisAsyncScalaApi: RedisAsyncApi[String, String] = {
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
+  
+  val scheduler: TimeServiceScheduler = this.timeServiceScheduler
 
   def sequencerCommandService(subSystemSequencerId: String): Future[SequencerCommandService] =
     componentFactory.sequenceCommandService(subSystemSequencerId, observingMode)
@@ -81,7 +83,7 @@ class CswServices(
     println(s"=========================> Getting events $eventKeys")
     eventService.defaultSubscriber.get(eventKeys)
   }
-  
+
   def sendResult(msg: String): Future[Done] = {
     redisAsyncScalaApi.publish(s"$sequencerId-$observingMode", msg).map(_ => Done)(system.dispatcher)
   }
