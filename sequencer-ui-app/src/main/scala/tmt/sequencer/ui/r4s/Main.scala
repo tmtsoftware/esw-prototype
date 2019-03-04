@@ -10,10 +10,10 @@ import tmt.sequencer.ui.r4s.resultevent.ResultEventComponent
 object Main {
   def main(arguments: Array[String]): Unit = {
     val component = E.div(
-      Component(HeaderComponent),
-      Component(FeederComponent, SequencerClient.feeder),
-      Component(EditorComponent, SequencerClient.editor),
-      Component(ResultEventComponent, SequencerClient.logger)
+      Component(HeaderComponent)
+//      Component(FeederComponent, SequencerClient.feeder),
+//      Component(EditorComponent, SequencerClient.editor),
+//      Component(ResultEventComponent, SequencerClient.logger)
     )
     NpmReactBridge.renderToDomById(component, "main")
   }
