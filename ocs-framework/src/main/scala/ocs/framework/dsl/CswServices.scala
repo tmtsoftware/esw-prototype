@@ -40,7 +40,7 @@ class CswServices(
   private lazy val redisAsyncScalaApi: RedisAsyncApi[String, String] = {
     romaineFactory.redisAsyncApi(locationService.redisUrI(masterId))
   }
-  
+
   val scheduler: TimeServiceScheduler = this.timeServiceScheduler
 
   def sequencerCommandService(subSystemSequencerId: String): Future[SequencerCommandService] =

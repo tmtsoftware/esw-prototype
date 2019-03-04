@@ -37,7 +37,7 @@ object CancellableMock extends Cancellable {
 }
 
 class CswServicesMock(sequencerId: String, observingMode: String, sequencer: SequenceOperator)(implicit system: ActorSystem)
-    extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null, null) {
+    extends CswServices(sequencerId, observingMode, sequencer, null, null, null, null, null, null) {
   val commandResponseF: Future[CommandResponse] = Future.successful(CommandResponse.Completed(Id("dummy-id")))
   val submitResponseF: Future[SubmitResponse]   = Future.successful(CommandResponse.Completed(Id("dummy-id")))
 
@@ -48,7 +48,7 @@ class CswServicesMock(sequencerId: String, observingMode: String, sequencer: Seq
   override def oneway(assemblyName: String, command: ControlCommand): Future[CommandResponse]            = commandResponseF
   override def subscribe(eventKeys: Set[EventKey])(callback: Event => Done)(implicit strandEc: StrandEc): EventSubscription =
     EventSubscriptionMock
-  override def publish(every: FiniteDuration)(eventGeneratorBlock: => Event)(implicit strandEc: StrandEc): Cancellable =
+  override def publish(every: FiniteDuration)(eventGeneratorBlock: => Option[Event])(implicit strandEc: StrandEc): Cancellable =
     CancellableMock
   override def publish(event: Event): Future[Done]   = Future.successful(Done)
   override def sendResult(msg: String): Future[Done] = Future.successful(Done)
