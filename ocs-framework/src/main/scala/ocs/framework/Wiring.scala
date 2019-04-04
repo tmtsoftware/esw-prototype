@@ -78,7 +78,4 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val sequenceEditor: SequenceEditor                   = new SequenceEditorJvmClient(supervisorRef)
   lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
-
-  lazy val remoteRepl =
-    new RemoteRepl(cswServices, sequenceOperator, supervisorRef, sequencerCommandService, sequenceEditor, configs)
 }

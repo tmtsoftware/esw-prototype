@@ -30,7 +30,5 @@ object SequencerApp {
       Future(redisClient.shutdown()).map(_ => Done)
     }
 
-    Thread.sleep(4000)
-    remoteRepl.server().start()
   }
 }
