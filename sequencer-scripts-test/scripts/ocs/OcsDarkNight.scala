@@ -11,7 +11,7 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
   private var commandCount = 0
 
   private val publisherStream = csw.publish(10.seconds) {
-    SystemEvent(Prefix("ocs-test"), EventName("system"))
+    Option(SystemEvent(Prefix("ocs-test"), EventName("system")))
   }
   private val subscriptionStream = csw.subscribe(Set(EventKey("ocs-test.system"))) { eventKey =>
     eventCount = eventCount + 1

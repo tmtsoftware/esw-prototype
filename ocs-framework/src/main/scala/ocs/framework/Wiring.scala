@@ -2,12 +2,11 @@ package ocs.framework
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import akka.actor.{ActorSystem, typed}
+import akka.actor.{typed, ActorSystem}
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
-import csw.command.client.CommandResponseManager
-import csw.command.client.internal.CommandResponseManagerFactory
 import csw.command.client.messages.CommandResponseManagerMessage
+import csw.command.client.{CRMCacheProperties, CommandResponseManager, CommandResponseManagerActor}
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.event.client.models.EventStores.RedisStore
@@ -38,8 +37,9 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy implicit val materializer: Materializer              = ActorMaterializer()
   lazy implicit val executionContext: ExecutionContext      = system.dispatcher
 
-  lazy val crmRef: ActorRef[CommandResponseManagerMessage] = system.spawn(crmFactory.makeBehavior(loggerFactory), "crm")
-  lazy val commandResponseManager: CommandResponseManager  = crmFactory.make(crmRef)
+  lazy val crmRef: ActorRef[CommandResponseManagerMessage] =
+    system.spawn(CommandResponseManagerActor.behavior(CRMCacheProperties(), loggerFactory), "crm")
+  lazy val commandResponseManager: CommandResponseManager = new CommandResponseManager(crmRef)
 
   lazy val sequencerRef: ActorRef[SequencerMsg] = system.spawn(SequencerBehaviour.behavior(crmRef), "sequencer")
   lazy val sequenceOperator                     = new SequenceOperator(sequencerRef, system)
@@ -60,7 +60,6 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   private val loggerFactory = new LoggerFactory("sequencer")
-  private val crmFactory    = new CommandResponseManagerFactory()
 
   lazy val cswServices =
     new CswServices(

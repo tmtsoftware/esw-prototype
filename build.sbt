@@ -150,7 +150,6 @@ lazy val `ocs-framework` = project
       Ammonite.`ammonite-sshd`,
       Libs.`scala-async`.value,
       Csw.`csw-event-client`,
-      Csw.`csw-time-service`,
       Csw.`csw-time-scheduler`,
       SharedLibs.scalaTest.value % Test
     )
