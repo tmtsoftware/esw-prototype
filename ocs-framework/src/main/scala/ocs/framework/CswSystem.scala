@@ -7,7 +7,10 @@ import akka.actor.typed.scaladsl.adapter.TypedActorSystemOps
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
 import akka.stream.typed.scaladsl.ActorMaterializer
 import akka.util.Timeout
+import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
+import csw.location.client.scaladsl.HttpLocationServiceFactory
+import ocs.client.factory.LocationServiceWrapper
 import ocs.framework.GuardianActor.GuardianMsg
 
 import scala.concurrent.duration.DurationDouble
@@ -23,6 +26,9 @@ class CswSystem(name: String) {
 
   implicit lazy val scheduler: Scheduler = typedSystem.scheduler
   implicit lazy val timeout: Timeout     = Timeout(5.seconds)
+
+  lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
+  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
   def spawn[T](behavior: Behavior[T], name: String, props: Props = Props.empty): ActorRef[T] = {
     Await.result(typedSystem ? GuardianActor.Spawn(behavior, name, props), 5.seconds)

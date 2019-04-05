@@ -1,27 +1,28 @@
 package ocs.framework
 
+import akka.Done
 import akka.actor.typed.ActorRef
 import csw.command.client.messages.CommandResponseManagerMessage
 import csw.command.client.{CRMCacheProperties, CommandResponseManager, CommandResponseManagerActor}
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.event.client.models.EventStores.RedisStore
-import csw.location.api.scaladsl.LocationService
-import csw.location.client.scaladsl.HttpLocationServiceFactory
-import csw.logging.client.scaladsl.LoggerFactory
+import csw.location.api.models.{ComponentId, ComponentType}
+import csw.logging.client.scaladsl.{LoggerFactory, LoggingSystemFactory}
+import csw.params.core.models.Prefix
 import csw.time.scheduler.TimeServiceSchedulerFactory
 import csw.time.scheduler.api.TimeServiceScheduler
 import io.lettuce.core.RedisClient
 import ocs.api.client.{SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
 import ocs.api.messages.{SequencerMsg, SupervisorMsg}
-import ocs.api.{SequenceEditor, SequencerCommandService}
-import ocs.client.factory.{ComponentFactory, LocationServiceWrapper}
+import ocs.api.{SequenceEditor, SequencerCommandService, SequencerUtil}
+import ocs.client.factory.ComponentFactory
 import ocs.framework.core.{Engine, SequenceOperator, SequencerBehaviour, SupervisorBehavior}
 import ocs.framework.dsl.{CswServices, Script}
 import ocs.framework.util.ScriptLoader
 import romaine.RomaineFactory
 
-class Wiring(sequencerId: String, observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
+class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
 
   import cswSystem._
 
@@ -32,9 +33,6 @@ class Wiring(sequencerId: String, observingMode: String, cswSystem: CswSystem, r
 
   lazy val sequencerRef: ActorRef[SequencerMsg] = cswSystem.spawn(SequencerBehaviour.behavior(crmRef), "sequencer")
   lazy val sequenceOperator                     = new SequenceOperator(sequencerRef, system)
-
-  lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
-  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
   lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
 
@@ -48,6 +46,8 @@ class Wiring(sequencerId: String, observingMode: String, cswSystem: CswSystem, r
   lazy val romaineFactory: RomaineFactory = new RomaineFactory(redisClient)
 
   private val loggerFactory = new LoggerFactory("sequencer")
+
+  lazy val componentId = ComponentId(SequencerUtil.getComponentName(sequencerId, observingMode), ComponentType.Sequencer)
 
   lazy val cswServices =
     new CswServices(
@@ -67,4 +67,19 @@ class Wiring(sequencerId: String, observingMode: String, cswSystem: CswSystem, r
 
   lazy val sequenceEditor: SequenceEditor                   = new SequenceEditorJvmClient(supervisorRef)
   lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
+
+  def shutDown(): Done = {
+    cswSystem.shutdownChildren()
+  }
+
+  def start(): Unit = {
+    LoggingSystemFactory.start("sample", "", "", system)
+    engine.start(sequenceOperator, script)
+    locationServiceWrapper.register(
+      Prefix("sequencer"),
+      componentId,
+      supervisorRef
+    )
+  }
+
 }

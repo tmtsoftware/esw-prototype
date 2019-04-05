@@ -7,24 +7,24 @@ import csw.location.api.models._
 import csw.location.api.scaladsl.LocationService
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisURI
-import ocs.api.messages.SupervisorMsg
 
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceWrapper(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
-  def registerSequencer(prefix: Prefix, componentName: String, supervisorRef: ActorRef[SupervisorMsg]): Unit = {
+  def register[T](prefix: Prefix, componentId: ComponentId, actorRef: ActorRef[T]): Unit = {
+
     val registration =
       AkkaRegistration(
-        AkkaConnection(ComponentId(componentName, ComponentType.Sequencer)),
+        AkkaConnection(componentId),
         prefix,
-        supervisorRef,
+        actorRef
       )
 
     println(s"Registering [${registration.actorRef.path}]")
     locationService.register(registration).foreach { registrationResult =>
-      println(s"Successfully registered $componentName - $registrationResult")
+      println(s"Successfully registered ${componentId.name} - $registrationResult")
 
       CoordinatedShutdown(system).addTask(
         CoordinatedShutdown.PhaseBeforeServiceUnbind,
