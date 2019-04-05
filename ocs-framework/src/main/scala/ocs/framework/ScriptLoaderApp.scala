@@ -5,8 +5,8 @@ import akka.actor.typed.ActorRef
 import csw.location.api.models.{ComponentId, ComponentType}
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisClient
+import ocs.api.messages.ScriptLoaderMsg
 import ocs.framework.core.ScriptLoaderBehaviour
-import ocs.framework.messages.ScriptLoaderMsg
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}

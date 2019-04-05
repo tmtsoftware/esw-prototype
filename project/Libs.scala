@@ -30,6 +30,7 @@ object Csw {
   private val Version = "c293b55" //change this to 0.1-SNAPSHOT to test with local csw changes (after publishLocal)
 
   val `csw-location-client` = Org %% "csw-location-client" % Version
+  val `csw-location-api`    = Org %% "csw-location-api"    % Version
   val `csw-command-client`  = Org %% "csw-command-client"  % Version
   val `csw-time-scheduler`  = Org %% "csw-time-scheduler"  % Version
 

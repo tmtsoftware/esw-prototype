@@ -49,6 +49,7 @@ lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
       Csw.`csw-params`.value,
       Enumeratum.`enumeratum`.value,
       SharedLibs.scalaTest.value % Test,
+      Csw.`csw-location-api`
     )
   )
 

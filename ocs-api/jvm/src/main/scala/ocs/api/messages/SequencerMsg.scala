@@ -2,6 +2,7 @@ package ocs.api.messages
 
 import akka.Done
 import akka.actor.typed.ActorRef
+import csw.location.api.models.ComponentId
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
@@ -43,4 +44,12 @@ object SequencerMsg {
   case class AddBreakpoints(ids: List[Id], replyTo: ActorRef[Try[Unit]])                        extends ExternalSequencerMsg
   case class RemoveBreakpoints(ids: List[Id], replyTo: ActorRef[Try[Unit]])                     extends ExternalSequencerMsg
   case class GetSequence(replyTo: ActorRef[Try[StepList]])                                      extends ExternalSequencerMsg
+}
+
+sealed trait ScriptLoaderMsg extends TMTSerializable
+
+object ScriptLoaderMsg {
+  case class LoadScript(sequencerId: String, observingMode: String, replyTo: ActorRef[Done]) extends ScriptLoaderMsg
+  case class StopScript(replyTo: ActorRef[Done])                                             extends ScriptLoaderMsg
+  case class GetStatus(replyTo: ActorRef[ComponentId])                                       extends ScriptLoaderMsg
 }

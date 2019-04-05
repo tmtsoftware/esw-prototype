@@ -5,9 +5,9 @@ import akka.actor.typed.scaladsl.Behaviors
 import csw.location.api.models.{ComponentId, ComponentType}
 import io.lettuce.core.RedisClient
 import ocs.api.SequencerUtil
+import ocs.api.messages.ScriptLoaderMsg
+import ocs.api.messages.ScriptLoaderMsg._
 import ocs.framework.{CswSystem, Wiring}
-import ocs.framework.messages.ScriptLoaderMsg
-import ocs.framework.messages.ScriptLoaderMsg.{GetStatus, LoadScript, StopScript}
 
 object ScriptLoaderBehaviour {
   def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptLoaderMsg] =

@@ -73,7 +73,8 @@ class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswS
   }
 
   def start(): Unit = {
-    LoggingSystemFactory.start("sample", "", "", system)
+    //fixme: Logging actor can not be created with untyped system as Top level actor
+    //LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequenceOperator, script)
     locationServiceWrapper.register(
       Prefix("sequencer"),

@@ -27,6 +27,10 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
     locationService.resolve(assemblyName, ComponentType.Assembly)(identity)
   }
 
+  def scriptLoaderLocation(scriptLoaderName: String): Future[AkkaLocation] = {
+    locationService.resolve(scriptLoaderName, ComponentType.Service)(identity)
+  }
+
   def sequenceCommandService(sequencerId: String, observingMode: String): Future[SequencerCommandService] = {
     val componentName = SequencerUtil.getComponentName(sequencerId, observingMode)
     locationService.resolve(componentName, ComponentType.Sequencer) { akkaLocation =>
