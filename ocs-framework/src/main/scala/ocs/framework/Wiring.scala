@@ -27,11 +27,11 @@ class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswS
   import cswSystem._
 
   lazy val crmRef: ActorRef[CommandResponseManagerMessage] =
-    cswSystem.spawn(CommandResponseManagerActor.behavior(CRMCacheProperties(), loggerFactory), "crm")
+    cswSystem.userActorOf(CommandResponseManagerActor.behavior(CRMCacheProperties(), loggerFactory), "crm")
 
   lazy val commandResponseManager: CommandResponseManager = new CommandResponseManager(crmRef)
 
-  lazy val sequencerRef: ActorRef[SequencerMsg] = cswSystem.spawn(SequencerBehaviour.behavior(crmRef), "sequencer")
+  lazy val sequencerRef: ActorRef[SequencerMsg] = cswSystem.userActorOf(SequencerBehaviour.behavior(crmRef), "sequencer")
   lazy val sequenceOperator                     = new SequenceOperator(sequencerRef, system)
 
   lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
@@ -63,13 +63,13 @@ class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswS
     )
 
   lazy val supervisorRef: ActorRef[SupervisorMsg] =
-    cswSystem.spawn(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
+    cswSystem.userActorOf(SupervisorBehavior.behavior(sequencerRef, script), "supervisor")
 
   lazy val sequenceEditor: SequenceEditor                   = new SequenceEditorJvmClient(supervisorRef)
   lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
 
   def shutDown(): Done = {
-    cswSystem.shutdownChildren()
+    cswSystem.shutdownUserActors()
   }
 
   def start(): Unit = {

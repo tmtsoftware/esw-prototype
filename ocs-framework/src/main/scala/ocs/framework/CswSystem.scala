@@ -30,11 +30,11 @@ class CswSystem(name: String) {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
-  def spawn[T](behavior: Behavior[T], name: String, props: Props = Props.empty): ActorRef[T] = {
+  def userActorOf[T](behavior: Behavior[T], name: String, props: Props = Props.empty): ActorRef[T] = {
     Await.result(typedSystem ? GuardianActor.Spawn(behavior, name, props), 5.seconds)
   }
 
-  def shutdownChildren[T](): Done = {
+  def shutdownUserActors[T](): Done = {
     Await.result(typedSystem ? GuardianActor.ShutdownChildren, 10.seconds)
   }
 }
