@@ -13,28 +13,28 @@ object ScriptLoaderBehaviour {
   def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptLoaderMsg] =
     Behaviors.setup[ScriptLoaderMsg](
       _ => {
-        var wiring: Option[Wiring] = None
 
-        Behaviors.receiveMessage[ScriptLoaderMsg] {
-          msg =>
-            msg match {
-              case LoadScript(sequencerId, observingMode, replyTo) => {
-                wiring = Some(new Wiring(sequencerId, observingMode, cswSystem, redisClient))
-                wiring.get.start()
-                replyTo ! Done
-              }
-              case StopScript(replyTo) => {
-                wiring.get.shutDown()
-                wiring = None
-                replyTo ! Done
-              }
-              case GetStatus(replyTo) if wiring.isDefined => {
-                val componentName = SequencerUtil.getComponentName(wiring.get.sequencerId, wiring.get.observingMode)
-                replyTo ! ComponentId(componentName, ComponentType.Sequencer)
-              }
+        def receive(wiring: Option[Wiring]): Behavior[ScriptLoaderMsg] = {
+          Behaviors.receiveMessage[ScriptLoaderMsg] {
+            case LoadScript(sequencerId, observingMode, replyTo) => {
+              val newWiring = Some(new Wiring(sequencerId, observingMode, cswSystem, redisClient))
+              newWiring.get.start()
+              replyTo ! Done
+              receive(newWiring)
             }
-            Behaviors.same
+            case StopScript(replyTo) if wiring.isDefined => {
+              wiring.get.shutDown()
+              replyTo ! Done
+              receive(None)
+            }
+            case GetStatus(replyTo) if wiring.isDefined => {
+              val componentName = SequencerUtil.getComponentName(wiring.get.sequencerId, wiring.get.observingMode)
+              replyTo ! ComponentId(componentName, ComponentType.Sequencer)
+              receive(wiring)
+            }
+          }
         }
+        receive(None)
       }
     )
 }
