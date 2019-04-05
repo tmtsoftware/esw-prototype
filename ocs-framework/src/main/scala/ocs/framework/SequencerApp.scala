@@ -9,8 +9,8 @@ import ocs.api.SequencerUtil
 import scala.concurrent.Future
 
 object SequencerApp {
-  def run(sequencerId: String, observingMode: String, replPort: Int): Unit = {
-    val wiring = new Wiring(sequencerId, observingMode, replPort)
+  def run(sequencerId: String, observingMode: String): Unit = {
+    val wiring = new Wiring(sequencerId, observingMode)
     import wiring._
 
     LoggingSystemFactory.start("sample", "", "", system)

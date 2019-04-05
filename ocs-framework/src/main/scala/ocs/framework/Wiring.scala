@@ -29,7 +29,7 @@ import romaine.RomaineFactory
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationDouble
 
-class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
+class Wiring(sequencerId: String, observingMode: String) {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
 
   lazy implicit val system: ActorSystem                     = ActorSystemFactory.remote()
@@ -51,7 +51,7 @@ class Wiring(sequencerId: String, observingMode: String, replPort: Int) {
 
   lazy val redisClient: RedisClient   = RedisClient.create()
   lazy val eventService: EventService = new EventServiceFactory(RedisStore(redisClient)).make(locationService)
-  lazy val configs                    = new Configs(sequencerId, observingMode, replPort)
+  lazy val configs                    = new Configs(sequencerId, observingMode)
   lazy val script: Script             = ScriptLoader.load(configs, cswServices)
 
   lazy val timeServiceScheduler: TimeServiceScheduler = TimeServiceSchedulerFactory.make()
