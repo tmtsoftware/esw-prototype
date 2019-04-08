@@ -24,14 +24,14 @@ object ScriptLoaderBehaviour {
         sender ! None
         Behaviors.same
       case StopScript(sender) =>
-        sender ! Left("ScriptLoader is not running any script")
+        sender ! Done
         Behaviors.same
     }
 
     def running(wiring: Wiring): Behavior[ScriptCommand] = Behaviors.receiveMessage[ScriptCommand] {
       case StopScript(sender) =>
         wiring.shutDown()
-        sender ! Right(Done)
+        sender ! Done
         idle
       case GetStatus(sender) =>
         val componentName = SequencerUtil.getComponentName(wiring.sequencerId, wiring.observingMode)

@@ -49,9 +49,7 @@ object SequencerMsg {
 sealed trait ScriptCommand extends TMTSerializable
 
 object ScriptCommand {
-  case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Response]) extends ScriptCommand
-  case class StopScript(sender: ActorRef[Response])                                             extends ScriptCommand
-  case class GetStatus(sender: ActorRef[Option[ComponentId]])                                   extends ScriptCommand
-
-  type Response = Either[String, Done]
+  case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Either[String, Done]]) extends ScriptCommand
+  case class StopScript(sender: ActorRef[Done])                                                             extends ScriptCommand
+  case class GetStatus(sender: ActorRef[Option[ComponentId]])                                               extends ScriptCommand
 }
