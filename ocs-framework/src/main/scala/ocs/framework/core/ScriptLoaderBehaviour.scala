@@ -11,6 +11,19 @@ import ocs.framework.{CswSystem, Wiring}
 
 object ScriptLoaderBehaviour {
   def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptCommand] = {
+    lazy val idle: Behavior[ScriptCommand] = {
+      Behaviors.receiveMessage[ScriptCommand] {
+        case LoadScript(sequencerId, observingMode, replyTo) =>
+          val newWiring = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
+          newWiring.start()
+          replyTo ! Right(Done)
+          running(newWiring)
+        case x: Running =>
+          x.replyTo ! Left("ScriptLoader is not running any script")
+          Behaviors.same
+      }
+    }
+
     def running(wiring: Wiring): Behavior[ScriptCommand] =
       Behaviors.receiveMessage[ScriptCommand] {
         case StopScript(replyTo) =>
@@ -21,26 +34,10 @@ object ScriptLoaderBehaviour {
           val componentName = SequencerUtil.getComponentName(wiring.sequencerId, wiring.observingMode)
           replyTo ! Right(ComponentId(componentName, ComponentType.Sequencer))
           running(wiring)
-        case LoadScript(_, _, replyTo) =>
-          replyTo ! Left(s"ScriptLoader is running ${wiring.sequencerId} with ${wiring.observingMode}")
+        case x: Idle =>
+          x.replyTo ! Left(s"ScriptLoader is running ${wiring.sequencerId} with ${wiring.observingMode}")
           Behaviors.same
       }
-
-    lazy val idle: Behavior[ScriptCommand] = {
-      Behaviors.receiveMessage[ScriptCommand] {
-        case LoadScript(sequencerId, observingMode, replyTo) =>
-          val newWiring = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
-          newWiring.start()
-          replyTo ! Right(Done)
-          running(newWiring)
-        case StopScript(replyTo) =>
-          replyTo ! Left("ScriptLoader is not running any script")
-          Behaviors.same
-        case GetStatus(replyTo) =>
-          replyTo ! Left("ScriptLoader is not running any script")
-          Behaviors.same
-      }
-    }
 
     idle
   }

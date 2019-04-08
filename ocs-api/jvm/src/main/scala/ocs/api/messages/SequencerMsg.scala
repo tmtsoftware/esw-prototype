@@ -46,7 +46,9 @@ object SequencerMsg {
   case class GetSequence(replyTo: ActorRef[Try[StepList]])                                      extends ExternalSequencerMsg
 }
 
-sealed trait ScriptCommand extends TMTSerializable
+sealed trait ScriptCommand extends TMTSerializable {
+  def replyTo: ActorRef[ScriptCommand.Response[Nothing]]
+}
 
 object ScriptCommand {
   sealed trait Idle                                                                                    extends ScriptCommand
