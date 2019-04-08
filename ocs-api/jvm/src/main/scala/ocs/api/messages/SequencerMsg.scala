@@ -46,10 +46,15 @@ object SequencerMsg {
   case class GetSequence(replyTo: ActorRef[Try[StepList]])                                      extends ExternalSequencerMsg
 }
 
-sealed trait ScriptLoaderMsg extends TMTSerializable
+sealed trait ScriptCommand extends TMTSerializable
 
-object ScriptLoaderMsg {
-  case class LoadScript(sequencerId: String, observingMode: String, replyTo: ActorRef[Done]) extends ScriptLoaderMsg
-  case class StopScript(replyTo: ActorRef[Done])                                             extends ScriptLoaderMsg
-  case class GetStatus(replyTo: ActorRef[ComponentId])                                       extends ScriptLoaderMsg
+object ScriptCommand {
+  sealed trait Idle                                                                                    extends ScriptCommand
+  case class LoadScript(sequencerId: String, observingMode: String, replyTo: ActorRef[Response[Done]]) extends Idle
+
+  sealed trait Running                                           extends ScriptCommand
+  case class StopScript(replyTo: ActorRef[Response[Done]])       extends Running
+  case class GetStatus(replyTo: ActorRef[Response[ComponentId]]) extends Running
+
+  type Response[T] = Either[String, T]
 }

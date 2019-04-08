@@ -5,36 +5,43 @@ import akka.actor.typed.scaladsl.Behaviors
 import csw.location.api.models.{ComponentId, ComponentType}
 import io.lettuce.core.RedisClient
 import ocs.api.SequencerUtil
-import ocs.api.messages.ScriptLoaderMsg
-import ocs.api.messages.ScriptLoaderMsg._
+import ocs.api.messages.ScriptCommand
+import ocs.api.messages.ScriptCommand._
 import ocs.framework.{CswSystem, Wiring}
 
 object ScriptLoaderBehaviour {
-  def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptLoaderMsg] =
-    Behaviors.setup[ScriptLoaderMsg](
-      _ => {
-
-        def receive(wiring: Option[Wiring]): Behavior[ScriptLoaderMsg] = {
-          Behaviors.receiveMessage[ScriptLoaderMsg] {
-            case LoadScript(sequencerId, observingMode, replyTo) => {
-              val newWiring = Some(new Wiring(sequencerId, observingMode, cswSystem, redisClient))
-              newWiring.get.start()
-              replyTo ! Done
-              receive(newWiring)
-            }
-            case StopScript(replyTo) if wiring.isDefined => {
-              wiring.get.shutDown()
-              replyTo ! Done
-              receive(None)
-            }
-            case GetStatus(replyTo) if wiring.isDefined => {
-              val componentName = SequencerUtil.getComponentName(wiring.get.sequencerId, wiring.get.observingMode)
-              replyTo ! ComponentId(componentName, ComponentType.Sequencer)
-              receive(wiring)
-            }
-          }
-        }
-        receive(None)
+  def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptCommand] = {
+    def running(wiring: Wiring): Behavior[ScriptCommand] =
+      Behaviors.receiveMessage[ScriptCommand] {
+        case StopScript(replyTo) =>
+          wiring.shutDown()
+          replyTo ! Right(Done)
+          idle
+        case GetStatus(replyTo) =>
+          val componentName = SequencerUtil.getComponentName(wiring.sequencerId, wiring.observingMode)
+          replyTo ! Right(ComponentId(componentName, ComponentType.Sequencer))
+          running(wiring)
+        case LoadScript(_, _, replyTo) =>
+          replyTo ! Left(s"ScriptLoader is running ${wiring.sequencerId} with ${wiring.observingMode}")
+          Behaviors.same
       }
-    )
+
+    lazy val idle: Behavior[ScriptCommand] = {
+      Behaviors.receiveMessage[ScriptCommand] {
+        case LoadScript(sequencerId, observingMode, replyTo) =>
+          val newWiring = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
+          newWiring.start()
+          replyTo ! Right(Done)
+          running(newWiring)
+        case StopScript(replyTo) =>
+          replyTo ! Left("ScriptLoader is not running any script")
+          Behaviors.same
+        case GetStatus(replyTo) =>
+          replyTo ! Left("ScriptLoader is not running any script")
+          Behaviors.same
+      }
+    }
+
+    idle
+  }
 }
