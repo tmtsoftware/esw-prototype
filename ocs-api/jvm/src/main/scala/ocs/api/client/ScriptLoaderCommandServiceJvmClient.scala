@@ -1,8 +1,8 @@
 package ocs.api.client
-import akka.Done
-import akka.actor.{ActorSystem, Scheduler}
-import akka.actor.typed.scaladsl.AskPattern._
+
 import akka.actor.typed.ActorRef
+import akka.actor.typed.scaladsl.AskPattern._
+import akka.actor.{ActorSystem, Scheduler}
 import akka.util.Timeout
 import csw.location.api.models.ComponentId
 import ocs.api.ScriptLoaderCommandService
@@ -18,8 +18,8 @@ class ScriptLoaderCommandServiceJvmClient(scriptLoaderRef: ActorRef[ScriptComman
   private implicit val timeout: Timeout     = Timeout(10.seconds)
   private implicit val scheduler: Scheduler = system.scheduler
 
-  override def loadScript(sequencerId: String, observingMode: String): Future[Response[Done]] =
+  override def loadScript(sequencerId: String, observingMode: String): Future[Response] =
     scriptLoaderRef ? (x => LoadScript(sequencerId, observingMode, x))
-  override def stopScript: Future[Response[Done]]       = scriptLoaderRef ? StopScript
-  override def getStatus: Future[Response[ComponentId]] = scriptLoaderRef ? GetStatus
+  override def stopScript: Future[Response]           = scriptLoaderRef ? StopScript
+  override def getStatus: Future[Option[ComponentId]] = scriptLoaderRef ? GetStatus
 }
