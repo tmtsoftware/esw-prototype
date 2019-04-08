@@ -1,12 +1,12 @@
 package ocs.framework
 
-import akka.{actor, Done}
 import akka.actor.Scheduler
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.typed.scaladsl.adapter.TypedActorSystemOps
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
 import akka.stream.typed.scaladsl.ActorMaterializer
 import akka.util.Timeout
+import akka.{actor, Done}
 import csw.location.api.scaladsl.LocationService
 import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory

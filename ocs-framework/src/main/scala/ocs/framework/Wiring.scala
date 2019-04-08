@@ -8,7 +8,7 @@ import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.event.client.models.EventStores.RedisStore
 import csw.location.api.models.{ComponentId, ComponentType}
-import csw.logging.client.scaladsl.{LoggerFactory, LoggingSystemFactory}
+import csw.logging.client.scaladsl.LoggerFactory
 import csw.params.core.models.Prefix
 import csw.time.scheduler.TimeServiceSchedulerFactory
 import csw.time.scheduler.api.TimeServiceScheduler

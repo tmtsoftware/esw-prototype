@@ -1,24 +1,18 @@
 package ocs.framework
 import akka.Done
 import akka.actor.CoordinatedShutdown
-import akka.actor.typed.ActorRef
 import csw.location.api.models.{ComponentId, ComponentType}
 import csw.params.core.models.Prefix
-import io.lettuce.core.RedisClient
-import ocs.api.messages.ScriptLoaderMsg
-import ocs.framework.core.ScriptLoaderBehaviour
 
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object ScriptLoaderApp {
   def run(name: String): Unit = {
-    val redisClient = RedisClient.create()
-    val cswSystem   = new CswSystem("csw-system")
-    import cswSystem._
 
-    val scriptLoaderRef: ActorRef[ScriptLoaderMsg] =
-      Await.result(typedSystem.systemActorOf(ScriptLoaderBehaviour.behaviour(redisClient, cswSystem), name), 5.seconds)
+    val scriptLoaderWiring: ScriptLoaderWiring = new ScriptLoaderWiring(name)
+
+    import scriptLoaderWiring._
+    import scriptLoaderWiring.cswSystem._
 
     locationServiceWrapper.register(
       Prefix("script-loader"),

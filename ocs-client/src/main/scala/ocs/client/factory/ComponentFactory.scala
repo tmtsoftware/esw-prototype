@@ -5,8 +5,8 @@ import akka.actor.{typed, ActorSystem}
 import csw.command.api.scaladsl.CommandService
 import csw.command.client._
 import csw.location.api.models.{AkkaLocation, ComponentType}
-import ocs.api.client.{SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
-import ocs.api.messages.SupervisorMsg
+import ocs.api.client.{ScriptLoaderCommandServiceJvmClient, SequenceEditorJvmClient, SequencerCommandServiceJvmClient}
+import ocs.api.messages.{ScriptLoaderMsg, SupervisorMsg}
 import ocs.api.{SequenceEditor, SequencerCommandService, SequencerUtil}
 
 import scala.concurrent.Future
@@ -27,8 +27,11 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
     locationService.resolve(assemblyName, ComponentType.Assembly)(identity)
   }
 
-  def scriptLoaderLocation(scriptLoaderName: String): Future[AkkaLocation] = {
-    locationService.resolve(scriptLoaderName, ComponentType.Service)(identity)
+  def scriptLoaderCommandService(scriptLoaderName: String): Future[ScriptLoaderCommandServiceJvmClient] = {
+    locationService.resolve(scriptLoaderName, ComponentType.Service) { akkaLocation =>
+      val scriptLoaderRef = akkaLocation.actorRef.unsafeUpcast[ScriptLoaderMsg]
+      new ScriptLoaderCommandServiceJvmClient(scriptLoaderRef, system)
+    }
   }
 
   def sequenceCommandService(sequencerId: String, observingMode: String): Future[SequencerCommandService] = {
