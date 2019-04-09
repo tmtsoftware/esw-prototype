@@ -9,7 +9,7 @@ import ocs.api.messages.ScriptCommand
 import ocs.api.messages.ScriptCommand._
 import ocs.framework.{CswSystem, Wiring}
 
-object ScriptLoaderBehaviour {
+object ScriptRunner {
 
   def behaviour(redisClient: RedisClient, cswSystem: CswSystem): Behavior[ScriptCommand] = {
 
