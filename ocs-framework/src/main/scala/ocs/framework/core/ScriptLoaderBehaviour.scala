@@ -3,9 +3,8 @@ package ocs.framework.core
 import akka.Done
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
-import csw.location.api.models.{ComponentId, ComponentType}
+import csw.location.api.models.AkkaLocation
 import io.lettuce.core.RedisClient
-import ocs.api.SequencerUtil
 import ocs.api.messages.ScriptCommand
 import ocs.api.messages.ScriptCommand._
 import ocs.framework.{CswSystem, Wiring}
@@ -16,10 +15,10 @@ object ScriptLoaderBehaviour {
 
     lazy val idle: Behavior[ScriptCommand] = Behaviors.receiveMessage[ScriptCommand] {
       case LoadScript(sequencerId, observingMode, sender) =>
-        val wiring = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
-        wiring.start()
-        sender ! Right(Done)
-        running(wiring)
+        val wiring   = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
+        val location = wiring.start()
+        sender ! Right(location)
+        running(wiring, location)
       case GetStatus(sender) =>
         sender ! None
         Behaviors.same
@@ -28,17 +27,16 @@ object ScriptLoaderBehaviour {
         Behaviors.same
     }
 
-    def running(wiring: Wiring): Behavior[ScriptCommand] = Behaviors.receiveMessage[ScriptCommand] {
+    def running(wiring: Wiring, location: AkkaLocation): Behavior[ScriptCommand] = Behaviors.receiveMessage[ScriptCommand] {
       case StopScript(sender) =>
         wiring.shutDown()
         sender ! Done
         idle
       case GetStatus(sender) =>
-        val componentName = SequencerUtil.getComponentName(wiring.sequencerId, wiring.observingMode)
-        sender ! Some(ComponentId(componentName, ComponentType.Sequencer))
+        sender ! Some(location)
         Behaviors.same
       case LoadScript(_, _, sender) =>
-        sender ! Left(s"ScriptLoader is running ${wiring.sequencerId} with ${wiring.observingMode}")
+        sender ! Left(location)
         Behaviors.same
     }
 

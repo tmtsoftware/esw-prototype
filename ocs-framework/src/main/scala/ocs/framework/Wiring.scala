@@ -7,7 +7,8 @@ import csw.command.client.{CRMCacheProperties, CommandResponseManager, CommandRe
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
 import csw.event.client.models.EventStores.RedisStore
-import csw.location.api.models.{ComponentId, ComponentType}
+import csw.location.api.models.Connection.AkkaConnection
+import csw.location.api.models.{AkkaLocation, ComponentId, ComponentType}
 import csw.logging.client.scaladsl.LoggerFactory
 import csw.params.core.models.Prefix
 import csw.time.scheduler.TimeServiceSchedulerFactory
@@ -21,6 +22,9 @@ import ocs.framework.core.{Engine, SequenceOperator, SequencerBehaviour, Supervi
 import ocs.framework.dsl.{CswServices, Script}
 import ocs.framework.util.ScriptLoader
 import romaine.RomaineFactory
+
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationLong
 
 class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
 
@@ -69,18 +73,17 @@ class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswS
   lazy val sequencerCommandService: SequencerCommandService = new SequencerCommandServiceJvmClient(supervisorRef)
 
   def shutDown(): Done = {
+    Await.result(locationService.unregister(AkkaConnection(componentId)), 5.seconds)
     cswSystem.shutdownUserActors()
   }
 
-  def start(): Unit = {
+  def start(): AkkaLocation = {
     //fixme: Logging actor can not be created with untyped system as Top level actor
     //LoggingSystemFactory.start("sample", "", "", system)
     engine.start(sequenceOperator, script)
-    locationServiceWrapper.register(
-      Prefix("sequencer"),
-      componentId,
-      supervisorRef
-    )
+    Await
+      .result(locationServiceWrapper.register(Prefix("sequencer"), componentId, supervisorRef), 5.seconds)
+      .location
+      .asInstanceOf[AkkaLocation]
   }
-
 }

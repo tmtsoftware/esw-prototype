@@ -2,7 +2,7 @@ package ocs.api.messages
 
 import akka.Done
 import akka.actor.typed.ActorRef
-import csw.location.api.models.ComponentId
+import csw.location.api.models.AkkaLocation
 import csw.params.commands.CommandResponse.SubmitResponse
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
@@ -49,7 +49,8 @@ object SequencerMsg {
 sealed trait ScriptCommand extends TMTSerializable
 
 object ScriptCommand {
-  case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Either[String, Done]]) extends ScriptCommand
-  case class StopScript(sender: ActorRef[Done])                                                             extends ScriptCommand
-  case class GetStatus(sender: ActorRef[Option[ComponentId]])                                               extends ScriptCommand
+  case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Either[AkkaLocation, AkkaLocation]])
+      extends ScriptCommand
+  case class StopScript(sender: ActorRef[Done])                extends ScriptCommand
+  case class GetStatus(sender: ActorRef[Option[AkkaLocation]]) extends ScriptCommand
 }

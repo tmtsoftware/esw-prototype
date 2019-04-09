@@ -1,7 +1,7 @@
 package ocs.client.factory
 
+import akka.actor.ActorSystem
 import akka.actor.typed.ActorRef
-import akka.actor.{ActorSystem, CoordinatedShutdown}
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.location.api.models._
 import csw.location.api.scaladsl.LocationService
@@ -13,28 +13,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LocationServiceWrapper(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
 
-  def register[T](prefix: Prefix, componentId: ComponentId, actorRef: ActorRef[T]): Unit = {
-
-    val registration =
-      AkkaRegistration(
-        AkkaConnection(componentId),
-        prefix,
-        actorRef
-      )
-
+  def register[T](prefix: Prefix, componentId: ComponentId, actorRef: ActorRef[T]): Future[RegistrationResult] = {
+    val registration = AkkaRegistration(AkkaConnection(componentId), prefix, actorRef)
     println(s"Registering [${registration.actorRef.path}]")
-    locationService.register(registration).foreach { registrationResult =>
+    val eventualResult = locationService.register(registration)
+    eventualResult.foreach { registrationResult =>
       println(s"Successfully registered ${componentId.name} - $registrationResult")
-
-      CoordinatedShutdown(system).addTask(
-        CoordinatedShutdown.PhaseBeforeServiceUnbind,
-        s"unregistering-${registrationResult.location}"
-      ) { () =>
-        println(s"Shutting down actor system, unregistering-${registrationResult.location}")
-        registrationResult.unregister()
-      }
     }
-
+    eventualResult
   }
 
   def resolve[T](componentName: String, componentType: ComponentType)(f: AkkaLocation => T): Future[T] =
@@ -53,7 +39,8 @@ class LocationServiceWrapper(locationService: LocationService, system: ActorSyst
       .flatMap {
         case Some(tcpLocation) =>
           Future { RedisURI.Builder.sentinel(tcpLocation.uri.getHost, tcpLocation.uri.getPort, masterId).build() }
-        case None => throw new IllegalArgumentException(s"Could not find component - Event server")
+        case None =>
+          throw new IllegalArgumentException(s"Could not find component - Event server")
       }
   }
 
