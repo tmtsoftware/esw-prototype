@@ -24,7 +24,7 @@ object Main {
                 |import csw.params.core.models._
                 |import ocs.api.messages.SequencerMsg._
                 |import ocs.api.messages.SupervisorMsg._
-                |import ocs.api.messages.ScriptLoaderMsg._
+                |import ocs.api.messages.ScriptCommand._
                 |import csw.location.api.models.ComponentId
                 |import ocs.api.models.Sequence
                 |implicit class RichFuture[T](val f: Future[T]) {
