@@ -24,11 +24,6 @@ class ScriptRunnerWiring(name: String) {
   lazy val scriptRunnerJvmClient = new ScriptRunnerJvmClient(scriptRunnerRef, system)
 
   def start(): Unit = {
-    locationServiceWrapper.register(
-      Prefix("script-loader"),
-      ComponentId(name, ComponentType.Service),
-      scriptRunnerRef
-    )
     CoordinatedShutdown(system).addTask(
       CoordinatedShutdown.PhaseBeforeServiceUnbind,
       "Shutdown redis client"
@@ -36,6 +31,13 @@ class ScriptRunnerWiring(name: String) {
       println("Shutting down redis client")
       Future(redisClient.shutdown()).map(_ => Done)
     }
+
+    Await.result(
+      locationServiceWrapper.register(Prefix("script-loader"), ComponentId(name, ComponentType.Service), scriptRunnerRef),
+      5.seconds
+    )
+
+    println("script-runner is started")
   }
 
 }
