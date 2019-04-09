@@ -13,15 +13,15 @@ import ocs.api.messages.ScriptCommand.{GetStatus, LoadScript, StopScript}
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
-class ScriptRunnerJvmClient(scriptLoaderRef: ActorRef[ScriptCommand], system: ActorSystem) extends ScriptRunnerApi {
+class ScriptRunnerJvmClient(scriptRunnerRef: ActorRef[ScriptCommand], system: ActorSystem) extends ScriptRunnerApi {
 
   private implicit val timeout: Timeout     = Timeout(10.seconds)
   private implicit val scheduler: Scheduler = system.scheduler
 
   override def loadScript(sequencerId: String, observingMode: String): Future[Either[AkkaLocation, AkkaLocation]] = {
-    scriptLoaderRef ? (x => LoadScript(sequencerId, observingMode, x))
+    scriptRunnerRef ? (x => LoadScript(sequencerId, observingMode, x))
   }
 
-  override def stopScript: Future[Done]                = scriptLoaderRef ? StopScript
-  override def getStatus: Future[Option[AkkaLocation]] = scriptLoaderRef ? GetStatus
+  override def stopScript: Future[Done]                = scriptRunnerRef ? StopScript
+  override def getStatus: Future[Option[AkkaLocation]] = scriptRunnerRef ? GetStatus
 }

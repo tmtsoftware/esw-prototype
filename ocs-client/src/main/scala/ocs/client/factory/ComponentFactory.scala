@@ -27,10 +27,10 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
     locationService.resolve(assemblyName, ComponentType.Assembly)(identity)
   }
 
-  def scriptLoaderCommandService(scriptLoaderName: String): Future[ScriptRunnerJvmClient] = {
-    locationService.resolve(scriptLoaderName, ComponentType.Service) { akkaLocation =>
-      val scriptLoaderRef = akkaLocation.actorRef.unsafeUpcast[ScriptCommand]
-      new ScriptRunnerJvmClient(scriptLoaderRef, system)
+  def scriptRunnerCommandService(scriptRunnerName: String): Future[ScriptRunnerJvmClient] = {
+    locationService.resolve(scriptRunnerName, ComponentType.Service) { akkaLocation =>
+      val scriptRunnerRef = akkaLocation.actorRef.unsafeUpcast[ScriptCommand]
+      new ScriptRunnerJvmClient(scriptRunnerRef, system)
     }
   }
 
