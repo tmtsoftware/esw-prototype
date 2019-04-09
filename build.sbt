@@ -35,7 +35,8 @@ lazy val `esw-prototype` = project
     `react4s-facade`,
     `ocs-react4s-app`,
     `ocs-gateway`,
-    `ocs-client`
+    `ocs-client`,
+    `spikes`
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -169,4 +170,12 @@ lazy val `sequencer-scripts-test` = project
     unmanagedSourceDirectories in Compile += (baseDirectory in Compile) (_ / "scripts").value,
     unmanagedSourceDirectories in Test += (baseDirectory in Test) (_ / "tests").value,
     unmanagedResourceDirectories in Compile += (baseDirectory in Compile) (_ / "configs").value,
+  )
+
+lazy val `spikes` = project
+  .settings(
+    libraryDependencies ++= Seq(
+      Libs.`reactify`,
+      Libs.`scalarx`
+    )
   )
