@@ -32,6 +32,7 @@ abstract class Script2[State](init: State, cswSystem: CswSystem) {
 
   protected implicit class AssignableFuture[T](future: Future[T]) {
     def assign(updater: T => Unit): Future[Unit] = future.map(updater)
+
     def react(updater: T => Unit): Future[Unit] = {
       assign {
         updater.andThen(_ => run())
@@ -43,11 +44,12 @@ abstract class Script2[State](init: State, cswSystem: CswSystem) {
     def assign(updater: T => Unit): Mat = {
       source
         .mapAsync(1) { x =>
-          Future(x).assign(updater)
+          Future(x).map(updater)
         }
         .to(Sink.ignore)
         .run()
     }
+
     def react(updater: T => Unit): Mat = {
       assign {
         updater.andThen(_ => run())

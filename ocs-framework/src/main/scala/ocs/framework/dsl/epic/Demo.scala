@@ -7,9 +7,7 @@ object Demo {
   sealed trait State
 
   case object Init extends State
-
-  case object Ok extends State
-
+  case object Ok   extends State
   case object High extends State
 
   private val demoSystem = new CswSystem("demo")

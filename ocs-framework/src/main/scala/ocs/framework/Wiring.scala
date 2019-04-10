@@ -74,7 +74,7 @@ class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswS
 
   def shutDown(): Done = {
     Await.result(locationService.unregister(AkkaConnection(componentId)), 5.seconds)
-    script.strandEc.shutdown()
+    Await.result(script.shutdown(), 5.seconds)
     cswSystem.shutdownUserActors()
   }
 
