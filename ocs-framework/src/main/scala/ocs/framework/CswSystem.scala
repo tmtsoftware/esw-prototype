@@ -4,7 +4,7 @@ import akka.actor.Scheduler
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.typed.scaladsl.adapter.TypedActorSystemOps
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
-import akka.stream.typed.scaladsl.ActorMaterializer
+import akka.stream.Materializer
 import akka.util.Timeout
 import akka.{actor, Done}
 import csw.location.api.scaladsl.LocationService
@@ -21,7 +21,7 @@ class CswSystem(name: String) {
   implicit lazy val typedSystem: ActorSystem[GuardianMsg] = ActorSystemFactory.remote[GuardianMsg](GuardianActor.behavior, name)
   implicit lazy val system: actor.ActorSystem             = typedSystem.toUntyped
 
-  implicit lazy val materializer: ActorMaterializer    = ActorMaterializer()
+  implicit lazy val materializer: Materializer         = createMaterializer()
   implicit lazy val executionContext: ExecutionContext = typedSystem.executionContext
 
   implicit lazy val scheduler: Scheduler = typedSystem.scheduler
@@ -36,5 +36,9 @@ class CswSystem(name: String) {
 
   def shutdownUserActors[T](): Done = {
     Await.result(typedSystem ? GuardianActor.ShutdownChildren, 10.seconds)
+  }
+
+  def createMaterializer[T](): Materializer = {
+    Await.result(typedSystem ? GuardianActor.GetMaterializer, 10.seconds)
   }
 }
