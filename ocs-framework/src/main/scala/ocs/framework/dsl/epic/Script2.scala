@@ -21,7 +21,7 @@ abstract class Script2[State](init: State, cswSystem: CswSystem) {
   implicit lazy val strandEc: StrandEc           = StrandEc.create()
   private implicit lazy val ec: ExecutionContext = strandEc.ec
 
-  private def run(): Unit = strandEc.ec.execute(() => machine(currentState))
+  private def run(): Future[Unit] = Future(machine(currentState))
 
   def when(condition: => Boolean)(body: => Unit): Unit = {
     if (condition) {
@@ -32,29 +32,12 @@ abstract class Script2[State](init: State, cswSystem: CswSystem) {
 
   protected implicit class AssignableFuture[T](future: Future[T]) {
     def assign(updater: T => Unit): Future[Unit] = future.map(updater)
-
-    def react(updater: T => Unit): Future[Unit] = {
-      assign {
-        updater.andThen(_ => run())
-      }
-    }
+    def react(updater: T => Unit): Future[Unit]  = future.map(updater).flatMap(_ => run())
   }
 
   protected implicit class AssignableStream[T, Mat](source: Source[T, Mat]) {
-    def assign(updater: T => Unit): Mat = {
-      source
-        .mapAsync(1) { x =>
-          Future(x).map(updater)
-        }
-        .to(Sink.ignore)
-        .run()
-    }
-
-    def react(updater: T => Unit): Mat = {
-      assign {
-        updater.andThen(_ => run())
-      }
-    }
+    def assign(updater: T => Unit): Mat                          = runSequentially(x => Future(updater(x)))
+    def react(updater: T => Unit): Mat                           = runSequentially(x => Future(updater(x)).flatMap(_ => run()))
+    private def runSequentially(updater: T => Future[Unit]): Mat = source.mapAsync(1)(updater).to(Sink.ignore).run()
   }
-
 }
