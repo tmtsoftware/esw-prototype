@@ -7,8 +7,8 @@ import ocs.api.{SequencerCommandService, WebGateway}
 import scala.concurrent.Future
 
 class SequencerCommandServiceJsClient(gateway: WebGateway) extends SequencerJsonSupport {
-  def feed(commandList: Sequence): Future[Unit] = gateway.postOneway(
+  def feed(sequence: Sequence): Future[Unit] = gateway.postOneway(
     s"${SequencerCommandService.ApiName}/${SequencerCommandService.Feed}",
-    commandList
+    sequence
   )
 }

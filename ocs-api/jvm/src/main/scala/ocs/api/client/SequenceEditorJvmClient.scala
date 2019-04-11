@@ -25,7 +25,7 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
 
   def sequenceCommandsFrom(commands: List[SequenceCommand]): List[SequenceCommand] = commands.map(cmd => cmd)
 
-  override def sequence: Future[StepList] = {
+  override def status: Future[StepList] = {
     val future: Future[Try[StepList]] = supervisor ? (x => GetSequence(x))
     future.map(_.get)
   }
@@ -59,5 +59,5 @@ class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit syst
 
   override def abort(): Future[Unit] = responseHelper(supervisor ? Abort)
 
-  override def isAvailable: Future[Boolean] = sequence.map(seq => seq.isFinished)
+  override def isAvailable: Future[Boolean] = status.map(seq => seq.isFinished)
 }

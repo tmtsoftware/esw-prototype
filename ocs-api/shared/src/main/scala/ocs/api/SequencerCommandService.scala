@@ -6,7 +6,7 @@ import ocs.api.models.Sequence
 import scala.concurrent.Future
 
 trait SequencerCommandService {
-  def submit(commandList: Sequence): Future[SubmitResponse]
+  def submit(sequence: Sequence): Future[SubmitResponse]
 }
 
 object SequencerCommandService {

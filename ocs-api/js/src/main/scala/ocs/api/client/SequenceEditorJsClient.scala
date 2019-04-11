@@ -27,7 +27,7 @@ class SequenceEditorJsClient(gateway: WebGateway) extends SequenceEditor with Se
     s"${SequenceEditor.ApiName}/${SequenceEditor.Reset}"
   )
 
-  override def sequence: Future[StepList] = gateway.get[StepList](
+  override def status: Future[StepList] = gateway.get[StepList](
     s"${SequenceEditor.ApiName}/${SequenceEditor.Sequence}"
   )
 

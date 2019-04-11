@@ -21,7 +21,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 object SequencerCommandServiceMock$ extends SequencerCommandService {
-  override def submit(commandList: Sequence): Future[SubmitResponse] = Future.successful(
+  override def submit(sequence: Sequence): Future[SubmitResponse] = Future.successful(
     CommandResponse.Completed(Id("dummy-id"))
   )
 }

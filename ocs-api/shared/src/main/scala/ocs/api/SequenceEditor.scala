@@ -11,7 +11,7 @@ trait SequenceEditor {
   def pause(): Future[Unit]
   def resume(): Future[Unit]
   def reset(): Future[Unit]
-  def sequence: Future[StepList]
+  def status: Future[StepList]
   def isAvailable: Future[Boolean]
   def delete(ids: List[Id]): Future[Unit]
   def addBreakpoints(ids: List[Id]): Future[Unit]

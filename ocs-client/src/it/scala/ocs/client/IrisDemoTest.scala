@@ -53,7 +53,7 @@ class IrisDemoTest extends FunSuite {
 
     irisSequenceEditor.pause().get
 
-    val currentSequenceState: StepList = irisSequenceEditor.sequence.get
+    val currentSequenceState: StepList = irisSequenceEditor.status.get
 
     assert(currentSequenceState.isPaused)
 

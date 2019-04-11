@@ -13,7 +13,7 @@ case class ShowSequenceComponent(client: P[SequenceEditorJsClient]) extends Comp
 
   val sequenceResponse = State("")
 
-  def handleShowSequence(client: SequenceEditorJsClient): Unit = client.sequence.onComplete {
+  def handleShowSequence(client: SequenceEditorJsClient): Unit = client.status.onComplete {
     case Success(value) => sequenceResponse.set(Json.prettyPrint(Json.toJson(value)))
     case Failure(ex)    => sequenceResponse.set(ex.getMessage)
   }

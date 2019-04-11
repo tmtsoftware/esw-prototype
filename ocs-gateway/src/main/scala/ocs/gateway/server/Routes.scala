@@ -82,10 +82,10 @@ class Routes(
         pathPrefix(SequencerCommandService.ApiName) {
           post {
             path(SequencerCommandService.Feed) {
-              entity(as[Sequence]) { commandList =>
+              entity(as[Sequence]) { sequence =>
                 onSuccess(sequenceEditor.flatMap(_.isAvailable)) { isAvailable =>
                   validate(isAvailable, "Previous sequence is still running, cannot feed another sequence") {
-                    sequenceFeeder.foreach(_.submit(commandList))
+                    sequenceFeeder.foreach(_.submit(sequence))
                     complete(HttpResponse(StatusCodes.Accepted, entity = "Done"))
                   }
                 }
@@ -96,7 +96,7 @@ class Routes(
         pathPrefix(SequenceEditor.ApiName) {
           get {
             path(SequenceEditor.Sequence) {
-              val eventualSequence: Future[StepList] = sequenceEditor.flatMap(_.sequence)
+              val eventualSequence: Future[StepList] = sequenceEditor.flatMap(_.status)
               complete(eventualSequence)
             }
           } ~
