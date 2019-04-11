@@ -6,22 +6,22 @@ import akka.actor.typed.ActorRef
 import csw.location.api.models.{ComponentId, ComponentType}
 import csw.params.core.models.Prefix
 import io.lettuce.core.RedisClient
-import ocs.api.client.ScriptRunnerJvmClient
-import ocs.api.messages.ScriptCommand
-import ocs.framework.core.ScriptRunner
+import ocs.api.client.SequenceComponentJvmClient
+import ocs.api.messages.SequenceComponentMsg
+import ocs.framework.core.SequenceComponent
 
 import scala.concurrent.duration.DurationLong
 import scala.concurrent.{Await, Future}
 
-class ScriptRunnerWiring(name: String) {
+class SequenceComponentWiring(name: String) {
   lazy val redisClient: RedisClient = RedisClient.create()
   lazy val cswSystem                = new CswSystem("csw-system")
   import cswSystem._
 
-  lazy val scriptRunnerRef: ActorRef[ScriptCommand] =
-    Await.result(typedSystem.systemActorOf(ScriptRunner.behaviour(redisClient, cswSystem), name), 5.seconds)
+  lazy val sequenceComponentRef: ActorRef[SequenceComponentMsg] =
+    Await.result(typedSystem.systemActorOf(SequenceComponent.behaviour(redisClient, cswSystem), name), 5.seconds)
 
-  lazy val scriptRunnerJvmClient = new ScriptRunnerJvmClient(scriptRunnerRef, system)
+  lazy val sequenceComponentJvmClient = new SequenceComponentJvmClient(sequenceComponentRef, system)
 
   def start(): Unit = {
     CoordinatedShutdown(system).addTask(
@@ -33,7 +33,7 @@ class ScriptRunnerWiring(name: String) {
     }
 
     Await.result(
-      locationServiceWrapper.register(Prefix("script-loader"), ComponentId(name, ComponentType.Service), scriptRunnerRef),
+      locationServiceWrapper.register(Prefix("script-loader"), ComponentId(name, ComponentType.Service), sequenceComponentRef),
       5.seconds
     )
 

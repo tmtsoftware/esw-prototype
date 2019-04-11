@@ -46,11 +46,11 @@ object SequencerMsg {
   case class GetSequence(replyTo: ActorRef[Try[StepList]])                                      extends ExternalSequencerMsg
 }
 
-sealed trait ScriptCommand extends TMTSerializable
+sealed trait SequenceComponentMsg extends TMTSerializable
 
-object ScriptCommand {
+object SequenceComponentMsg {
   case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Either[AkkaLocation, AkkaLocation]])
-      extends ScriptCommand
-  case class StopScript(sender: ActorRef[Done])                extends ScriptCommand
-  case class GetStatus(sender: ActorRef[Option[AkkaLocation]]) extends ScriptCommand
+      extends SequenceComponentMsg
+  case class StopScript(sender: ActorRef[Done])                extends SequenceComponentMsg
+  case class GetStatus(sender: ActorRef[Option[AkkaLocation]]) extends SequenceComponentMsg
 }
