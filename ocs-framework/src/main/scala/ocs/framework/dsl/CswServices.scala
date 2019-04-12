@@ -28,7 +28,7 @@ class CswServices(
     componentFactory: ComponentFactory,
     locationService: LocationServiceWrapper,
     eventService: EventService,
-    scheduler: TimeServiceScheduler,
+    val scheduler: TimeServiceScheduler,
     romaineFactory: RomaineFactory,
     commandResponseManager: CommandResponseManager
 )(implicit system: ActorSystem) {
