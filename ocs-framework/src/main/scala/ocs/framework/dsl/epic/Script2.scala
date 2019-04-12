@@ -16,28 +16,28 @@ abstract class Script2[State](init: State, cswSystem: CswSystem) {
     currentState = state
   }
 
-  run()
+  refresh()
 
   implicit lazy val strandEc: StrandEc           = StrandEc.create()
   private implicit lazy val ec: ExecutionContext = strandEc.ec
 
-  private def run(): Future[Unit] = Future(machine(currentState))
+  private def refresh(): Future[Unit] = Future(machine(currentState))
 
   def when(condition: => Boolean)(body: => Unit): Unit = {
     if (condition) {
       body
-      run()
+      refresh()
     }
   }
 
   protected implicit class AssignableFuture[T](future: Future[T]) {
     def assign(updater: T => Unit): Future[Unit] = future.map(updater)
-    def react(updater: T => Unit): Future[Unit]  = future.map(updater).flatMap(_ => run())
+    def react(updater: T => Unit): Future[Unit]  = future.map(updater).flatMap(_ => refresh())
   }
 
   protected implicit class AssignableStream[T, Mat](source: Source[T, Mat]) {
     def assign(updater: T => Unit): Mat                          = runSequentially(x => Future(updater(x)))
-    def react(updater: T => Unit): Mat                           = runSequentially(x => Future(updater(x)).flatMap(_ => run()))
+    def react(updater: T => Unit): Mat                           = runSequentially(x => Future(updater(x)).flatMap(_ => refresh()))
     private def runSequentially(updater: T => Future[Unit]): Mat = source.mapAsync(1)(updater).to(Sink.ignore).run()
   }
 }
