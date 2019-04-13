@@ -1,3 +1,0 @@
-package spikes
-
-object ReactifySpike {}

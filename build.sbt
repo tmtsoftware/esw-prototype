@@ -36,7 +36,7 @@ lazy val `esw-prototype` = project
     `ocs-react4s-app`,
     `ocs-gateway`,
     `ocs-client`,
-    `spikes`
+    `ui-spikes`
   )
 
 lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
@@ -172,10 +172,27 @@ lazy val `sequencer-scripts-test` = project
     unmanagedResourceDirectories in Compile += (baseDirectory in Compile) (_ / "configs").value,
   )
 
-lazy val `spikes` = project
+lazy val `ui-spikes` = project
+  .enablePlugins(ScalaJSBundlerPlugin)
   .settings(
+    scalaJSUseMainModuleInitializer := true,
+    resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
+    npmDependencies in Compile ++= Seq(
+      "svg.js" -> "2.7.1",
+      "p5" -> "0.7",
+    ),
+    scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
-      Libs.`reactify`,
-      Libs.`scalarx`
+      SharedLibs.scalaTest.value % Test,
+      ScalablyTyped.S.svg_dot_js,
+      ScalablyTyped.P.p5,
+      Libs.`scala-async`.value
+    ),
+    version in webpack := "4.8.1",
+    version in startWebpackDevServer := "3.1.4",
+    webpackResources := webpackResources.value +++ PathFinder(Seq(baseDirectory.value / "index.html")) ** "*.*",
+    webpackDevServerExtraArgs in fastOptJS ++= Seq(
+      "--content-base",
+      baseDirectory.value.getAbsolutePath
     )
   )
