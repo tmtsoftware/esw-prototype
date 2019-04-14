@@ -180,12 +180,14 @@ lazy val `ui-spikes` = project
     npmDependencies in Compile ++= Seq(
       "svg.js" -> "2.7.1",
       "p5" -> "0.7",
+      "paper" -> "v0.11.8",
     ),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
       SharedLibs.scalaTest.value % Test,
       ScalablyTyped.S.svg_dot_js,
       ScalablyTyped.P.p5,
+      ScalablyTyped.P.paper,
       Libs.`scala-async`.value
     ),
     version in webpack := "4.8.1",
