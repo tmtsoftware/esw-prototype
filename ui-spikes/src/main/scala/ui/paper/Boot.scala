@@ -13,7 +13,7 @@ object Boot {
     canvas.width = 800
     canvas.height = 800
     Paper.setup(canvas)
-    new Honeycomb(50)
+    new Honeycomb(40)
     Paper.view.draw()
   }
 
