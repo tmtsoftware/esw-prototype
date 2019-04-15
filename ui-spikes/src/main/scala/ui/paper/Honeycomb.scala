@@ -8,40 +8,46 @@ import typings.paperLib.paperNs
 import scala.scalajs.js.|
 import scala.util.Random
 
-class Honeycomb(radius: Int, rows: Int) {
-  private val Length        = Math.cos(Math.PI / 6) * radius
-  private val Center        = new Point(Paper.view.center)
-  private val IndexedCenter = IndexedPoint(0, 0, Center)
+class Honeycomb(radius: Int, maxRows: Int) {
+  private val Length = Math.cos(Math.PI / 6) * radius
 
-  val initialFront: List[IndexedPoint] = (0 until 6).toList.map { sector =>
-    val point = pointOff(Center, sector * 60, Length * 2)
-    IndexedPoint(sector + 1, 1, point)
+  val initialRow: Row = {
+    val Center = new Point(Paper.view.center)
+    val sectors = (0 until 6).toList.map { sector =>
+      val point = pointOff(Center, sector * 60, Length * 2)
+      Sector(sector + 1, List(point))
+    }
+    Row(1, sectors)
   }
 
-  def loop(row: Int, front: List[IndexedPoint], result: List[IndexedPoint]): List[IndexedPoint] = row match {
-    case `rows` => result
+  def loop(row: Row, result: List[Row]): List[Row] = row.id match {
+    case `maxRows` => result
     case _ =>
-      val newFront = front.flatMap { p =>
-        List(p.sector - 1, p.sector)
-          .map { i =>
-            val point = pointOff(p.point, i * 60, Length * 2)
-            IndexedPoint(p.sector, p.row + 1, point)
-          }
+      val sectors = row.sectors.map { sector =>
+        val points = sector.points.flatMap { point =>
+          List(sector.id - 1, sector.id)
+            .map { i =>
+              pointOff(point, i * 60, Length * 2)
+            }
+        }
+        Sector(sector.id, points)
       }
 
-      loop(row + 1, newFront, result ::: newFront)
+      val newRow = Row(row.id + 1, sectors)
+      loop(newRow, newRow :: result)
   }
 
-  loop(1, initialFront, IndexedCenter :: initialFront).foreach(createHexagon)
+  val result: List[Mirror] = Mirror.from(loop(initialRow, List(initialRow)).reverse.tail)
 
-  def createHexagon(point: IndexedPoint): RegularPolygon = new RegularPolygon(point.point, 6, radius) {
-    fillColor = if (point.row <= 1) ext.Color.Black.toHex else ext.Color.all(point.sector).toHex
-    if (point.row > 1) {
-      strokeColor = "white"
-    }
+  result.foreach(createHexagon)
+  println(result.length)
+  result.foreach(println)
+
+  def createHexagon(mirror: Mirror): RegularPolygon = new RegularPolygon(mirror.point, 6, radius) {
+    fillColor = List("#E7CFA0", "#7CC1D2", "#A97FFF")(mirror.sector % 3)
+    strokeColor = "white"
     override def onClick(event: paperNs.MouseEvent): Unit | Boolean = {
-      val color = new Color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble())
-      fillColor = color
+      fillColor = "red"
     }
   }
 
@@ -54,6 +60,20 @@ class Honeycomb(radius: Int, rows: Int) {
   }
 }
 
-case class IndexedPoint(sector: Int, row: Int, point: Point) extends Proxy {
-  override def self: Any = (point.x.round, point.y.round)
+case class Mirror(sector: Int, row: Int, position: Int, point: Point) extends Proxy {
+  override def self: Any          = (point.x.round, point.y.round)
+  override def toString(): String = (sector, row, position, (point.x.round, point.y.round)).toString()
 }
+
+object Mirror {
+  def from(rows: List[Row]): List[Mirror] = rows.flatMap { row =>
+    row.sectors.flatMap { sector =>
+      sector.points.zipWithIndex.map {
+        case (point, position) => Mirror(sector.id, row.id, position, point)
+      }.distinct
+    }
+  }
+}
+
+case class Sector(id: Int, points: List[Point])
+case class Row(id: Int, sectors: List[Sector])
