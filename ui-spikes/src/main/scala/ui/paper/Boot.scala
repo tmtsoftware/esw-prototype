@@ -12,6 +12,7 @@ object Boot {
     val canvas: HTMLCanvasElement = document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
     Paper.setup(canvas)
     Creator.create()
+//    new Hexagoan
     Paper.view.draw()
   }
 
