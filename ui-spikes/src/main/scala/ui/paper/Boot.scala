@@ -11,9 +11,7 @@ object Boot {
   val start: js.ThisFunction1[Window, Event, _] = { (_, _) =>
     val canvas: HTMLCanvasElement = document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
     Paper.setup(canvas)
-
-//    Creator.create()
-    new Hexagoan
+    new Hexagon(50)
     Paper.view.draw()
   }
 
