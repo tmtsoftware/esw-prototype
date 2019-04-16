@@ -13,11 +13,11 @@ object Boot {
       .getElementById("myCanvas")
       .asInstanceOf[HTMLCanvasElement]
 
-    canvas.width = 800
+    canvas.width = 900
     canvas.height = 800
 
     Paper.setup(canvas)
-    new Display(20, 10).honeyComb()
+    new Display(16, 13).honeyComb()
     Paper.view.draw()
   }
 
