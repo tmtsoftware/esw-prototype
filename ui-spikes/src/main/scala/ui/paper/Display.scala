@@ -3,15 +3,18 @@ package ui.paper
 import typings.paperLib.paperMod.PathNs.RegularPolygon
 import typings.paperLib.paperNs
 import typings.paperLib.paperMod.Color
+import typings.paperLib.paperNs.MouseEvent
 
 import scala.scalajs.js.|
 
 class Display(radius: Int, maxRows: Int) {
-  lazy val mirrors: List[Mirror]                    = new Honeycomb(20, 10).mirrors
-  lazy val hexagons: Map[Int, List[RegularPolygon]] = mirrors.groupBy(_.sector).mapValues(_.map(createHexagon)).toList.toMap
+  lazy val mirrors: List[Mirror]                            = new Honeycomb(20, 10).mirrors
+  lazy val creations: List[Creation]                        = mirrors.map(m => Creation(m, createHexagon(m)))
+  lazy val hexagonsBySector: Map[Int, List[RegularPolygon]] = creations.groupBy(_.mirror.sector).mapValues(_.map(_.hexagon))
+  lazy val hexagonsByRow: Map[Int, List[RegularPolygon]]    = creations.groupBy(_.mirror.row).mapValues(_.map(_.hexagon))
 
   def honeyComb(): Unit = {
-    hexagons
+    creations
     println(mirrors.length)
     mirrors.foreach(println)
   }
@@ -32,8 +35,10 @@ class Display(radius: Int, maxRows: Int) {
       }
     }
     override def onDoubleClick(event: paperNs.MouseEvent): Unit | Boolean = {
-      hexagons.getOrElse(mirror.sector, Nil).foreach(_.onClick(event))
+      hexagonsByRow.getOrElse(mirror.row, Nil).foreach(_.onClick(event))
       onClick(event)
     }
   }
 }
+
+case class Creation(mirror: Mirror, hexagon: RegularPolygon)
