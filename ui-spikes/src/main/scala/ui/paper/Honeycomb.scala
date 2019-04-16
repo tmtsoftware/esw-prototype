@@ -5,26 +5,25 @@ import typings.paperLib.paperMod.{Point, ^ => Paper}
 class Honeycomb(radius: Int, maxRows: Int) {
   private val Length = Math.cos(Math.PI / 6) * radius
 
-  val initialRow: Row = {
+  val firstRow: Row = {
     val Center = new Point(Paper.view.center)
     val sectors = (0 until 6).toList.map { sector =>
-      val point = pointOff(Center, sector * 60, Length * 2)
+      val point = shift(Center, sector * 60, Length * 2)
       Sector(sector + 1, List(point))
     }
     Row(1, sectors)
   }
 
-  val mirrors: List[Mirror] = Mirror.from(loop(initialRow, List(initialRow)).reverse.tail)
+  val mirrors: List[Mirror] = Mirror.from(loop(firstRow, List(firstRow)).reverse.tail)
 
   def loop(row: Row, result: List[Row]): List[Row] = row.id match {
     case `maxRows` => result
     case _ =>
       val sectors = row.sectors.map { sector =>
         val points = sector.points.flatMap { point =>
-          List(sector.id - 1, sector.id)
-            .map { i =>
-              pointOff(point, i * 60, Length * 2)
-            }
+          List(sector.id - 1, sector.id).map { i =>
+            shift(point, i * 60, Length * 2)
+          }
         }
         Sector(sector.id, points)
       }
@@ -33,7 +32,7 @@ class Honeycomb(radius: Int, maxRows: Int) {
       loop(newRow, newRow :: result)
   }
 
-  def pointOff(center: Point, _angle: Double, _length: Double): Point = {
+  def shift(center: Point, _angle: Double, _length: Double): Point = {
     val delta = new Point() {
       angle = _angle
       length = _length
