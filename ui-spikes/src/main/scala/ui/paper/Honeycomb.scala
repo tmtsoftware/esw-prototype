@@ -1,12 +1,6 @@
 package ui.paper
 
-import org.scalajs.dom.ext
-import typings.paperLib.paperMod.PathNs.RegularPolygon
-import typings.paperLib.paperMod.{Color, Point, ^ => Paper}
-import typings.paperLib.paperNs
-
-import scala.scalajs.js.|
-import scala.util.Random
+import typings.paperLib.paperMod.{Point, ^ => Paper}
 
 class Honeycomb(radius: Int, maxRows: Int) {
   private val Length = Math.cos(Math.PI / 6) * radius
@@ -19,6 +13,8 @@ class Honeycomb(radius: Int, maxRows: Int) {
     }
     Row(1, sectors)
   }
+
+  val mirrors: List[Mirror] = Mirror.from(loop(initialRow, List(initialRow)).reverse.tail)
 
   def loop(row: Row, result: List[Row]): List[Row] = row.id match {
     case `maxRows` => result
@@ -35,20 +31,6 @@ class Honeycomb(radius: Int, maxRows: Int) {
 
       val newRow = Row(row.id + 1, sectors)
       loop(newRow, newRow :: result)
-  }
-
-  val result: List[Mirror] = Mirror.from(loop(initialRow, List(initialRow)).reverse.tail)
-
-  result.foreach(createHexagon)
-  println(result.length)
-  result.foreach(println)
-
-  def createHexagon(mirror: Mirror): RegularPolygon = new RegularPolygon(mirror.point, 6, radius) {
-    fillColor = List("#E7CFA0", "#7CC1D2", "#A97FFF")(mirror.sector % 3)
-    strokeColor = "white"
-    override def onClick(event: paperNs.MouseEvent): Unit | Boolean = {
-      fillColor = "red"
-    }
   }
 
   def pointOff(center: Point, _angle: Double, _length: Double): Point = {

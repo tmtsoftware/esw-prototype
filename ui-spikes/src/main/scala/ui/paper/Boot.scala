@@ -9,11 +9,15 @@ import scala.scalajs.js
 object Boot {
 
   val start: js.ThisFunction1[Window, Event, _] = { (_, _) =>
-    val canvas: HTMLCanvasElement = document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
+    val canvas: HTMLCanvasElement = document
+      .getElementById("myCanvas")
+      .asInstanceOf[HTMLCanvasElement]
+
     canvas.width = 800
     canvas.height = 800
+
     Paper.setup(canvas)
-    new Honeycomb(20, 10)
+    new Display(20, 10).honeyComb()
     Paper.view.draw()
   }
 
