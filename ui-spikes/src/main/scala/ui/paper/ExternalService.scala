@@ -1,29 +1,31 @@
 package ui.paper
 
-import com.raquo.airstream.signal.{StrictSignal, Var}
+import com.raquo.airstream.eventstream
+import com.raquo.airstream.signal.Var
 import ocs.api.{EventStream, WebGateway}
 import play.api.libs.json.{JsObject, JsPath}
 
 class ExternalService {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private val defaultValue = Position(100, 100, 100)
-  private val position     = Var(defaultValue)
+  subscribe()
+  def positions: eventstream.EventStream[Position] = position.signal.changes.delay(1000)
 
-  private val gateway = new WebGateway("https://stream.wikimedia.org")
+  private lazy val defaultValue = Position(100, 100, 100)
+  private lazy val position     = Var(defaultValue)
 
-  private val stream: EventStream[JsObject] = gateway.stream[JsObject]("/v2/stream/recentchange")
+  private lazy val gateway = new WebGateway("https://stream.wikimedia.org")
 
-  def subscribe(): StrictSignal[Position] = {
-    stream.onNext = { jsObject =>
+  private def subscribe(): Unit = {
+    val eventStream: EventStream[JsObject] = gateway.stream[JsObject]("/v2/stream/recentchange")
+    eventStream.onNext = { jsObject =>
       val _position = parse(jsObject)
       println(_position)
       position.set(_position)
     }
-    position.signal
   }
 
-  def parse(jsObject: JsObject): Position = {
+  private def parse(jsObject: JsObject): Position = {
     (JsPath \ "revision" \ "new")
       .asSingleJsResult(jsObject)
       .asOpt

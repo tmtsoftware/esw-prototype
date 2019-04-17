@@ -17,7 +17,7 @@ object Boot {
     canvas.height = 800
 
     Paper.setup(canvas)
-    new Display(16, 13).honeyComb()
+    new Display(16, 13).render()
     Paper.view.draw()
   }
 

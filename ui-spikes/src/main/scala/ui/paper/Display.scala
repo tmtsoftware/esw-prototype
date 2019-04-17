@@ -1,6 +1,5 @@
 package ui.paper
 
-import com.raquo.airstream.ownership.Owner
 import com.raquo.airstream.signal.{Signal, Var}
 import typings.paperLib.paperMod.PathNs.RegularPolygon
 import typings.paperLib.paperNs
@@ -15,13 +14,14 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
 
   private lazy val externalService = new ExternalService
 
-  def honeyComb(): Unit = {
+  def render(): Unit = {
     mirrors
     println(hexagons.length)
     hexagons.foreach(println)
-    externalService.subscribe().foreach { t =>
-      mirrorByPosition.get(t).foreach { m =>
-        m.click()
+
+    externalService.positions.foreach { position =>
+      mirrorByPosition.get(position).foreach { mirror =>
+        mirror.click()
       }
     }
   }
@@ -46,8 +46,4 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
       override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.click())
     }
   }
-}
-
-trait MyOwner {
-  implicit val owner: Owner = new Owner {}
 }
