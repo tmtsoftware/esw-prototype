@@ -31,11 +31,14 @@ case class Sector(id: Int, centers: List[Point]) {
   }
 
   private def reposition(hexagons: List[Hexagon]): List[Hexagon] = hexagons.zipWithIndex.map {
-    case (hexagon, i) => hexagon.copy(position = i)
+    case (hexagon, i) => hexagon.copy(index = i)
   }
 }
 
-case class Hexagon(sector: Int, row: Int, position: Int, point: Point) extends Proxy {
+case class Hexagon(sector: Int, row: Int, index: Int, point: Point) extends Proxy {
   override def self: Any          = (point.x.round, point.y.round)
-  override def toString(): String = (row, sector, position, (point.x.round, point.y.round)).toString()
+  override def toString(): String = (row, sector, index, (point.x.round, point.y.round)).toString()
+  def position: Position          = Position(sector, row, index)
 }
+
+case class Position(x: Int, y: Int, z: Int)

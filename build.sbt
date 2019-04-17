@@ -173,6 +173,7 @@ lazy val `sequencer-scripts-test` = project
   )
 
 lazy val `ui-spikes` = project
+  .dependsOn(`ocs-api-js`)
   .enablePlugins(ScalaJSBundlerPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
