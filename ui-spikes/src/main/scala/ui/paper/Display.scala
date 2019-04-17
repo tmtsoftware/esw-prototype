@@ -9,7 +9,7 @@ import scala.scalajs.js.|
 
 class Display(radius: Int, maxRows: Int) {
   lazy val hexagons: List[Hexagon]                  = new HoneycombFactory(radius, maxRows).create().trimmedHexagons
-  lazy val mirrors: List[Mirror]                    = hexagons.map(hexagon => new Mirror(hexagon, radius))
+  lazy val mirrors: List[Mirror]                    = hexagons.map(hexagon => new Mirror(hexagon))
   lazy val displaysBySector: Map[Int, List[Mirror]] = mirrors.groupBy(_.hexagon.sector)
   lazy val displaysByRow: Map[Int, List[Mirror]]    = mirrors.groupBy(_.hexagon.row)
 
@@ -21,13 +21,13 @@ class Display(radius: Int, maxRows: Int) {
 
   val Colors = List("#E7CFA0", "#7CC1D2", "#A97FFF")
 
-  class Mirror(val hexagon: Hexagon, radius: Int) extends MyOwner {
-    def flip(): Unit = clicked.set(!clicked.now())
+  class Mirror(val hexagon: Hexagon) extends MyOwner {
+    def click(): Unit = clicked.set(!clicked.now())
 
     private val clicked = Var(false)
 
     val color: Signal[String] = clicked.signal.map {
-      case false => List("#E7CFA0", "#7CC1D2", "#A97FFF")(hexagon.sector % 3)
+      case false => Colors(hexagon.sector % 3)
       case true  => "red"
     }
 
@@ -36,7 +36,7 @@ class Display(radius: Int, maxRows: Int) {
     new RegularPolygon(hexagon.point, 6, radius) {
       color.foreach(x => fillColor = x)
       strokeColor = "white"
-      override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.flip())
+      override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.click())
     }
   }
 }
