@@ -177,10 +177,13 @@ lazy val `ui-spikes` = project
   .settings(
     scalaJSUseMainModuleInitializer := true,
     resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
     npmDependencies in Compile ++= Seq(
       "svg.js" -> "2.7.1",
       "p5" -> "0.7",
       "paper" -> "v0.11.8",
+      "react" -> "16.5.1",
+      "react-dom" -> "16.5.1",
     ),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
@@ -188,7 +191,8 @@ lazy val `ui-spikes` = project
       ScalablyTyped.S.svg_dot_js,
       ScalablyTyped.P.p5,
       ScalablyTyped.P.paper,
-      Libs.`scala-async`.value
+      Libs.`scala-async`.value,
+      React4s.`react4s`.value
     ),
     version in webpack := "4.8.1",
     version in startWebpackDevServer := "3.1.4",
