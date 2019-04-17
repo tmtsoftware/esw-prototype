@@ -1,16 +1,17 @@
 package ui.paper
 
-import typings.paperLib.paperMod.Color
+import com.raquo.airstream.ownership.Owner
+import com.raquo.airstream.signal.{Signal, Var}
 import typings.paperLib.paperMod.PathNs.RegularPolygon
 import typings.paperLib.paperNs
 
 import scala.scalajs.js.|
 
 class Display(radius: Int, maxRows: Int) {
-  lazy val hexagons: List[Hexagon]                          = new HoneycombFactory(radius, maxRows).create().trimmedHexagons
-  lazy val mirrors: List[Mirror]                            = hexagons.map(m => Mirror(m, createHexagon(m)))
-  lazy val displaysBySector: Map[Int, List[RegularPolygon]] = mirrors.groupBy(_.hexagon.sector).mapValues(_.map(_.display))
-  lazy val displaysByRow: Map[Int, List[RegularPolygon]]    = mirrors.groupBy(_.hexagon.row).mapValues(_.map(_.display))
+  lazy val hexagons: List[Hexagon]                  = new HoneycombFactory(radius, maxRows).create().trimmedHexagons
+  lazy val mirrors: List[Mirror]                    = hexagons.map(hexagon => new Mirror(hexagon, radius))
+  lazy val displaysBySector: Map[Int, List[Mirror]] = mirrors.groupBy(_.hexagon.sector)
+  lazy val displaysByRow: Map[Int, List[Mirror]]    = mirrors.groupBy(_.hexagon.row)
 
   def honeyComb(): Unit = {
     mirrors
@@ -18,26 +19,28 @@ class Display(radius: Int, maxRows: Int) {
     hexagons.foreach(println)
   }
 
-  private def createHexagon(mirror: Hexagon): RegularPolygon = new RegularPolygon(mirror.point, 6, radius) {
-    private val defaultColor = new Color(List("#E7CFA0", "#7CC1D2", "#A97FFF")(mirror.sector % 3))
-    private val clickColor   = new Color("red")
+  val Colors = List("#E7CFA0", "#7CC1D2", "#A97FFF")
 
-    fillColor = defaultColor
-    strokeColor = "white"
+  class Mirror(val hexagon: Hexagon, radius: Int) extends MyOwner {
+    def flip(): Unit = clicked.set(!clicked.now())
 
-    override def onClick(event: paperNs.MouseEvent): Unit | Boolean = {
-      if (fillColor == defaultColor) {
-        fillColor = clickColor
+    private val clicked = Var(false)
 
-      } else if (fillColor == clickColor) {
-        fillColor = defaultColor
-      }
+    val color: Signal[String] = clicked.signal.map {
+      case false => List("#E7CFA0", "#7CC1D2", "#A97FFF")(hexagon.sector % 3)
+      case true  => "red"
     }
-    override def onDoubleClick(event: paperNs.MouseEvent): Unit | Boolean = {
-      displaysByRow.getOrElse(mirror.row, Nil).foreach(_.onClick(event))
-      onClick(event)
+
+    private lazy val mirrorsWithSameRow = displaysByRow.getOrElse(hexagon.row, Nil)
+
+    new RegularPolygon(hexagon.point, 6, radius) {
+      color.foreach(x => fillColor = x)
+      strokeColor = "white"
+      override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.flip())
     }
   }
 }
 
-case class Mirror(hexagon: Hexagon, display: RegularPolygon)
+trait MyOwner {
+  implicit val owner: Owner = new Owner {}
+}

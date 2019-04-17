@@ -192,6 +192,7 @@ lazy val `ui-spikes` = project
       ScalablyTyped.P.p5,
       ScalablyTyped.P.paper,
       Libs.`scala-async`.value,
+      Libs.airstream.value,
       React4s.`react4s`.value
     ),
     version in webpack := "4.8.1",
