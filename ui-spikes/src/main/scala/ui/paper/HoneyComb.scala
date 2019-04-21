@@ -1,6 +1,6 @@
 package ui.paper
 
-case class HoneyComb(radius: Int, rows: List[Row]) {
+case class HoneyComb(rows: List[Row]) {
   def cells: List[Cell]        = rows.flatMap(_.cells)
   def trimmedCells: List[Cell] = rows.drop(2).flatMap(_.trimmedCells(rows.length - 1))
 }
@@ -35,6 +35,8 @@ case class Sector(id: Int, hexagons: List[Hexagon]) {
 
 case class Cell(sector: Int, row: Int, index: Int, hexagon: Hexagon) {
   def position: Position = Position(sector, row, index)
+
+  override def toString: String = s"row=$row sector=$sector index=$index $hexagon"
 }
 
 case class Position(x: Int, y: Int, z: Int)

@@ -1,6 +1,7 @@
 package ui.paper
 
 case class Point(x: Double, y: Double) {
+
   def shift(radius: Double, angle: Double): Point = add(Point.polar(radius, angle))
   def add(point: Point)                           = Point(x + point.x, y + point.y)
 
@@ -10,6 +11,8 @@ case class Point(x: Double, y: Double) {
   }
 
   override def hashCode(): Int = underlying.hashCode()
+
+  override def toString: String = underlying.toString()
 
   private def underlying: (Long, Long) = (x.round, y.round)
 }
@@ -31,8 +34,10 @@ case class Hexagon(center: Point, radius: Double) {
   def generate(length: Double, rotation: Double, indices: List[Int]): List[Point] = indices.map { i =>
     center.shift(length, i * Math.PI / 3 + rotation)
   }
+
+  override def toString: String = s"center=$center radius=$radius"
 }
 
 object Hexagon {
-  val Indices: List[Int] = (0 to 6).toList
+  val Indices: List[Int] = (0 until 6).toList
 }

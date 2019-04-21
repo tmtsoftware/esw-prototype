@@ -20,7 +20,7 @@ class ExternalService {
     val eventStream: EventStream[JsObject] = gateway.stream[JsObject]("/v2/stream/recentchange")
     eventStream.onNext = { jsObject =>
       val _position = parse(jsObject)
-      println(_position)
+//      println(_position)
       position.set(_position)
     }
   }

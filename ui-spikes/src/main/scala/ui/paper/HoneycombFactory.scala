@@ -1,17 +1,13 @@
 package ui.paper
 
-import typings.paperLib.paperMod.{^ => Paper}
+class HoneycombFactory(centralHexagon: Hexagon, maxRows: Int) {
 
-class HoneycombFactory(radius: Int, maxRows: Int) {
+  def create() = HoneyComb(loop(firstRow, List(firstRow, zeroRow)).reverse)
 
-  def create() = HoneyComb(radius, loop(firstRow, List(firstRow, zeroRow)).reverse)
-
-  private val Center = Point(Paper.view.center.x, Paper.view.center.x)
-
-  private val zeroRow = Row(0, List(Sector(0, List(Hexagon(Center, radius)))))
+  private val zeroRow = Row(0, List(Sector(0, List(centralHexagon))))
 
   private val firstRow: Row = {
-    val sectors = Hexagon(Center, radius).allNeighbours.zipWithIndex.map {
+    val sectors = centralHexagon.allNeighbours.zipWithIndex.map {
       case (hexagon, i) => Sector(i + 1, List(hexagon))
     }
     Row(1, sectors)
