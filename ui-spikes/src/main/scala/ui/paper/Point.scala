@@ -1,12 +1,8 @@
 package ui.paper
 
 case class Point(x: Double, y: Double) {
-  def hexagonVertices(radius: Double, rotation: Double): List[Point] =
-    (0 until 6).map(i => shift(radius, i * Math.PI / 3 + rotation)).toList
-
   def shift(radius: Double, angle: Double): Point = add(Point.polar(radius, angle))
-
-  def add(point: Point) = Point(x + point.x, y + point.y)
+  def add(point: Point)                           = Point(x + point.x, y + point.y)
 
   override def equals(obj: Any): Boolean = obj match {
     case x: Point => underlying == x.underlying
@@ -23,4 +19,20 @@ object Point {
     radius * Math.cos(angle),
     radius * Math.sin(angle)
   )
+}
+
+case class Hexagon(center: Point, radius: Double) {
+  def vertices: List[Point] = generate(radius, Math.PI / 6, Hexagon.Indices)
+
+  def allNeighbours: List[Hexagon]                  = neighbours(Hexagon.Indices)
+  def neighbours(indices: List[Int]): List[Hexagon] = generate(distance, 0, indices).map(p => copy(center = p))
+  def distance: Double                              = 2 * Math.cos(Math.PI / 6) * radius
+
+  def generate(length: Double, rotation: Double, indices: List[Int]): List[Point] = indices.map { i =>
+    center.shift(length, i * Math.PI / 3 + rotation)
+  }
+}
+
+object Hexagon {
+  val Indices: List[Int] = (0 to 6).toList
 }

@@ -7,17 +7,17 @@ import typings.paperLib.paperNs
 import scala.scalajs.js.|
 
 class Display(radius: Int, maxRows: Int) extends MyOwner {
-  lazy val hexagons: List[Hexagon]                 = new HoneycombFactory(radius, maxRows).create().trimmedHexagons
-  lazy val mirrors: List[Mirror]                   = hexagons.map(hexagon => new Mirror(hexagon))
-  lazy val mirrorsByRow: Map[Int, List[Mirror]]    = mirrors.groupBy(_.hexagon.row)
-  lazy val mirrorByPosition: Map[Position, Mirror] = mirrors.map(m => m.hexagon.position -> m).toMap
+  lazy val cells: List[Cell]                       = new HoneycombFactory(radius, maxRows).create().trimmedCells
+  lazy val mirrors: List[Mirror]                   = cells.map(cell => new Mirror(cell))
+  lazy val mirrorsByRow: Map[Int, List[Mirror]]    = mirrors.groupBy(_.cell.row)
+  lazy val mirrorByPosition: Map[Position, Mirror] = mirrors.map(m => m.cell.position -> m).toMap
 
   private lazy val externalService = new ExternalService
 
   def render(): Unit = {
     mirrors
-    println(hexagons.length)
-    hexagons.foreach(println)
+    println(cells.length)
+    cells.foreach(println)
 
     externalService.positions.foreach { position =>
       mirrorByPosition.get(position).foreach { mirror =>
@@ -28,17 +28,17 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
 
   val Colors = List("#E7CFA0", "#7CC1D2", "#A97FFF")
 
-  class Mirror(val hexagon: Hexagon) extends MyOwner {
+  class Mirror(val cell: Cell) extends MyOwner {
     def click(): Unit = clicked.set(!clicked.now())
 
     private val clicked = Var(false)
 
     val color: Signal[String] = clicked.signal.map {
-      case false => Colors(hexagon.sector % 3)
+      case false => Colors(cell.sector % 3)
       case true  => "red"
     }
 
-    private lazy val mirrorsWithSameRow = mirrorsByRow.getOrElse(hexagon.row, Nil)
+    private lazy val mirrorsWithSameRow = mirrorsByRow.getOrElse(cell.row, Nil)
 
     val path = new Path() {
       color.foreach(x => fillColor = x)
@@ -46,6 +46,6 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
       override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.click())
     }
 
-    hexagon.center.hexagonVertices(radius, Math.PI / 6).foreach(p => path.add(new PPoint(p.x, p.y)))
+    cell.hexagon.vertices.foreach(p => path.add(new PPoint(p.x, p.y)))
   }
 }
