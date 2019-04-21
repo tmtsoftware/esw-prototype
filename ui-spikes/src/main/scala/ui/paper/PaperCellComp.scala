@@ -8,7 +8,7 @@ import ui.mirror._
 import scala.scalajs.js
 import scala.scalajs.js.|
 
-class PaperPathComp(cell: Cell, color: Signal[String], store: Store) extends MyOwner {
+class PaperCellComp(cell: Cell, color: Signal[String], store: Store) extends MyOwner {
   val vertices: List[Point] = cell.hexagon.vertices
 
   new Path(vertices.map(p => new PPoint(p.x, p.y)).to[js.Array]) {

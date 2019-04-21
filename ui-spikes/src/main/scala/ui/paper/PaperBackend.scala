@@ -13,13 +13,14 @@ object PaperBackend extends RenderBackend {
   }
 
   override def setup(): Unit = {
-    Paper.setup(
-      document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
-    )
+    val canvas = document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
+    canvas.width = 900
+    canvas.height = 800
+    Paper.setup(canvas)
   }
 
   override def draw(cell: Cell, color: Signal[String], store: Store): Unit = {
-    new PaperPathComp(cell, color, store)
+    new PaperCellComp(cell, color, store)
   }
 
   override def postDraw(): Unit = {
