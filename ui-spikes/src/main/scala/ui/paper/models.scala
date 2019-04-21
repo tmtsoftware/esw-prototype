@@ -1,7 +1,5 @@
 package ui.paper
 
-import typings.paperLib.paperMod.Point
-
 case class HoneyComb(radius: Int, rows: List[Row]) {
   def hexagons: List[Hexagon]        = rows.flatMap(_.hexagons)
   def trimmedHexagons: List[Hexagon] = rows.drop(2).flatMap(_.trimmedHexagons(rows.length - 1))
@@ -12,7 +10,7 @@ case class Row(id: Int, sectors: List[Sector]) {
   def trimmedHexagons(maxRows: Int): List[Hexagon] = sectors.flatMap(_.trimmedHexagons(id, maxRows))
 }
 
-case class Sector(id: Int, centers: List[Point]) {
+case class Sector(id: Int, centers: List[MyPoint]) {
   def hexagons(rowId: Int): List[Hexagon] = reposition {
     centers.map(point => Hexagon(id, rowId, 0, point)).distinct
   }
@@ -35,9 +33,9 @@ case class Sector(id: Int, centers: List[Point]) {
   }
 }
 
-case class Hexagon(sector: Int, row: Int, index: Int, point: Point) extends Proxy {
-  override def self: Any          = (point.x.round, point.y.round)
-  override def toString(): String = (row, sector, index, (point.x.round, point.y.round)).toString()
+case class Hexagon(sector: Int, row: Int, index: Int, center: MyPoint) extends Proxy {
+  override def self: Any          = (center.x.round, center.y.round)
+  override def toString(): String = (row, sector, index, (center.x.round, center.y.round)).toString()
   def position: Position          = Position(sector, row, index)
 }
 

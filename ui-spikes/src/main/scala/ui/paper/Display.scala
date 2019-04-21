@@ -1,7 +1,7 @@
 package ui.paper
 
 import com.raquo.airstream.signal.{Signal, Var}
-import typings.paperLib.paperMod.PathNs.RegularPolygon
+import typings.paperLib.paperMod.{Path, Point}
 import typings.paperLib.paperNs
 
 import scala.scalajs.js.|
@@ -40,10 +40,12 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
 
     private lazy val mirrorsWithSameRow = mirrorsByRow.getOrElse(hexagon.row, Nil)
 
-    new RegularPolygon(hexagon.point, 6, radius) {
+    val path = new Path() {
       color.foreach(x => fillColor = x)
       strokeColor = "white"
       override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.click())
     }
+
+    hexagon.center.hexagonVertices(radius, Math.PI / 6).foreach(p => path.add(new Point(p.x, p.y)))
   }
 }

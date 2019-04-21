@@ -6,7 +6,7 @@ import ocs.framework.dsl.epic.internal._
 
 class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Script2[State](Init, cswSystem) {
 
-  val temp = Var(0).assign() // assign to remotePvVariable
+  val temp = Var(0) // assign to remotePvVariable
 //  externalService.subscribe("temperature updates").react(temp)
 
   override def machine(state: State): Unit = {
