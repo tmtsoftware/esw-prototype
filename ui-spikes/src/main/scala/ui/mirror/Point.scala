@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror
 
 case class Point(x: Double, y: Double) {
 

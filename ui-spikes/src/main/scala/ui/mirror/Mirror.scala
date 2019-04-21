@@ -1,8 +1,8 @@
-package ui.paper
+package ui.mirror
 
 import com.raquo.airstream.signal.{Signal, Var}
 
-class Mirror(cell: Cell, store: Store) extends MyOwner {
+class Mirror(cell: Cell, store: Store, renderBackend: RenderBackend) extends MyOwner {
   store.cellClicks.filter(_.row == cell.row).foreach(_ => click())
   store.positions.filter(_ == cell.position).foreach(_ => click())
 
@@ -15,5 +15,5 @@ class Mirror(cell: Cell, store: Store) extends MyOwner {
     case true  => "red"
   }
 
-  new PaperPathComp(cell, color, store)
+  renderBackend.draw(cell, color, store)
 }

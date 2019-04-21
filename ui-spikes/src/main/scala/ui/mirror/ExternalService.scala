@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror
 
 import ocs.api.{EventStream, WebGateway}
 import play.api.libs.json.{JsObject, JsPath}

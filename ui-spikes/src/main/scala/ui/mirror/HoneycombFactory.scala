@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror
 
 class HoneycombFactory(centralHexagon: Hexagon, maxRows: Int) {
 

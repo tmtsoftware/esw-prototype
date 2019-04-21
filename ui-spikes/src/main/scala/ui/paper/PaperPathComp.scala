@@ -3,6 +3,7 @@ package ui.paper
 import com.raquo.airstream.signal.Signal
 import typings.paperLib.paperMod.{Path, Point => PPoint}
 import typings.paperLib.paperNs
+import ui.mirror._
 
 import scala.scalajs.js
 import scala.scalajs.js.|

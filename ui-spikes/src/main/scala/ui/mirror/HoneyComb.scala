@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror
 
 case class HoneyComb(rows: List[Row]) {
   def cells: List[Cell]        = rows.flatMap(_.cells)

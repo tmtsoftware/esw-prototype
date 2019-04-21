@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror
 
 import com.raquo.airstream.eventbus.{EventBus, WriteBus}
 import com.raquo.airstream.eventstream.EventStream
