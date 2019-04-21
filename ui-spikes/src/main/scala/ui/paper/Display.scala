@@ -1,7 +1,7 @@
 package ui.paper
 
 import com.raquo.airstream.signal.{Signal, Var}
-import typings.paperLib.paperMod.{Path, Point}
+import typings.paperLib.paperMod.{Path, Point => PPoint}
 import typings.paperLib.paperNs
 
 import scala.scalajs.js.|
@@ -46,6 +46,6 @@ class Display(radius: Int, maxRows: Int) extends MyOwner {
       override def onClick(event: paperNs.MouseEvent): Unit | Boolean = mirrorsWithSameRow.foreach(_.click())
     }
 
-    hexagon.center.hexagonVertices(radius, Math.PI / 6).foreach(p => path.add(new Point(p.x, p.y)))
+    hexagon.center.hexagonVertices(radius, Math.PI / 6).foreach(p => path.add(new PPoint(p.x, p.y)))
   }
 }

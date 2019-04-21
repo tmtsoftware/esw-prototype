@@ -8,7 +8,7 @@ class HoneycombFactory(radius: Int, maxRows: Int) {
 
   private val Length = 2 * Math.cos(Math.PI / 6) * radius
 
-  private val Center = MyPoint(Paper.view.center.x, Paper.view.center.x)
+  private val Center = Point(Paper.view.center.x, Paper.view.center.x)
 
   private val zeroRow = Row(0, List(Sector(0, List(Center))))
 

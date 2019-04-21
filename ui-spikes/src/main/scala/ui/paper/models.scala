@@ -10,7 +10,7 @@ case class Row(id: Int, sectors: List[Sector]) {
   def trimmedHexagons(maxRows: Int): List[Hexagon] = sectors.flatMap(_.trimmedHexagons(id, maxRows))
 }
 
-case class Sector(id: Int, centers: List[MyPoint]) {
+case class Sector(id: Int, centers: List[Point]) {
   def hexagons(rowId: Int): List[Hexagon] = reposition {
     centers.distinct.map(point => Hexagon(id, rowId, 0, point))
   }
@@ -33,7 +33,7 @@ case class Sector(id: Int, centers: List[MyPoint]) {
   }
 }
 
-case class Hexagon(sector: Int, row: Int, index: Int, center: MyPoint) {
+case class Hexagon(sector: Int, row: Int, index: Int, center: Point) {
   def position: Position = Position(sector, row, index)
 }
 
