@@ -1,15 +1,14 @@
 package ui.paper
 
-import typings.stdLib.^.document
-import typings.stdLib.{Event, HTMLCanvasElement, Window}
+import org.scalajs.dom
+import org.scalajs.dom.Event
 import typings.paperLib.paperMod.{^ => Paper}
-
-import scala.scalajs.js
+import typings.stdLib.HTMLCanvasElement
 
 object Boot {
 
-  val start: js.ThisFunction1[Window, Event, _] = { (_, _) =>
-    val canvas: HTMLCanvasElement = document
+  val start: Event => Unit = { _ =>
+    val canvas: HTMLCanvasElement = dom.document
       .getElementById("myCanvas")
       .asInstanceOf[HTMLCanvasElement]
 
