@@ -12,7 +12,7 @@ case class Row(id: Int, sectors: List[Sector]) {
 
 case class Sector(id: Int, centers: List[MyPoint]) {
   def hexagons(rowId: Int): List[Hexagon] = reposition {
-    centers.map(point => Hexagon(id, rowId, 0, point)).distinct
+    centers.distinct.map(point => Hexagon(id, rowId, 0, point))
   }
 
   def trimmedHexagons(rowId: Int, maxRows: Int): List[Hexagon] = reposition {
@@ -33,10 +33,8 @@ case class Sector(id: Int, centers: List[MyPoint]) {
   }
 }
 
-case class Hexagon(sector: Int, row: Int, index: Int, center: MyPoint) extends Proxy {
-  override def self: Any          = (center.x.round, center.y.round)
-  override def toString(): String = (row, sector, index, (center.x.round, center.y.round)).toString()
-  def position: Position          = Position(sector, row, index)
+case class Hexagon(sector: Int, row: Int, index: Int, center: MyPoint) {
+  def position: Position = Position(sector, row, index)
 }
 
 case class Position(x: Int, y: Int, z: Int)

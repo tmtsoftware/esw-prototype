@@ -9,6 +9,12 @@ case class MyPoint(x: Double, y: Double) {
     y + radius * Math.sin(angle)
   )
 
-//  override def self: Any          = (x.round, y.round)
-//  override def toString(): String = (x.round, y.round).toString()
+  override def equals(obj: Any): Boolean = obj match {
+    case x: MyPoint => underlying == x.underlying
+    case _          => false
+  }
+
+  override def hashCode(): Int = underlying.hashCode()
+
+  private def underlying: (Long, Long) = (x.round, y.round)
 }
