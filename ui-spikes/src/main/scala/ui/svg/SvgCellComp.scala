@@ -14,14 +14,12 @@ class SvgCellComp(cell: Cell, color: Signal[String], store: Store) extends MyOwn
     vertices.map(v => js.Array(v.x, v.y)).to[js.Array]
   }
 
-  val onClick: MouseEvent => Unit = { _ =>
-    store.writer.onNext(Click(cell))
-  }
-
   val polygon: Polygon = doc
     .polygon(points)
     .stroke("white")
-    .on("click", onClick)
+    .on("click", { _: MouseEvent =>
+      store.writer.onNext(Click(cell))
+    })
 
   color.foreach(c => polygon.fill(c))
 }

@@ -5,7 +5,7 @@ import typings.svgDotJsLib.svgDotJsMod.svgjsNs.Doc
 import typings.svgDotJsLib.svgDotJsMod.{^ => SVG}
 import ui.mirror._
 
-object SvgBackend extends RenderBackend with MyOwner {
+object SvgBackend extends RenderBackend {
 
   var doc: Doc = _
 
