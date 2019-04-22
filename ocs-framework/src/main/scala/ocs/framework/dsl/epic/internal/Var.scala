@@ -28,9 +28,9 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
   }
 
   def pvGet(): Future[Unit] = {
-    eventService.get(key).map { x =>
-      x.foreach { y =>
-        set(y.value.asInstanceOf[T])
+    eventService.get(key).map { option =>
+      option.foreach { event =>
+        set(event.value.asInstanceOf[T])
         mc.refresh()
       }
     }

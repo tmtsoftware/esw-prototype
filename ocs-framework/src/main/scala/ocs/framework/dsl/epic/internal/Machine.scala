@@ -8,7 +8,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 abstract class Machine[State](init: State, cswSystem: CswSystem) {
-  def logic(state: State): Unit
+  type Logic = State => Unit
+
+  def logic: Logic
 
   private var currentState: State = init
 
@@ -22,8 +24,12 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
     currentState = state
   }
 
-  def refresh(): Future[Unit] = Future {
-    logic(currentState)
+  def refresh(): Future[Unit] = {
+//    Thread.sleep(100)
+    Future {
+      debug(currentState)
+      logic(currentState)
+    }
   }
 
   def when(condition: => Boolean)(body: => Unit): Unit = {
@@ -33,5 +39,11 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
     }
   }
 
+  def debug(state: State): Unit = {}
+
   implicit def varToT[T](reactive: Var[T]): T = reactive.get
+}
+
+object Machine {
+  type Logic[T] = T => Unit
 }
