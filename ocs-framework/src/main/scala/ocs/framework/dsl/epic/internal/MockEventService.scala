@@ -7,11 +7,9 @@ import akka.stream.scaladsl.{Keep, Source, SourceQueueWithComplete}
 import akka.stream.{ActorMaterializer, KillSwitch, KillSwitches, Materializer, OverflowStrategy}
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService, Future}
-
-case class MockEvent(key: String, value: Any)
+import MockEventService._
 
 class MockEventService {
-
   var map: Map[String, MockEvent]                                          = Map.empty
   var subscriptions: Map[String, List[SourceQueueWithComplete[MockEvent]]] = Map.empty
 
@@ -36,5 +34,8 @@ class MockEventService {
     }
     stream.viaMat(KillSwitches.single)(Keep.right)
   }
+}
 
+object MockEventService {
+  case class MockEvent(key: String, value: Any)
 }
