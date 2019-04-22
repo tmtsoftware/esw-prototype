@@ -1,4 +1,4 @@
-package ui.svgjs
+package ui.spikes.svgjs
 
 import typings.svgDotJsLib.svgDotJsMod.svgjsNs.{Doc, PointArray, Polygon, StrokeData}
 import typings.svgDotJsLib.svgDotJsMod.{^ => SVG}

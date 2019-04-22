@@ -1,4 +1,4 @@
-package ui.paper
+package ui.mirror.paper
 
 import com.raquo.airstream.signal.Signal
 import org.scalajs.dom.document

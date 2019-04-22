@@ -1,10 +1,10 @@
-package ui.svg
+package ui.mirror.svg
 
 import com.raquo.airstream.signal.Signal
 import org.scalajs.dom.raw.MouseEvent
 import typings.svgDotJsLib.svgDotJsMod.svgjsNs.Polygon
+import ui.mirror.svg.SvgBackend.doc
 import ui.mirror.{Cell, MyOwner, SelectEvent, Store}
-import ui.svg.SvgBackend.doc
 
 import scala.scalajs.js
 

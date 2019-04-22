@@ -1,4 +1,4 @@
-package ui.react
+package ui.spikes.react
 
 import com.github.ahnfelt.react4s.ReactBridge
 

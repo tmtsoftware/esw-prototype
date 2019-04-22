@@ -1,4 +1,4 @@
-package ui.p5js
+package ui.spikes.p5js
 
 import typings.p5Lib.p5Mod.namespaced
 

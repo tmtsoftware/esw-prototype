@@ -2,8 +2,8 @@ package ui
 
 import org.scalajs.dom
 import ui.mirror.Boot
-import ui.paper.PaperBackend
-import ui.svg.SvgBackend
+import ui.mirror.paper.PaperBackend
+import ui.mirror.svg.SvgBackend
 
 object Main {
 

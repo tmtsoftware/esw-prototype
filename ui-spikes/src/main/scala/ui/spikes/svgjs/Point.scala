@@ -1,4 +1,4 @@
-package ui.svgjs
+package ui.spikes.svgjs
 
 import scala.scalajs.js
 
