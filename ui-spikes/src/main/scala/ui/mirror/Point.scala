@@ -25,11 +25,13 @@ object Point {
 }
 
 case class Hexagon(center: Point, radius: Double) {
-  def vertices: List[Point] = generate(radius, Math.PI / 6, Hexagon.Indices)
+  def vertices: List[Point] = generate(radius, Hexagon.VertexRotation, Hexagon.Indices)
 
-  def allNeighbours: List[Hexagon]                  = neighbours(Hexagon.Indices)
-  def neighbours(indices: List[Int]): List[Hexagon] = generate(distance, 0, indices).map(p => copy(center = p))
-  def distance: Double                              = 2 * Math.cos(Math.PI / 6) * radius
+  def allNeighbours: List[Hexagon] = neighbours(Hexagon.Indices)
+  def neighbours(indices: List[Int]): List[Hexagon] = {
+    generate(distance, Hexagon.NeighbourRotation, indices).map(p => copy(center = p))
+  }
+  def distance: Double = 2 * Math.cos(Math.PI / 6) * radius
 
   def generate(length: Double, rotation: Double, indices: List[Int]): List[Point] = indices.map { i =>
     center.shift(length, i * Math.PI / 3 + rotation)
@@ -39,5 +41,7 @@ case class Hexagon(center: Point, radius: Double) {
 }
 
 object Hexagon {
-  val Indices: List[Int] = (0 until 6).toList
+  val Indices: List[Int]        = (0 until 6).toList
+  val NeighbourRotation: Double = 0
+  val VertexRotation: Double    = NeighbourRotation + Math.PI / 6
 }
