@@ -3,7 +3,7 @@ package ui.svg
 import com.raquo.airstream.signal.Signal
 import org.scalajs.dom.raw.MouseEvent
 import typings.svgDotJsLib.svgDotJsMod.svgjsNs.Polygon
-import ui.mirror.{Cell, Click, MyOwner, Store}
+import ui.mirror.{Cell, MyOwner, SelectEvent, Store}
 import ui.svg.SvgBackend.doc
 
 import scala.scalajs.js
@@ -18,7 +18,7 @@ class SvgCellComp(cell: Cell, color: Signal[String], store: Store) extends MyOwn
     .polygon(points)
     .stroke("white")
     .on("click", { _: MouseEvent =>
-      store.writer.onNext(Click(cell))
+      store.writer.onNext(SelectEvent(cell))
     })
 
   color.foreach(c => polygon.fill(c))

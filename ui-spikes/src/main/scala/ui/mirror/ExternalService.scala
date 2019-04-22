@@ -15,7 +15,7 @@ class ExternalService(store: Store) {
     eventStream.onNext = { jsObject =>
       val _position = parse(jsObject)
 //      println(_position)
-      _position.map(PositionEvent).foreach(store.writer.onNext)
+      _position.map(FaultEvent).foreach(store.writer.onNext)
     }
   }
 

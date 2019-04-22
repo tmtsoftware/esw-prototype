@@ -10,9 +10,7 @@ object SvgBackend extends RenderBackend {
   var doc: Doc = _
 
   override def center: Point = {
-    val point = new Point(doc.width() / 2, doc.height() / 2)
-    println(point)
-    point
+    new Point(doc.width() / 2, doc.height() / 2)
   }
 
   override def setup(): Unit = {

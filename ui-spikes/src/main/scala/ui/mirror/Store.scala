@@ -9,15 +9,15 @@ class Store {
   val writer: WriteBus[AppEvent]    = eventBus.writer
   val events: EventStream[AppEvent] = eventBus.events
 
-  val cellClicks: EventStream[Cell] = events.collect {
-    case Click(cell) => cell
+  val selectedCells: EventStream[Cell] = events.collect {
+    case SelectEvent(cell) => cell
   }
 
-  val positions: EventStream[Position] = events.collect {
-    case PositionEvent(position) => position
+  val faultPositions: EventStream[Position] = events.collect {
+    case FaultEvent(position) => position
   }
 }
 
 sealed trait AppEvent
-case class Click(cell: Cell)                 extends AppEvent
-case class PositionEvent(position: Position) extends AppEvent
+case class SelectEvent(cell: Cell)        extends AppEvent
+case class FaultEvent(position: Position) extends AppEvent
