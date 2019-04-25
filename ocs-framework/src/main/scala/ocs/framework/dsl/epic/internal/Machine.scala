@@ -22,6 +22,7 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
 
   protected def become(state: State): Unit = {
     currentState = state
+    refresh()
   }
 
   def refresh(): Future[Unit] = {
@@ -35,7 +36,7 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
   def when(condition: => Boolean)(body: => Unit): Unit = {
     if (condition) {
       body
-      refresh()
+//      refresh()
     }
   }
 

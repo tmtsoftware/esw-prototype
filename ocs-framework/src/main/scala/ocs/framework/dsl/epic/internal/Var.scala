@@ -31,7 +31,7 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
     eventService.get(key).map { option =>
       option.foreach { event =>
         set(event.value.asInstanceOf[T])
-        mc.refresh()
+//        mc.refresh()
       }
     }
   }
@@ -42,7 +42,7 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
       .mapAsync(1) { event =>
         Future {
           set(event.value.asInstanceOf[T])
-          mc.refresh()
+//          mc.refresh()
         }
       }
       .to(Sink.ignore)
