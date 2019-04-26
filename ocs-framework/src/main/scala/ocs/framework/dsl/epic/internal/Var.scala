@@ -48,6 +48,83 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
       .to(Sink.ignore)
       .run()
   }
+
+  /*
+    pvStat pvAssign(channel ch, char *pv_name)
+
+    Assigns or re-assigns ch to a process variable with name pv_name. If pv_name is an empty string or NULL,
+    then ch is de-assigned (not associated with any process variable)
+
+    Note that pvAsssign is asynchronous: it sends a request to search for and connect to the given pv_name,
+    but it does not wait for a response, similar to pvGet(var,ASYNC). Calling pvAssign does have one
+    immediate effect, namely de-assigning the variable from any PV it currently is assigned to. In order
+    to make sure that it has connected to the new PV, you can use the pvConnected built-in function inside
+    a transition clause.
+   */
+  def pvAssign() = ???
+
+  /*
+    int  delay (delay_in_seconds)
+    float  delay_in_seconds;
+
+    The delay function returns TRUE if the specified time has elapsed from entering the state.
+    It should be used only within a when expression.
+   */
+  def delay = ???
+
+  /*
+    pvStat pvMonitor(channel ch)
+
+    Initiates a monitor on the process variable that ch was assigned to.
+   */
+  def pvMonitor = ???
+
+  /*
+    pvStat pvStopMonitor(channel ch)
+
+    Terminates a monitor on the underlying process variable.
+   */
+  def pvStopMonitor = ???
+
+  /*
+    void pvPutCancel(channel ch)
+
+    Cancel a pending (asynchronous) pvPut.
+   */
+  def pvPutCancel = ???
+
+  /*
+    seqBool pvPutComplete(channel ch)
+
+    Returns whether the last asynchronous pvPut to this process variable has completed.
+   */
+  def pvPutComplete = ???
+
+  /*
+    seqBool pvGetComplete(channel ch)
+
+    Returns whether the last asynchronous pvGet for ch has completed.
+   */
+  def pvGetComplete = ???
+
+  /*
+    void pvGetCancel(channel ch)
+
+    Cancel a pending (asynchronous) pvGet.
+   */
+  def pvGetCancel = ???
+
+  /*
+    unsigned pvChannelCount()
+
+    Returns the total number of process variables associated with the program.
+   */
+  def pvChannelCount = ???
+
+  /*
+
+ */
+
 }
 
 object Var {
