@@ -12,11 +12,12 @@ object PaperBackend extends RenderBackend {
     Point(paperCenter.x, paperCenter.y)
   }
 
-  override def setup(): Unit = {
+  override def setup(width: Int, height: Int, store: Store): Unit = {
     val canvas = document.getElementById("myCanvas").asInstanceOf[HTMLCanvasElement]
-    canvas.width = 900
-    canvas.height = 800
+    canvas.width = width
+    canvas.height = height
     Paper.setup(canvas)
+    new PaperCounterComp(store)
   }
 
   override def draw(cell: Cell, color: Signal[String], store: Store): Unit = {
