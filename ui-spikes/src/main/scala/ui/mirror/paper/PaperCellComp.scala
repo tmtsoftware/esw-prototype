@@ -17,6 +17,6 @@ class PaperCellComp(cell: Cell, color: Signal[String], store: Store) extends MyO
   new Path(points) {
     color.foreach(x => fillColor = x)
     strokeColor = "white"
-    override def onClick(event: paperNs.MouseEvent): Unit | Boolean = store.writer.onNext(SelectEvent(cell))
+    override def onClick(event: paperNs.MouseEvent): Unit | Boolean = store.selectedCells.set(cell)
   }
 }

@@ -6,16 +6,14 @@ import play.api.libs.json.{JsObject, JsPath}
 class ExternalService(store: Store) {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  subscribe()
-
   private lazy val gateway = new WebGateway("https://stream.wikimedia.org")
 
-  private def subscribe(): Unit = {
+  def subscribe(): Unit = {
     val eventStream: EventStream[JsObject] = gateway.stream[JsObject]("/v2/stream/recentchange")
     eventStream.onNext = { jsObject =>
       val _position = parse(jsObject)
 //      println(_position)
-      _position.map(FaultEvent).foreach(store.writer.onNext)
+      _position.foreach(store.faultPositions.set)
     }
   }
 

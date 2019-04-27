@@ -1,23 +1,15 @@
 package ui.mirror
 
-import com.raquo.airstream.eventbus.{EventBus, WriteBus}
+import com.raquo.airstream.eventbus.EventBus
 import com.raquo.airstream.eventstream.EventStream
 
 class Store {
-  val eventBus = new EventBus[AppEvent]
-
-  val writer: WriteBus[AppEvent]    = eventBus.writer
-  val events: EventStream[AppEvent] = eventBus.events
-
-  val selectedCells: EventStream[Cell] = events.collect {
-    case SelectEvent(cell) => cell
+  trait State[T] {
+    private val eventBus       = new EventBus[T]
+    def set(value: T): Unit    = eventBus.writer.onNext(value)
+    def stream: EventStream[T] = eventBus.events
   }
 
-  val faultPositions: EventStream[Position] = events.collect {
-    case FaultEvent(position) => position
-  }
+  object selectedCells  extends State[Cell]
+  object faultPositions extends State[Position]
 }
-
-sealed trait AppEvent
-case class SelectEvent(cell: Cell)        extends AppEvent
-case class FaultEvent(position: Position) extends AppEvent

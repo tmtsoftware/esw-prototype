@@ -6,7 +6,7 @@ object Boot {
 
   def start(renderBackend: RenderBackend): Event => Unit = { _ =>
     val store = new Store
-    new ExternalService(store)
+    new ExternalService(store).subscribe()
     renderBackend.setup()
     new Display(store, renderBackend).render(renderBackend.center, 16, 13)
     renderBackend.postDraw()
