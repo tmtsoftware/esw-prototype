@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+
 import sbt.Keys.{libraryDependencies, resolvers}
 import sbtcrossproject.CrossType
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
@@ -174,11 +177,8 @@ lazy val `sequencer-scripts-test` = project
 
 lazy val `ui-spikes` = project
   .dependsOn(`ocs-api-js`)
-  .enablePlugins(ScalaJSBundlerPlugin)
+  .configure(baseJsSettings, bundlerSettings, browserProject)
   .settings(
-    scalaJSUseMainModuleInitializer := true,
-    resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
-    resolvers += Resolver.sonatypeRepo("snapshots"),
     npmDependencies in Compile ++= Seq(
       "svg.js" -> "2.7.1",
       "p5" -> "0.7",
@@ -186,22 +186,50 @@ lazy val `ui-spikes` = project
       "react" -> "16.5.1",
       "react-dom" -> "16.5.1",
     ),
-    scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     libraryDependencies ++= Seq(
-      SharedLibs.scalaTest.value % Test,
       ScalablyTyped.S.svg_dot_js,
       ScalablyTyped.P.p5,
       ScalablyTyped.P.paper,
       Libs.`scala-async`.value,
       Libs.`scalajs-dom`.value,
-      Libs.airstream.value,
-      React4s.`react4s`.value
-    ),
-    version in webpack := "4.8.1",
-    version in startWebpackDevServer := "3.1.4",
-    webpackResources := webpackResources.value +++ PathFinder(Seq(baseDirectory.value / "index.html")) ** "*.*",
-    webpackDevServerExtraArgs in fastOptJS ++= Seq(
-      "--content-base",
-      baseDirectory.value.getAbsolutePath
+      Libs.airstream.value
     )
   )
+
+lazy val start = TaskKey[Unit]("start")
+
+lazy val browserProject: Project => Project =
+  _.settings(
+    start := {
+      (Compile / fastOptJS / startWebpackDevServer).value
+      val indexFrom = baseDirectory.value / "index.html"
+      val indexTo   = (Compile / fastOptJS / crossTarget).value / "index.html"
+      Files.copy(indexFrom.toPath, indexTo.toPath, REPLACE_EXISTING)
+    }
+  )
+
+lazy val baseJsSettings: Project => Project =
+  _.enablePlugins(ScalaJSPlugin)
+    .settings(
+      scalaJSUseMainModuleInitializer := true,
+      scalaJSModuleKind := ModuleKind.CommonJSModule,
+      /* disabled because it somehow triggers many warnings */
+      emitSourceMaps := false,
+      /* in preparation for scala.js 1.0 */
+      scalacOptions += "-P:scalajs:sjsDefinedByDefault",
+      /* for ScalablyTyped */
+      resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped"),
+    )
+
+lazy val bundlerSettings: Project => Project =
+  _.enablePlugins(ScalaJSBundlerPlugin)
+    .settings(
+      /* Specify current versions and modes */
+      startWebpackDevServer / version := "3.1.10",
+      webpack / version := "4.26.1",
+      Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+      Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+      Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+      Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
+      useYarn := true
+    )
