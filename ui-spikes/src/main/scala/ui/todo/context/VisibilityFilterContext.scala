@@ -11,7 +11,7 @@ object VisibilityFilterContext {
     new VisibilityFilterContext(VisibilityFilter.All, _ => ())
   )
 
-  val Provider: FC[Unit] = define.fc[Unit] { props =>
+  val Provider: FC[_] = define.fc[js.Any] { props =>
     val js.Tuple2(value, set) = React.useState[VisibilityFilter](VisibilityFilter.All)
 
     Context.Provider(

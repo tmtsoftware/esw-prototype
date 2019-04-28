@@ -5,9 +5,11 @@ import typings.reactLib.dsl._
 import typings.reactLib.reactMod.FC
 import ui.todo.models.VisibilityFilter
 
+import scala.scalajs.js
+
 object Footer {
 
-  val Component: FC[Unit] = define.fc[Unit] { _ =>
+  val Component: FC[_] = define.fc[js.Any] { _ =>
     dom.console.log("-----------> Footer")
 
     div.noprops(

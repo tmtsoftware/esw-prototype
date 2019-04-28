@@ -9,7 +9,7 @@ import scala.scalajs.js
 object TodoListContext {
   val Context: Context[TodoListContext] = React.createContext(new TodoListContext(Seq.empty, _ => ()))
 
-  val Provider: FC[Unit] = define.fc[Unit] { props =>
+  val Provider: FC[_] = define.fc[js.Any] { props =>
     val js.Tuple2(todos, setTodos) = React.useState(Seq.empty[Todo])
 
     Context.Provider(

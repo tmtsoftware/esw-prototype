@@ -8,7 +8,7 @@ import scala.scalajs.js
 
 object AddTodo {
 
-  val Component: FC[Unit] = define.fc[Unit] { _ =>
+  val Component: FC[_] = define.fc[js.Any] { _ =>
     val context                         = React.useContext(TodoListContext.Context)
     val js.Tuple2(inputValue, setInput) = React.useState("")
 

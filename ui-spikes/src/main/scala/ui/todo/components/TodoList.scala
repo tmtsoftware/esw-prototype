@@ -4,9 +4,11 @@ import typings.reactLib.dsl._
 import typings.reactLib.reactMod.{FC, ^ => React}
 import ui.todo.context.{TodoListContext, VisibilityFilterContext}
 
+import scala.scalajs.js
+
 object TodoList {
 
-  val Component: FC[Unit] = define.fc[Unit] { _ =>
+  val Component: FC[_] = define.fc[js.Any] { _ =>
     val todoListContext         = React.useContext(TodoListContext.Context)
     val visibilityFilterContext = React.useContext(VisibilityFilterContext.Context)
 
