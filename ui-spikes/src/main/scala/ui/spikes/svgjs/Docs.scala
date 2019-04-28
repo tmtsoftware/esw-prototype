@@ -1,9 +1,6 @@
 package ui.spikes.svgjs
 
-import typings.svgDotJsLib.svgDotJsMod.svgjsNs.{Doc, PointArray, Polygon, StrokeData}
-import typings.svgDotJsLib.svgDotJsMod.{^ => SVG}
-
-import scala.scalajs.js
+import typings.svgDotJsLib.svgDotJsMod.{Doc, Polygon, StrokeData, ^ => SVG}
 
 object Docs {
 

@@ -183,8 +183,8 @@ lazy val `ui-spikes` = project
       "svg.js" -> "2.7.1",
       "p5" -> "0.7",
       "paper" -> "v0.11.8",
-      "react" -> "16.5.1",
-      "react-dom" -> "16.5.1",
+      "react" -> "16.8",
+      "react-dom" -> "16.8",
     ),
     libraryDependencies ++= Seq(
       ScalablyTyped.S.svg_dot_js,
@@ -192,7 +192,9 @@ lazy val `ui-spikes` = project
       ScalablyTyped.P.paper,
       Libs.`scala-async`.value,
       Libs.`scalajs-dom`.value,
-      Libs.airstream.value
+      Libs.airstream.value,
+      ScalablyTyped.R.`react-facade`,
+      ScalablyTyped.R.`react-dom`,
     )
   )
 

@@ -1,7 +1,6 @@
 package ui.spikes.p5js
 
-import typings.p5Lib.p5Mod.{namespaced => P5}
-import typings.p5Lib.p5Mod.p5Ns.p5InstanceExtensions
+import typings.p5Lib.p5Mod.{p5InstanceExtensions, ^ => P5}
 
 import scala.scalajs.js
 

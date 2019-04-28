@@ -1,6 +1,6 @@
 package ui.mirror.svg
 
-import typings.svgDotJsLib.svgDotJsMod.svgjsNs.{Doc, Text}
+import typings.svgDotJsLib.svgDotJsMod.{Doc, Text}
 import ui.mirror.{MyOwner, Store}
 
 class SvgCounterComp(doc: Doc, store: Store) extends MyOwner {

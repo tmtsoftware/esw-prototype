@@ -1,8 +1,7 @@
 package ui.mirror.svg
 
 import com.raquo.airstream.signal.Signal
-import typings.svgDotJsLib.svgDotJsMod.svgjsNs.Doc
-import typings.svgDotJsLib.svgDotJsMod.{^ => SVG}
+import typings.svgDotJsLib.svgDotJsMod.{Doc, ^ => SVG}
 import ui.mirror._
 
 object SvgBackend extends RenderBackend {

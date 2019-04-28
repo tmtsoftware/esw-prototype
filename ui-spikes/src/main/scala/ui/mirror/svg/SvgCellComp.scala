@@ -2,7 +2,7 @@ package ui.mirror.svg
 
 import com.raquo.airstream.signal.Signal
 import org.scalajs.dom.raw.MouseEvent
-import typings.svgDotJsLib.svgDotJsMod.svgjsNs.Polygon
+import typings.svgDotJsLib.svgDotJsMod.Polygon
 import ui.mirror.svg.SvgBackend.doc
 import ui.mirror.{Cell, MyOwner, Store}
 

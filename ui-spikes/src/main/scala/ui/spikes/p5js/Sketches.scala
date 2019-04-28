@@ -1,9 +1,9 @@
 package ui.spikes.p5js
 
-import typings.p5Lib.p5Mod.namespaced
+import typings.p5Lib.p5Mod.{^ => P5}
 
 object Sketches {
-  def sketch(): namespaced = P5Facade { p =>
+  def sketch(): P5 = P5Facade { p =>
     import p._
 
     setup = () => {
