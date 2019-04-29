@@ -3,7 +3,7 @@ import React, {useState} from "react";
 const e = () => {}
 export const PinholeMaskContext = React.createContext({open: false, openShutter:e, closeShutter:e, toggleShutter: e})
 
-const PinholeMaskProvider = (props) => {
+const PinholeMaskContextProvider = (props) => {
     const [open, setOpen] = useState(false)
 
     const openShutter = () => setOpen(true)
@@ -15,4 +15,4 @@ const PinholeMaskProvider = (props) => {
     </PinholeMaskContext.Provider>
 }
 
-export default PinholeMaskProvider
+export default PinholeMaskContextProvider

@@ -1,18 +1,13 @@
-import React, {useContext} from "react";
+import React from "react";
 import {DashBox} from "./common/DashBox";
 import {TextBox} from "./common/TextBox";
-import {AlignmentMirrorContext} from "../context/AlignmentMirrorContext";
 import PropTypes from "prop-types";
 import {PinholeMask} from "./PinholeMask";
 
 export const SourcesAndCalibration = (props) => {
-    const {isUp} = useContext(AlignmentMirrorContext)
     const width = props.width;
     const strokeWidth = 2;
     const height = 500;
-    const mirrorMidY = isUp ? height/2 : height/2 + height/6
-
-    const boxWidth = width/2 - 40
 
     return <svg x={props.x}>
 

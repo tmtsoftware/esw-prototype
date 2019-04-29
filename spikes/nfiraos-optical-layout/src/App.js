@@ -10,6 +10,8 @@ import {AlignmentTelescope} from "./components/AlignmentTelescope";
 import AlignmentMirrorContextProvider from "./context/AlignmentMirrorContext";
 import {SourcesAndCalibration} from "./components/SourcesAndCalibration";
 import {MainShutter} from "./components/MainShutter";
+import {InstrumentSelectionMirror} from "./components/InstrumentSelectionMirror";
+import InstrumentMirrorContextProvider from "./context/InstrumentMirrorContext";
 
 class App extends React.Component {
     render() {
@@ -31,22 +33,26 @@ class App extends React.Component {
         const sourceAndCalibX = alignmentUnitX + alignmentWidth + gap
         const sourceAndCalibWidth = 320
 
+        const instrumentMirrorX = sourceAndCalibX + sourceAndCalibWidth + gap
+        const instrumentMirrorWidth = 520
         return (
             <MainShutterContextProvider>
                 <InstrumentCalibrationMirrorContextProvider>
                     <AlignmentMirrorContextProvider>
                         <PinholeMaskContextProvider>
-                            <div className="App">
-                                <ControlPanel/>
-                                <svg viewBox="0 0 1024 600" width="1024" height="600">
-                                    <MainShutter x={shutterX} width={shutterWidth}/>
-                                    <CalibrationUnit x={calibrationUnitX} width={calibrationWidth}/>
-                                    <AlignmentTelescope x={alignmentUnitX} width={alignmentWidth}/>
-                                    <SourcesAndCalibration x={sourceAndCalibX} width={sourceAndCalibWidth}/>
-                                    <Light x={x} initialWidth={lightWidth}/>
-
-                                </svg>
-                            </div>
+                            <InstrumentMirrorContextProvider>
+                                <div className="App">
+                                    <ControlPanel/>
+                                    <svg viewBox="0 0 1250 600" width="1250" height="600">
+                                        <MainShutter x={shutterX} width={shutterWidth}/>
+                                        <CalibrationUnit x={calibrationUnitX} width={calibrationWidth}/>
+                                        <AlignmentTelescope x={alignmentUnitX} width={alignmentWidth}/>
+                                        <SourcesAndCalibration x={sourceAndCalibX} width={sourceAndCalibWidth}/>
+                                        <InstrumentSelectionMirror x={instrumentMirrorX} width={instrumentMirrorWidth}/>
+                                        <Light x={x} initialWidth={lightWidth}/>
+                                    </svg>
+                                </div>
+                            </InstrumentMirrorContextProvider>
                         </PinholeMaskContextProvider>
                     </AlignmentMirrorContextProvider>
                 </InstrumentCalibrationMirrorContextProvider>

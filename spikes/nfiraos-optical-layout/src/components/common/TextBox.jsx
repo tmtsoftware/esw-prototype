@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import {Text} from "./Text";
 
 export const TextBox = (props) => {
-    const {x, y, width, height, color, backgroundColor, children} = {...props};
-    return <g>
+    const {x, y, width, height, color, backgroundColor,onClick ,children} = {...props};
+    return <g onClick={onClick}>
         <rect
             fill={backgroundColor === "transparent" ? "white" : backgroundColor}
             fillOpacity={backgroundColor === "transparent" ? 0 : 1}
@@ -34,5 +34,6 @@ TextBox.propTypes = {
     height: PropTypes.number.isRequired,
     color: PropTypes.string,
     backgroundColor: PropTypes.string,
+    onClick: PropTypes.func,
     children: PropTypes.string
 };

@@ -32,5 +32,5 @@ Text.propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     color: PropTypes.string,
-    children: PropTypes.string.isRequired
+    children: PropTypes.string
 };
