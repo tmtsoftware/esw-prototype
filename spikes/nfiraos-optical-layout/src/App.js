@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import {CalibrationUnit} from "./components/CalibrationUnit";
-import {Shutter} from "./components/Shutter";
+import {CalibrationUnit} from "./components/calibrationunit/CalibrationUnit";
+import {Shutter} from "./components/shutter/Shutter";
 import {Light} from "./components/Light";
-import {ControlPanel} from "./components/ControlPanel";
+import {ControlPanel} from "./components/controlpanel/ControlPanel";
 import ShutterContextProvider from "./context/ShutterContext";
 import InstrumentCalibrationMirrorContextProvider from "./context/InstrumentCalibrationMirrorContext";
+import {AlignmentTelescope} from "./components/alignmenttelescope/AlignmentTelescope";
 
 class App extends React.Component {
     render() {
@@ -17,6 +18,7 @@ class App extends React.Component {
                         <svg viewBox="0 0 1024 600" width="1024" height="600">
                             <Shutter/>
                             <CalibrationUnit/>
+                            <AlignmentTelescope/>
                             <Light/>
                         </svg>
                     </div>

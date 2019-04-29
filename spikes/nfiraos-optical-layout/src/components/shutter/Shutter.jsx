@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import './Shuter.css'
-import {ShutterContext} from "../context/ShutterContext";
+import {ShutterContext} from "../../context/ShutterContext";
 
 export const Shutter = () => {
     const {open} = useContext(ShutterContext)

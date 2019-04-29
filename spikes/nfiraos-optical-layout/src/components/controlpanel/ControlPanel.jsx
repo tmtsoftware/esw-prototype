@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import './ControlPanel.css'
-import {ShutterContext} from "../context/ShutterContext";
-import {InstrumentCalibrationMirrorContext} from "../context/InstrumentCalibrationMirrorContext";
+import {ShutterContext} from "../../context/ShutterContext";
+import {InstrumentCalibrationMirrorContext} from "../../context/InstrumentCalibrationMirrorContext";
 
 export const ControlPanel = () => {
     const {open, toggleShutter} = useContext(ShutterContext)

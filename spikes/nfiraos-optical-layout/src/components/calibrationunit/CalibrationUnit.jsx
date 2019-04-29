@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
-import {TextBox} from "./TextBox";
-import {DashBox} from "./DashBox";
-import {Mirror} from "./Mirror";
-import {InstrumentCalibrationMirrorContext} from "../context/InstrumentCalibrationMirrorContext";
+import {TextBox} from "../common/TextBox";
+import {DashBox} from "../common/DashBox";
+import {Mirror} from "../common/Mirror";
+import {InstrumentCalibrationMirrorContext} from "../../context/InstrumentCalibrationMirrorContext";
 
 export const CalibrationUnit = () => {
     const {isUp} = useContext(InstrumentCalibrationMirrorContext)
@@ -26,6 +26,10 @@ export const CalibrationUnit = () => {
                 NSCU arcs & flats
             </TextBox>
             <Mirror midX={width/2} midY={mirrorMidY} />
+            <TextBox width={width * 0.8} height={height * 0.12} y={height * 0.80} x={width * 0.1 + strokeWidth}>
+                Instrument Calibration Mirror
+            </TextBox>
+
         </DashBox>
     </svg>
 }
