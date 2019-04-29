@@ -12,7 +12,7 @@ object App {
       VisibilityFilterContext.Provider.noprops(
         TodoListContext.Provider.noprops(
           AddTodo.Component.noprops(),
-          TodoList.Component.noprops()
+          TodoListComp.Component.noprops()
         ),
         Footer.Component.noprops()
       )

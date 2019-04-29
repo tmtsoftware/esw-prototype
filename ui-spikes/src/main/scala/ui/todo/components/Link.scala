@@ -1,22 +1,22 @@
 package ui.todo.components
 
 import typings.reactLib.dsl._
-import typings.reactLib.reactMod.{ButtonHTMLAttributes, CSSProperties, FC, HTMLAttributes, ^ => React}
+import typings.reactLib.reactMod.{ButtonHTMLAttributes, CSSProperties, FC, HTMLAttributes}
 import ui.todo.context.VisibilityFilterContext
 import ui.todo.models.VisibilityFilter
 
 object Link {
 
   val Component: FC[VisibilityFilter] = define.fc[VisibilityFilter] { filter =>
-    val context = React.useContext(VisibilityFilterContext.Context)
+    val filterContext = VisibilityFilterContext.use()
 
-    println(filter.Value -> context.filter.Value)
+    println(filter.Value -> filterContext.value.Value)
 
     button.props(
       ButtonHTMLAttributes(
         HTMLAttributes(
-          onClick = e => context.set(filter),
-          `aria-disabled` = filter == context.filter,
+          onClick = e => filterContext.set(filter),
+          `aria-disabled` = filter == filterContext.value,
           style = new CSSProperties {
             marginLeft = "4px"
           }

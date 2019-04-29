@@ -1,10 +1,8 @@
-package ui.todo.context
+package ui.todo.models
 
-import ui.todo.models.{Todo, VisibilityFilter}
+import ui.todo.lib.ContextType
 
-object TodoListContext extends GenericContext(Seq.empty[Todo], new TodoListContext(_, _))
-
-case class TodoListContext(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
+case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
   def add(text: String): Unit = setTodos(todos :+ Todo(todos.length, text, isComplete = false))
 
   def toggle(id: Int): Unit = setTodos {
@@ -18,4 +16,8 @@ case class TodoListContext(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
     case VisibilityFilter.Completed.Value => todos.filter(_.isComplete)
     case VisibilityFilter.Active.Value    => todos.filter(!_.isComplete)
   }
+}
+
+object TodoList {
+  def from(contextType: ContextType[Seq[Todo]]) = TodoList(contextType.value, contextType.set)
 }
