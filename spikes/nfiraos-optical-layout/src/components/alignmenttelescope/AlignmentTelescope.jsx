@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import {DashBox} from "../common/DashBox";
 import {TextBox} from "../common/TextBox";
 import {Mirror} from "../common/Mirror";
+import {AlignmentMirrorContext} from "../../context/AlignmentMirrorContext";
 
 export const AlignmentTelescope = () => {
-    const
+    const {isUp} = useContext(AlignmentMirrorContext)
     const width = 120;
     const strokeWidth = 2;
     const height = 500;

@@ -7,21 +7,24 @@ import {ControlPanel} from "./components/controlpanel/ControlPanel";
 import ShutterContextProvider from "./context/ShutterContext";
 import InstrumentCalibrationMirrorContextProvider from "./context/InstrumentCalibrationMirrorContext";
 import {AlignmentTelescope} from "./components/alignmenttelescope/AlignmentTelescope";
+import AlignmentMirrorContextProvider from "./context/AlignmentMirrorContext";
 
 class App extends React.Component {
     render() {
         return (
             <ShutterContextProvider>
                 <InstrumentCalibrationMirrorContextProvider>
-                    <div className="App">
-                        <ControlPanel />
-                        <svg viewBox="0 0 1024 600" width="1024" height="600">
-                            <Shutter/>
-                            <CalibrationUnit/>
-                            <AlignmentTelescope/>
-                            <Light/>
-                        </svg>
-                    </div>
+                    <AlignmentMirrorContextProvider>
+                        <div className="App">
+                            <ControlPanel/>
+                            <svg viewBox="0 0 1024 600" width="1024" height="600">
+                                <Shutter/>
+                                <CalibrationUnit/>
+                                <AlignmentTelescope/>
+                                <Light/>
+                            </svg>
+                        </div>
+                    </AlignmentMirrorContextProvider>
                 </InstrumentCalibrationMirrorContextProvider>
             </ShutterContextProvider>
         );
