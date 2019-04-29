@@ -21,6 +21,7 @@ object Libs {
   val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.6")
   val `shapeless`                = dep("com.chuusai"            %% "shapeless"                 % "2.3.3")
   val airstream                  = dep("com.raquo"              %%% "airstream"                % "0.5.2")
+  val laminar                    = dep("com.raquo"              %%% "laminar"                  % "0.7")
 }
 
 object Enumeratum {
