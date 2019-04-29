@@ -1,0 +1,40 @@
+#control-panel{
+    position: fixed;
+    right: 1em;
+    display: flex;
+    flex-flow: column;
+    box-shadow: 2px 2px 5px 0 #6d6d6d;
+}
+
+#panel-header{
+    text-align: center;
+    padding: 0.2em;
+    background-color: black;
+    color: white;
+}
+
+#panel-body {
+    border: 0.1em solid black;
+    padding: 0.5em;
+    background-color: white;
+    display: flex;
+    flex-flow: column;
+    width: 12em;
+}
+
+.panel-button {
+    background-color: #eeeeee;
+    border: 0.1em solid black;
+    margin: 0.2em;
+    cursor: pointer;
+    font-size: 0.8em;
+    padding: 0.2em 0.5em;
+}
+
+.panel-button:hover {
+    background-color: #dedede;
+}
+
+.panel-button:focus {
+    outline: 0;
+}
