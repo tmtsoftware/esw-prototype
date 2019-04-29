@@ -1,11 +1,9 @@
 package ui.todo.models
 
-import scala.scalajs.js
-
-abstract class VisibilityFilter(val Value: String) extends js.Object
+sealed trait VisibilityFilter
 
 object VisibilityFilter {
-  object All       extends VisibilityFilter("All")
-  object Completed extends VisibilityFilter("Completed")
-  object Active    extends VisibilityFilter("Active")
+  case object All       extends VisibilityFilter
+  case object Completed extends VisibilityFilter
+  case object Active    extends VisibilityFilter
 }

@@ -14,9 +14,9 @@ object Footer {
 
     div.noprops(
       span.noprops("Show: "),
-      Link.Component.props(VisibilityFilter.All, VisibilityFilter.All.Value),
-      Link.Component.props(VisibilityFilter.Active, VisibilityFilter.Active.Value),
-      Link.Component.props(VisibilityFilter.Completed, VisibilityFilter.Completed.Value),
+      Link.Component.props(Link.Props(VisibilityFilter.All), VisibilityFilter.All.toString),
+      Link.Component.props(Link.Props(VisibilityFilter.Active), VisibilityFilter.Active.toString),
+      Link.Component.props(Link.Props(VisibilityFilter.Completed), VisibilityFilter.Completed.toString),
     )
 
   }

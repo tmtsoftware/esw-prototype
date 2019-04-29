@@ -11,10 +11,10 @@ case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
     }
   }
 
-  def filter(visibilityFilter: VisibilityFilter): Seq[Todo] = visibilityFilter.Value match {
-    case VisibilityFilter.All.Value       => todos
-    case VisibilityFilter.Completed.Value => todos.filter(_.isComplete)
-    case VisibilityFilter.Active.Value    => todos.filter(!_.isComplete)
+  def filter(visibilityFilter: VisibilityFilter): Seq[Todo] = visibilityFilter match {
+    case VisibilityFilter.All       => todos
+    case VisibilityFilter.Completed => todos.filter(_.isComplete)
+    case VisibilityFilter.Active    => todos.filter(!_.isComplete)
   }
 }
 
