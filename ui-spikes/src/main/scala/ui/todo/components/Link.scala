@@ -10,7 +10,7 @@ object Link {
   val Component: FC[VisibilityFilter] = define.fc[VisibilityFilter] { filter =>
     val context = React.useContext(VisibilityFilterContext.Context)
 
-    println(filter.value -> context.filter.value)
+    println(filter.Value -> context.filter.Value)
 
     button.props(
       ButtonHTMLAttributes(
