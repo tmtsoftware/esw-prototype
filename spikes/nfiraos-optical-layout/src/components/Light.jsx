@@ -1,8 +1,9 @@
 import React, {useContext} from "react";
-import {ShutterContext} from "../context/ShutterContext";
+import {MainShutterContext} from "../context/MainShutterContext";
+import PropTypes from "prop-types";
 
-export const Light= () => {
-    const blocked = !useContext(ShutterContext).open
+export const Light= (props) => {
+    const blocked = !useContext(MainShutterContext).open
 
     return <svg x={"0"} y="200">
         <defs>
@@ -20,8 +21,8 @@ export const Light= () => {
         /*LIGHT*/
         <line id={"light"}
               className={blocked? "blocked" : "unblocked"}
-              x1="0"
-              x2= {blocked? "40" : "100"}
+              x1={props.x}
+              x2= {blocked? props.initialWidth : "100"}
               y1="50"
               y2="50"
               stroke="red"
@@ -30,3 +31,8 @@ export const Light= () => {
         />
     </svg>
 }
+
+Light.propTypes = {
+    x: PropTypes.number.isRequired,
+    initialWidth: PropTypes.number.isRequired
+};

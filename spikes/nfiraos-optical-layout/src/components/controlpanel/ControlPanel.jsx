@@ -1,11 +1,13 @@
 import React, {useContext} from "react";
 import './ControlPanel.css'
-import {ShutterContext} from "../../context/ShutterContext";
+import {MainShutterContext} from "../../context/MainShutterContext";
+import {PinholeMaskContext} from "../../context/PinholeMaskContext";
 import {InstrumentCalibrationMirrorContext} from "../../context/InstrumentCalibrationMirrorContext";
 import {AlignmentMirrorContext} from "../../context/AlignmentMirrorContext";
 
 export const ControlPanel = () => {
-    const {open, toggleShutter} = useContext(ShutterContext)
+    const {open, toggleShutter} = useContext(MainShutterContext)
+    const pinholeMaskContext = useContext(PinholeMaskContext)
     const {isUp, toggleMirror} = useContext(InstrumentCalibrationMirrorContext)
     const {isAlignmentMirrorUp, toggleAlignmentMirror} = useContext(AlignmentMirrorContext)
 
@@ -22,6 +24,9 @@ export const ControlPanel = () => {
             </button>
             <button onClick={toggleAlignmentMirror} className="panel-button">
                 {isAlignmentMirrorUp === true ? "Move Alignment Mirror down" : "Move Alignment Mirror up"}
+            </button>
+            <button onClick={pinholeMaskContext.toggleShutter} className="panel-button">
+                {pinholeMaskContext.open === true ? "Close Pinhole Mask" : "Open Pinhole Mask"}
             </button>
         </div>
     </div>

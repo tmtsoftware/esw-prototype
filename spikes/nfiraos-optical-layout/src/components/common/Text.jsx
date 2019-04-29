@@ -12,7 +12,8 @@ export class Text extends React.Component{
                     padding: "0.1em",
                     height: "100%",
                     display: "flex",
-                    alignItems: "center"
+                    alignItems: "center",
+                    justifyContent: "center"
                 }
             }>
                 <div>{children}</div>
