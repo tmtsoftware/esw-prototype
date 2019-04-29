@@ -2,11 +2,12 @@ package ocs.framework.dsl.epic.internal
 
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
+import ocs.framework.dsl.epic.internal.event.EpicsEvent
+import play.api.libs.json.Format
 
 import scala.concurrent.Future
-import scala.language.implicitConversions
 
-class Var[T](init: T) {
+class Var[T: Format](init: T) {
   @volatile
   private var _value = init
   def set(x: T): Unit = {
@@ -19,19 +20,45 @@ class Var[T](init: T) {
   override def toString: String = _value.toString
 }
 
-class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T](init) {
+class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) extends Var[T](init) {
 
   import mc.{ec, eventService, mat}
 
+  /*
+    pvStat pvPut(channel ch, compType mode = DEFAULT, double timeout = 10.0)
+
+    Puts (or writes) the value of ch to the process variable it has been assigned to.
+    Returns the status from the PV layer.
+
+    By default, i.e. with no optional arguments, pvPut is un-confirmed “fire and forget”; completion must be inferred
+    by other means. An optional second argument can change this default:
+    • SYNC causes it to block the state set until completion. This mode is called synchronous.
+    • ASYNC allows the state set to continue but still check for completion via a subsequent call to pvPutComplete (typically in a condition). This mode is called asnchronous.
+    A timeout value may be specified after the SYNC argument. This should be a positive floating point number, specifying the number of seconds before the request times out.
+    This value overrides the default timeout of 10 seconds.
+
+    Note that SNL allows only one pending pvPut per variable and state set to be active.
+    As long as a pvPut(var,ASYNC) is pending completion, further calls to pvPut(var,ASYNC) from the same
+    state set immediately fail and an error message is printed; whereas further calls to pvPut(var,SYNC)
+    are delayed until the previous operation completes.
+   */
   def pvPut(): Future[Unit] = Future.unit.flatMap { _ =>
-    eventService.publish(key, MockEvent(key, get))
+    eventService.publish(key, EpicsEvent(key, get))
   }
 
+  /*
+    pvStat pvGet(channel ch, compType ct = DEFAULT, double timeout = 10.0)
+
+    Gets (or reads) the value of ch from the process variable it has been assigned to. Returns the status
+    from the PV layer.
+
+    Like for pvPut, only one pending pvGet per channel and state set can be active.
+   */
   def pvGet(): Future[Unit] = {
     eventService.get(key).map { option =>
       option.foreach { event =>
-        set(event.value.asInstanceOf[T])
-//        mc.refresh()
+        set(event.value)
+        mc.refresh()
       }
     }
   }
@@ -41,8 +68,8 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
       .subscribe(key)
       .mapAsync(1) { event =>
         Future {
-          set(event.value.asInstanceOf[T])
-//          mc.refresh()
+          set(event.value)
+          mc.refresh()
         }
       }
       .to(Sink.ignore)
@@ -55,7 +82,7 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
     Assigns or re-assigns ch to a process variable with name pv_name. If pv_name is an empty string or NULL,
     then ch is de-assigned (not associated with any process variable)
 
-    Note that pvAsssign is asynchronous: it sends a request to search for and connect to the given pv_name,
+    Note that pvAssign is asynchronous: it sends a request to search for and connect to the given pv_name,
     but it does not wait for a response, similar to pvGet(var,ASYNC). Calling pvAssign does have one
     immediate effect, namely de-assigning the variable from any PV it currently is assigned to. In order
     to make sure that it has connected to the new PV, you can use the pvConnected built-in function inside
@@ -128,6 +155,6 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
 }
 
 object Var {
-  def apply[T](init: T): Var[T]                                                    = new Var(init)
-  def assign[T](init: T, key: String)(implicit machine: Machine[_]): ProcessVar[T] = new ProcessVar[T](init, key)
+  def apply[T: Format](init: T): Var[T]                                                    = new Var(init)
+  def assign[T: Format](init: T, key: String)(implicit machine: Machine[_]): ProcessVar[T] = new ProcessVar[T](init, key)
 }

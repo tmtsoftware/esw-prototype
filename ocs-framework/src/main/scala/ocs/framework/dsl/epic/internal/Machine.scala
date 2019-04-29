@@ -2,6 +2,7 @@ package ocs.framework.dsl.epic.internal
 
 import akka.stream.Materializer
 import ocs.framework.CswSystem
+import ocs.framework.dsl.epic.internal.event.EpicsEventService
 import sequencer.macros.StrandEc
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -14,19 +15,17 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
 
   private var currentState: State = init
 
-  implicit lazy val strandEc: StrandEc             = StrandEc.create()
-  implicit lazy val ec: ExecutionContext           = strandEc.ec
-  implicit lazy val mat: Materializer              = cswSystem.materializer
-  implicit lazy val eventService: MockEventService = cswSystem.mockEventService
-  implicit lazy val mach: Machine[State]           = this
+  implicit lazy val strandEc: StrandEc              = StrandEc.create()
+  implicit lazy val ec: ExecutionContext            = strandEc.ec
+  implicit lazy val mat: Materializer               = cswSystem.materializer
+  implicit lazy val eventService: EpicsEventService = cswSystem.mockEventService
+  implicit lazy val mach: Machine[State]            = this
 
   protected def become(state: State): Unit = {
     currentState = state
-    refresh()
   }
 
   def refresh(): Future[Unit] = {
-//    Thread.sleep(100)
     Future {
       debug(currentState)
       logic(currentState)
@@ -36,7 +35,7 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
   def when(condition: => Boolean)(body: => Unit): Unit = {
     if (condition) {
       body
-//      refresh()
+      refresh()
     }
   }
 

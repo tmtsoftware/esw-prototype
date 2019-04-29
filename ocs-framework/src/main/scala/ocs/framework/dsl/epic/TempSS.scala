@@ -12,26 +12,28 @@ class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Mac
   def logic: Logic = {
     case Init =>
       when(condition = true) {
+        println(s"current state=$Init, temp=$temp")
         temp := 45
         temp.pvPut()
         become(Ok)
       }
     case Ok =>
       when(temp > 40) {
-//          externalService.submit("decrease temperature", 30).react(temp)
+        println(s"current state=$Ok, temp=$temp")
         temp := 25
         temp.pvPut()
         become(High)
       }
     case High =>
       when(temp < 30) {
+        println(s"current state=$High, temp=$temp")
         temp.pvGet()
         become(Ok)
       }
   }
 
   override def debug(state: State): Unit = {
-    println(s"current state=$state, temp=$temp")
+//    println(s"current state=$state, temp=$temp")
   }
 }
 
