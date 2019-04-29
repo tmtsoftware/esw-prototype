@@ -31,7 +31,7 @@ class CswSystem(name: String) {
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
-  lazy val mockEventService: EpicsEventService = new RedisEventService(executionContext)
+  lazy val mockEventService: EpicsEventService = new RedisEventService
 //  lazy val mockEventService: EpicsEventService = new MockEventService
 
   def userActorOf[T](behavior: Behavior[T], name: String, props: Props = Props.empty): ActorRef[T] = {
