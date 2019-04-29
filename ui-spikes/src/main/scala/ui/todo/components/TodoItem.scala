@@ -3,9 +3,11 @@ package ui.todo.components
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.{CSSProperties, FC, LiHTMLAttributes}
 
+import scala.scalajs.js
+
 object TodoItem {
 
-  case class Props(onClick: () => Unit, isComplete: Boolean, textContent: String)
+  class Props(val onClick: () => Unit, val isComplete: Boolean, val textContent: String) extends js.Object
 
   val Component: FC[Props] = define.fc[Props] { props =>
     li.props(

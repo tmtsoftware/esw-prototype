@@ -17,7 +17,7 @@ object TodoList {
         TodoItem.Component
           .withKey(todo.id)
           .props(
-            TodoItem.Props(() => todoListContext.toggle(todo.id), todo.isComplete, todo.text)
+            new TodoItem.Props(() => todoListContext.toggle(todo.id), todo.isComplete, todo.text)
           )
       }: _*
     )

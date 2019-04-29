@@ -1,28 +1,10 @@
 package ui.todo.context
 
-import typings.reactLib.dsl._
-import typings.reactLib.reactMod.{Context, FC, ProviderProps, ^ => React}
 import ui.todo.models.{Todo, VisibilityFilter}
 
-import scala.scalajs.js
+object TodoListContext extends GenericContext(Seq.empty[Todo], new TodoListContext(_, _))
 
-object TodoListContext {
-  val Context: Context[TodoListContext] = React.createContext(new TodoListContext(Seq.empty, _ => ()))
-
-  val Provider: FC[_] = define.fc[js.Any] { props =>
-    val js.Tuple2(todos, setTodos) = React.useState(Seq.empty[Todo])
-
-    Context.Provider(
-      ProviderProps(
-        new TodoListContext(todos, setTodos(_)),
-        props.children.get
-      )
-    )
-  }
-
-}
-
-class TodoListContext(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
+case class TodoListContext(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
   def add(text: String): Unit = setTodos(todos :+ Todo(todos.length, text, isComplete = false))
 
   def toggle(id: Int): Unit = setTodos {
