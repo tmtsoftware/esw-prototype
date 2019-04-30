@@ -58,7 +58,7 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
     eventService.get(key).map { option =>
       option.foreach { event =>
         set(event.value)
-        mc.refresh()
+        mc.refresh("pvGet")
       }
     }
   }
@@ -69,7 +69,7 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
       .mapAsync(1) { event =>
         Future {
           set(event.value)
-          mc.refresh()
+          mc.refresh("monitor")
         }
       }
       .to(Sink.ignore)

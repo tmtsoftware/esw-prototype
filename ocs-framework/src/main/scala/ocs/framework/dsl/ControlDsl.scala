@@ -23,7 +23,7 @@ trait ControlDsl {
   protected def loop(block: => Future[Boolean]): Future[Done] = loop(loopInterval)(block)
 
   protected def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
-    loopWithoutDelay(FutureUtils.delay(block, minimumInterval max loopInterval))
+    loopWithoutDelay(FutureUtils.delay(minimumInterval max loopInterval)(block))
 
   private def loopWithoutDelay(block: => Future[Boolean]): Future[Done] = spawn {
     if (block.await) Done else loopWithoutDelay(block).await

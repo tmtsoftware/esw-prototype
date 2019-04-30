@@ -25,21 +25,21 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
     currentState = state
   }
 
-  def refresh(): Future[Unit] = {
+  def refresh(source: String): Future[Unit] = {
     Future {
-      debug(currentState)
+      println(f"state = $currentState%-8s    action = $source%-8s     $debugString%8s")
       logic(currentState)
     }
   }
 
-  def when(condition: => Boolean)(body: => Unit): Unit = {
+  def when(condition: => Boolean = true)(body: => Unit): Unit = {
     if (condition) {
       body
-      refresh()
+      refresh("when")
     }
   }
 
-  def debug(state: State): Unit = {}
+  def debugString: String = ""
 
   implicit def varToT[T](reactive: Var[T]): T = reactive.get
 }
