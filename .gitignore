@@ -37,3 +37,4 @@ shared/.jvm
 bin/
 journal
 snapshots
+laminar-spikes/yarn.lock
