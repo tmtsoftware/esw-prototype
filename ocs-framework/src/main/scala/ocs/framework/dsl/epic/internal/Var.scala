@@ -42,8 +42,11 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
     state set immediately fail and an error message is printed; whereas further calls to pvPut(var,SYNC)
     are delayed until the previous operation completes.
    */
-  def pvPut(): Future[Unit] = Future.unit.flatMap { _ =>
-    eventService.publish(key, EpicsEvent(key, get))
+  def pvPut(): Future[Unit] = {
+    val value = get
+    Future.unit.flatMap { _ =>
+      eventService.publish(key, EpicsEvent(key, value))
+    }
   }
 
   /*
@@ -67,7 +70,7 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
     eventService
       .subscribe(key)
       .mapAsync(1) { event =>
-        Future {
+        Future.unit.flatMap { _ =>
           set(event.value)
           mc.refresh("monitor")
         }

@@ -13,7 +13,8 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
 
   def logic: Logic
 
-  private var currentState: State = init
+  private var currentState: State  = init
+  private var previousState: State = _
 
   implicit lazy val strandEc: StrandEc              = StrandEc.create()
   implicit lazy val ec: ExecutionContext            = strandEc.ec
@@ -27,15 +28,24 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
 
   def refresh(source: String): Future[Unit] = {
     Future {
-      println(f"state = $currentState%-8s    action = $source%-8s     $debugString%8s")
+      println(
+        f"previousState = $previousState%-8s     currentState = $currentState%-8s    action = $source%-8s     $debugString%8s"
+      )
       logic(currentState)
     }
   }
 
   def when(condition: => Boolean = true)(body: => Unit): Unit = {
+    previousState = currentState
     if (condition) {
       body
       refresh("when")
+    }
+  }
+
+  def entry(body: => Unit): Unit = {
+    if (currentState != previousState) {
+      body
     }
   }
 

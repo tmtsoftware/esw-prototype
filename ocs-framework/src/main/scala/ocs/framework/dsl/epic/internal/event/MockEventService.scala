@@ -28,13 +28,12 @@ class MockEventService extends EpicsEventService {
     }
   }
 
-  def publish[T: Format](key: String, value: EpicsEvent[T]): Future[Unit] = FutureUtils.delay(4.seconds) {
-    Future.unit.flatMap { _ =>
+  def publish[T: Format](key: String, value: EpicsEvent[T]): Future[Unit] =
+    FutureUtils.delay(4.seconds, strandEc.executorService).flatMap { _ =>
       val str = eventJson.writes(value).toString()
       map = map + (key -> str)
       Future.traverse(subscriptions.getOrElse(key, List.empty))(_.offer(str)).map(_ => ())
     }
-  }
 
   def subscribe[T: Format](key: String): Source[EpicsEvent[T], KillSwitch] = {
     val (queue: SourceQueueWithComplete[String], stream) =
