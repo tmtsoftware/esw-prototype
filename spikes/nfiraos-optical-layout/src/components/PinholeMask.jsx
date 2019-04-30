@@ -4,8 +4,8 @@ import {Shutter} from "./common/Shutter";
 import {PinholeMaskContext} from "../context/PinholeMaskContext";
 
 export const PinholeMask = (props) => {
-    const open = useContext(PinholeMaskContext).open
-    return <Shutter color="#FF9200" open={open} {...props}/>
+    const {open, toggleShutter} = useContext(PinholeMaskContext)
+    return <Shutter color="#FF9200" open={open} {...props} onClick={toggleShutter}/>
 }
 
 PinholeMask.propTypes = {

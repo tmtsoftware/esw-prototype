@@ -6,7 +6,7 @@ import {InstrumentCalibrationMirrorContext} from "../context/InstrumentCalibrati
 import PropTypes from "prop-types";
 
 export const CalibrationUnit = (props) => {
-    const {isUp} = useContext(InstrumentCalibrationMirrorContext)
+    const {isUp, toggleMirror} = useContext(InstrumentCalibrationMirrorContext)
     const width = props.width;
     const strokeWidth = 2;
     const height = 500;
@@ -26,7 +26,7 @@ export const CalibrationUnit = (props) => {
                      backgroundColor="#0433FF">
                 NSCU arcs & flats
             </TextBox>
-            <Mirror midX={width/2} midY={mirrorMidY} />
+            <Mirror midX={width/2} midY={mirrorMidY} onClick={toggleMirror} />
             <TextBox width={width * 0.8} height={height * 0.12} y={height * 0.80} x={width * 0.1 + strokeWidth}>
                 Instrument Calibration Mirror
             </TextBox>

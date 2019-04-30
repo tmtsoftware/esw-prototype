@@ -23,13 +23,15 @@ export const InstrumentSelectionMirror = (props) => {
     const IRISX = f(IRMSX) + 15
     const WFSX = f(IRISX) + 15
     const CAMX = f(WFSX)
+
     return <svg x={props.x}>
 
-
         <DashBox width={width} x={2} y={2} height={height}>
-            <TextBox width={portWidth} height={70} y={400} x={IRMSX} backgroundColor="#D782FF" onClick={setTopPort}>
+            <TextBox width={portWidth} height={70} y={400} x={IRMSX} backgroundColor="#D782FF"
+                          onClick={setTopPort}>
                 IRMS
             </TextBox>
+
             <TextBox width={portWidth} height={70} y={400} x={IRISX} backgroundColor="#D782FF" onClick={setBottomPort}>
                 IRIS
             </TextBox>

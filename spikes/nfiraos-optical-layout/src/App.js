@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import {CalibrationUnit} from "./components/CalibrationUnit";
 import {Light} from "./components/Light";
-import {ControlPanel} from "./components/controlpanel/ControlPanel";
 import MainShutterContextProvider from "./context/MainShutterContext";
 import PinholeMaskContextProvider from "./context/PinholeMaskContext";
 import InstrumentCalibrationMirrorContextProvider from "./context/InstrumentCalibrationMirrorContext";
@@ -42,7 +41,6 @@ class App extends React.Component {
                         <PinholeMaskContextProvider>
                             <InstrumentMirrorContextProvider>
                                 <div className="App">
-                                    <ControlPanel/>
                                     <svg viewBox="0 0 1250 600" width="1250" height="600">
                                         <MainShutter x={shutterX} width={shutterWidth}/>
                                         <CalibrationUnit x={calibrationUnitX} width={calibrationWidth}/>

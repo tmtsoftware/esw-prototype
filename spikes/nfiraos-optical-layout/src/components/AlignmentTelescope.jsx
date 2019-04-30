@@ -6,7 +6,7 @@ import {AlignmentMirrorContext} from "../context/AlignmentMirrorContext";
 import PropTypes from "prop-types";
 
 export const AlignmentTelescope = (props) => {
-    const {isUp} = useContext(AlignmentMirrorContext)
+    const {isUp, toggleAlignmentMirror} = useContext(AlignmentMirrorContext)
     const width = props.width;
     const strokeWidth = 2;
     const height = 500;
@@ -22,7 +22,7 @@ export const AlignmentTelescope = (props) => {
                      x={width * 0.2 + strokeWidth}
                      backgroundColor="#BFBFFF">
             </TextBox>
-            <Mirror midX={width/2} midY={mirrorMidY} />
+            <Mirror midX={width/2} midY={mirrorMidY} onClick={toggleAlignmentMirror} />
             <TextBox width={width * 0.8} height={height * 0.12} y={height * 0.80} x={width * 0.1 + strokeWidth}>
                 Alignment Telescope fold Mirror
             </TextBox>

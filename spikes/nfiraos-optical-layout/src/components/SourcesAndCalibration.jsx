@@ -19,11 +19,13 @@ export const SourcesAndCalibration = (props) => {
             <TextBox width={width/2 - 30} height={height/6} y={height * 0.15} x={strokeWidth + 20} backgroundColor="#FF5200" >
                 NFIRAOS Calibration NGS sources
             </TextBox>
+
             <TextBox width={width/2 - 30 } height={height/6} y={height * 0.15} x={width/2+strokeWidth + 10} backgroundColor="#FF9200">
                 NFIRAOS Calibration LGS sources
             </TextBox>
 
             <PinholeMask x={20} width={5} />
+
             <TextBox width={width * 0.4} height={height * 0.12} y={height * 0.80} x={0}>
                 Pinhole Mask
             </TextBox>

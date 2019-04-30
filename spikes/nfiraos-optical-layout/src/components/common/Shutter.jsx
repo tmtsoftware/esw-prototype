@@ -1,30 +1,41 @@
 import React from "react";
 import './Shuter.css'
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
-export const Shutter = (props) => {
+const ShutterComponent = (props) => {
     const topOffSet = props.open === true ? 150 : 200;
     const bottomOffSet = props.open === true ? 300 : 250;
-    return <svg x={props.x}>
+    return <svg x={props.x} className={props.className}>
         /*TOP SHUTTER*/
         <path id={"top-shutter"} d={`m1 ${topOffSet} v50`}
               stroke={props.color}
-              strokeWidth={props.width}/>
+              strokeWidth={props.width} onClick={props.onClick}/>
 
         /*BOTTOM SHUTTER*/
         <path id={"bottom-shutter"} d={`m1 ${bottomOffSet} v50`}
               stroke={props.color}
-              strokeWidth={props.width}/>
+              strokeWidth={props.width} onClick={props.onClick}/>
     </svg>
 }
 
-Shutter.defaultProps={
-    color: "black"
+export const Shutter = styled(ShutterComponent)`
+    opacity:0.8;
+    cursor: pointer;
+   :hover{
+      opacity:1;
+   }
+`;
+
+Shutter.defaultProps = {
+    color: "black",
+    onClick: ()=>{}
 }
 
 Shutter.propTypes = {
     x: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
     color: PropTypes.string,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
+    onClick: PropTypes.func
 };
