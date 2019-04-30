@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
-import TodosContext from '../context/TodosContext'
+import React, {useState, useContext} from 'react'
+import TodosContext from './TodosContext'
+import NotificationContext from './NotificationContext'
 
 const TodosContextProvider = (props) => {
     const [todos, setTodos] = useState([])
+    const context = useContext(NotificationContext)
 
 
     const addTodo = (text) => {
@@ -13,6 +15,7 @@ const TodosContextProvider = (props) => {
                 text: text,
                 completed: false
             }])
+        context.showNotification("Todo added")
     };
 
     const toggleTodo = (id) => {

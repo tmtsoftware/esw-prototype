@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import VisibilityFilterContext from '../context/VisibilityFilterContext'
+import VisibilityFilterContext from './VisibilityFilterContext'
 import {VisibilityFilters} from "../constants/visibilityFilters";
 
 const VisibilityFilterContextProvider = (props) => {

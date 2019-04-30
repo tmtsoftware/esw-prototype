@@ -3,7 +3,7 @@ import Link from '../components/Link'
 import { VisibilityFilters } from '../constants/visibilityFilters'
 
 const Footer = () => {
-    console.log('-----------> Footer')
+    console.log('-----------> rendering Footer')
     return <div>
         <span>Show: </span>
         <Link filter={VisibilityFilters.SHOW_ALL}>All</Link>

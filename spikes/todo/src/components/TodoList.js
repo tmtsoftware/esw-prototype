@@ -8,6 +8,7 @@ const TodoList = () => {
     const todosContext = useContext(TodosContext)
     const visibilityFilterContext = useContext(VisibilityFilterContext)
 
+    console.log("----------> rendering TodoList")
     return <ul>
         {
             getVisibleTodos(todosContext.todos, visibilityFilterContext.visibilityFilter).map(todo => (

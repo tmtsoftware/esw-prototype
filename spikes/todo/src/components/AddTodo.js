@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import TodosContext from "../context/TodosContext";
 
 const AddTodo = () => {
@@ -9,6 +9,7 @@ const AddTodo = () => {
         setInput( e.target.value)
     }
 
+    console.log("----------> rendering AddTodo")
     return (
         <form
             onSubmit={
