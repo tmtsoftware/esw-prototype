@@ -1,6 +1,6 @@
 package ui.todo.models
 
-import ui.todo.context.{TodoListContext, VisibilityFilterContext}
+import ui.todo.context.Context
 
 case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit, setFilter: VisibilityFilter => Unit) {
   def add(text: String): Unit = {
@@ -23,8 +23,8 @@ case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit, setFilter: Vi
 
 object TodoList {
   def create(): TodoList = {
-    val (todos, setTodos) = TodoListContext.use()
-    val setFilter         = VisibilityFilterContext.useSetter()
+    val (todos, setTodos) = Context.TodoList.use()
+    val setFilter         = Context.VisibilityFilter.useSetter()
     TodoList(todos, setTodos, setFilter)
   }
 }

@@ -4,7 +4,7 @@ import typings.reactLib.dsl._
 import typings.reactLib.reactMod.FC
 
 object ComponentUtils {
-  def compose(comps: FC[_]*): FC[JsUnit] = comps.foldLeft(Empty) { (acc, elm) =>
+  def compose(comps: Seq[FC[_]]): FC[JsUnit] = comps.foldLeft(Empty) { (acc, elm) =>
     define.fc[JsUnit] { props =>
       acc.noprops(elm.noprops(props.children.getOrElse(null)))
     }

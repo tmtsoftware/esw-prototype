@@ -2,7 +2,7 @@ package ui.todo.components
 
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.FC
-import ui.todo.context.VisibilityFilterContext
+import ui.todo.context.Context
 import ui.todo.lib.JsUnit
 import ui.todo.models.{Todo, TodoList}
 
@@ -10,7 +10,7 @@ object TodoListComp {
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     val todoList = TodoList.create()
-    val filter   = VisibilityFilterContext.useGetter()
+    val filter   = Context.VisibilityFilter.useGetter()
 
     ul.noprops(
       todoList.filter(filter).map {

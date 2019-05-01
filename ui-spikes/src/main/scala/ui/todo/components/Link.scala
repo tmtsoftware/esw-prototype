@@ -2,7 +2,7 @@ package ui.todo.components
 
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.{ButtonHTMLAttributes, CSSProperties, FC, HTMLAttributes}
-import ui.todo.context.VisibilityFilterContext
+import ui.todo.context.Context
 import ui.todo.models.VisibilityFilter
 
 import scala.language.implicitConversions
@@ -16,7 +16,7 @@ object Link {
   }
 
   val Component: FC[Props] = define.fc[Props] { props =>
-    val (filter, setFilter) = VisibilityFilterContext.use()
+    val (filter, setFilter) = Context.VisibilityFilter.use()
 
     println(props.filter -> filter)
 
