@@ -23,8 +23,8 @@ case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit, setFilter: Vi
 
 object TodoList {
   def create(): TodoList = {
-    val todoCtx   = TodoListContext.use()
-    val filterCtx = VisibilityFilterContext.use()
-    TodoList(todoCtx.get, todoCtx.set, filterCtx.set)
+    val (todos, setTodos) = TodoListContext.use()
+    val setFilter         = VisibilityFilterContext.useSetter()
+    TodoList(todos, setTodos, setFilter)
   }
 }

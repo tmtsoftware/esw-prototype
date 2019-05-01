@@ -10,11 +10,11 @@ import scala.scalajs.js
 object TodoListComp {
 
   val Component: FC[_] = define.fc[js.Any] { _ =>
-    val todoList      = TodoList.create()
-    val filterContext = VisibilityFilterContext.use()
+    val todoList = TodoList.create()
+    val filter   = VisibilityFilterContext.useGetter()
 
     ul.noprops(
-      todoList.filter(filterContext.get).map { todo =>
+      todoList.filter(filter).map { todo =>
         TodoItem.Component
           .withKey(todo.id)
           .props(
