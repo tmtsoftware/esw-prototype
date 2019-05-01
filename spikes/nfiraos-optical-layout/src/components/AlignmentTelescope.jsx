@@ -22,7 +22,7 @@ export const AlignmentTelescope = (props) => {
                      x={width * 0.2 + strokeWidth}
                      backgroundColor="#BFBFFF">
             </TextBox>
-            <Mirror midX={width/2} midY={mirrorMidY} onClick={toggleAlignmentMirror} />
+            <Mirror toolTip={"move"} midX={width/2} midY={mirrorMidY} onClick={toggleAlignmentMirror} />
             <TextBox width={width * 0.8} height={height * 0.12} y={height * 0.80} x={width * 0.1 + strokeWidth}>
                 Alignment Telescope fold Mirror
             </TextBox>

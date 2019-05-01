@@ -11,6 +11,7 @@ import {SourcesAndCalibration} from "./components/SourcesAndCalibration";
 import {MainShutter} from "./components/MainShutter";
 import {InstrumentSelectionMirror} from "./components/InstrumentSelectionMirror";
 import InstrumentMirrorContextProvider from "./context/InstrumentMirrorContext";
+import ReactTooltip from 'react-tooltip';
 
 class App extends React.Component {
     render() {
@@ -46,9 +47,11 @@ class App extends React.Component {
                                         <CalibrationUnit x={calibrationUnitX} width={calibrationWidth}/>
                                         <AlignmentTelescope x={alignmentUnitX} width={alignmentWidth}/>
                                         <SourcesAndCalibration x={sourceAndCalibX} width={sourceAndCalibWidth}/>
-                                        <InstrumentSelectionMirror x={instrumentMirrorX} width={instrumentMirrorWidth}/>
+                                        <InstrumentSelectionMirror x={instrumentMirrorX}
+                                                                   width={instrumentMirrorWidth}/>
                                         <Light x={x} initialWidth={lightWidth}/>
                                     </svg>
+                                    <ReactTooltip effect={'solid'} />
                                 </div>
                             </InstrumentMirrorContextProvider>
                         </PinholeMaskContextProvider>

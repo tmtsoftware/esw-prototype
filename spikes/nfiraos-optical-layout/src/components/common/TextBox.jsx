@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Text} from "./Text";
+import {Clickable} from "./Clickable";
 
 export const TextBox = (props) => {
-    const {x, y, width, height, color, backgroundColor,onClick ,children} = {...props};
-    return <g onClick={onClick}>
+    const {x, y, width, height, color, backgroundColor, onClick, children, toolTip} = {...props};
+
+    return <Clickable onClick={onClick} toolTip={toolTip} >
         <rect
             fill={backgroundColor === "transparent" ? "white" : backgroundColor}
             fillOpacity={backgroundColor === "transparent" ? 0 : 1}
@@ -19,7 +21,7 @@ export const TextBox = (props) => {
         <Text x={x} y={y} width={width} height={height} color={color}>
             {children}
         </Text>
-    </g>
+    </Clickable>
 };
 
 TextBox.defaultProps = {
@@ -34,6 +36,7 @@ TextBox.propTypes = {
     height: PropTypes.number.isRequired,
     color: PropTypes.string,
     backgroundColor: PropTypes.string,
+    children: PropTypes.string,
     onClick: PropTypes.func,
-    children: PropTypes.string
+    toolTip: PropTypes.string
 };

@@ -5,7 +5,7 @@ import {MainShutterContext} from "../context/MainShutterContext";
 
 export const MainShutter = (props) => {
     const {open,toggleShutter} = useContext(MainShutterContext)
-    return <Shutter color="red" open={open} {...props} onClick={toggleShutter} />
+    return <Shutter tooltip={"toggle"} color="red" open={open} {...props} onClick={toggleShutter} />
 }
 
 MainShutter.propTypes = {
