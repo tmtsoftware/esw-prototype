@@ -2,14 +2,12 @@ package ui.todo.components
 
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod._
-import ui.todo.lib.GenericState
+import ui.todo.lib.{GenericState, JsUnit}
 import ui.todo.models.TodoList
-
-import scala.scalajs.js
 
 object AddTodo {
 
-  val Component: FC[_] = define.fc[js.Any] { _ =>
+  val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     val todoList               = TodoList.create()
     val (inputValue, setInput) = GenericState.use("")
 

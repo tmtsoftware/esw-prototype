@@ -3,8 +3,6 @@ package ui.todo.lib
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.{Context, FC, ProviderProps, ReactElement, ReactNode, ^ => React}
 
-import scala.scalajs.js
-
 class GenericContext[T](default: T) {
 
   private val GetterContext = new SingleContext(default)
@@ -15,7 +13,7 @@ class GenericContext[T](default: T) {
   def useGetter(): T         = GetterContext.use()
   def useSetter(): T => Unit = SetterContext.use()
 
-  val Provider: FC[_] = define.fc[js.Any] { props =>
+  val Provider: FC[JsUnit] = define.fc[JsUnit] { props =>
     val (get, set) = GenericState.use(default)
     GetterContext
       .Provider(
