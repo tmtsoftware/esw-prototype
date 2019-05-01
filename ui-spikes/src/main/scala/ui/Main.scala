@@ -1,17 +1,14 @@
 package ui
 
 import org.scalajs.dom
-import ui.mirror.Boot
-import ui.mirror.paper.PaperBackend
-import ui.mirror.svg.SvgBackend
-import ui.todo.TodoEntryPoint
+import ui.todo.components.App
 
 object Main {
 
   def main(arguments: Array[String]): Unit = {
 //    dom.window.onload = Boot.start(PaperBackend)
 //    dom.window.onload = Boot.start(SvgBackend)
-    dom.window.onload = _ => TodoEntryPoint.run()
+    dom.window.onload = _ => App.run()
   }
 
 }
