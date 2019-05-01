@@ -18,13 +18,13 @@ object Link {
   val Component: FC[Props] = define.fc[Props] { props =>
     val filterContext = VisibilityFilterContext.use()
 
-    println(props.filter -> filterContext.value)
+    println(props.filter -> filterContext.get)
 
     button.props(
       ButtonHTMLAttributes(
         HTMLAttributes(
           onClick = _ => filterContext.set(props.filter),
-          `aria-disabled` = props.filter == filterContext.value,
+          `aria-disabled` = props.filter == filterContext.get,
           style = new CSSProperties {
             marginLeft = "4px"
           }

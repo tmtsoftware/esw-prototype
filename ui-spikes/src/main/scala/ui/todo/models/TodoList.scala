@@ -25,6 +25,6 @@ object TodoList {
   def create(): TodoList = {
     val todoCtx   = TodoListContext.use()
     val filterCtx = VisibilityFilterContext.use()
-    TodoList(todoCtx.value, todoCtx.set, filterCtx.set)
+    TodoList(todoCtx.get, todoCtx.set, filterCtx.set)
   }
 }

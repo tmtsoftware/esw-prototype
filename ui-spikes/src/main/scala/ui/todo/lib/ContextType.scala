@@ -1,3 +1,3 @@
 package ui.todo.lib
 
-case class ContextType[T](value: T, set: T => Unit)
+case class ContextType[T](get: T, set: T => Unit)

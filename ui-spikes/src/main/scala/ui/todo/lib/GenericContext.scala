@@ -1,28 +1,44 @@
 package ui.todo.lib
 
 import typings.reactLib.dsl._
-import typings.reactLib.reactMod.{Context, FC, ProviderProps, ^ => React}
+import typings.reactLib.reactMod.{Context, FC, ProviderProps, ReactElement, ReactNode, ^ => React}
 
 import scala.scalajs.js
 
 class GenericContext[T](default: T) {
 
-  def use(): ContextType[T] = React.useContext(Context)
+  private val GetterContext = new SingleContext(default)
+  private val SetterContext = new SingleContext[T => Unit](_ => ())
 
-  private val Context: Context[ContextType[T]] = React.createContext(ContextType(default, _ => ()))
+  def use(): ContextType[T] = ContextType(useGetter(), useSetter())
+
+  def useGetter(): T         = GetterContext.use()
+  def useSetter(): T => Unit = SetterContext.use()
 
   val Provider: FC[_] = define.fc[js.Any] { props =>
-    val (value, set) = GenericState.use(default)
-
-    val providerProps: ProviderProps[ContextType[T]] = React.useMemo { () =>
-      ProviderProps(
-        ContextType(value, x => set(x)),
-        props.children.getOrElse(null)
+    val (get, set) = GenericState.use(default)
+    GetterContext
+      .Provider(
+        get,
+        SetterContext.Provider(
+          set,
+          props.children.getOrElse(null)
+        )
       )
-    }
+  }
+}
 
-    Context.Provider_Original
-      .asInstanceOf[FC[ProviderProps[ContextType[T]]]]
-      .props(providerProps)
+private[lib] class SingleContext[T](default: T) {
+  def use(): T = React.useContext(Context)
+
+  private val Context: Context[T]                     = React.createContext(default)
+  private val Provider_Original: FC[ProviderProps[T]] = Context.Provider_Original.asInstanceOf[FC[ProviderProps[T]]]
+
+  def Provider(value: T, reactNode: ReactNode): ReactElement[ProviderProps[T]] = {
+    val providerProps: ProviderProps[T] = ProviderProps(
+      React.useMemo(() => value),
+      reactNode
+    )
+    Provider_Original.props(providerProps)
   }
 }

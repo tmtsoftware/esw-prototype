@@ -14,7 +14,7 @@ object TodoListComp {
     val filterContext = VisibilityFilterContext.use()
 
     ul.noprops(
-      todoList.filter(filterContext.value).map { todo =>
+      todoList.filter(filterContext.get).map { todo =>
         TodoItem.Component
           .withKey(todo.id)
           .props(
