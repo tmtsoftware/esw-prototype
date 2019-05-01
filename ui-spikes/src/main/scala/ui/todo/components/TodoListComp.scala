@@ -2,7 +2,7 @@ package ui.todo.components
 
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.FC
-import ui.todo.context.{TodoListContext, VisibilityFilterContext}
+import ui.todo.context.VisibilityFilterContext
 import ui.todo.models.TodoList
 
 import scala.scalajs.js
@@ -10,7 +10,7 @@ import scala.scalajs.js
 object TodoListComp {
 
   val Component: FC[_] = define.fc[js.Any] { _ =>
-    val todoList      = TodoList.from(TodoListContext.use())
+    val todoList      = TodoList.create()
     val filterContext = VisibilityFilterContext.use()
 
     ul.noprops(

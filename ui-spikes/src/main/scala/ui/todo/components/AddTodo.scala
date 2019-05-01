@@ -1,8 +1,7 @@
 package ui.todo.components
 
 import typings.reactLib.dsl._
-import typings.reactLib.reactMod.{ButtonHTMLAttributes, FC, FormHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ^ => React}
-import ui.todo.context.TodoListContext
+import typings.reactLib.reactMod._
 import ui.todo.lib.GenericState
 import ui.todo.models.TodoList
 
@@ -11,8 +10,10 @@ import scala.scalajs.js
 object AddTodo {
 
   val Component: FC[_] = define.fc[js.Any] { _ =>
-    val todoList               = TodoList.from(TodoListContext.use())
+    val todoList               = TodoList.create()
     val (inputValue, setInput) = GenericState.use("")
+
+    println("******************* error!!!")
 
     form.props(
       FormHTMLAttributes(

@@ -1,9 +1,12 @@
 package ui.todo.models
 
-import ui.todo.lib.ContextType
+import ui.todo.context.{TodoListContext, VisibilityFilterContext}
 
-case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
-  def add(text: String): Unit = setTodos(todos :+ Todo(todos.length, text, isComplete = false))
+case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit, setFilter: VisibilityFilter => Unit) {
+  def add(text: String): Unit = {
+    setTodos(todos :+ Todo(todos.length, text, isComplete = false))
+    setFilter(VisibilityFilter.All)
+  }
 
   def toggle(id: Int): Unit = setTodos {
     todos.map { todo =>
@@ -19,5 +22,9 @@ case class TodoList(todos: Seq[Todo], setTodos: Seq[Todo] => Unit) {
 }
 
 object TodoList {
-  def from(contextType: ContextType[Seq[Todo]]) = TodoList(contextType.value, contextType.set)
+  def create(): TodoList = {
+    val todoCtx   = TodoListContext.use()
+    val filterCtx = VisibilityFilterContext.use()
+    TodoList(todoCtx.value, todoCtx.set, filterCtx.set)
+  }
 }
