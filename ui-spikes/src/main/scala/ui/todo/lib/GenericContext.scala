@@ -14,13 +14,15 @@ class GenericContext[T](default: T) {
   val Provider: FC[_] = define.fc[js.Any] { props =>
     val (value, set) = GenericState.use(default)
 
+    val providerProps: ProviderProps[ContextType[T]] = React.useMemo { () =>
+      ProviderProps(
+        ContextType(value, x => set(x)),
+        props.children.getOrElse(null)
+      )
+    }
+
     Context.Provider_Original
       .asInstanceOf[FC[ProviderProps[ContextType[T]]]]
-      .props(
-        ProviderProps(
-          ContextType(value, x => set(x)),
-          props.children.getOrElse(null)
-        )
-      )
+      .props(providerProps)
   }
 }
