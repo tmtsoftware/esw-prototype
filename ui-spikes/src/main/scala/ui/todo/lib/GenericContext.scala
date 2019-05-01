@@ -8,8 +8,7 @@ class GenericContext[T](default: T) {
   private val GetterContext = new SingleContext(default)
   private val SetterContext = new SingleContext[T => Unit](_ => ())
 
-  def use(): (T, T => Unit) = (useGetter(), useSetter())
-
+  def use(): (T, T => Unit)  = (GetterContext.use(), SetterContext.use())
   def useGetter(): T         = GetterContext.use()
   def useSetter(): T => Unit = SetterContext.use()
 

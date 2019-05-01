@@ -1,4 +1,4 @@
-package todo.models
+package ui.laminar.models
 
 sealed trait VisibilityFilter
 object VisibilityFilter {

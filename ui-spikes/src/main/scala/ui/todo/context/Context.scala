@@ -13,7 +13,6 @@ sealed trait Context extends EnumEntry {
 }
 
 object Context extends Enum[Context] {
-
   object TodoList         extends GenericContext(Seq.empty[Todo]) with Context
   object VisibilityFilter extends GenericContext[VisibilityFilter](models.VisibilityFilter.All) with Context
 

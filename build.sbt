@@ -193,7 +193,7 @@ lazy val `ui-spikes` = project
       Libs.`scala-async`.value,
       Enumeratum.`enumeratum`.value,
       Libs.`scalajs-dom`.value,
-      Libs.airstream.value,
+      Libs.laminar.value,
       ScalablyTyped.R.`react-facade`,
       ScalablyTyped.R.`react-dom`,
     )
