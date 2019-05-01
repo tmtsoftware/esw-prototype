@@ -2,7 +2,7 @@ import React from "react";
 import './Shuter.css'
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import {Clickable} from "./Clickable";
+import {Clickable} from "../internals/Clickable";
 
 const ShutterComponent = (props) => {
     const topOffSet = props.open === true ? 150 : 200;

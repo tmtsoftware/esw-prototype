@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Text} from "./Text";
-import {Clickable} from "./Clickable";
+import {Text} from "../internals/Text";
+import {Clickable} from "../internals/Clickable";
 
 export const TextBox = (props) => {
     const {x, y, width, height, color, backgroundColor, onClick, children, toolTip} = {...props};

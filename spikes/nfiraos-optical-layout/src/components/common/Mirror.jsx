@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import posed from 'react-pose';
 import styled from "styled-components";
-import {Clickable} from "./Clickable";
+import {Clickable} from "../internals/Clickable";
+import {PosedLine} from "../internals/PosedLine";
 
 function getX2Y2(x, y, length, angle) {
     const bdashX = length * Math.cos(angle * Math.PI / 180)
@@ -11,15 +11,6 @@ function getX2Y2(x, y, length, angle) {
     const y2 = bdashY + y
     return {x2, y2}
 }
-
-const PosedLine = posed.line({
-    default: {
-        x1: (props) => props.x1,
-        y1: (props) => props.y1,
-        x2: (props) => props.x2,
-        y2: (props) => props.y2
-    }
-})
 
 export const MirrorComponent = (props) => {
     const {midX, midY, angle, color, length, width, onClick, toolTip} = {...props};
