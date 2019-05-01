@@ -3,7 +3,7 @@ package ui.todo.components
 import typings.reactLib.dsl._
 import typings.reactLib.reactMod.FC
 import ui.todo.context.VisibilityFilterContext
-import ui.todo.models.TodoList
+import ui.todo.models.{Todo, TodoList}
 
 import scala.scalajs.js
 
@@ -14,12 +14,13 @@ object TodoListComp {
     val filter   = VisibilityFilterContext.useGetter()
 
     ul.noprops(
-      todoList.filter(filter).map { todo =>
-        TodoItem.Component
-          .withKey(todo.id)
-          .props(
-            new TodoItem.Props(() => todoList.toggle(todo.id), todo.isComplete, todo.text)
-          )
+      todoList.filter(filter).map {
+        case Todo(id, text1, isComplete) =>
+          TodoItem.Component
+            .withKey(id)
+            .props(
+              new TodoItem.Props(() => todoList.toggle(id), isComplete, text1)
+            )
       }: _*
     )
   }
