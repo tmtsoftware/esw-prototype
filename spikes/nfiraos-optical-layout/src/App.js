@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import {CalibrationUnit} from "./components/CalibrationUnit";
-import {Light} from "./components/Light";
 import MainShutterContextProvider from "./context/MainShutterContext";
 import PinholeMaskContextProvider from "./context/PinholeMaskContext";
 import InstrumentCalibrationMirrorContextProvider from "./context/InstrumentCalibrationMirrorContext";
@@ -12,6 +11,7 @@ import {MainShutter} from "./components/MainShutter";
 import {InstrumentSelectionMirror} from "./components/InstrumentSelectionMirror";
 import InstrumentMirrorContextProvider from "./context/InstrumentMirrorContext";
 import ReactTooltip from 'react-tooltip';
+import {MainLight} from "./components/MainLight";
 
 class App extends React.Component {
     render() {
@@ -49,7 +49,7 @@ class App extends React.Component {
                                         <SourcesAndCalibration x={sourceAndCalibX} width={sourceAndCalibWidth}/>
                                         <InstrumentSelectionMirror x={instrumentMirrorX}
                                                                    width={instrumentMirrorWidth}/>
-                                        <Light x={x} initialWidth={lightWidth}/>
+                                        <MainLight x={x} initialWidth={lightWidth}/>
                                     </svg>
                                     <ReactTooltip effect={'solid'} />
                                 </div>
