@@ -34,7 +34,7 @@ export const InstrumentSelectionMirror = (props) => {
     const IRMSX = 180
     const IRISX = f(IRMSX) + 15
     const WFSX = f(IRISX) + 15
-    const CAMX = f(WFSX)
+    const CAMX = f(WFSX) - 10
 
     const onClickHandler = data[nextIndex()].action
 
