@@ -1,13 +1,8 @@
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import TodosContext from "../context/TodosContext";
 
 const AddTodo = () => {
     const context = useContext(TodosContext)
-    const [input, setInput] = useState('')
-
-    const updateInput = (e) => {
-        setInput( e.target.value)
-    }
 
     console.log("----------> rendering AddTodo")
     return (
@@ -15,11 +10,11 @@ const AddTodo = () => {
             onSubmit={
                 (e) => {
                     e.preventDefault()
+                    const input = document.getElementById("addTodo").value
                     context.addTodo(input)
                 }
             }>
-            <input
-                onChange={updateInput}>
+            <input id="addTodo">
             </input>
             <button type="submit">Add Todo</button>
         </form>
