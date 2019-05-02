@@ -7,16 +7,18 @@ import typings.stdLib.{^, Element}
 import ui.todo.context.Context
 import ui.todo.lib.JsUnit
 
-object App {
+object ReactApp {
 
-  def run(): Unit = {
+  def render(): Unit = {
     ReactDom.render(
-      App.Component.noprops(),
+      ReactApp.Component.noprops(),
       ^.document.getElementById("todo").asInstanceOf[Element]
     )
   }
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
+    println("**** rendering App")
+
     Context.Provider.noprops(
       AddTodo.Component.noprops(),
       TodoListComp.Component.noprops(),

@@ -9,7 +9,7 @@ import ui.todo.models.VisibilityFilter
 object Footer {
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
-    dom.console.log("-----------> Footer")
+    println("**** rendering Footer")
 
     div.noprops(
       span.noprops("Show: "),

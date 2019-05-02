@@ -9,6 +9,8 @@ import ui.todo.models.{Todo, TodoList}
 object TodoListComp {
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
+    println("**** rendering TodoList")
+
     val todoList = TodoList.create()
     val filter   = Context.VisibilityFilter.useGetter()
 

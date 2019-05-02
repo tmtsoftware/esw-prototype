@@ -16,9 +16,9 @@ object Link {
   }
 
   val Component: FC[Props] = define.fc[Props] { props =>
-    val (filter, setFilter) = Context.VisibilityFilter.use()
+    println(s"**** rendering Link filter=${props.filter}")
 
-    println(props.filter -> filter)
+    val (filter, setFilter) = Context.VisibilityFilter.use()
 
     button.props(
       ButtonHTMLAttributes(

@@ -8,10 +8,10 @@ import ui.todo.models.TodoList
 object AddTodo {
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
+    println("**** rendering AddTodo")
+
     val todoList               = TodoList.create()
     val (inputValue, setInput) = GenericState.use("")
-
-    println("******************* error!!!")
 
     form.props(
       FormHTMLAttributes(
