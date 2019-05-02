@@ -9,8 +9,8 @@ object Main {
   def main(arguments: Array[String]): Unit = {
 //    dom.window.onload = Boot.start(PaperBackend)
 //    dom.window.onload = Boot.start(SvgBackend)
-    ReactApp.render()
-//    App.renderApp()
+//    ReactApp.render()
+    LaminarApp.renderApp()
   }
 
 }
