@@ -24,13 +24,21 @@ export const MainLight = (props) => {
             return "l13,135"
     }
 
-    // this can be improved
-    let coordinates = ["m10,10",
-        mainShutter.open ? calibrationMirror.isUp ? "h128" : alignmentMirror.isUp ? "h273" : pinholeMask.open ? "h1083 " + getPortCoordinates() : "h363" : "h40"
-    ]
+    let move = "m10,10 "
+
+    if(!mainShutter.open)
+        move += "h40 l0,0"
+    else if (calibrationMirror.isUp)
+        move += "h128 l0,0"
+    else if(alignmentMirror.isUp)
+        move += "h273 l0,0"
+    else if(pinholeMask.open)
+        move += "h1083 " + getPortCoordinates()
+    else
+        move +="h363 l0,0"
 
     return <svg y={240}>
-        <Arrow coordinates={coordinates.join(" ")} color={"blue"} />
+        <Arrow coordinates={move} color={"blue"} />
     </svg>
 
 };
