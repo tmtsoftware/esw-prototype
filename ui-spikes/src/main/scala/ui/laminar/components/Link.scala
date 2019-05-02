@@ -5,12 +5,15 @@ import ui.laminar.stores.VisibilityFilterStore
 import ui.laminar.models.VisibilityFilter
 
 object Link {
-  def apply(filter: VisibilityFilter, content: String): Button = {
+  def apply(filter: VisibilityFilter, childNodes: Node*): Button = {
+
+    println(s"**** rendering Link filter=$filter")
+
     button(
       onClick.mapTo(filter) --> VisibilityFilterStore.update,
-      disabled <-- VisibilityFilterStore.isSame(filter),
+      disabled <-- VisibilityFilterStore.isSameAs(filter),
       marginLeft := "4px",
-      content
+      childNodes
     )
   }
 }

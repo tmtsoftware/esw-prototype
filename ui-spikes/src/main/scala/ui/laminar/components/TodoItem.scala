@@ -5,7 +5,10 @@ import ui.laminar.stores.TodoListStore
 import ui.laminar.models.Todo
 
 object TodoItem {
-  def apply(id: Int, initialTodo: Todo, todos: Signal[Todo]): Li = {
+  def apply(id: Int, todoItem: Todo, todos: Signal[Todo]): Li = {
+
+    println(s"**** rendering TodoItem=$todoItem")
+
     li(
       onClick.mapTo(id) --> TodoListStore.toggle,
       textDecoration <-- todos.map(x => if (x.isComplete) "line-through" else "none"),

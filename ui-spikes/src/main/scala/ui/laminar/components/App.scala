@@ -6,7 +6,7 @@ object App {
   def apply(): Div = {
     div(
       AddTodo(),
-      TodoList(),
+      TodoListComp(),
       Footer()
     )
   }

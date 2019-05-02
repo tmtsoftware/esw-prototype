@@ -5,15 +5,15 @@ import ui.laminar.stores.TodoListStore
 
 object AddTodo {
   def apply(): Div = {
-    val text1 = Var("")
+    val inputValue = Var("")
 
-    println("******************* error!!!")
+    println("**** rendering AddTodo")
 
     div(
       form(
-        onSubmit.preventDefault.mapTo(text1.now()) --> TodoListStore.add,
+        onSubmit.preventDefault.mapTo(inputValue.now()) --> TodoListStore.add,
         input(
-          inContext(thisNode => onInput.mapTo(thisNode.ref.value) --> text1.writer)
+          inContext(thisNode => onInput.mapTo(thisNode.ref.value) --> inputValue.writer)
         ),
         button(
           tpe := "submit",
