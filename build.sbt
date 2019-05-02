@@ -48,7 +48,6 @@ lazy val `ocs-api` = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies ++= Seq(
       Libs.`play-json`.value,
       Libs.`play-functional`.value,
-      Libs.`shapeless`.value,
       Libs.`play-json-derived-codecs`.value,
       Csw.`csw-params`.value,
       Enumeratum.`enumeratum`.value,
