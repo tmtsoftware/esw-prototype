@@ -6,7 +6,8 @@ export const Clickable = (props) => {
     return <g
         style={onClick ? {cursor: 'pointer'} : {}}
         onClick={onClick}
-        data-tip={toolTip}>
+        // data-tip={toolTip}
+    >
         {children}
     </g>
 };
