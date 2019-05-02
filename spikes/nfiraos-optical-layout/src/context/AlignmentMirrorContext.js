@@ -2,10 +2,10 @@ import React, {useState} from "react";
 
 const e = () =>{}
 
-export const AlignmentMirrorContext = React.createContext({isUp: false, moveUp: e, moveDown: e, toggleAlignmentMirror: e})
+export const AlignmentMirrorContext = React.createContext({isUp: true, moveUp: e, moveDown: e, toggleAlignmentMirror: e})
 
 const AlignmentMirrorContextProvider = (props) => {
-    const [isUp, set] = useState(false)
+    const [isUp, set] = useState(true)
 
     const moveUp = () => set(true)
     const moveDown = () => set(false)

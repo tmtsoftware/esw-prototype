@@ -42,7 +42,7 @@ class App extends React.Component {
                         <PinholeMaskContextProvider>
                             <InstrumentMirrorContextProvider>
                                 <div className="App">
-                                    <svg viewBox="0 0 1250 600" width="1250" height="600">
+                                    <svg viewBox="0 0 1250 550" width="1250" height="550">
                                         <MainShutter x={shutterX} width={shutterWidth}/>
                                         <CalibrationUnit x={calibrationUnitX} width={calibrationWidth}/>
                                         <AlignmentTelescope x={alignmentUnitX} width={alignmentWidth}/>
