@@ -4,10 +4,12 @@ import com.raquo.laminar.api.L._
 import ui.laminar.stores.TodoListStore
 
 object AddTodo {
+
   def apply(): Div = {
-    val inputValue = Var("")
 
     println("**** rendering AddTodo")
+
+    val inputValue = Var("")
 
     div(
       form(
@@ -22,4 +24,5 @@ object AddTodo {
       )
     )
   }
+
 }

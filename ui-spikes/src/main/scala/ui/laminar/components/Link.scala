@@ -5,6 +5,7 @@ import ui.laminar.stores.VisibilityFilterStore
 import ui.laminar.models.VisibilityFilter
 
 object Link {
+
   def apply(filter: VisibilityFilter, childNodes: Node*): Button = {
 
     println(s"**** rendering Link filter=$filter")
@@ -16,4 +17,5 @@ object Link {
       childNodes
     )
   }
+
 }

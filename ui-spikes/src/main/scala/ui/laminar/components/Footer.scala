@@ -4,7 +4,11 @@ import com.raquo.laminar.api.L._
 import ui.laminar.models.VisibilityFilter
 
 object Footer {
+
   def apply(): Div = {
+
+    println("**** rendering Footer")
+
     div(
       span("Show: "),
       Link(VisibilityFilter.All, VisibilityFilter.All.toString),
@@ -12,4 +16,5 @@ object Footer {
       Link(VisibilityFilter.Completed, VisibilityFilter.Completed.toString),
     )
   }
+
 }

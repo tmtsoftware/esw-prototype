@@ -5,14 +5,12 @@ import ui.laminar.stores.TodoListStore
 
 object TodoListComp {
 
-  def apply(): Div = {
+  def apply(): Node = {
 
     println("**** rendering TodoList")
 
-    div {
-      ul(
-        children <-- TodoListStore.filteredList.map(_.todos).split(_.id)(TodoItem.apply)
-      )
-    }
+    ul(
+      children <-- TodoListStore.filteredList.map(_.todos).split(_.id)(TodoItem.apply)
+    )
   }
 }
