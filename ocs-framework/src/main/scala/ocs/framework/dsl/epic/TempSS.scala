@@ -7,10 +7,14 @@ import ocs.framework.dsl.epic.internal._
 class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Machine[State](Init, cswSystem) {
 
   val temp: ProcessVar[Double] = Var.assign(0, "temperature updates")
-  temp.monitor()
 
-  def logic: Logic = {
+  def logic: Logic = putMonitor
+
+  def putMonitor: Logic = {
     case Init =>
+      entry {
+        temp.monitor()
+      }
       when() {
         become(Ok)
       }
@@ -26,6 +30,25 @@ class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Mac
       }
     case High =>
       when(temp < 30) {
+        become(Ok)
+      }
+  }
+
+  def putGet: Logic = {
+    case Init =>
+      when() {
+        temp := 45
+        temp.pvPut()
+        become(Ok)
+      }
+    case Ok =>
+      when(temp > 40) {
+        temp := 25
+        become(High)
+      }
+    case High =>
+      when(temp < 30) {
+        temp.pvGet()
         become(Ok)
       }
   }

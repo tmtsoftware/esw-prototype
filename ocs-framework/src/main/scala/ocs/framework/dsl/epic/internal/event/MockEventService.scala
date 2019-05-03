@@ -21,14 +21,12 @@ class MockEventService {
   implicit val actorSystem: ActorSystem = ActorSystem("server")
   implicit val mat: Materializer        = ActorMaterializer()
 
-  def get(key: String): Future[Option[EpicsEvent]] = FutureUtils.delay(8.seconds) {
-    Future {
-      map.get(key)
-    }
+  def get(key: String): Future[Option[EpicsEvent]] = FutureUtils.delay(4.seconds, strandEc.executorService).map { _ =>
+    map.get(key)
   }
 
   def publish(key: String, value: EpicsEvent): Future[Unit] =
-    FutureUtils.delay(4.seconds, strandEc.executorService).flatMap { _ =>
+    FutureUtils.delay(2.seconds, strandEc.executorService).flatMap { _ =>
       map = map + (key -> value)
       Future.traverse(subscriptions.getOrElse(key, List.empty))(_.offer(value)).map(_ => ())
     }
