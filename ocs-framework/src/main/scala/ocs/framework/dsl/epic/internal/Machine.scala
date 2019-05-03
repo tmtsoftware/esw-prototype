@@ -55,11 +55,6 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
   def debugString: String = ""
 
   implicit def varToT[T](reactive: Var[T]): T = reactive.get
-
-  implicit class RichFuture[T](future: Future[T]) {
-    def block(finDuration: FiniteDuration = 10.seconds): T = Await.result(future, finDuration)
-  }
-
 }
 
 object Machine {

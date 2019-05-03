@@ -3,10 +3,11 @@ package ocs.framework.dsl.epic
 import TempSS._
 import ocs.framework.CswSystem
 import ocs.framework.dsl.epic.internal._
+import ocs.framework.dsl.epic.internal.event.EpicsEvent
 
 class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Machine[State](Init, cswSystem) {
 
-  val temp: ProcessVar[Double] = Var.assign(0, "temperature updates")
+  val temp: ProcessVar[Double] = Var.assign(0, "temperature updates", "temp")
 
   def logic: Logic = putGet
 

@@ -20,7 +20,7 @@ class Var[T](init: T) {
   override def toString: String = _value.toString
 }
 
-class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T](init) {
+class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]) extends Var[T](init) {
 
   import mc.{ec, eventService, mat}
 
@@ -42,8 +42,8 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
     state set immediately fail and an error message is printed; whereas further calls to pvPut(var,SYNC)
     are delayed until the previous operation completes.
    */
-  def pvPut(): Future[Done] = {
-    eventService.publish(key, EpicsEvent(key, get))
+  def pvPut(): Unit = {
+    eventService.publish(key, EpicsEvent(key, Map(field -> get)))
   }
 
   /*
@@ -54,14 +54,16 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
 
     Like for pvPut, only one pending pvGet per channel and state set can be active.
    */
-  def pvGet(): Future[Option[EpicsEvent]] = {
-    eventService.get(key).flatMap { option =>
-      Future.successful(option).flatMap { option =>
-        option.foreach { event =>
-          set(event.value.asInstanceOf[T])
-        }
-        mc.refresh("pvGet").map(_ => option)
-      }
+  def pvGet(): Unit = {
+    eventService.get(key).foreach { event =>
+      val value = event.params
+        .getOrElse(
+          field,
+          throw new RuntimeException(s"missing field=$field in event=$event")
+        )
+        .asInstanceOf[T]
+      set(value)
+      mc.refresh("pvGet")
     }
   }
 
@@ -70,7 +72,7 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
       .subscribe(key)
       .mapAsync(1) { event =>
         Future.unit.flatMap { _ =>
-          set(event.value.asInstanceOf[T])
+          set(event.params.asInstanceOf[T])
           mc.refresh("monitor")
         }
       }
@@ -129,6 +131,8 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
 }
 
 object Var {
-  def apply[T](init: T): Var[T]                                                    = new Var(init)
-  def assign[T](init: T, key: String)(implicit machine: Machine[_]): ProcessVar[T] = new ProcessVar[T](init, key)
+  def apply[T](init: T): Var[T] = new Var(init)
+  def assign[T](init: T, key: String, field: String)(
+      implicit machine: Machine[_]
+  ): ProcessVar[T] = new ProcessVar[T](init, key, field)
 }

@@ -10,7 +10,10 @@ import sequencer.macros.StrandEc
 import scala.concurrent.duration.DurationLong
 import scala.concurrent.{ExecutionContext, Future}
 
-case class EpicsEvent(key: String, value: Any)
+case class EpicsEvent(key: String, params: Map[String, Any])
+object EpicsEvent {
+  def empty(key: String): EpicsEvent = EpicsEvent(key, Map.empty)
+}
 
 class MockEventService {
 
@@ -22,8 +25,8 @@ class MockEventService {
   implicit val actorSystem: ActorSystem = ActorSystem("server")
   implicit val mat: Materializer        = ActorMaterializer()
 
-  def get(key: String): Future[Option[EpicsEvent]] = FutureUtils.delay(4.seconds, strandEc.executorService).map { _ =>
-    map.get(key)
+  def get(key: String): Future[EpicsEvent] = FutureUtils.delay(4.seconds, strandEc.executorService).map { _ =>
+    map.getOrElse(key, EpicsEvent.empty(key))
   }
 
   def publish(key: String, value: EpicsEvent): Future[Done] =
