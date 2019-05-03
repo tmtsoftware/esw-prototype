@@ -198,18 +198,6 @@ lazy val `ui-spikes` = project
     )
   )
 
-lazy val `laminar-spikes` = project
-  .configure(baseJsSettings, bundlerSettings, browserProject)
-  .settings(
-    npmDependencies in Compile ++= Seq(
-      "react" -> "16.8",
-      "react-dom" -> "16.8",
-    ),
-    libraryDependencies ++= Seq(
-      Libs.laminar.value,
-    )
-  )
-
 lazy val start = TaskKey[Unit]("start")
 
 lazy val browserProject: Project => Project =
