@@ -6,7 +6,7 @@ import ocs.framework.dsl.epic.internal._
 
 class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Machine[State](Init, cswSystem) {
 
-  val temp: ProcessVar[Int] = Var.assign(0, "temperature updates")
+  val temp: ProcessVar[Double] = Var.assign(0, "temperature updates")
   temp.monitor()
 
   def logic: Logic = {

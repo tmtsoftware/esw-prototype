@@ -3,11 +3,10 @@ package ocs.framework.dsl.epic.internal
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
 import ocs.framework.dsl.epic.internal.event.EpicsEvent
-import play.api.libs.json.Format
 
 import scala.concurrent.Future
 
-class Var[T: Format](init: T) {
+class Var[T](init: T) {
   @volatile
   private var _value = init
   def set(x: T): Unit = {
@@ -20,7 +19,7 @@ class Var[T: Format](init: T) {
   override def toString: String = _value.toString
 }
 
-class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) extends Var[T](init) {
+class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T](init) {
 
   import mc.{ec, eventService, mat}
 
@@ -60,7 +59,7 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
   def pvGet(): Future[Unit] = {
     eventService.get(key).map { option =>
       option.foreach { event =>
-        set(event.value)
+        set(event.value.asInstanceOf[T])
         mc.refresh("pvGet")
       }
     }
@@ -71,7 +70,7 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
       .subscribe(key)
       .mapAsync(1) { event =>
         Future.unit.flatMap { _ =>
-          set(event.value)
+          set(event.value.asInstanceOf[T])
           mc.refresh("monitor")
         }
       }
@@ -158,6 +157,6 @@ class ProcessVar[T: Format](init: T, key: String)(implicit mc: Machine[_]) exten
 }
 
 object Var {
-  def apply[T: Format](init: T): Var[T]                                                    = new Var(init)
-  def assign[T: Format](init: T, key: String)(implicit machine: Machine[_]): ProcessVar[T] = new ProcessVar[T](init, key)
+  def apply[T](init: T): Var[T]                                                    = new Var(init)
+  def assign[T](init: T, key: String)(implicit machine: Machine[_]): ProcessVar[T] = new ProcessVar[T](init, key)
 }

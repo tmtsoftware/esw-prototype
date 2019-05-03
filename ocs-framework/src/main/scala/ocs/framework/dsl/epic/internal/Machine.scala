@@ -2,7 +2,7 @@ package ocs.framework.dsl.epic.internal
 
 import akka.stream.Materializer
 import ocs.framework.CswSystem
-import ocs.framework.dsl.epic.internal.event.EpicsEventService
+import ocs.framework.dsl.epic.internal.event.MockEventService
 import sequencer.macros.StrandEc
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -16,11 +16,11 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
   private var currentState: State  = init
   private var previousState: State = _
 
-  implicit lazy val strandEc: StrandEc              = StrandEc.create()
-  implicit lazy val ec: ExecutionContext            = strandEc.ec
-  implicit lazy val mat: Materializer               = cswSystem.materializer
-  implicit lazy val eventService: EpicsEventService = cswSystem.mockEventService
-  implicit lazy val mach: Machine[State]            = this
+  implicit lazy val strandEc: StrandEc             = StrandEc.create()
+  implicit lazy val ec: ExecutionContext           = strandEc.ec
+  implicit lazy val mat: Materializer              = cswSystem.materializer
+  implicit lazy val eventService: MockEventService = cswSystem.mockEventService
+  implicit lazy val mach: Machine[State]           = this
 
   protected def become(state: State): Unit = {
     currentState = state

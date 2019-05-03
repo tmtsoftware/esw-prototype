@@ -12,7 +12,7 @@ import csw.location.client.ActorSystemFactory
 import csw.location.client.scaladsl.HttpLocationServiceFactory
 import ocs.client.factory.LocationServiceWrapper
 import ocs.framework.GuardianActor.GuardianMsg
-import ocs.framework.dsl.epic.internal.event.{EpicsEventService, MockEventService, RedisEventService}
+import ocs.framework.dsl.epic.internal.event.MockEventService
 
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{Await, ExecutionContext}
@@ -32,7 +32,7 @@ class CswSystem(name: String) {
   lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
 
 //  lazy val mockEventService: EpicsEventService = new RedisEventService
-  lazy val mockEventService: EpicsEventService = new MockEventService
+  lazy val mockEventService: MockEventService = new MockEventService
 
   def userActorOf[T](behavior: Behavior[T], name: String, props: Props = Props.empty): ActorRef[T] = {
     Await.result(typedSystem ? GuardianActor.Spawn(behavior, name, props), 5.seconds)
