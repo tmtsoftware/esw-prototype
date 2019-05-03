@@ -8,12 +8,12 @@ class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Mac
 
   val temp: ProcessVar[Double] = Var.assign(0, "temperature updates")
 
-  def logic: Logic = putMonitor
+  def logic: Logic = putGet
 
   def putMonitor: Logic = {
     case Init =>
       entry {
-        temp.monitor()
+        temp.pvMonitor()
       }
       when() {
         become(Ok)

@@ -1,5 +1,6 @@
 package ocs.framework.dsl.epic.internal.event
 
+import akka.Done
 import akka.actor.ActorSystem
 import akka.stream._
 import akka.stream.scaladsl.{Keep, Source, SourceQueueWithComplete}
@@ -25,10 +26,10 @@ class MockEventService {
     map.get(key)
   }
 
-  def publish(key: String, value: EpicsEvent): Future[Unit] =
+  def publish(key: String, value: EpicsEvent): Future[Done] =
     FutureUtils.delay(2.seconds, strandEc.executorService).flatMap { _ =>
       map = map + (key -> value)
-      Future.traverse(subscriptions.getOrElse(key, List.empty))(_.offer(value)).map(_ => ())
+      Future.traverse(subscriptions.getOrElse(key, List.empty))(_.offer(value)).map(_ => Done)
     }
 
   def subscribe(key: String): Source[EpicsEvent, KillSwitch] = {

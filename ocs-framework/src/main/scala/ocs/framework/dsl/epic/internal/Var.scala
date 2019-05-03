@@ -1,5 +1,6 @@
 package ocs.framework.dsl.epic.internal
 
+import akka.Done
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
 import ocs.framework.dsl.epic.internal.event.EpicsEvent
@@ -41,11 +42,8 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
     state set immediately fail and an error message is printed; whereas further calls to pvPut(var,SYNC)
     are delayed until the previous operation completes.
    */
-  def pvPut(): Future[Unit] = {
-    val value = get
-    Future.unit.flatMap { _ =>
-      eventService.publish(key, EpicsEvent(key, value))
-    }
+  def pvPut(): Future[Done] = {
+    eventService.publish(key, EpicsEvent(key, get))
   }
 
   /*
@@ -56,16 +54,18 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
 
     Like for pvPut, only one pending pvGet per channel and state set can be active.
    */
-  def pvGet(): Future[Unit] = {
-    eventService.get(key).map { option =>
-      option.foreach { event =>
-        set(event.value.asInstanceOf[T])
-        mc.refresh("pvGet")
+  def pvGet(): Future[Option[EpicsEvent]] = {
+    eventService.get(key).flatMap { option =>
+      Future.successful(option).flatMap { option =>
+        option.foreach { event =>
+          set(event.value.asInstanceOf[T])
+        }
+        mc.refresh("pvGet").map(_ => option)
       }
     }
   }
 
-  def monitor(): KillSwitch = {
+  def pvMonitor(): KillSwitch = {
     eventService
       .subscribe(key)
       .mapAsync(1) { event =>
@@ -102,39 +102,11 @@ class ProcessVar[T](init: T, key: String)(implicit mc: Machine[_]) extends Var[T
   def delay = ???
 
   /*
-    pvStat pvMonitor(channel ch)
-
-    Initiates a monitor on the process variable that ch was assigned to.
-   */
-  def pvMonitor = ???
-
-  /*
-    pvStat pvStopMonitor(channel ch)
-
-    Terminates a monitor on the underlying process variable.
-   */
-  def pvStopMonitor = ???
-
-  /*
     void pvPutCancel(channel ch)
 
     Cancel a pending (asynchronous) pvPut.
    */
   def pvPutCancel = ???
-
-  /*
-    seqBool pvPutComplete(channel ch)
-
-    Returns whether the last asynchronous pvPut to this process variable has completed.
-   */
-  def pvPutComplete = ???
-
-  /*
-    seqBool pvGetComplete(channel ch)
-
-    Returns whether the last asynchronous pvGet for ch has completed.
-   */
-  def pvGetComplete = ???
 
   /*
     void pvGetCancel(channel ch)
