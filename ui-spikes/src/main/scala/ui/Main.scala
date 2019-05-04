@@ -12,7 +12,7 @@ object Main {
 //    dom.window.onload = Boot.start(SvgBackend)
 //    ReactApp.render()
 //    LaminarApp.renderApp()
-    Rays.run()
+    new Rays().animate()
   }
 
 }
