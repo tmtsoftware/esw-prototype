@@ -180,6 +180,7 @@ lazy val `ui-spikes` = project
   .settings(
     npmDependencies in Compile ++= Seq(
       "svg.js" -> "2.7.1",
+      "svg.pathmorphing.js" -> "0.1.3",
       "p5" -> "0.7",
       "paper" -> "v0.11.8",
       "react" -> "16.8",
@@ -204,9 +205,16 @@ lazy val browserProject: Project => Project =
   _.settings(
     start := {
       (Compile / fastOptJS / startWebpackDevServer).value
-      val indexFrom = baseDirectory.value / "index.html"
-      val indexTo   = (Compile / fastOptJS / crossTarget).value / "index.html"
-      Files.copy(indexFrom.toPath, indexTo.toPath, REPLACE_EXISTING)
+      Files.copy(
+        (baseDirectory.value / "index.html").toPath,
+        ((Compile / fastOptJS / crossTarget).value / "index.html").toPath, 
+        REPLACE_EXISTING
+      )
+      Files.copy(
+        (baseDirectory.value / "index2.html").toPath,
+        ((Compile / fastOptJS / crossTarget).value / "index2.html").toPath, 
+        REPLACE_EXISTING
+      )
     }
   )
 

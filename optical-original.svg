@@ -1,0 +1,204 @@
+<svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="svg2957" version="1.1"
+        viewBox="0 0 1250 550" width="1250" height="550">
+    <svg x="60" class="sc-bwzfXH kQAYE">
+        <g style="cursor: pointer;">
+            <path id="top-shutter-1" d="m1 150 v50" stroke="red" stroke-width="5"/>
+        </g>
+        <g style="cursor: pointer;">
+            <path id="bottom-shutter-1" d="m1 300 v50" stroke="red" stroke-width="5"/>
+        </g>
+    </svg>
+    <svg x="75">
+        <g>
+            <rect fill="#00feff" fill-opacity="1" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-dasharray="8.0" stroke-width="2" x="2" y="2" width="150" height="500"/>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="120" x="17" y="15"/>
+                <foreignObject x="17" y="15" width="120" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>NFIRAOS Science Calibration Unit</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g>
+                <rect fill="#0433FF" fill-opacity="1" stroke="black" stroke-width="1" height="60" width="120" x="17"
+                      y="90">
+                </rect>
+                <foreignObject x="17" y="90" width="120" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: white; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>NSCU arcs &amp; flats</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g style="cursor: pointer;">
+                <line id="mirror-1" class="sc-bdVaJa liXdAS" x1="46.7157287525381" y1="305.0490620858714"
+                      x2="103.2842712474619" y2="361.6176045807952" stroke="black" stroke-width="3"/>
+            </g>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="120" x="17" y="400"/>
+                <foreignObject x="17" y="400" width="120" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Instrument Calibration Mirror</div>
+                    </div>
+                </foreignObject>
+            </g>
+        </g>
+    </svg>
+    <svg x="235">
+        <g>
+            <rect fill="white" fill-opacity="0" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-dasharray="8.0" stroke-width="2" x="2" y="2" width="120" height="500"/>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="96" x="14" y="15"/>
+                <foreignObject x="14" y="15" width="96" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Alignment Telescope</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g>
+                <rect fill="#BFBFFF" fill-opacity="1" stroke="black" stroke-width="1" height="90" width="72" x="26"
+                      y="90">
+                </rect>
+                <foreignObject x="26" y="90" width="72" height="90">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    </div>
+                </foreignObject>
+            </g>
+            <g style="cursor: pointer;">
+                <line id="mirror-2" class="sc-bdVaJa liXdAS" x1="31.715728752538098" y1="221.7157287525381"
+                      x2="88.2842712474619" y2="278.2842712474619" stroke="black" stroke-width="3"/>
+            </g>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="96" x="14" y="400"/>
+                <foreignObject x="14" y="400" width="96" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Alignment Telescope fold Mirror</div>
+                    </div>
+                </foreignObject>
+            </g>
+        </g>
+    </svg>
+    <svg x="365">
+        <g>
+            <rect fill="white" fill-opacity="0" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-dasharray="8.0" stroke-width="2" x="2" y="2" width="320" height="500"/>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="256" x="34" y="15"/>
+                <foreignObject x="34" y="15" width="256" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: rgb(255, 40, 4); padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Sources and calibration</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g>
+                <rect fill="#FF5200" fill-opacity="1" stroke="black" stroke-width="1" height="83.33333333333333" width="130" x="22" y="75"/>
+                <foreignObject x="22" y="75" width="130" height="83.33333333333333">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>NFIRAOS Calibration NGS sources</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g>
+                <rect fill="#FF9200" fill-opacity="1" stroke="black" stroke-width="1" height="83.33333333333333" width="130" x="172" y="75"/>
+                <foreignObject x="172" y="75" width="130" height="83.33333333333333">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>NFIRAOS Calibration LGS sources</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <svg x="20" class="sc-bwzfXH kQAYE">
+                <g style="cursor: pointer;">
+                    <path id="top-shutter-2" d="m1 200 v50" stroke="#FF9200" stroke-width="5"/>
+                </g>
+                <g style="cursor: pointer;">
+                    <path id="bottom-shutter-2" d="m1 250 v50" stroke="#FF9200" stroke-width="5"/>
+                </g>
+            </svg>
+            <g>
+                <rect fill="white" fill-opacity="0" stroke="" stroke-width="1" height="60" width="128" x="0" y="400"/>
+                <foreignObject x="0" y="400" width="128" height="60">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Pinhole Mask</div>
+                    </div>
+                </foreignObject>
+            </g>
+        </g>
+    </svg>
+    <svg x="695">
+        <g>
+            <rect fill="white" fill-opacity="0" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-dasharray="8.0" stroke-width="2" x="2" y="2" width="520" height="500"/>
+            <g style="cursor: pointer;">
+                <line id="mirror-3" class="sc-bdVaJa liXdAS" x1="376.7157287525381" y1="221.7157287525381"
+                      x2="433.2842712474619" y2="278.2842712474619" stroke="black" stroke-width="3"/>
+            </g>
+            <g style="cursor: pointer;">
+                <rect fill="#D782FF" fill-opacity="1" stroke="black" stroke-width="1" height="70" width="60" x="180"
+                      y="400">
+                </rect>
+                <foreignObject x="180" y="400" width="60" height="70">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>IRMS</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g style="cursor: pointer;">
+                <rect fill="#D782FF" fill-opacity="1" stroke="black" stroke-width="1" height="70" width="60" x="265"
+                      y="400">
+                </rect>
+                <foreignObject x="265" y="400" width="60" height="70">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>IRIS</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g style="cursor: pointer;">
+                <rect fill="#D782FF" fill-opacity="1" stroke="black" stroke-width="1" height="70" width="60" x="350"
+                      y="400">
+                </rect>
+                <foreignObject x="350" y="400" width="60" height="70">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>HiRES WFS</div>
+                    </div>
+                </foreignObject>
+            </g>
+            <g style="cursor: pointer;">
+                <rect fill="#D782FF" fill-opacity="1" stroke="black" stroke-width="1" height="70" width="60" x="410"
+                      y="400">
+                </rect>
+                <foreignObject x="410" y="400" width="60" height="70">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="text-align: center; color: black; padding: 0.1em; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>Acq. Cam.</div>
+                    </div>
+                </foreignObject>
+            </g>
+        </g>
+    </svg>
+    <svg y="240">
+        <svg>
+            <defs>
+                <marker id="arrow" markerWidth="4" markerHeight="4" refX="0" refY="2" orient="auto" markerUnits="strokeWidth">
+                    <polygon points="0,0 0,4 4,2" fill="blue"/>
+                </marker>
+            </defs>
+            <path id="light" d="m10,10 h273 l0,0" fill-opacity="0" stroke="blue" stroke-width="3" marker-end="url(#arrow)"/>
+        </svg>
+    </svg>
+</svg>
