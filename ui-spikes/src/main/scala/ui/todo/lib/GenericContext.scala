@@ -28,14 +28,13 @@ class GenericContext[T](default: T) {
 private[lib] class SingleContext[T](default: T) {
   def use(): T = React.useContext(Context)
 
-  private val Context: Context[T]                     = React.createContext(default)
-  private val Provider_Original: FC[ProviderProps[T]] = Context.Provider_Original.asInstanceOf[FC[ProviderProps[T]]]
+  private val Context: Context[T] = React.createContext(default)
 
   def Provider(value: T, reactNode: ReactNode): ReactElement[ProviderProps[T]] = {
     val providerProps: ProviderProps[T] = ProviderProps(
       React.useMemo(() => value),
       reactNode
     )
-    Provider_Original.props(providerProps)
+    Context.Provider.props(providerProps)
   }
 }
