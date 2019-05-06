@@ -54,10 +54,10 @@ class Routes(
         } ~
         pathPrefix("events") {
           path("subscribe" / Segment) { subsystem =>
-            parameters(("component".?, "event".?)) { (component, event) =>
+            parameters(("component".?, "event".?, "rateLimit".?)) { (component, event, rateLimit) =>
               complete {
                 eventMonitor
-                  .subscribe(subsystem, component, event)
+                  .subscribe(subsystem, component, event, rateLimit.map(_.toInt))
                   .map(evt => ServerSentEvent(Json.stringify(Json.toJson(evt))))
                   .keepAlive(10.second, () => ServerSentEvent.heartbeat)
               }
