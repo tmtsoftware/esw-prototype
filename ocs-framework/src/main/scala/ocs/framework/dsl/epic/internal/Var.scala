@@ -23,36 +23,10 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
 
   import mc.{ec, eventService, mat}
 
-  /*
-    pvStat pvPut(channel ch, compType mode = DEFAULT, double timeout = 10.0)
-
-    Puts (or writes) the value of ch to the process variable it has been assigned to.
-    Returns the status from the PV layer.
-
-    By default, i.e. with no optional arguments, pvPut is un-confirmed “fire and forget”; completion must be inferred
-    by other means. An optional second argument can change this default:
-    • SYNC causes it to block the state set until completion. This mode is called synchronous.
-    • ASYNC allows the state set to continue but still check for completion via a subsequent call to pvPutComplete (typically in a condition). This mode is called asnchronous.
-    A timeout value may be specified after the SYNC argument. This should be a positive floating point number, specifying the number of seconds before the request times out.
-    This value overrides the default timeout of 10 seconds.
-
-    Note that SNL allows only one pending pvPut per variable and state set to be active.
-    As long as a pvPut(var,ASYNC) is pending completion, further calls to pvPut(var,ASYNC) from the same
-    state set immediately fail and an error message is printed; whereas further calls to pvPut(var,SYNC)
-    are delayed until the previous operation completes.
-   */
   def pvPut(): Unit = {
     eventService.publish(EpicsEvent(key, Map(field -> get)))
   }
 
-  /*
-    pvStat pvGet(channel ch, compType ct = DEFAULT, double timeout = 10.0)
-
-    Gets (or reads) the value of ch from the process variable it has been assigned to. Returns the status
-    from the PV layer.
-
-    Like for pvPut, only one pending pvGet per channel and state set can be active.
-   */
   def pvGet(): Unit = {
     eventService.get(key).foreach(event => setValue(event, "pvGet"))
   }
@@ -74,55 +48,6 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
     set(value)
     mc.refresh("monitor")
   }
-
-  /*
-    pvStat pvAssign(channel ch, char *pv_name)
-
-    Assigns or re-assigns ch to a process variable with name pv_name. If pv_name is an empty string or NULL,
-    then ch is de-assigned (not associated with any process variable)
-
-    Note that pvAssign is asynchronous: it sends a request to search for and connect to the given pv_name,
-    but it does not wait for a response, similar to pvGet(var,ASYNC). Calling pvAssign does have one
-    immediate effect, namely de-assigning the variable from any PV it currently is assigned to. In order
-    to make sure that it has connected to the new PV, you can use the pvConnected built-in function inside
-    a transition clause.
-   */
-  def pvAssign() = ???
-
-  /*
-    int  delay (delay_in_seconds)
-    float  delay_in_seconds;
-
-    The delay function returns TRUE if the specified time has elapsed from entering the state.
-    It should be used only within a when expression.
-   */
-  def delay = ???
-
-  /*
-    void pvPutCancel(channel ch)
-
-    Cancel a pending (asynchronous) pvPut.
-   */
-  def pvPutCancel = ???
-
-  /*
-    void pvGetCancel(channel ch)
-
-    Cancel a pending (asynchronous) pvGet.
-   */
-  def pvGetCancel = ???
-
-  /*
-    unsigned pvChannelCount()
-
-    Returns the total number of process variables associated with the program.
-   */
-  def pvChannelCount = ???
-
-  /*
-
- */
-
 }
 
 object Var {

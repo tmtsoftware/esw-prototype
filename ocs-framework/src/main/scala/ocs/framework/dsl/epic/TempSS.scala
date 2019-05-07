@@ -4,6 +4,8 @@ import TempSS._
 import ocs.framework.CswSystem
 import ocs.framework.dsl.epic.internal._
 
+import scala.concurrent.duration.DurationLong
+
 class TempSS(cswSystem: CswSystem) extends Machine[State](Init, cswSystem) {
 
   val temp: ProcessVar[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
@@ -15,7 +17,8 @@ class TempSS(cswSystem: CswSystem) extends Machine[State](Init, cswSystem) {
       entry {
         temp.pvMonitor()
       }
-      when() {
+
+      when(delay = 1.seconds) {
         become(Ok)
       }
     case Ok =>

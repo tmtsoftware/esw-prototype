@@ -3,9 +3,11 @@ package ocs.framework.dsl.epic.internal
 import akka.Done
 import akka.stream.Materializer
 import ocs.framework.CswSystem
+import ocs.framework.dsl.FutureUtils
 import ocs.framework.dsl.epic.internal.event.MockEventService
 import sequencer.macros.StrandEc
 
+import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
@@ -42,6 +44,14 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
     if (condition) {
       body
       refresh("when")
+    }
+  }
+
+  def when(delay: FiniteDuration)(body: => Unit): Unit = {
+    FutureUtils.timeout(delay, strandEc.executorService).onComplete { _ =>
+      when() {
+        body
+      }
     }
   }
 
