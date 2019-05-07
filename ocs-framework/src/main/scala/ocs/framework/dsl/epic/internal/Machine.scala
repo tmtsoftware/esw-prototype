@@ -19,7 +19,7 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
 
   implicit lazy val strandEc: StrandEc             = StrandEc.create()
   implicit lazy val ec: ExecutionContext           = strandEc.ec
-  implicit lazy val mat: Materializer              = cswSystem.materializer
+  implicit lazy val mat: Materializer              = cswSystem.createMaterializer()
   implicit lazy val eventService: MockEventService = cswSystem.mockEventService
   implicit lazy val mach: Machine[State]           = this
 

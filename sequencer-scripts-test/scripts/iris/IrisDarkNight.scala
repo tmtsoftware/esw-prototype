@@ -9,6 +9,7 @@ class IrisDarkNight(csw: CswServices) extends Script(csw) {
   private val publisherStream = csw.publish(10.seconds) {
     Option(SystemEvent(Prefix("iris-test"), EventName("system")))
   }
+
   private val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { eventKey =>
     println(s"------------------> received-event for iris on key: $eventKey")
     Done
@@ -49,6 +50,8 @@ class IrisDarkNight(csw: CswServices) extends Script(csw) {
   }
 
   override def onShutdown(): Future[Done] = spawn {
+    publisherStream.cancel()
+    subscriptionStream.unsubscribe().await
     println("shutdown iris")
     Done
   }

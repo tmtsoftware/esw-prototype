@@ -2,6 +2,7 @@ package ocs.framework
 
 import akka.Done
 import akka.actor.typed.ActorRef
+import akka.stream.Materializer
 import csw.command.client.messages.CommandResponseManagerMessage
 import csw.command.client.{CRMCacheProperties, CommandResponseManager, CommandResponseManagerActor}
 import csw.event.api.scaladsl.EventService
@@ -29,6 +30,8 @@ import scala.concurrent.duration.DurationLong
 class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
 
   import cswSystem._
+
+  lazy implicit val mat: Materializer = createMaterializer()
 
   lazy val crmRef: ActorRef[CommandResponseManagerMessage] =
     cswSystem.userActorOf(CommandResponseManagerActor.behavior(CRMCacheProperties(), loggerFactory), "crm")
