@@ -1,6 +1,5 @@
 package ocs.framework.dsl.epic.internal
 
-import akka.Done
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
 import ocs.framework.dsl.epic.internal.event.EpicsEvent
@@ -43,7 +42,7 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
     are delayed until the previous operation completes.
    */
   def pvPut(): Unit = {
-    eventService.publish(key, EpicsEvent(key, Map(field -> get)))
+    eventService.publish(EpicsEvent(key, Map(field -> get)))
   }
 
   /*
@@ -55,16 +54,7 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
     Like for pvPut, only one pending pvGet per channel and state set can be active.
    */
   def pvGet(): Unit = {
-    eventService.get(key).foreach { event =>
-      val value = event.params
-        .getOrElse(
-          field,
-          throw new RuntimeException(s"missing field=$field in event=$event")
-        )
-        .asInstanceOf[T]
-      set(value)
-      mc.refresh("pvGet")
-    }
+    eventService.get(key).foreach(event => setValue(event, "pvGet"))
   }
 
   def pvMonitor(): KillSwitch = {
@@ -72,12 +62,17 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
       .subscribe(key)
       .mapAsync(1) { event =>
         Future.unit.flatMap { _ =>
-          set(event.params.asInstanceOf[T])
-          mc.refresh("monitor")
+          setValue(event, "monitor")
         }
       }
       .to(Sink.ignore)
       .run()
+  }
+
+  private def setValue(event: EpicsEvent, source: String) = {
+    val value = event.params.getOrElse(field, init).asInstanceOf[T]
+    set(value)
+    mc.refresh("monitor")
   }
 
   /*

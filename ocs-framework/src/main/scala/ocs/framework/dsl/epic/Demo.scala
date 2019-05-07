@@ -5,9 +5,9 @@ import ocs.framework.CswSystem
 object Demo {
 
   def main(args: Array[String]): Unit = {
-    val cswSystem       = new CswSystem("demo")
-    val externalService = new ExternalService(cswSystem)
-    new TempSS(cswSystem, externalService).refresh("init")
+    val cswSystem = new CswSystem("demo")
+    new TempSS(cswSystem).refresh("init")
+    new RemoteRepl(cswSystem).server().start()
   }
 
 }

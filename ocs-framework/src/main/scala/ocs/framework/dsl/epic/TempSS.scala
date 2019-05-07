@@ -3,13 +3,12 @@ package ocs.framework.dsl.epic
 import TempSS._
 import ocs.framework.CswSystem
 import ocs.framework.dsl.epic.internal._
-import ocs.framework.dsl.epic.internal.event.EpicsEvent
 
-class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Machine[State](Init, cswSystem) {
+class TempSS(cswSystem: CswSystem) extends Machine[State](Init, cswSystem) {
 
-  val temp: ProcessVar[Double] = Var.assign(0, "temperature updates", "temp")
+  val temp: ProcessVar[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
 
-  def logic: Logic = putGet
+  def logic: Logic = putMonitor
 
   def putMonitor: Logic = {
     case Init =>
@@ -21,9 +20,9 @@ class TempSS(cswSystem: CswSystem, externalService: ExternalService) extends Mac
       }
     case Ok =>
       entry {
-        temp := 45
-        temp.pvPut()
-        temp := 35
+//        temp := 45
+//        temp.pvPut()
+//        temp := 35
       }
       when(temp > 40) {
         temp := 25

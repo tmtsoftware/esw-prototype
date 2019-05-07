@@ -29,10 +29,10 @@ class MockEventService {
     map.getOrElse(key, EpicsEvent.empty(key))
   }
 
-  def publish(key: String, value: EpicsEvent): Future[Done] =
+  def publish(value: EpicsEvent): Future[Done] =
     FutureUtils.delay(2.seconds, strandEc.executorService).flatMap { _ =>
-      map = map + (key -> value)
-      Future.traverse(subscriptions.getOrElse(key, List.empty))(_.offer(value)).map(_ => Done)
+      map = map + (value.key -> value)
+      Future.traverse(subscriptions.getOrElse(value.key, List.empty))(_.offer(value)).map(_ => Done)
     }
 
   def subscribe(key: String): Source[EpicsEvent, KillSwitch] = {

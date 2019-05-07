@@ -6,8 +6,7 @@ import ocs.framework.CswSystem
 import ocs.framework.dsl.epic.internal.event.MockEventService
 import sequencer.macros.StrandEc
 
-import scala.concurrent.duration.{DurationLong, FiniteDuration}
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 abstract class Machine[State](init: State, cswSystem: CswSystem) {
