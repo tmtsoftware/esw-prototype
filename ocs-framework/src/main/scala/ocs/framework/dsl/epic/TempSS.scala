@@ -8,7 +8,7 @@ import scala.concurrent.duration.DurationLong
 
 class TempSS(cswSystem: CswSystem) extends Machine[State](Init, cswSystem) {
 
-  val temp: ProcessVar[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
+  val temp: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
 
   def logic: Logic = putMonitor
 

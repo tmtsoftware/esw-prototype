@@ -6,7 +6,7 @@ import ocs.framework.dsl.epic.internal.event.EpicsEvent
 
 import scala.concurrent.Future
 
-class Var[T](init: T) {
+class Var[T](init: T, key: String, field: String)(implicit mc: Machine[_]) {
   @volatile
   private var _value = init
   def set(x: T): Unit = {
@@ -15,11 +15,6 @@ class Var[T](init: T) {
 
   def :=(x: T): Unit = set(x)
   def get: T         = _value
-
-  override def toString: String = _value.toString
-}
-
-class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]) extends Var[T](init) {
 
   import mc.{ec, eventService, mat}
 
@@ -48,11 +43,11 @@ class ProcessVar[T](init: T, key: String, field: String)(implicit mc: Machine[_]
     set(value)
     mc.refresh("monitor")
   }
+
+  override def toString: String = _value.toString
 }
 
 object Var {
-  def apply[T](init: T): Var[T] = new Var(init)
-  def assign[T](init: T, key: String, field: String)(
-      implicit machine: Machine[_]
-  ): ProcessVar[T] = new ProcessVar[T](init, key, field)
+  def assign[T](init: T, eventKey: String, processVar: String)(implicit machine: Machine[_]): Var[T] =
+    new Var[T](init, eventKey, processVar)
 }
