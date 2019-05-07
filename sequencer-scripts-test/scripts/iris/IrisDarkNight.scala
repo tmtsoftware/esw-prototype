@@ -6,6 +6,14 @@ class IrisDarkNight(csw: CswServices) extends Script(csw) {
 
   var flag = true
 
+  private val publisherStream = csw.publish(10.seconds) {
+    Option(SystemEvent(Prefix("iris-test"), EventName("system")))
+  }
+  private val subscriptionStream = csw.subscribe(Set(EventKey("iris-test.system"))) { eventKey =>
+    println(s"------------------> received-event for iris on key: $eventKey")
+    Done
+  }
+
   handleSetupCommand("setup-iris") { command =>
     spawn {
       println(s"[Iris] Received command: ${command.commandName}")

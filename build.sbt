@@ -169,6 +169,7 @@ lazy val `sequencer-scripts-test` = project
       Libs.`mockito-core`,
       SharedLibs.`scalaTest`.value % Test
     ),
+    mainClass in reStart := Some("TestSequencerApp"),
     unmanagedSourceDirectories in Compile += (baseDirectory in Compile) (_ / "scripts").value,
     unmanagedSourceDirectories in Test += (baseDirectory in Test) (_ / "tests").value,
     unmanagedResourceDirectories in Compile += (baseDirectory in Compile) (_ / "configs").value,
