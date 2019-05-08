@@ -41,7 +41,7 @@ class Var[T](init: T, key: String, field: String)(implicit mc: Machine[_]) {
   private def setValue(event: MockEvent, source: String) = {
     val value = event.params.getOrElse(field, init).asInstanceOf[T]
     set(value)
-    mc.refresh("monitor")
+    mc.refresh(source)
   }
 
   override def toString: String = _value.toString
