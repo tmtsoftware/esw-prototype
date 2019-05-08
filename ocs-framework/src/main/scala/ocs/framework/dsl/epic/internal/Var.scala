@@ -2,7 +2,7 @@ package ocs.framework.dsl.epic.internal
 
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
-import ocs.framework.dsl.epic.internal.event.EpicsEvent
+import ocs.framework.dsl.epic.internal.event.MockEvent
 
 import scala.concurrent.Future
 
@@ -19,7 +19,7 @@ class Var[T](init: T, key: String, field: String)(implicit mc: Machine[_]) {
   import mc.{ec, eventService, mat}
 
   def pvPut(): Unit = {
-    eventService.publish(EpicsEvent(key, Map(field -> get)))
+    eventService.publish(MockEvent(key, Map(field -> get)))
   }
 
   def pvGet(): Unit = {
@@ -38,7 +38,7 @@ class Var[T](init: T, key: String, field: String)(implicit mc: Machine[_]) {
       .run()
   }
 
-  private def setValue(event: EpicsEvent, source: String) = {
+  private def setValue(event: MockEvent, source: String) = {
     val value = event.params.getOrElse(field, init).asInstanceOf[T]
     set(value)
     mc.refresh("monitor")

@@ -18,13 +18,14 @@ class RemoteRepl(
     predef = """
          |import scala.concurrent.duration.Duration
          |import scala.concurrent.{Await, Future}
-         |import ocs.framework.dsl.epic.internal.event.EpicsEvent
+         |import ocs.framework.dsl.epic.internal.event.MockEvent
          |implicit class RichFuture[T](val f: Future[T]) {
          |  def get: T = Await.result(f, Duration.Inf)
          |}
       """.stripMargin,
     replArgs = Seq(
       "csw" -> cswSystem,
+      "es" -> cswSystem.mockEventService,
     )
   )
 }
