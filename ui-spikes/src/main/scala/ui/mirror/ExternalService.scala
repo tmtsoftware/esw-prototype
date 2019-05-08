@@ -12,7 +12,7 @@ class ExternalService(store: Store) {
     val eventStream: EventStream[JsObject] = gateway.stream[JsObject]("/v2/stream/recentchange")
     eventStream.onNext = { jsObject =>
       val _position = parse(jsObject)
-//      println(_position)
+      _position.foreach(println)
       _position.foreach(store.faultPositions.set)
     }
   }
