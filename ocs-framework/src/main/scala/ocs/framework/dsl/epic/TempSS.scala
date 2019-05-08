@@ -1,62 +1,67 @@
 package ocs.framework.dsl.epic
 
-import TempSS._
 import ocs.framework.CswSystem
+import ocs.framework.dsl.epic.TempSS._
 import ocs.framework.dsl.epic.internal._
 
 import scala.concurrent.duration.DurationLong
 
-class TempSS(cswSystem: CswSystem) extends Machine[State](Init, cswSystem) {
 
-  val temp: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
+class TempProgram(cswSystem: CswSystem) extends Program(cswSystem) {
+  val temp2: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
 
-  def logic: Logic = putMonitor
+  var x = 0
 
-  def putMonitor: Logic = {
-    case Init =>
-      entry {
-        temp.pvMonitor()
-      }
+  setup(new Machine[State]("temp-monitor", Init) {
 
-      when(delay = 1.seconds) {
-        become(Ok)
-      }
-    case Ok =>
-      entry {
-//        temp := 45
-//        temp.pvPut()
-//        temp := 35
-      }
-      when(temp > 40) {
-        temp := 25
-        become(High)
-      }
-    case High =>
-      when(temp < 30) {
-        become(Ok)
-      }
-  }
+    val temp: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp1")
 
-  def putGet: Logic = {
-    case Init =>
-      when() {
-        temp := 45
-        temp.pvPut()
-        become(Ok)
-      }
-    case Ok =>
-      when(temp > 40) {
-        temp := 25
-        become(High)
-      }
-    case High =>
-      when(temp < 30) {
-        temp.pvGet()
-        become(Ok)
-      }
-  }
+    def logic: Logic = {
+      case Init =>
+        entry {
+          temp.pvMonitor()
+        }
+        when(delay = 1.seconds) {
+          become(Ok)
+        }
+      case Ok =>
+        when(temp > 40) {
+          temp := 25
+          become(High)
+        }
+      case High =>
+        when(temp < 30) {
+          become(Ok)
+        }
+    }
 
-  override def debugString: String = s"temp = $temp"
+    override def debugString: String = s"temp1 = $temp"
+  })
+
+  setup(new Machine[State]("", Init) {
+    val temp: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp2")
+
+    override def logic: Logic = {
+      case Init =>
+        when() {
+          temp := 45
+          temp.pvPut()
+          become(Ok)
+        }
+      case Ok =>
+        when(temp > 40) {
+          temp := 25
+          become(High)
+        }
+      case High =>
+        when(temp < 30) {
+          temp.pvGet()
+          become(Ok)
+        }
+    }
+
+    override def debugString: String = s"temp2 = $temp"
+  })
 }
 
 object TempSS {
