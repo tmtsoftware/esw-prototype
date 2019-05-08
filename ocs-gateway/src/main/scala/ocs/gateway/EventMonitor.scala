@@ -7,6 +7,7 @@ import csw.params.events.{Event, EventKey, EventName}
 import scala.concurrent.duration._
 
 class EventMonitor(eventService: EventService) {
+
   /**
    * Subscribes to events based on the given arguments.
    *
@@ -22,13 +23,10 @@ class EventMonitor(eventService: EventService) {
     val subscriber = eventService.defaultSubscriber
     (component, event) match {
       case (Some(componentVal), Some(eventVal)) =>
+        val eventKey = EventKey(Prefix(s"${subsystem.toLowerCase}.$componentVal"), EventName(eventVal))
         rateLimit match {
-          case None =>
-            subscriber.subscribe(Set(EventKey(Prefix(s"$subsystem.$componentVal"), EventName(eventVal))))
-          case Some(duration) =>
-            subscriber.subscribe(Set(EventKey(Prefix(s"$subsystem.$componentVal"), EventName(eventVal))),
-              duration.millis,
-              SubscriptionModes.RateLimiterMode)
+          case None           => subscriber.subscribe(Set(eventKey))
+          case Some(duration) => subscriber.subscribe(Set(eventKey), duration.millis, SubscriptionModes.RateLimiterMode)
         }
       case (Some(componentVal), None) =>
         subscriber.pSubscribe(Subsystem.withName(subsystem), s"$componentVal*")
