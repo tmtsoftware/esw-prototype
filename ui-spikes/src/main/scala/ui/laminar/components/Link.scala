@@ -11,7 +11,7 @@ object Link {
     println(s"**** rendering Link filter=$filter")
 
     button(
-      onClick.mapTo(filter) --> VisibilityFilterStore.update,
+      onClick.mapTo(filter) --> VisibilityFilterStore.Reducer,
       disabled <-- VisibilityFilterStore.isSameAs(filter),
       marginLeft := "4px",
       childNodes

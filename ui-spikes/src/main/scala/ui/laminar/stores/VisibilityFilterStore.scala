@@ -8,7 +8,7 @@ object VisibilityFilterStore {
 
   val value: Var[VisibilityFilter] = Var(VisibilityFilter.All)
 
-  val update: Observer[VisibilityFilter]     = value.writer
+  val Reducer: Observer[VisibilityFilter]    = value.writer
   val signal: StrictSignal[VisibilityFilter] = value.signal
 
   def isSameAs(filter: VisibilityFilter): Signal[Boolean] = signal.map(_ == filter)
