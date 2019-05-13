@@ -2,6 +2,7 @@ package ui
 
 import org.scalajs.dom
 import ui.animations.Rays
+import ui.config.components.MuiApp
 import ui.todo.components.ReactApp
 import ui.laminar.components.LaminarApp
 import ui.mirror.Boot
@@ -13,7 +14,9 @@ object Main {
 //    dom.window.onload = Boot.start(PaperBackend)
 //    dom.window.onload = Boot.start(SvgBackend)
 //    ReactApp.render()
-    LaminarApp.renderApp()
+//    LaminarApp.renderApp()
+     MuiApp.render()
+//    LaminarApp.renderApp()
 //    new Rays().animate()
   }
 
