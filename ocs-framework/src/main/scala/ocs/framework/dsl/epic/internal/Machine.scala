@@ -13,7 +13,7 @@ abstract class Machine[State](name: String, init: State)(implicit programContext
 
   def logic: Logic
 
-  private var currentState: State  = _
+  private var currentState: State  = init
   private var previousState: State = _
 
   import programContext._
