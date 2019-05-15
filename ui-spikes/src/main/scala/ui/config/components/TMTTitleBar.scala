@@ -11,6 +11,7 @@ import typings.reactLib.reactMod.{FC, HTMLAttributes}
 import ui.todo.lib.JsUnit
 
 object TMTTitleBar {
+
   private val flex = new reactMod.CSSProperties {
     flexGrow = 1
   }
@@ -32,6 +33,7 @@ object TMTTitleBar {
             ),
             "TMT CSW Configurations"
           ),
+          UserInfo.Component.noprops(),
           AuthButton.Component.noprops()
         )
       )

@@ -1,13 +1,26 @@
 package ui.config.context
 
-import typings.reactLib.reactMod
-import typings.reactLib.reactMod.{Provider, ^ ⇒ React}
-import ui.config.models.{ConfigState, UiState}
+import enumeratum.{Enum, EnumEntry}
+import typings.reactLib.reactMod.FC
+import ui.config.models.Item
+import ui.todo.lib.{ComponentUtils, GenericContext, JsUnit}
+
+import scala.collection.immutable
 
 object contexts {
-  val ConfigsContext: reactMod.Context[ConfigState] = React.createContext(ConfigState())
-  val ConfigProvider: Provider[ConfigState]         = ConfigsContext.Provider
 
-  val UiContext: reactMod.Context[UiState] = React.createContext(UiState())
-  val UiProvider: Provider[UiState]        = UiContext.Provider
+  sealed trait Context extends EnumEntry {
+    def Provider: FC[JsUnit]
+  }
+
+  object Context extends Enum[Context] {
+    object ConfigStore extends GenericContext(Seq.empty[Item]) with Context
+    object ModalOpenStore   extends GenericContext(false) with Context
+    object ErrorStore       extends GenericContext(false) with Context
+
+    override def values: immutable.IndexedSeq[Context] = findValues
+
+    val Provider: FC[JsUnit] = ComponentUtils.compose(Context.values.map(_.Provider))
+  }
+
 }
