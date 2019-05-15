@@ -1,29 +1,24 @@
 package ocs.framework.dsl.epic.internal
 
 import akka.Done
-import akka.stream.Materializer
-import ocs.framework.CswSystem
 import ocs.framework.dsl.FutureUtils
-import ocs.framework.dsl.epic.internal.event.MockEventService
-import sequencer.macros.StrandEc
+import ocs.framework.dsl.epic.{ProgramContext, Refreshable}
 
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
-abstract class Machine[State](init: State, cswSystem: CswSystem) {
+abstract class Machine[State](name: String, init: State)(implicit programContext: ProgramContext) extends Refreshable {
   type Logic = State => Unit
 
   def logic: Logic
 
-  private var currentState: State  = init
+  private var currentState: State  = _
   private var previousState: State = _
 
-  implicit lazy val strandEc: StrandEc             = StrandEc.create()
-  implicit lazy val ec: ExecutionContext           = strandEc.ec
-  implicit lazy val mat: Materializer              = cswSystem.createMaterializer()
-  implicit lazy val eventService: MockEventService = cswSystem.mockEventService
-  implicit lazy val mach: Machine[State]           = this
+  import programContext._
+
+  implicit lazy val Refreshable: Refreshable = this
 
   protected def become(state: State): Unit = {
     currentState = state
@@ -32,7 +27,7 @@ abstract class Machine[State](init: State, cswSystem: CswSystem) {
   def refresh(source: String): Future[Done] = {
     Future {
       println(
-        f"previousState = $previousState%-8s     currentState = $currentState%-8s    action = $source%-8s     $debugString%8s"
+        f"machine = $name%-8s    previousState = $previousState%-8s     currentState = $currentState%-8s    action = $source%-8s     $debugString%8s"
       )
       logic(currentState)
       Done
