@@ -6,7 +6,7 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
     val cswSystem = new CswSystem("demo")
-    new TempProgram(cswSystem).refresh("init")
+    new TemperatureProgram(cswSystem).refresh("init")
     new RemoteRepl(cswSystem).server().start()
   }
 

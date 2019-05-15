@@ -1,13 +1,12 @@
 package ocs.framework.dsl.epic
 
 import ocs.framework.CswSystem
-import ocs.framework.dsl.epic.TempSS._
+import ocs.framework.dsl.epic.TemperatureProgram._
 import ocs.framework.dsl.epic.internal._
 
 import scala.concurrent.duration.DurationLong
 
-
-class TempProgram(cswSystem: CswSystem) extends Program(cswSystem) {
+class TemperatureProgram(cswSystem: CswSystem) extends Program(cswSystem) {
   val temp2: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp")
 
   var x = 0
@@ -64,7 +63,7 @@ class TempProgram(cswSystem: CswSystem) extends Program(cswSystem) {
   })
 }
 
-object TempSS {
+object TemperatureProgram {
   sealed trait State
 
   case object Init extends State
