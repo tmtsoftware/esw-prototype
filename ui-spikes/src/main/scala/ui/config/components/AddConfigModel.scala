@@ -12,7 +12,7 @@ import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, ^ ⇒ AAS}
 import typings.reactLib.reactMod.{FC, ^ ⇒ React}
 import typings.stdLib
 import ui.config.ConfigClient
-import ui.config.context.contexts.Context.{ConfigStore, ErrorStore, ModalOpenStore}
+import ui.config.context.contexts.Context.{ConfigStore, ModalOpenStore}
 import ui.config.models.Item
 import ui.todo.lib.{GenericState, JsUnit}
 
@@ -26,7 +26,6 @@ object AddConfigModel {
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     println(s"**** rendering AddButton")
     val (modalOpen, setModalOpen) = ModalOpenStore.use()
-    val (error, setError)         = ErrorStore.use()
     val ctx                       = React.useContext(AAS.AuthContext)
     val (items, setItems)         = ConfigStore.use()
     val (path, setPath)           = GenericState.use("")
@@ -48,7 +47,7 @@ object AddConfigModel {
       clearDataAndClose()
     }
 
-    val dd = js.Dynamic
+    val dialogProps = js.Dynamic
       .literal(
         fullWidth = true,
         open = modalOpen,
@@ -72,7 +71,7 @@ object AddConfigModel {
     configTxtProps.variant = outlined
 
     Dialog.props(
-      dd,
+      dialogProps,
       DialogTitle.props(
         DialogTitleProps(id = "orm-dialog-title"),
         "Add new configuration"

@@ -25,14 +25,14 @@ object AppSnackbar {
           vertical = bottom
         ),
         message = span.props(HTMLAttributes(id = "message-id"), error.toString),
-        action = Mui.IconButton.props(
-          {
-            val i = IconButtonProps(action = null)
-            i.color = inherit
-            i
-          }
-        )
+        action = Mui.IconButton.props(iconProps)
       )
     )
+  }
+
+  private def iconProps = {
+    val i = IconButtonProps(action = null)
+    i.color = inherit
+    i
   }
 }

@@ -3,11 +3,11 @@ package ui.config.components
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings.{contained, default}
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreMod.{^ ⇒ Mui}
-import typings.atMaterialDashUiCoreLib.buttonButtonMod.ButtonProps
 import typings.atMaterialDashUiCoreLib.circularProgressCircularProgressMod.CircularProgressProps
 import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, IAuthContext, ^ ⇒ AAS}
 import typings.reactLib.reactMod
 import typings.reactLib.reactMod._
+import ui.config.components.PropsFactory.buttonProps
 import ui.todo.lib.JsUnit
 
 import scala.scalajs.js
@@ -21,10 +21,10 @@ object AuthButton {
   }
 
   private def authButton(ctx: IAuthContext, _onClick: IAuthContext ⇒ Unit, text: String) = define.fc[JsUnit] { _ =>
-    val buttonProps = ButtonProps(action = null, color = default, onClick = _ ⇒ _onClick(ctx))
-    buttonProps.variant = contained
-    buttonProps.style = buttonCss
-    Mui.Button.props(buttonProps, text)
+    Mui.Button.props(
+      buttonProps(_color = default, _onClick = _ ⇒ _onClick(ctx), _variant = contained, _style = buttonCss),
+      text
+    )
   }
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
