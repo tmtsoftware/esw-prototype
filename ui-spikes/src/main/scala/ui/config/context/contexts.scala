@@ -16,7 +16,7 @@ object contexts {
   object Context extends Enum[Context] {
     object ConfigStore extends GenericContext(Seq.empty[Item]) with Context
     object ModalOpenStore   extends GenericContext(false) with Context
-    object ErrorStore       extends GenericContext(false) with Context
+    object ErrorStore       extends GenericContext("") with Context
 
     override def values: immutable.IndexedSeq[Context] = findValues
 

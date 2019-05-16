@@ -186,7 +186,7 @@ lazy val `ui-spikes` = project
       "paper" -> "v0.11.8",
       "react" -> "16.8",
       "react-dom" -> "16.8",
-      "csw-aas-js" -> "0.1.0-test-typings",
+      "csw-aas-js" -> "0.4.4",
       "@material-ui/core" -> "3.9.3",
       "@material-ui/icons" -> "3.0.2",
     ),

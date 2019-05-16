@@ -25,6 +25,7 @@ object MuiApp {
   }
 
   private val App = define.fc[JsUnit] { _ =>
+    println(s"**** rendering MuiApp")
     AuthProvider.noprops(
       contexts.Context.Provider.noprops(
           ConfigApp.Component.noprops()

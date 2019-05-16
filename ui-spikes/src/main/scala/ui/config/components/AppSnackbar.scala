@@ -16,20 +16,21 @@ object AppSnackbar {
     val (modalOpen, setModalOpen) = ModalOpenStore.use()
     val (error, setError)         = ErrorStore.use()
 
-
     Mui.Snackbar.props(
       SnackbarProps(
-        open = error,
-        onClose = (_, _) ⇒ setError(false),
+        open = error.isEmpty,
+        onClose = (_, _) ⇒ setError(" "),
         anchorOrigin = SnackbarOrigin(
           horizontal = left,
           vertical = bottom
         ),
         message = span.props(HTMLAttributes(id = "message-id"), error.toString),
         action = Mui.IconButton.props(
-          IconButtonProps(
-            color = inherit
-          )
+          {
+            val i = IconButtonProps(action = null)
+            i.color = inherit
+            i
+          }
         )
       )
     )

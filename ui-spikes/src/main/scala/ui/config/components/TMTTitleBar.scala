@@ -16,21 +16,28 @@ object TMTTitleBar {
     flexGrow = 1
   }
 
+  private val typographyProps = {
+    val props = TypographyProps(
+      className = "grow",
+      color = inherit
+    )
+    props.style = flex
+    props.variant = atMaterialDashUiCoreLibStrings.h6
+    props
+  }
+
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     println(s"**** rendering TMTTitleBar")
 
     import typings.reactLib.dsl._
+
     div.props(
       HTMLAttributes(style = flex),
       Mui.AppBar.props(
         AppBarProps(position = static),
         Mui.Toolbar.noprops(
           Mui.Typography.props(
-            TypographyProps(
-              style = flex,
-              variant = atMaterialDashUiCoreLibStrings.h6,
-              color = inherit
-            ),
+            typographyProps,
             "TMT CSW Configurations"
           ),
           UserInfo.Component.noprops(),

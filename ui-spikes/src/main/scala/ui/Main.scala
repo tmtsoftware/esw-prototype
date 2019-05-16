@@ -8,9 +8,12 @@ import ui.laminar.components.LaminarApp
 import ui.mirror.Boot
 import ui.mirror.svg.SvgBackend
 
+import scala.scalajs.js
+
 object Main {
 
   def main(arguments: Array[String]): Unit = {
+
 //    dom.window.onload = Boot.start(PaperBackend)
 //    dom.window.onload = Boot.start(SvgBackend)
 //    ReactApp.render()

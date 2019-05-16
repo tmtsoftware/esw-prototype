@@ -1,26 +1,29 @@
 package ui.config.components
 
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibComponents._
+import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings._
 import typings.atMaterialDashUiCoreLib.cardCardMod.CardProps
-import typings.atMaterialDashUiCoreLib.{atMaterialDashUiCoreLibStrings, typographyTypographyMod}
 import typings.atMaterialDashUiIconsLib.atMaterialDashUiIconsMod.{^ ⇒ Icons}
 import typings.cswDashAasDashJsLib.cswDashAasDashJsLibComponents.ClientRoleProps
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{AuthContext, ^ ⇒ AAS}
-import typings.reactLib.dsl.{div, _}
-import typings.reactLib.reactMod
+import typings.cswDashAasDashJsLib.cswDashAasDashJsMod
+import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, ^ ⇒ AAS}
 import typings.reactLib.reactMod._
 import ui.config.ConfigClient
+import ui.config.context.contexts.Context.ConfigStore
 import ui.config.models.Item
 
 import scala.scalajs.js
 
 object ConfigPreview {
 
-  private val cardStyle = new reactMod.CSSProperties {
+  import PropsFactory._
+  import typings.reactLib.dsl._
+
+  private val cardStyle = new CSSProperties {
     minWidth = 275
   }
-  private val ts = new CSSProperties {
+  private val typographyStyle = new CSSProperties {
     marginBottom = 12
   }
 
@@ -30,57 +33,33 @@ object ConfigPreview {
   }
 
   val Component: FC[ConfigPreviewProps] = define.fc[ConfigPreviewProps] { props =>
+    println(s"**** rendering ConfigPreview")
     val item = props.item
+    val ctx = ^.useContext(cswDashAasDashJsMod.^.AuthContext)
 
-    def deleteComp(path: String): ReactElement[ConsumerProps[AuthContext]] = {
-      val props = ConsumerProps[AuthContext] { ctx ⇒
-        div.props(
-          HTMLAttributes(
-            onClick = _ ⇒ {
-              println("Deleting .... ")
-              ConfigClient.delete(path, ctx.auth.token.get())
-            }
-          ),
-          "Delete"
-        )
-      }
-
-      AAS.Consumer.props(props)
-    }
+    val (items, setItems) = ConfigStore.use()
 
     Card.props(
       CardProps(style = cardStyle),
       CardContent.noprops(
         Typography.props(
-          typographyTypographyMod.TypographyProps(
-            variant = atMaterialDashUiCoreLibStrings.h5
-          ),
+          typographyProps(_variant = atMaterialDashUiCoreLibStrings.h5),
           item.path
         ),
         Typography.props(
-          typographyTypographyMod.TypographyProps(
-            style = ts,
-            color = textSecondary
-          ),
+          typographyProps(_style = typographyStyle, _color = textSecondary),
           item.author
         )
       ),
       CardActions.noprops(
         Button.props(
-          ButtonProps(
-            color = primary,
-            size = atMaterialDashUiCoreLibStrings.small,
-            href = s"http://localhost:5000/config/${item.path}"
+          buttonProps(
+            _color = primary,
+            _href = s"http://localhost:5000/config/${item.path}",
+            _size = atMaterialDashUiCoreLibStrings.small,
           ),
           Icons.CloudDownloadRounded.noprops(),
-          div.props(
-            HTMLAttributes(
-              onClick = _ ⇒ {
-                println("Downloading ...")
-              }
-            ),
-            "Download"
-          )
+          "Download"
         ),
         AAS.ClientRole.props(
           ClientRoleProps(
@@ -89,11 +68,16 @@ object ConfigPreview {
             client = "csw-config-server"
           ),
           Button.props(
-            ButtonProps(
-              color = secondary
+            buttonProps(
+              _color = secondary,
+              _onClick = _ ⇒ {
+                val token = ctx.auth.merge[Auth].token.get().get
+                ConfigClient.delete(item.path, token)
+                setItems(items.filter(_ != item))
+              }
             ),
             Icons.Delete.noprops(),
-            deleteComp(item.path)
+            "Delete"
           )
         )
       )

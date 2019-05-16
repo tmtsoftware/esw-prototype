@@ -5,8 +5,7 @@ import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings.{contained
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreMod.{^ ⇒ Mui}
 import typings.atMaterialDashUiCoreLib.buttonButtonMod.ButtonProps
 import typings.atMaterialDashUiCoreLib.circularProgressCircularProgressMod.CircularProgressProps
-import typings.cswDashAasDashJsLib.cswDashAasDashJsLibComponents.Consumer
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.AuthContext
+import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, IAuthContext, ^ ⇒ AAS}
 import typings.reactLib.reactMod
 import typings.reactLib.reactMod._
 import ui.todo.lib.JsUnit
@@ -21,44 +20,31 @@ object AuthButton {
     marginRight = 20
   }
 
-  private def authButton(_onClick: AuthContext ⇒ Unit, text: String) = define.fc[JsUnit] { _ =>
-    val props = ConsumerProps[AuthContext] { ctx ⇒
-      div.props(
-        HTMLAttributes(onClick = _ => _onClick(ctx)),
-        Mui.Button.props(
-          ButtonProps(
-            style = buttonCss,
-            variant = contained,
-            color = default
-          ),
-          text
-        )
-      )
-    }
-
-    Consumer.props(props)
+  private def authButton(ctx: IAuthContext, _onClick: IAuthContext ⇒ Unit, text: String) = define.fc[JsUnit] { _ =>
+    val buttonProps = ButtonProps(action = null, color = default, onClick = _ ⇒ _onClick(ctx))
+    buttonProps.variant = contained
+    buttonProps.style = buttonCss
+    Mui.Button.props(buttonProps, text)
   }
-
-  private val LoginButton  = authButton(_.login(), "Login")
-  private val LogoutButton = authButton(_.logout(), "Logout")
 
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     println("**** Rendering AuthButton")
+    val ctx = ^.useContext(AAS.AuthContext)
 
-    val props = ConsumerProps[AuthContext] { ctx ⇒
-      val auth = ctx.auth
-      if (auth == null || js.isUndefined(auth))
-        Mui.CircularProgress.props(
-          CircularProgressProps(color = atMaterialDashUiCoreLibStrings.inherit)
-        )
-      else {
-        val isAuthenticated = auth.isAuthenticated.isDefined && auth.isAuthenticated.get()
-        if (isAuthenticated) LogoutButton.noprops()
-        else LoginButton.noprops()
+    val auth = ctx.auth
+    if (auth == null || js.isUndefined(auth))
+      Mui.CircularProgress.props(
+        CircularProgressProps(color = atMaterialDashUiCoreLibStrings.inherit)
+      )
+    else {
+      val isAuthenticated = {
+        val authenticated = auth.merge[Auth].isAuthenticated
+        authenticated.isDefined && authenticated.get().isDefined && authenticated.get().get
       }
+      if (isAuthenticated) authButton(ctx, _.logout(), "Logout").noprops()
+      else authButton(ctx, _.login(), "Login").noprops()
     }
 
-    Consumer.props(props)
   }
 
 }

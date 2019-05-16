@@ -10,4 +10,4 @@ addSbtPlugin("com.timushev.sbt"   % "sbt-updates"              % "0.4.0")
 
 addSbtCoursier
 resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped")
-addSbtPlugin("org.scalablytyped" % "sbt-scalablytyped" % "201905130530")
+addSbtPlugin("org.scalablytyped" % "sbt-scalablytyped" % "201905150530")
