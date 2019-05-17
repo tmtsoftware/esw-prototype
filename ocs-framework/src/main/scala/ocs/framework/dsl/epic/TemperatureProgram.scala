@@ -37,7 +37,7 @@ class TemperatureProgram(cswSystem: CswSystem) extends Program(cswSystem) {
     override def debugString: String = s"temp1 = $temp"
   })
 
-  setup(new Machine[State]("", Init) {
+  setup(new Machine[State]("temp-get", Init) {
     val temp: Var[Int] = Var.assign(0, "nfiraos.temp.updates", "temp2")
 
     override def logic: Logic = {

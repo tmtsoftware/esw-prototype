@@ -1,13 +1,15 @@
 package ocs.framework.dsl.epic.internal
 
+import akka.Done
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
 import ocs.framework.dsl.epic.internal.event.MockEvent
 import ocs.framework.dsl.epic.{ProgramContext, Refreshable}
 
 import scala.concurrent.Future
+import scala.reflect.ClassTag
 
-class Var[T](init: T, key: String, field: String)(implicit programContext: ProgramContext, refreshable: Refreshable) {
+class Var[T: ClassTag](init: T, key: String, field: String)(implicit programContext: ProgramContext, refreshable: Refreshable) {
   @volatile
   private var _value = init
   def set(x: T): Unit = {
@@ -20,16 +22,24 @@ class Var[T](init: T, key: String, field: String)(implicit programContext: Progr
   import programContext._
 
   def pvPut(): Unit = {
-    eventService.publish(MockEvent(key, Map(field -> get)))
+    eventService.publish(key, field, get)
   }
 
   def pvGet(): Unit = {
-    eventService.get(key).foreach(event => setValue(event, "pvGet"))
+    eventService.get(key).foreach { event =>
+      event.params.get(field).collect {
+        case value: T => setValue(value, "pvGet")
+      }
+    }
   }
 
   def pvMonitor(): KillSwitch = {
     eventService
       .subscribe(key)
+      .map(_.params.get(field))
+      .collect {
+        case Some(x: T) => x
+      }
       .mapAsync(1) { event =>
         Future.unit.flatMap { _ =>
           setValue(event, "monitor")
@@ -39,8 +49,7 @@ class Var[T](init: T, key: String, field: String)(implicit programContext: Progr
       .run()
   }
 
-  private def setValue(event: MockEvent, source: String) = {
-    val value = event.params.getOrElse(field, init).asInstanceOf[T]
+  private def setValue(value: T, source: String): Future[Done] = {
     set(value)
     refreshable.refresh(source)
   }
@@ -49,7 +58,7 @@ class Var[T](init: T, key: String, field: String)(implicit programContext: Progr
 }
 
 object Var {
-  def assign[T](init: T, eventKey: String, processVar: String)(
+  def assign[T: ClassTag](init: T, eventKey: String, processVar: String)(
       implicit programContext: ProgramContext,
       refreshable: Refreshable
   ): Var[T] = new Var[T](init, eventKey, processVar)
