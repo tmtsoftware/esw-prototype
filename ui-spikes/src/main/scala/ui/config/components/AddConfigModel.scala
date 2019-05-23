@@ -8,7 +8,8 @@ import typings.atMaterialDashUiCoreLib.dialogDialogMod.DialogProps
 import typings.atMaterialDashUiCoreLib.dialogTitleDialogTitleMod.DialogTitleProps
 import typings.atMaterialDashUiCoreLib.paperPaperMod.PaperProps
 import typings.atMaterialDashUiCoreLib.textFieldTextFieldMod.TextFieldProps
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, ^ ⇒ AAS}
+import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
+import typings.cswDashAasDashJsLib.{ cswDashAasDashJsMod ⇒ AAS }
 import typings.reactLib.reactMod.{FC, ^ ⇒ React}
 import typings.stdLib
 import ui.config.ConfigClient
@@ -37,10 +38,10 @@ object AddConfigModel {
     def clearDataAndClose(): Unit = { clearData(); closeAddModal() }
 
     def saveConfig(): Unit = async {
-      await(ConfigClient.addConfig(path, commitMsg, ctx.auth.merge[Auth].token.get().get, commitMsg))
+      await(ConfigClient.addConfig(path, commitMsg, ctx.auth.merge[Auth].token.get, commitMsg))
       val username =
         if (ctx.auth != null && !js.isUndefined(ctx.auth))
-          ctx.auth.merge[Auth].tokenParsed.get().asInstanceOf[js.Dynamic].preferred_username.asInstanceOf[String]
+          ctx.auth.merge[Auth].tokenParsed.get.asInstanceOf[js.Dynamic].preferred_username.asInstanceOf[String]
         else "unknown"
 
       setItems(items :+ Item(path, path, username, commitMsg))

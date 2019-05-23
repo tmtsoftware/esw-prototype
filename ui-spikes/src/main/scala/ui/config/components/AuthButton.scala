@@ -4,7 +4,9 @@ import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings.{contained, default}
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreMod.{^ ⇒ Mui}
 import typings.atMaterialDashUiCoreLib.circularProgressCircularProgressMod.CircularProgressProps
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, IAuthContext, ^ ⇒ AAS}
+import typings.cswDashAasDashJsLib.{ cswDashAasDashJsMod ⇒ AAS }
+import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
+import typings.cswDashAasDashJsLib.distComponentsContextAuthContextMod.AuthContextType
 import typings.reactLib.reactMod
 import typings.reactLib.reactMod._
 import ui.config.components.PropsFactory.buttonProps
@@ -20,7 +22,7 @@ object AuthButton {
     marginRight = 20
   }
 
-  private def authButton(ctx: IAuthContext, _onClick: IAuthContext ⇒ Unit, text: String) = define.fc[JsUnit] { _ =>
+  private def authButton(ctx: AuthContextType, _onClick: AuthContextType ⇒ Unit, text: String) = define.fc[JsUnit] { _ =>
     Mui.Button.props(
       buttonProps(_color = default, _onClick = _ ⇒ _onClick(ctx), _variant = contained, _style = buttonCss),
       text
@@ -39,7 +41,7 @@ object AuthButton {
     else {
       val isAuthenticated = {
         val authenticated = auth.merge[Auth].isAuthenticated
-        authenticated.isDefined && authenticated.get().isDefined && authenticated.get().get
+        authenticated.isDefined && authenticated.get
       }
       if (isAuthenticated) authButton(ctx, _.logout(), "Logout").noprops()
       else authButton(ctx, _.login(), "Login").noprops()

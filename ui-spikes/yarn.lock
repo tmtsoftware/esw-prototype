@@ -1913,12 +1913,12 @@ csstype@^2.0.0, csstype@^2.2.0, csstype@^2.5.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.4.tgz#d585a6062096e324e7187f80e04f92bd0f00e37f"
   integrity sha512-lAJUJP3M6HxFXbqtGRc0iZrdyeN+WzOWeY0q/VnFzI+kqVrYIzC7bWlKqCW7oCIdzoPkvfp82EVvrTlQ8zsWQg==
 
-csw-aas-js@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/csw-aas-js/-/csw-aas-js-0.4.4.tgz#f65578296f82550588861665be8044a49575d9ef"
-  integrity sha512-5QQql55C77iZ/DITfyguSUT9WL4rSwR2+nHDEiiSr40nb52n3BLbjcLV47dhLtsQg22kqlVMCVE6viGZq5IaWA==
+csw-aas-js@0.4.11:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/csw-aas-js/-/csw-aas-js-0.4.11.tgz#2ae32fe50ab4472700c54ee48e89d628026c7bff"
+  integrity sha512-PB0gU8DfcKfFSNol+ccGLrnGuBTOODmZ+14vVZ6tMom0Fm6ObFANPz+sg4WtBUf2+20MIZHZumTzFIvDoTavrQ==
   dependencies:
-    keycloak-js "5.0.0"
+    keycloak-js "6.0.1"
 
 cyclist@~0.2.2:
   version "0.2.2"
@@ -3776,10 +3776,10 @@ jss@^9.8.7:
     symbol-observable "^1.1.0"
     warning "^3.0.0"
 
-keycloak-js@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-5.0.0.tgz#ed7f640d7a1748135ae8ad1750f8925005d4895f"
-  integrity sha512-zJRgb9E1IV3GLXTMow2cpvRK1PEx9shVDx96uac7zO+uTG2ptLvrYxs1umemjGqDPmy5LJiaUgF30fc9MS3ykQ==
+keycloak-js@6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-6.0.1.tgz#329a5e77210dfc4a7d4acf96f95dd0132455bea3"
+  integrity sha512-p02dBCA9pSH1xvTmRIEMdeMz00eCGKmZF+rjMeqrkiQD4xhXkzu50J9sQjaANolMlLhazOtfql70+N5QWm8Upg==
 
 keyv@3.0.0:
   version "3.0.0"

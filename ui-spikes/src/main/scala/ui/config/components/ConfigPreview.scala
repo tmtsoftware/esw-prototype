@@ -6,8 +6,9 @@ import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings._
 import typings.atMaterialDashUiCoreLib.cardCardMod.CardProps
 import typings.atMaterialDashUiIconsLib.atMaterialDashUiIconsMod.{^ ⇒ Icons}
 import typings.cswDashAasDashJsLib.cswDashAasDashJsLibComponents.ClientRoleProps
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod
-import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.{Auth, ^ ⇒ AAS}
+import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.ClientRole
+import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
+import typings.cswDashAasDashJsLib.{ cswDashAasDashJsMod ⇒ AAS }
 import typings.reactLib.reactMod._
 import ui.config.ConfigClient
 import ui.config.context.contexts.Context.ConfigStore
@@ -35,7 +36,7 @@ object ConfigPreview {
   val Component: FC[ConfigPreviewProps] = define.fc[ConfigPreviewProps] { props =>
     println(s"**** rendering ConfigPreview")
     val item = props.item
-    val ctx = ^.useContext(cswDashAasDashJsMod.^.AuthContext)
+    val ctx  = ^.useContext(AAS.AuthContext)
 
     val (items, setItems) = ConfigStore.use()
 
@@ -61,23 +62,25 @@ object ConfigPreview {
           Icons.CloudDownloadRounded.noprops(),
           "Download"
         ),
-        AAS.ClientRole.props(
+        ClientRole(
           ClientRoleProps(
             clientRole = "admin",
             error = "",
-            client = "csw-config-server"
-          ),
-          Button.props(
-            buttonProps(
-              _color = secondary,
-              _onClick = _ ⇒ {
-                val token = ctx.auth.merge[Auth].token.get().get
-                ConfigClient.delete(item.path, token)
-                setItems(items.filter(_ != item))
-              }
-            ),
-            Icons.Delete.noprops(),
-            "Delete"
+            client = "csw-config-server",
+            children = js.Array(
+              Button.props(
+                buttonProps(
+                  _color = secondary,
+                  _onClick = _ ⇒ {
+                    val token = ctx.auth.merge[Auth].token.get
+                    ConfigClient.delete(item.path, token)
+                    setItems(items.filter(_ != item))
+                  }
+                ),
+                Icons.Delete.noprops(),
+                "Delete"
+              )
+            )
           )
         )
       )
