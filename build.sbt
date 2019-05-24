@@ -1,6 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-
 import sbt.Keys.{libraryDependencies, resolvers}
 import sbtcrossproject.CrossType
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
@@ -177,7 +174,7 @@ lazy val `sequencer-scripts-test` = project
 
 lazy val `ui-spikes` = project
   .dependsOn(`ocs-api-js`)
-  .configure(baseJsSettings, bundlerSettings, browserProject)
+  .configure(baseJsSettings, bundlerSettings)
   .settings(
     npmDependencies in Compile ++= Seq(
       "svg.js" -> "2.7.1",
@@ -207,25 +204,6 @@ lazy val `ui-spikes` = project
     )
   )
 
-lazy val start = TaskKey[Unit]("start")
-
-lazy val browserProject: Project => Project =
-  _.settings(
-    start := {
-      (Compile / fastOptJS / startWebpackDevServer).value
-      Files.copy(
-        (baseDirectory.value / "index.html").toPath,
-        ((Compile / fastOptJS / crossTarget).value / "index.html").toPath, 
-        REPLACE_EXISTING
-      )
-      Files.copy(
-        (baseDirectory.value / "index2.html").toPath,
-        ((Compile / fastOptJS / crossTarget).value / "index2.html").toPath, 
-        REPLACE_EXISTING
-      )
-    }
-  )
-
 lazy val baseJsSettings: Project => Project =
   _.enablePlugins(ScalaJSPlugin)
     .settings(
@@ -250,5 +228,6 @@ lazy val bundlerSettings: Project => Project =
       Compile / fullOptJS / webpackExtraArgs += "--mode=production",
       Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
       Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
-      useYarn := true
+      useYarn := true,
+      Compile / jsSourceDirectories += baseDirectory.value / "html" 
     )
