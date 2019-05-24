@@ -1,16 +1,16 @@
 package ui.config.components
 
+import typings.atMaterialDashUiCoreLib.PartialPaperProps
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibComponents.Dialog
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreLibStrings._
 import typings.atMaterialDashUiCoreLib.atMaterialDashUiCoreMod.^._
 import typings.atMaterialDashUiCoreLib.buttonButtonMod.ButtonProps
 import typings.atMaterialDashUiCoreLib.dialogDialogMod.DialogProps
 import typings.atMaterialDashUiCoreLib.dialogTitleDialogTitleMod.DialogTitleProps
-import typings.atMaterialDashUiCoreLib.paperPaperMod.PaperProps
 import typings.atMaterialDashUiCoreLib.textFieldTextFieldMod.TextFieldProps
 import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
-import typings.cswDashAasDashJsLib.{cswDashAasDashJsMod ⇒ AAS}
-import typings.reactLib.reactMod.{FC, ^ ⇒ React}
+import typings.cswDashAasDashJsLib.{cswDashAasDashJsMod => AAS}
+import typings.reactLib.reactMod.{FC, ^ => React}
 import typings.stdLib
 import ui.config.ConfigClient
 import ui.config.context.contexts.Context.{ConfigStore, ErrorStore, ModalOpenStore}
@@ -73,7 +73,7 @@ object AddConfigModel {
         fullWidth = true,
         open = modalOpen,
         onClose = _ ⇒ clearDataAndClose(),
-        PaperProps = PaperProps(`aria-labelledby` = "form-dialog-title").asInstanceOf[stdLib.Partial[PaperProps]]
+        PaperProps = PartialPaperProps(`aria-labelledby` = "form-dialog-title")
       ),
       DialogTitle.props(
         DialogTitleProps(id = "orm-dialog-title"),
