@@ -21,7 +21,7 @@ object PropsFactory {
       _style: js.UndefOr[CSSProperties] = js.undefined,
       _className: java.lang.String = null
   ): TypographyProps = {
-    val p = typographyTypographyMod.TypographyProps(color = _color)
+    val p = typographyTypographyMod.TypographyProps(className = _className, color = _color)
     p.variant = _variant
     p.style = _style
     p
@@ -43,6 +43,7 @@ object PropsFactory {
   }
 
   def gridProps(
+      _className: java.lang.String = null,
       _item: js.UndefOr[scala.Boolean] = js.undefined,
       _style: js.UndefOr[CSSProperties] = js.undefined,
       _spacing: js.UndefOr[GridSpacing] = js.undefined,
@@ -52,7 +53,8 @@ object PropsFactory {
     val grid = GridProps(
       container = _container,
       justify = _justify,
-      item = _item
+      item = _item,
+      className = _className
     )
     grid.style = _style
     grid.spacing = _spacing
@@ -66,7 +68,7 @@ object PropsFactory {
   ): FabProps = {
     val fab = FabProps(
       action = null,
-      className = "fab",
+      className = _className,
       color = primary
     )
     fab.style = _style

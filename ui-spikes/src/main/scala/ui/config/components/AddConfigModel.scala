@@ -9,7 +9,7 @@ import typings.atMaterialDashUiCoreLib.dialogTitleDialogTitleMod.DialogTitleProp
 import typings.atMaterialDashUiCoreLib.paperPaperMod.PaperProps
 import typings.atMaterialDashUiCoreLib.textFieldTextFieldMod.TextFieldProps
 import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
-import typings.cswDashAasDashJsLib.{ cswDashAasDashJsMod ⇒ AAS }
+import typings.cswDashAasDashJsLib.{cswDashAasDashJsMod ⇒ AAS}
 import typings.reactLib.reactMod.{FC, ^ ⇒ React}
 import typings.stdLib
 import ui.config.ConfigClient
@@ -40,22 +40,13 @@ object AddConfigModel {
     def saveConfig(): Unit = async {
       await(ConfigClient.addConfig(path, commitMsg, ctx.auth.merge[Auth].token.get, commitMsg))
       val username =
-        if (ctx.auth != null && !js.isUndefined(ctx.auth))
+        if (ctx.auth != null && ctx.auth.merge[Auth].tokenParsed.isDefined)
           ctx.auth.merge[Auth].tokenParsed.get.asInstanceOf[js.Dynamic].preferred_username.asInstanceOf[String]
         else "unknown"
 
       setItems(items :+ Item(path, path, username, commitMsg))
       clearDataAndClose()
     }
-
-    val dialogProps = js.Dynamic
-      .literal(
-        fullWidth = true,
-        open = modalOpen,
-        onClose = () ⇒ clearDataAndClose(),
-        PaperProps = PaperProps(`aria-labelledby` = "form-dialog-title").asInstanceOf[stdLib.Partial[PaperProps]]
-      )
-      .asInstanceOf[DialogProps]
 
     val configTxtProps = TextFieldProps(
       margin = dense,
@@ -72,7 +63,12 @@ object AddConfigModel {
     configTxtProps.variant = outlined
 
     Dialog.props(
-      dialogProps,
+      DialogProps(
+        fullWidth = true,
+        open = modalOpen,
+        onClose = _ ⇒ clearDataAndClose(),
+        PaperProps = PaperProps(`aria-labelledby` = "form-dialog-title").asInstanceOf[stdLib.Partial[PaperProps]]
+      ),
       DialogTitle.props(
         DialogTitleProps(id = "orm-dialog-title"),
         "Add new configuration"

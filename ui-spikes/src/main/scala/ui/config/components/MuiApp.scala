@@ -1,6 +1,6 @@
 package ui.config.components
 
-import typings.cswDashAasDashJsLib.{Anon_ClientId, cswDashAasDashJsLibComponents}
+import typings.cswDashAasDashJsLib.Anon_ClientId
 import typings.cswDashAasDashJsLib.cswDashAasDashJsLibComponents.{AuthContextProvider, AuthContextProviderProps}
 import typings.reactDashDomLib.reactDashDomMod.{^ ⇒ ReactDom}
 import typings.reactLib.dsl._
