@@ -231,7 +231,8 @@ lazy val baseJsSettings: Project => Project =
     .settings(
       scalaJSUseMainModuleInitializer := true,
       scalaJSModuleKind := ModuleKind.CommonJSModule,
-      /* disabled because it somehow triggers many warnings */
+      scalaJSLinkerConfig ~= { _.withESFeatures(_.withUseECMAScript2015(true)) },
+        /* disabled because it somehow triggers many warnings */
       emitSourceMaps := false,
       /* in preparation for scala.js 1.0 */
       scalacOptions += "-P:scalajs:sjsDefinedByDefault",
