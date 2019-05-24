@@ -30,6 +30,7 @@ object ConfigApp {
     div.noprops(
       TMTTitleBar.Component.noprops(),
       ConfigCollection.Component.noprops(),
+      AppSnackbar.Component.noprops(),
       AddButton.Component.noprops()
     )
 

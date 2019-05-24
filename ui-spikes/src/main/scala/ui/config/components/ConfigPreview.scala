@@ -11,15 +11,15 @@ import typings.cswDashAasDashJsLib.cswDashAasDashJsLibComponents.ClientRoleProps
 import typings.cswDashAasDashJsLib.cswDashAasDashJsMod.ClientRole
 import typings.cswDashAasDashJsLib.distComponentsAuthMod.Auth
 import typings.cswDashAasDashJsLib.{cswDashAasDashJsMod ⇒ AAS}
-import typings.reactLib.reactMod.{^ ⇒ React}
-import typings.reactLib.reactMod._
+import typings.reactLib.reactMod.{^ ⇒ React, _}
 import ui.config.ConfigClient
 import ui.config.components.utils.StyledFC
-import ui.config.context.contexts.Context.ConfigStore
+import ui.config.context.contexts.Context.{ConfigStore, ErrorStore}
 import ui.config.models.Item
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 object ConfigPreview {
 
@@ -65,6 +65,7 @@ object ConfigPreview {
     val ctx  = React.useContext(AAS.AuthContext)
 
     val (items, setItems) = ConfigStore.use()
+    val (_, setError)     = ErrorStore.use()
 
     Card.props(
       CardProps(props.classes.card),
@@ -99,8 +100,12 @@ object ConfigPreview {
                   _color = secondary,
                   _onClick = _ ⇒ {
                     val token = ctx.auth.merge[Auth].token.get
-                    ConfigClient.delete(item.path, token)
-                      .foreach(r ⇒ if(r.status == 200) setItems(items.filter(_ != item)))
+                    ConfigClient
+                      .delete(item.path, token)
+                      .onComplete {
+                        case _: Success[_] ⇒ setItems(items.filter(_ != item))
+                        case _: Failure[_] ⇒ setError("Failed to delete config file.")
+                      }
                   }
                 ),
                 Icons.Delete.noprops(),

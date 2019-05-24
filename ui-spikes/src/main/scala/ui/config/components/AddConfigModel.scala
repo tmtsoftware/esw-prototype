@@ -13,13 +13,13 @@ import typings.cswDashAasDashJsLib.{cswDashAasDashJsMod ⇒ AAS}
 import typings.reactLib.reactMod.{FC, ^ ⇒ React}
 import typings.stdLib
 import ui.config.ConfigClient
-import ui.config.context.contexts.Context.{ConfigStore, ModalOpenStore}
+import ui.config.context.contexts.Context.{ConfigStore, ErrorStore, ModalOpenStore}
 import ui.config.models.Item
 import ui.todo.lib.{GenericState, JsUnit}
 
-import scala.async.Async.{async, await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 object AddConfigModel {
   import typings.reactLib.dsl._
@@ -27,6 +27,8 @@ object AddConfigModel {
   val Component: FC[JsUnit] = define.fc[JsUnit] { _ =>
     println(s"**** rendering AddButton")
     val (modalOpen, setModalOpen) = ModalOpenStore.use()
+    val (_, setError)             = ErrorStore.use()
+
     val ctx                       = React.useContext(AAS.AuthContext)
     val (items, setItems)         = ConfigStore.use()
     val (path, setPath)           = GenericState.use("")
@@ -37,16 +39,20 @@ object AddConfigModel {
     def closeAddModal(): Unit     = setModalOpen(false)
     def clearDataAndClose(): Unit = { clearData(); closeAddModal() }
 
-    def saveConfig(): Unit = async {
-      await(ConfigClient.addConfig(path, commitMsg, ctx.auth.merge[Auth].token.get, commitMsg))
-      val username =
-        if (ctx.auth != null && ctx.auth.merge[Auth].tokenParsed.isDefined)
-          ctx.auth.merge[Auth].tokenParsed.get.asInstanceOf[js.Dynamic].preferred_username.asInstanceOf[String]
-        else "unknown"
+    def saveConfig(): Unit =
+      ConfigClient
+        .addConfig(path, commitMsg, ctx.auth.merge[Auth].token.get, commitMsg)
+        .onComplete {
+          case _: Success[_] ⇒
+            val username =
+              if (ctx.auth != null && ctx.auth.merge[Auth].tokenParsed.isDefined)
+                ctx.auth.merge[Auth].tokenParsed.get.asInstanceOf[js.Dynamic].preferred_username.asInstanceOf[String]
+              else "unknown"
 
-      setItems(items :+ Item(path, path, username, commitMsg))
-      clearDataAndClose()
-    }
+            setItems(items :+ Item(path, path, username, commitMsg))
+            clearDataAndClose()
+          case _: Failure[_] ⇒ clearDataAndClose(); setError("Failed to add config file.")
+        }
 
     val configTxtProps = TextFieldProps(
       margin = dense,
