@@ -27,7 +27,7 @@ import romaine.RomaineFactory
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationLong
 
-class Wiring(val sequencerId: String, val observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
+class SequencerWiring(val sequencerId: String, val observingMode: String, cswSystem: CswSystem, redisClient: RedisClient) {
 
   import cswSystem._
 

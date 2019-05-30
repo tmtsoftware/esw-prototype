@@ -7,7 +7,7 @@ import csw.location.api.models.AkkaLocation
 import io.lettuce.core.RedisClient
 import ocs.api.messages.SequenceComponentMsg
 import ocs.api.messages.SequenceComponentMsg._
-import ocs.framework.{CswSystem, Wiring}
+import ocs.framework.{CswSystem, SequencerWiring}
 
 object SequenceComponent {
 
@@ -15,7 +15,7 @@ object SequenceComponent {
 
     lazy val idle: Behavior[SequenceComponentMsg] = Behaviors.receiveMessage[SequenceComponentMsg] {
       case LoadScript(sequencerId, observingMode, sender) =>
-        val wiring   = new Wiring(sequencerId, observingMode, cswSystem, redisClient)
+        val wiring   = new SequencerWiring(sequencerId, observingMode, cswSystem, redisClient)
         val location = wiring.start()
         sender ! Right(location)
         running(wiring, location)
@@ -27,7 +27,7 @@ object SequenceComponent {
         Behaviors.same
     }
 
-    def running(wiring: Wiring, location: AkkaLocation): Behavior[SequenceComponentMsg] =
+    def running(wiring: SequencerWiring, location: AkkaLocation): Behavior[SequenceComponentMsg] =
       Behaviors.receiveMessage[SequenceComponentMsg] {
         case StopScript(sender) =>
           wiring.shutDown()

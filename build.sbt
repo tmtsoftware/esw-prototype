@@ -140,7 +140,7 @@ lazy val `ocs-gateway` = project
   )
 
 lazy val `ocs-framework` = project
-  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(ClasspathJarPlugin)
   .dependsOn(`sequencer-macros`, `ocs-client`)
   .settings(
     libraryDependencies ++= Seq(
@@ -153,7 +153,8 @@ lazy val `ocs-framework` = project
       Csw.`csw-event-client`,
       Csw.`csw-time-scheduler`,
       SharedLibs.scalaTest.value % Test
-    )
+    ),
+    mainClass in Compile := Some("ocs.framework.SequencerApp")
   )
 
 lazy val `ocs-testkit` = project
@@ -166,7 +167,7 @@ lazy val `sequencer-scripts-test` = project
       Libs.`mockito-core`,
       SharedLibs.`scalaTest`.value % Test
     ),
-    mainClass in reStart := Some("TestSequencerApp"),
+    mainClass in Compile := Some("ocs.framework.SequencerApp"),
     unmanagedSourceDirectories in Compile += (baseDirectory in Compile) (_ / "scripts").value,
     unmanagedSourceDirectories in Test += (baseDirectory in Test) (_ / "tests").value,
     unmanagedResourceDirectories in Compile += (baseDirectory in Compile) (_ / "configs").value,
