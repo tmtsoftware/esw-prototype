@@ -30,13 +30,4 @@ trait ControlDsl {
   }
 
   protected def stopWhen(condition: Boolean): Boolean = condition
-
-  def shutdown(): Future[Done] = spawn {
-    onShutdown().await
-    strandEc.shutdown()
-    Done
-  }
-
-  protected def onShutdown(): Future[Done] = spawn(Done)
-  def abort(): Future[Done]                = spawn(Done)
 }

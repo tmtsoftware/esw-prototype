@@ -4,7 +4,7 @@ import scala.collection.mutable
 import scala.reflect.ClassTag
 
 class FunctionBuilder[I, O] {
-  private val handlers: mutable.Buffer[PartialFunction[I, O]] = mutable.Buffer.empty
+  private[dsl] val handlers: mutable.Buffer[PartialFunction[I, O]] = mutable.Buffer.empty
 
   lazy val combinedHandler: PartialFunction[I, O] = handlers.foldLeft(PartialFunction.empty[I, O])(_ orElse _)
 
@@ -13,4 +13,12 @@ class FunctionBuilder[I, O] {
   }
 
   def build(default: I => O): I => O = input => combinedHandler.lift(input).getOrElse(default(input))
+}
+
+class InterruptHandlers[O] {
+  private[dsl] val handlers: mutable.Buffer[() ⇒ O] = mutable.Buffer.empty
+
+  def add(handler: ⇒ O): Unit = handlers += handler _
+
+  def execute(): mutable.Buffer[O] = handlers.map(_.apply())
 }
