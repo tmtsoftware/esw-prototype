@@ -43,8 +43,8 @@ trait ScriptDsl extends ControlDsl {
   }
 
   private implicit val ec: ExecutionContext = strandEc.ec
-  protected def onShutdown(): Future[Done]  = Future.sequence(shutdownHandlers.execute()).map(_ ⇒ Done)
-  def abort(): Future[Done]                 = Future.sequence(abortHandlers.execute()).map(_ ⇒ Done)
+  protected def onShutdown(): Future[Done]  = par(shutdownHandlers.execute().toList)
+  def abort(): Future[Done]                 = par(abortHandlers.execute().toList)
 
   private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[Done]): Unit = {
     commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
