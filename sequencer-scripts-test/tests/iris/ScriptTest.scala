@@ -6,7 +6,7 @@ import csw.params.commands.{CommandName, Setup}
 import csw.params.core.models.Prefix
 import ocs.framework.ScriptImports.{CswServices, Script}
 import ocs.framework.core.SequenceOperator
-import ocs.framework.dsl.{ControlDsl, ScriptDsl}
+import ocs.framework.dsl.ScriptDsl
 import ocs.testkit.mocks.CswServicesMock
 import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar.mock
@@ -30,9 +30,16 @@ trait HandleTest1 extends ScriptDsl {
       Done
     }
   }
+
+  handleAbort {
+    spawn {
+      println(s"[${Thread.currentThread().getName}] HandleTest1 handleAbort")
+      Done
+    }
+  }
 }
 
-trait HandleTestDsl extends ScriptDsl {
+trait HandleTest2 extends ScriptDsl {
   println(s"[${Thread.currentThread().getName}] HandleTest2 Constructor")
 
   handleSetupCommand("test2") { cmd ⇒
@@ -46,6 +53,13 @@ trait HandleTestDsl extends ScriptDsl {
   handleShutdown {
     spawn {
       println(s"[${Thread.currentThread().getName}] HandleTest2 onShutdown")
+      Done
+    }
+  }
+
+  handleAbort {
+    spawn {
+      println(s"[${Thread.currentThread().getName}] HandleTest2 handleAbort")
       Done
     }
   }
@@ -75,7 +89,7 @@ class HandleTest4(cswServices: CswServices) extends Script(cswServices) {
   }
 }
 
-class TestScript(csw: CswServices) extends Script(csw) with HandleTest1 with HandleTestDsl {
+class TestScript(csw: CswServices) extends Script(csw) with HandleTest1 with HandleTest2 {
   println(s"[${Thread.currentThread().getName}] TestScript Constructor")
 
 }
@@ -104,6 +118,7 @@ class ScriptTest extends FunSuite {
     val eventualResponse1 = testScript.execute(Setup(Prefix("sequencer"), CommandName("test2"), None))
     println(Await.result(eventualResponse1, 10.seconds))
 
+    Await.result(testScript.abort(), 10.seconds)
     Await.result(testScript.shutdown(), 10.seconds)
     Await.result(system.terminate(), 10.seconds)
   }
