@@ -14,37 +14,37 @@ import org.scalatest.mockito.MockitoSugar.mock
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationLong
 
-trait HandleTest1 extends ScriptDsl {
-  println(s"[${Thread.currentThread().getName}] HandleTest1 Constructor")
+trait WFOSSExposureHandler extends ScriptDsl {
+  println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Constructor")
 
-  handleSetupCommand("test1") { cmd ⇒
+  handleSetupCommand("wfos-exposure") { cmd ⇒
     spawn {
-      println(s"[${Thread.currentThread().getName}]  Received $cmd")
+      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Received $cmd")
       Done
     }
   }
 
   handleShutdown {
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest1 onShutdown")
+      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] onShutdown")
       Done
     }
   }
 
   handleAbort {
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest1 handleAbort")
+      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] handleAbort")
       Done
     }
   }
 }
 
-trait HandleTest2 extends ScriptDsl {
-  println(s"[${Thread.currentThread().getName}] HandleTest2 Constructor")
+trait WFOSObserveHandler extends ScriptDsl {
+  println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Constructor")
 
-  handleSetupCommand("test2") { cmd ⇒
+  handleSetupCommand("wfos-observe") { cmd ⇒
     spawn {
-      println(s"[${Thread.currentThread().getName}]  Received $cmd")
+      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Received $cmd")
 
       Done
     }
@@ -52,55 +52,68 @@ trait HandleTest2 extends ScriptDsl {
 
   handleShutdown {
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest2 onShutdown")
+      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] onShutdown")
       Done
     }
   }
 
   handleAbort {
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest2 handleAbort")
+      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] handleAbort")
       Done
     }
   }
 }
 
-class HandleTest3(cswServices: CswServices) extends Script(cswServices) {
+class IrisHandlers(cswServices: CswServices) extends Script(cswServices) {
 
-  println(s"[${Thread.currentThread().getName}] HandleTest3 Constructor")
+  println(s"[${Thread.currentThread().getName}] [IrisHandlers] Constructor")
 
-  handleSetupCommand("test1") { cmd ⇒
+  handleSetupCommand("iris") { cmd ⇒
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest3 Received $cmd")
+      println(s"[${Thread.currentThread().getName}] [IrisHandlers] Received $cmd")
       Done
     }
   }
 
 }
 
-class HandleTest4(cswServices: CswServices) extends Script(cswServices) {
-  println(s"[${Thread.currentThread().getName}] HandleTest4 Constructor")
+class TcsHandlers(cswServices: CswServices) extends Script(cswServices) {
+  println(s"[${Thread.currentThread().getName}] [TcsHandlers] Constructor")
 
-  handleSetupCommand("test1") { cmd ⇒
+  handleSetupCommand("tcs") { cmd ⇒
     spawn {
-      println(s"[${Thread.currentThread().getName}] HandleTest4 Received $cmd")
+      println(s"[${Thread.currentThread().getName}] [TcsHandlers] Received $cmd")
       Done
     }
   }
 }
 
-class TestScript(csw: CswServices) extends Script(csw) with HandleTest1 with HandleTest2 {
-  println(s"[${Thread.currentThread().getName}] TestScript Constructor")
+class WFOSScript(csw: CswServices) extends Script(csw) with WFOSObserveHandler with WFOSSExposureHandler  {
+  println(s"[${Thread.currentThread().getName}] [WFOSScript] Constructor")
 
 }
 
-class TestScript1(csw: CswServices) extends Script(csw) {
-  println(s"[${Thread.currentThread().getName}] TestScript Constructor")
+class OcsScript(csw: CswServices) extends Script(csw) {
+  println(s"[${Thread.currentThread().getName}] [OcsScript] Constructor")
 
-  injectHandlers(
-    new HandleTest3(csw),
-    new HandleTest4(csw)
-  )
+  private val irisHandlers = new IrisHandlers(csw)
+  private val tcsHandlers = new TcsHandlers(csw)
+
+  handleSetupCommand("ocs") { cmd ⇒
+    spawn {
+
+      val irisSetup = cmd.copy(commandName = CommandName("iris"))
+      val tcsSetup = cmd.copy(commandName = CommandName("tcs"))
+
+      par(
+        irisHandlers.execute(irisSetup),
+        tcsHandlers.execute(tcsSetup)
+      ).await
+    }
+
+  }
+
 }
 
 class ScriptTest extends FunSuite {
@@ -109,18 +122,26 @@ class ScriptTest extends FunSuite {
   private val mockSequenceOperator         = mock[SequenceOperator]
   private val mockCswServices              = CswServicesMock.create(mockSequenceOperator)
 
-  test("testing script mixin") {
-    val testScript = new TestScript(mockCswServices)
+  test("mixin approach") {
+    val wFOSScript = new WFOSScript(mockCswServices)
 
-    val eventualResponse = testScript.execute(Setup(Prefix("sequencer"), CommandName("test1"), None))
-    println(Await.result(eventualResponse, 10.seconds))
+    Await.result(wFOSScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-observe"), None)),10.seconds)
+    Await.result(wFOSScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-exposure"), None)), 10.seconds)
 
-    val eventualResponse1 = testScript.execute(Setup(Prefix("sequencer"), CommandName("test2"), None))
-    println(Await.result(eventualResponse1, 10.seconds))
-
-    Await.result(testScript.abort(), 10.seconds)
-    Await.result(testScript.shutdown(), 10.seconds)
+    Await.result(wFOSScript.abort(), 10.seconds)
+    Await.result(wFOSScript.shutdown(), 10.seconds)
     Await.result(system.terminate(), 10.seconds)
   }
 
+  test("new scripts approach") {
+    val ocsScript = new OcsScript(mockCswServices)
+
+    val eventualResponse = ocsScript.execute(Setup(Prefix("sequencer"), CommandName("ocs"), None))
+
+    println(Await.result(eventualResponse, 10.seconds))
+
+    Await.result(ocsScript.abort(), 10.seconds)
+    Await.result(ocsScript.shutdown(), 10.seconds)
+    Await.result(system.terminate(), 10.seconds)
+  }
 }

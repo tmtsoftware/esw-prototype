@@ -14,6 +14,8 @@ trait ControlDsl {
   private val loopInterval: FiniteDuration         = 50.millis
 
   def par(fs: Future[SubmitResponse]*): Future[List[SubmitResponse]] = Future.sequence(fs.toList)
+  
+  def par(fst: Future[Done], rest: Future[Done]*): Future[Done] = Future.sequence(fst :: rest.toList).map(_ => Done)
 
   protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await
