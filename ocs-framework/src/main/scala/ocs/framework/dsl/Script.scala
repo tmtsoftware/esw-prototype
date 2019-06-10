@@ -22,8 +22,9 @@ trait ScriptDsl extends ControlDsl {
     }
 
   protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[Done]] = new FunctionBuilder
-  protected val shutdownHandlers: InterruptHandlers[Future[Done]]                     = new InterruptHandlers
-  protected val abortHandlers: InterruptHandlers[Future[Done]]                        = new InterruptHandlers
+  protected val shutdownHandlers: Function0Handlers[Future[Done]]                     = new Function0Handlers
+  protected val abortHandlers: Function0Handlers[Future[Done]]                        = new Function0Handlers
+  protected val diagHandlers: Function1Handlers[String, Future[Done]]                 = new Function1Handlers
 
   private lazy val commandHandler: SequenceCommand => Future[Done] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
@@ -31,6 +32,7 @@ trait ScriptDsl extends ControlDsl {
   }
 
   def execute(command: SequenceCommand): Future[Done] = spawn(commandHandler(command).await)
+  def executeDiag(hint: String): Future[Done] = par(diagHandlers.execute(hint).toList)
 
   def callback: SubmitResponse => Unit = response => CommandResponse.isFinal(response)
 
@@ -50,6 +52,7 @@ trait ScriptDsl extends ControlDsl {
 
   protected def handleSetupCommand(name: String)(handler: Setup => Future[Done]): Unit     = handle(name)(handler)
   protected def handleObserveCommand(name: String)(handler: Observe => Future[Done]): Unit = handle(name)(handler)
+  protected def handleDiagnosticCommand(handler: String => Future[Done]): Unit             = diagHandlers.add(handler)
   protected def handleShutdown(handler: => Future[Done]): Unit                             = shutdownHandlers.add(handler)
   protected def handleAbort(handler: => Future[Done]): Unit                                = abortHandlers.add(handler)
 

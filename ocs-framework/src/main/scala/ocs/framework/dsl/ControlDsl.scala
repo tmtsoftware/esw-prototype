@@ -15,7 +15,9 @@ trait ControlDsl {
 
   def par(fs: Future[SubmitResponse]*): Future[List[SubmitResponse]] = Future.sequence(fs.toList)
   
-  def par(fst: Future[Done], rest: Future[Done]*): Future[Done] = Future.sequence(fst :: rest.toList).map(_ => Done)
+  def par(fst: Future[Done], rest: Future[Done]*): Future[Done] = par(fst :: rest.toList)
+
+  def par(futures: List[Future[Done]]): Future[Done] = Future.sequence(futures).map(_ => Done)
 
   protected implicit class RichF[T](t: Future[T]) {
     final def await: T = macro AsyncMacros.await

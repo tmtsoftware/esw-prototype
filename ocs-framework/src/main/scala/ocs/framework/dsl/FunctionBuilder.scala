@@ -15,10 +15,19 @@ class FunctionBuilder[I, O] {
   def build(default: I => O): I => O = input => combinedHandler.lift(input).getOrElse(default(input))
 }
 
-class InterruptHandlers[O] {
+class Function0Handlers[O] {
   private[dsl] val handlers: mutable.Buffer[() ⇒ O] = mutable.Buffer.empty
 
   def add(handler: ⇒ O): Unit = handlers += handler _
 
   def execute(): mutable.Buffer[O] = handlers.map(_.apply())
+}
+
+
+class Function1Handlers[I, O] {
+  private[dsl] val handlers: mutable.Buffer[I ⇒ O] = mutable.Buffer.empty
+
+  def add(handler: I ⇒ O): Unit = handlers += handler
+
+  def execute(input: I): mutable.Buffer[O] = handlers.map(_.apply(input))
 }

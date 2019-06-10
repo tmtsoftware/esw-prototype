@@ -24,6 +24,13 @@ trait WFOSSExposureHandler extends ScriptDsl {
     }
   }
 
+  handleDiagnosticCommand { hint ⇒
+    spawn {
+      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Diag Mode: Hint = $hint")
+      Done
+    }
+  }
+
   handleShutdown {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] onShutdown")
@@ -46,6 +53,13 @@ trait WFOSObserveHandler extends ScriptDsl {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Received $cmd")
 
+      Done
+    }
+  }
+
+  handleDiagnosticCommand { hint ⇒
+    spawn {
+      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Diag Mode: Hint = $hint")
       Done
     }
   }
@@ -123,13 +137,14 @@ class ScriptTest extends FunSuite {
   private val mockCswServices              = CswServicesMock.create(mockSequenceOperator)
 
   test("mixin approach") {
-    val wFOSScript = new WFOSScript(mockCswServices)
+    val wfosScript = new WFOSScript(mockCswServices)
 
-    Await.result(wFOSScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-observe"), None)),10.seconds)
-    Await.result(wFOSScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-exposure"), None)), 10.seconds)
+    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-observe"), None)),10.seconds)
+    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-exposure"), None)), 10.seconds)
+    Await.result(wfosScript.executeDiag("demo"), 10.seconds)
 
-    Await.result(wFOSScript.abort(), 10.seconds)
-    Await.result(wFOSScript.shutdown(), 10.seconds)
+    Await.result(wfosScript.abort(), 10.seconds)
+    Await.result(wfosScript.shutdown(), 10.seconds)
     Await.result(system.terminate(), 10.seconds)
   }
 
