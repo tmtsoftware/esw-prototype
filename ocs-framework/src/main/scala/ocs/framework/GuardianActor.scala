@@ -19,12 +19,15 @@ object GuardianActor {
         val actorRef = ctx.spawn(beh, name, props)
         msg.replyTo ! actorRef
         Behaviors.same
+
+      // todo: do we want to shutdown all the children?
       case msg @ ShutdownChildren(replyTo) =>
         if (ctx.children.isEmpty) {
           msg.replyTo ! Done
         } else {
           ctx.children.foreach { child =>
             ctx.stop(child)
+            // todo: watch first and then stop?
             ctx.watchWith(child, ShutdownReply(replyTo))
           }
         }
@@ -35,6 +38,8 @@ object GuardianActor {
         }
         Behaviors.same
       case GetMaterializer(replyTo) =>
+        // todo: should we cache materializer?
+        //  Every time it creates new stream supervisor actor
         replyTo ! ActorMaterializer.boundToActor(ctx)
         Behaviors.same
     }

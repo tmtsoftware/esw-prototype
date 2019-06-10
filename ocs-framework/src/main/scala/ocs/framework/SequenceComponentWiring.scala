@@ -18,6 +18,9 @@ class SequenceComponentWiring(name: String) {
   lazy val cswSystem                = new CswSystem("csw-system")
   import cswSystem._
 
+  // Q: Why it is created in system namespace?
+  // A: On StopScript message, we want to shutdown all the children created with this actor system but not sequenceComponentRef
+  //    we do this by shutting down actors in user space
   lazy val sequenceComponentRef: ActorRef[SequenceComponentMsg] =
     Await.result(typedSystem.systemActorOf(SequenceComponent.behaviour(redisClient, cswSystem), name), 5.seconds)
 

@@ -107,6 +107,7 @@ object SequencerBehaviour {
       Behaviors.receiveMessage[SequencerMsg] { msg =>
         if (stepList.isFinished) {
           msg match {
+            // todo: will we ever get null here?
             case ProcessSequence(null, replyTo) =>
               replyTo ! Failure(new RuntimeException("empty sequence can not be processed"))
             case ProcessSequence(sequence, replyTo) => processSequence(sequence, replyTo)

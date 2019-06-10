@@ -49,6 +49,9 @@ object SequencerMsg {
 sealed trait SequenceComponentMsg extends TMTSerializable
 
 object SequenceComponentMsg {
+
+  // todo: sender type = Either[LoadingFailed, AkkaLocation] ?
+  //  LoadingFailed("Existing Script is already loaded with loc: $akkaLocation")
   case class LoadScript(sequencerId: String, observingMode: String, sender: ActorRef[Either[AkkaLocation, AkkaLocation]])
       extends SequenceComponentMsg
   case class StopScript(sender: ActorRef[Done])                extends SequenceComponentMsg
