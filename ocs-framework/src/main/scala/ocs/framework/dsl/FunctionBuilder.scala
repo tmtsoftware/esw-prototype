@@ -16,7 +16,7 @@ class FunctionBuilder[I, O] {
 }
 
 class Function0Handlers[O] {
-  private[dsl] val handlers: mutable.Buffer[() ⇒ O] = mutable.Buffer.empty
+  private val handlers: mutable.Buffer[() ⇒ O] = mutable.Buffer.empty
 
   def add(handler: ⇒ O): Unit = handlers += handler _
 
@@ -25,7 +25,7 @@ class Function0Handlers[O] {
 
 
 class Function1Handlers[I, O] {
-  private[dsl] val handlers: mutable.Buffer[I ⇒ O] = mutable.Buffer.empty
+  private val handlers: mutable.Buffer[I ⇒ O] = mutable.Buffer.empty
 
   def add(handler: I ⇒ O): Unit = handlers += handler
 

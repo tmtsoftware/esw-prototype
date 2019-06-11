@@ -105,7 +105,6 @@ class TcsHandlers(cswServices: CswServices) extends Script(cswServices) {
 
 class WFOSScript(csw: CswServices) extends Script(csw) with WFOSObserveHandler with WFOSSExposureHandler  {
   println(s"[${Thread.currentThread().getName}] [WFOSScript] Constructor")
-
 }
 
 class OcsScript(csw: CswServices) extends Script(csw) {
@@ -116,7 +115,6 @@ class OcsScript(csw: CswServices) extends Script(csw) {
 
   handleSetupCommand("ocs") { cmd ⇒
     spawn {
-
       val irisSetup = cmd.copy(commandName = CommandName("iris"))
       val tcsSetup = cmd.copy(commandName = CommandName("tcs"))
 
@@ -125,9 +123,7 @@ class OcsScript(csw: CswServices) extends Script(csw) {
         tcsHandlers.execute(tcsSetup)
       ).await
     }
-
   }
-
 }
 
 class ScriptTest extends FunSuite {
