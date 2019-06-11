@@ -3,7 +3,7 @@ package iris
 import akka.Done
 import akka.actor.ActorSystem
 import csw.params.commands.{CommandName, Setup}
-import csw.params.core.models.Prefix
+import csw.params.core.models.{Id, Prefix}
 import ocs.framework.ScriptImports.{CswServices, Script}
 import ocs.framework.core.SequenceOperator
 import ocs.framework.dsl.ScriptDsl
@@ -14,8 +14,16 @@ import org.scalatest.mockito.MockitoSugar.mock
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationLong
 
+trait BaseTest extends FunSuite {
+  protected implicit val system: ActorSystem           = ActorSystem("test")
+  protected val mockSequenceOperator: SequenceOperator = mock[SequenceOperator]
+  protected val mockCswServices: CswServices           = CswServicesMock.create(mockSequenceOperator)
+}
+
+// ================== mix-in =============================
 trait WFOSSExposureHandler extends ScriptDsl {
   println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Constructor")
+
 
   handleSetupCommand("wfos-exposure") { cmd ⇒
     spawn {
@@ -33,7 +41,7 @@ trait WFOSSExposureHandler extends ScriptDsl {
 
   handleShutdown {
     spawn {
-      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] onShutdown")
+      println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] handleShutdown")
       Done
     }
   }
@@ -66,7 +74,7 @@ trait WFOSObserveHandler extends ScriptDsl {
 
   handleShutdown {
     spawn {
-      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] onShutdown")
+      println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] handleShutdown")
       Done
     }
   }
@@ -79,6 +87,27 @@ trait WFOSObserveHandler extends ScriptDsl {
   }
 }
 
+class WFOSScript(csw: CswServices) extends Script(csw) with WFOSObserveHandler with WFOSSExposureHandler {
+  println(s"[${Thread.currentThread().getName}] [WFOSScript] Constructor")
+}
+
+class ScriptMixInExample extends BaseTest {
+
+  test("mixin approach") {
+    val wfosScript = new WFOSScript(mockCswServices)
+
+    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-observe"), None)), 10.seconds)
+    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-exposure"), None)), 10.seconds)
+    Await.result(wfosScript.executeDiag("demo"), 10.seconds)
+
+    Await.result(wfosScript.abort(), 10.seconds)
+    Await.result(wfosScript.shutdown(), 10.seconds)
+    Await.result(system.terminate(), 10.seconds)
+  }
+}
+
+
+// ================== new script =========================
 class IrisHandlers(cswServices: CswServices) extends Script(cswServices) {
 
   println(s"[${Thread.currentThread().getName}] [IrisHandlers] Constructor")
@@ -103,20 +132,18 @@ class TcsHandlers(cswServices: CswServices) extends Script(cswServices) {
   }
 }
 
-class WFOSScript(csw: CswServices) extends Script(csw) with WFOSObserveHandler with WFOSSExposureHandler  {
-  println(s"[${Thread.currentThread().getName}] [WFOSScript] Constructor")
-}
-
 class OcsScript(csw: CswServices) extends Script(csw) {
   println(s"[${Thread.currentThread().getName}] [OcsScript] Constructor")
 
   private val irisHandlers = new IrisHandlers(csw)
-  private val tcsHandlers = new TcsHandlers(csw)
+  private val tcsHandlers  = new TcsHandlers(csw)
 
   handleSetupCommand("ocs") { cmd ⇒
     spawn {
-      val irisSetup = cmd.copy(commandName = CommandName("iris"))
-      val tcsSetup = cmd.copy(commandName = CommandName("tcs"))
+      val irisSetup = cmd.copy(commandName = CommandName("iris"), runId = Id())
+      val tcsSetup  = cmd.copy(commandName = CommandName("tcs"), runId = Id())
+
+      println(s"[${Thread.currentThread().getName}] [OcsScript] Received $cmd")
 
       par(
         irisHandlers.execute(irisSetup),
@@ -126,30 +153,13 @@ class OcsScript(csw: CswServices) extends Script(csw) {
   }
 }
 
-class ScriptTest extends FunSuite {
-
-  private implicit val system: ActorSystem = ActorSystem("test")
-  private val mockSequenceOperator         = mock[SequenceOperator]
-  private val mockCswServices              = CswServicesMock.create(mockSequenceOperator)
-
-  test("mixin approach") {
-    val wfosScript = new WFOSScript(mockCswServices)
-
-    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-observe"), None)),10.seconds)
-    Await.result(wfosScript.execute(Setup(Prefix("sequencer"), CommandName("wfos-exposure"), None)), 10.seconds)
-    Await.result(wfosScript.executeDiag("demo"), 10.seconds)
-
-    Await.result(wfosScript.abort(), 10.seconds)
-    Await.result(wfosScript.shutdown(), 10.seconds)
-    Await.result(system.terminate(), 10.seconds)
-  }
-
+class ThreadPerScriptExample extends BaseTest {
   test("new scripts approach") {
     val ocsScript = new OcsScript(mockCswServices)
 
     val eventualResponse = ocsScript.execute(Setup(Prefix("sequencer"), CommandName("ocs"), None))
 
-    println(Await.result(eventualResponse, 10.seconds))
+    Await.result(eventualResponse, 10.seconds)
 
     Await.result(ocsScript.abort(), 10.seconds)
     Await.result(ocsScript.shutdown(), 10.seconds)
