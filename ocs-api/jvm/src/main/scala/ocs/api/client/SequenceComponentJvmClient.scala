@@ -1,9 +1,9 @@
 package ocs.api.client
 
 import akka.Done
-import akka.actor.typed.ActorRef
+import akka.actor.typed.{ActorRef, ActorSystem, SpawnProtocol}
 import akka.actor.typed.scaladsl.AskPattern._
-import akka.actor.{ActorSystem, Scheduler}
+import akka.actor.Scheduler
 import akka.util.Timeout
 import csw.location.api.models.AkkaLocation
 import ocs.api.SequenceComponentApi
@@ -13,7 +13,7 @@ import ocs.api.messages.SequenceComponentMsg.{GetStatus, LoadScript, StopScript}
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
-class SequenceComponentJvmClient(sequenceComponentRef: ActorRef[SequenceComponentMsg], system: ActorSystem)
+class SequenceComponentJvmClient(sequenceComponentRef: ActorRef[SequenceComponentMsg], system: ActorSystem[_])
     extends SequenceComponentApi {
 
   private implicit val timeout: Timeout     = Timeout(10.seconds)

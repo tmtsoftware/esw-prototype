@@ -1,5 +1,6 @@
 package ocs.client
 import akka.actor.CoordinatedShutdown
+import akka.actor.typed.scaladsl.adapter.TypedActorSystemOps
 import ammonite.util.Res
 
 object Main {
@@ -43,6 +44,6 @@ object Main {
         "materializer"     -> materializer
       )
 
-    CoordinatedShutdown(system).run(CoordinatedShutdown.JvmExitReason)
+    CoordinatedShutdown(typedSystem.toUntyped).run(CoordinatedShutdown.JvmExitReason)
   }
 }

@@ -3,7 +3,6 @@ package ocs.framework.dsl.epic.internal
 import akka.Done
 import akka.stream.KillSwitch
 import akka.stream.scaladsl.Sink
-import ocs.framework.dsl.epic.internal.event.MockEvent
 import ocs.framework.dsl.epic.{ProgramContext, Refreshable}
 
 import scala.concurrent.Future

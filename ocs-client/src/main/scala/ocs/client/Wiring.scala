@@ -1,7 +1,8 @@
 package ocs.client
 
-import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.actor.typed.{ActorSystem, SpawnProtocol}
+import akka.stream.Materializer
+import akka.stream.typed.scaladsl.ActorMaterializer
 import akka.util.Timeout
 import csw.event.api.scaladsl.EventService
 import csw.event.client.EventServiceFactory
@@ -16,13 +17,13 @@ import scala.concurrent.duration.DurationDouble
 class Wiring() {
   implicit lazy val timeout: Timeout = Timeout(5.seconds)
 
-  lazy implicit val system: ActorSystem                = ActorSystemFactory.remote()
-  lazy implicit val materializer: Materializer         = ActorMaterializer()
-  lazy implicit val executionContext: ExecutionContext = system.dispatcher
+  lazy implicit val typedSystem: ActorSystem[SpawnProtocol] = ActorSystemFactory.remote(SpawnProtocol.behavior, "ocs-client")
+  lazy implicit val materializer: Materializer              = ActorMaterializer()(typedSystem)
+  lazy implicit val executionContext: ExecutionContext      = typedSystem.executionContext
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
   lazy val eventService: EventService                     = new EventServiceFactory().make(locationService)
-  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
+  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService)
 
   lazy val componentFactory = new ComponentFactory(locationServiceWrapper)
 }

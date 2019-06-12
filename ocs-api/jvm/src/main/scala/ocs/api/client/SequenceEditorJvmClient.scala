@@ -1,8 +1,8 @@
 package ocs.api.client
 
-import akka.actor.typed.ActorRef
+import akka.actor.typed.{ActorRef, ActorSystem, SpawnProtocol}
 import akka.actor.typed.scaladsl.AskPattern._
-import akka.actor.{ActorSystem, Scheduler}
+import akka.actor.Scheduler
 import akka.util.Timeout
 import csw.params.commands.SequenceCommand
 import csw.params.core.models.Id
@@ -16,10 +16,10 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
-class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem) extends SequenceEditor {
+class SequenceEditorJvmClient(supervisor: ActorRef[SupervisorMsg])(implicit system: ActorSystem[_]) extends SequenceEditor {
   private implicit val timeout: Timeout     = Timeout(10.hour)
   private implicit val scheduler: Scheduler = system.scheduler
-  import system.dispatcher
+  import system.executionContext
 
   def responseHelper[T](future: Future[Try[T]]): Future[T] = future.map(_.get)
 

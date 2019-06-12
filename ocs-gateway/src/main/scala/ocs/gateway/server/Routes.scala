@@ -1,6 +1,6 @@
 package ocs.gateway.server
 
-import akka.actor.ActorSystem
+import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives.{entity, _}
@@ -29,7 +29,7 @@ class Routes(
     positionTracker: PositionTracker,
     assemblyService: AssemblyService,
     eventMonitor: EventMonitor
-)(implicit ec: ExecutionContext, val actorSystem: ActorSystem)
+)(implicit ec: ExecutionContext, val actorSystem: ActorSystem[SpawnProtocol])
     extends PlayJsonSupport
     with SequencerJsonSupport {
 

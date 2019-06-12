@@ -1,7 +1,6 @@
 package ocs.client.factory
 
-import akka.actor.ActorSystem
-import akka.actor.typed.ActorRef
+import akka.actor.typed.{ActorRef, ActorSystem, SpawnProtocol}
 import csw.location.api.models.Connection.{AkkaConnection, TcpConnection}
 import csw.location.api.models._
 import csw.location.api.scaladsl.LocationService
@@ -11,7 +10,9 @@ import io.lettuce.core.RedisURI
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{ExecutionContext, Future}
 
-class LocationServiceWrapper(locationService: LocationService, system: ActorSystem)(implicit ec: ExecutionContext) {
+class LocationServiceWrapper(locationService: LocationService)(
+    implicit ec: ExecutionContext
+) {
 
   def register[T](prefix: Prefix, componentId: ComponentId, actorRef: ActorRef[T]): Future[RegistrationResult] = {
     val registration = AkkaRegistration(AkkaConnection(componentId), prefix, actorRef)

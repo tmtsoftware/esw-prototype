@@ -1,7 +1,6 @@
 package ocs.client.factory
 
-import akka.actor.typed.scaladsl.adapter.UntypedActorSystemOps
-import akka.actor.{typed, ActorSystem}
+import akka.actor.typed.ActorSystem
 import csw.command.api.scaladsl.CommandService
 import csw.command.client._
 import csw.location.api.models.{AkkaLocation, ComponentType}
@@ -11,9 +10,7 @@ import ocs.api.{SequenceEditor, SequencerCommandService, SequencerUtil}
 
 import scala.concurrent.Future
 
-class ComponentFactory(locationService: LocationServiceWrapper)(implicit system: ActorSystem) {
-
-  implicit val typedSystem: typed.ActorSystem[Nothing] = system.toTyped
+class ComponentFactory(locationService: LocationServiceWrapper)(implicit typedSystem: ActorSystem[_]) {
 
   def assemblyCommandService(assemblyName: String): Future[CommandService] = {
     locationService.resolve(assemblyName, ComponentType.Assembly)(akkaLocation => CommandServiceFactory.make(akkaLocation))
@@ -30,7 +27,7 @@ class ComponentFactory(locationService: LocationServiceWrapper)(implicit system:
   def sequenceComponentService(sequenceComponentName: String): Future[SequenceComponentJvmClient] = {
     locationService.resolve(sequenceComponentName, ComponentType.Service) { akkaLocation =>
       val sequenceComponentRef = akkaLocation.actorRef.unsafeUpcast[SequenceComponentMsg]
-      new SequenceComponentJvmClient(sequenceComponentRef, system)
+      new SequenceComponentJvmClient(sequenceComponentRef, typedSystem)
     }
   }
 

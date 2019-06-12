@@ -24,7 +24,7 @@ class SequenceComponentWiring(name: String) {
   lazy val sequenceComponentRef: ActorRef[SequenceComponentMsg] =
     Await.result(typedSystem.systemActorOf(SequenceComponent.behaviour(redisClient, cswSystem), name), 5.seconds)
 
-  lazy val sequenceComponentJvmClient = new SequenceComponentJvmClient(sequenceComponentRef, system)
+  lazy val sequenceComponentJvmClient = new SequenceComponentJvmClient(sequenceComponentRef, typedSystem)
 
   def start(): Unit = {
     CoordinatedShutdown(system).addTask(

@@ -29,7 +29,7 @@ class CswSystem(name: String) {
   implicit lazy val timeout: Timeout     = Timeout(5.seconds)
 
   lazy val locationService: LocationService               = HttpLocationServiceFactory.makeLocalClient
-  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService, system)
+  lazy val locationServiceWrapper: LocationServiceWrapper = new LocationServiceWrapper(locationService)
 
 //  lazy val mockEventService: EpicsEventService = new RedisEventService
   lazy val mockEventService: MockEventService = new MockEventService
