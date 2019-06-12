@@ -22,9 +22,9 @@ trait ScriptDsl extends ControlDsl {
     }
 
   protected val commandHandlerBuilder: FunctionBuilder[SequenceCommand, Future[Done]] = new FunctionBuilder
-  protected val shutdownHandlers: Function0Handlers[Future[Done]]                     = new Function0Handlers
-  protected val abortHandlers: Function0Handlers[Future[Done]]                        = new Function0Handlers
-  protected val diagHandlers: Function1Handlers[String, Future[Done]]                 = new Function1Handlers
+  protected val shutdownHandlers: FunctionHandlers[Unit, Future[Done]]                = new FunctionHandlers
+  protected val abortHandlers: FunctionHandlers[Unit, Future[Done]]                   = new FunctionHandlers
+  protected val diagHandlers: FunctionHandlers[String, Future[Done]]                  = new FunctionHandlers
 
   private lazy val commandHandler: SequenceCommand => Future[Done] = commandHandlerBuilder.build { input =>
     println(s"unknown command=$input")
@@ -32,7 +32,7 @@ trait ScriptDsl extends ControlDsl {
   }
 
   def execute(command: SequenceCommand): Future[Done] = spawn(commandHandler(command).await)
-  def executeDiag(hint: String): Future[Done] = par(diagHandlers.execute(hint).toList)
+  def executeDiag(hint: String): Future[Done]         = par(diagHandlers.execute(hint).toList)
 
   def callback: SubmitResponse => Unit = response => CommandResponse.isFinal(response)
 
@@ -43,8 +43,8 @@ trait ScriptDsl extends ControlDsl {
   }
 
   private implicit val ec: ExecutionContext = strandEc.ec
-  protected def onShutdown(): Future[Done]  = par(shutdownHandlers.execute().toList)
-  def abort(): Future[Done]                 = par(abortHandlers.execute().toList)
+  protected def onShutdown(): Future[Done]  = par(shutdownHandlers.execute(()).toList)
+  def abort(): Future[Done]                 = par(abortHandlers.execute(()).toList)
 
   private def handle[T <: SequenceCommand: ClassTag](name: String)(handler: T => Future[Done]): Unit = {
     commandHandlerBuilder.addHandler[T](handler)(_.commandName.name == name)
@@ -53,11 +53,6 @@ trait ScriptDsl extends ControlDsl {
   protected def handleSetupCommand(name: String)(handler: Setup => Future[Done]): Unit     = handle(name)(handler)
   protected def handleObserveCommand(name: String)(handler: Observe => Future[Done]): Unit = handle(name)(handler)
   protected def handleDiagnosticCommand(handler: String => Future[Done]): Unit             = diagHandlers.add(handler)
-  protected def handleShutdown(handler: => Future[Done]): Unit                             = shutdownHandlers.add(handler)
-  protected def handleAbort(handler: => Future[Done]): Unit                                = abortHandlers.add(handler)
-
-  // this is not required, instead of this - use mix-in approach (keeping it for a while for reference.)
-  protected def injectHandlers(scripts: Script*): Unit =
-    commandHandlerBuilder.handlers ++= scripts.flatMap(_.commandHandlerBuilder.handlers)
-
+  protected def handleShutdown(handler: => Future[Done]): Unit                             = shutdownHandlers.add(_ => handler)
+  protected def handleAbort(handler: => Future[Done]): Unit                                = abortHandlers.add(_ => handler)
 }
