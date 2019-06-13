@@ -9,7 +9,7 @@ object Libs {
   val `scala-compiler`     = "org.scala-lang"         % "scala-compiler"      % ScalaVersion
   val `akka-http-cors`     = "ch.megard"              %% "akka-http-cors"     % "0.4.0"
   val `scala-java8-compat` = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0" //BSD 3-clause "New" or "Revised" License
-  val `mockito-core`       = "org.mockito"            % "mockito-core"        % "2.21.0" //MIT License
+  val `mockito-core`       = "org.mockito"            % "mockito-core"        % "2.28.2" //MIT License
   val `reactify`           = "com.outr"               %% "reactify"           % "3.0.3"
   val `scalarx`            = "com.lihaoyi"            %% "scalarx"            % "0.4.0"
 
@@ -44,29 +44,29 @@ object Csw {
 }
 
 object Ammonite {
-  val Version = "1.6.6"
+  val Version = "1.6.7"
 
   val `ammonite`      = "com.lihaoyi" % "ammonite"      % Version cross CrossVersion.full
   val `ammonite-sshd` = "com.lihaoyi" % "ammonite-sshd" % Version cross CrossVersion.full
 }
 
 object Akka {
-  val Version = "2.5.22"
+  val Version = "2.5.23"
 
   val `akka-actor`          = "com.typesafe.akka" %% "akka-actor"               % Version
   val `akka-stream`         = "com.typesafe.akka" %% "akka-stream"              % Version
   val `akka-typed`          = "com.typesafe.akka" %% "akka-actor-typed"         % Version
   val `akka-http`           = "com.typesafe.akka" %% "akka-http"                % "10.1.8"
   val `akka-typed-testkit`  = "com.typesafe.akka" %% "akka-actor-testkit-typed" % Version
-  val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json"      % "1.21.0" //Apache 2.0
+  val `akka-http-play-json` = "de.heikoseeberger" %% "akka-http-play-json"      % "1.26.0" //Apache 2.0
 }
 
 object SharedLibs {
-  val `scalaTest` = dep("org.scalatest" %%% "scalatest" % "3.0.7")
+  val `scalaTest` = dep("org.scalatest" %%% "scalatest" % "3.0.8")
 }
 
 object React4s {
-  val `react4s` = dep("com.github.ahnfelt" %%% "react4s" % "0.9.24-SNAPSHOT")
+  val `react4s` = dep("com.github.ahnfelt" %%% "react4s" % "0.9.26-SNAPSHOT")
 }
 
 object Sparse {
