@@ -14,7 +14,7 @@ trait ControlDsl {
   private val loopInterval: FiniteDuration         = 50.millis
 
   def par(fs: Future[SubmitResponse]*): Future[List[SubmitResponse]] = Future.sequence(fs.toList)
-  
+
   def par(fst: Future[Done], rest: Future[Done]*): Future[Done] = par(fst :: rest.toList)
 
   def par(futures: List[Future[Done]]): Future[Done] = Future.sequence(futures).map(_ => Done)
@@ -27,7 +27,7 @@ trait ControlDsl {
   protected def loop(block: => Future[Boolean]): Future[Done] = loop(loopInterval)(block)
 
   protected def loop(minimumInterval: FiniteDuration)(block: => Future[Boolean]): Future[Done] =
-    loopWithoutDelay(FutureUtils.delay(minimumInterval max loopInterval)(block))
+    loopWithoutDelay(FutureUtils.delay[Boolean](minimumInterval max loopInterval)(block)(strandEc))
 
   private def loopWithoutDelay(block: => Future[Boolean]): Future[Done] = spawn {
     if (block.await) Done else loopWithoutDelay(block).await

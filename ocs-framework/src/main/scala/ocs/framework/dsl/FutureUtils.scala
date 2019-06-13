@@ -23,4 +23,10 @@ object FutureUtils {
       await(futureValue)
     }(strandEc.ec)
   }
+
+  def delay(duration: FiniteDuration, executorService: ScheduledExecutorService): Future[Unit] = {
+    val p = Promise[Unit]()
+    executorService.schedule(() => p.success(()), duration.length, duration.unit)
+    p.future
+  }
 }
