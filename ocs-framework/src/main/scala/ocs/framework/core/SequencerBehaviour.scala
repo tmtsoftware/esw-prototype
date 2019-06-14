@@ -25,6 +25,8 @@ object SequencerBehaviour {
       var latestResponse: Option[SubmitResponse]                = None
       val emptyChildId                                          = Id("empty-child")
 
+      var seqId: Option[Id] = None
+
       def sendNext(replyTo: ActorRef[Step]): Unit = stepList.next match {
         case Some(step) => setInFlight(replyTo, step)
         case None       => stepRefOpt = Some(replyTo)
@@ -84,7 +86,6 @@ object SequencerBehaviour {
           stepList = StepList.empty
           readyToExecuteNextRefOpt.foreach(x => readyToExecuteNext(x))
           latestResponse = None
-          responseRefOpt = None
           readyToExecuteNextRefOpt = None
         }
       }
@@ -97,6 +98,7 @@ object SequencerBehaviour {
 
       def processSequence(sequence: Sequence, replyTo: ActorRef[Try[SubmitResponse]]): Unit = {
         val runId = sequence.runId
+        seqId = Some(runId)
         stepList = StepList.from(sequence)
         crmRef ! AddOrUpdateCommand(CommandResponse.Started(runId))
         crmRef ! CommandResponseManagerMessage.Subscribe(runId, crmMapper)
@@ -105,6 +107,7 @@ object SequencerBehaviour {
       }
 
       Behaviors.receiveMessage[SequencerMsg] { msg =>
+
         if (stepList.isFinished) {
           msg match {
             // todo: will we ever get null here?
@@ -114,6 +117,15 @@ object SequencerBehaviour {
             case GetSequence(replyTo)               => replyTo ! Success(stepList)
             case GetNext(replyTo)                   => sendNext(replyTo)
             case ReadyToExecuteNext(replyTo)        => readyToExecuteNext(replyTo)
+            case Update(response) if seqId.contains(response.runId) ⇒
+              for {
+                ref ← responseRefOpt
+                r ← latestResponse
+              } yield {
+                ref ! Success(r)
+              }
+              responseRefOpt = None
+
             case x: ExternalSequencerMsg =>
               x.replyTo ! Failure(
                 new RuntimeException(s"${x.getClass.getSimpleName} can not be applied on a finished sequence")
