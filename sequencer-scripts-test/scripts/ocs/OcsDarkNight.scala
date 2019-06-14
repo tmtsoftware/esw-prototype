@@ -8,7 +8,6 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
   private val tcs  = csw.sequencerCommandService("tcs")
 
   private var eventCount   = 0
-  private var commandCount = 0
 
   private val publisherStream = csw.publish(10.seconds) {
     Option(SystemEvent(Prefix("ocs-test"), EventName("system")))
@@ -38,7 +37,6 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
       val response = iris.await.submit(sequence).await
 
       csw.addSequenceResponse(topLevelCommands, response)
-      Done
     }
   }
 
@@ -68,8 +66,6 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
 
       println(s"[Ocs] Received response: $responses")
       csw.sendResult(s"$responses")
-
-      Done
     }
   }
 
@@ -81,14 +77,12 @@ class OcsDarkNight(csw: CswServices) extends Script(csw) {
 
       csw.addSequenceResponse(Set(command), response)
       csw.sendResult(s"$response")
-      Done
     }
   }
 
-  override def onShutdown(): Future[Done] = spawn {
+  override def onShutdown(): Future[Unit] = spawn {
     println("shutdown ocs")
     subscriptionStream.unsubscribe().await
     publisherStream.cancel()
-    Done
   }
 }

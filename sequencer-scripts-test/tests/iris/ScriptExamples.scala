@@ -1,6 +1,5 @@
 package iris
 
-import akka.Done
 import akka.actor.ActorSystem
 import csw.params.commands.{CommandName, Setup}
 import csw.params.core.models.{Id, Prefix}
@@ -28,28 +27,24 @@ trait WFOSSExposureHandler extends ScriptDsl {
   handleSetupCommand("wfos-exposure") { cmd ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Received $cmd")
-      Done
     }
   }
 
   handleDiagnosticCommand { hint ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] Diag Mode: Hint = $hint")
-      Done
     }
   }
 
   handleShutdown {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] handleShutdown")
-      Done
     }
   }
 
   handleAbort {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSSExposureHandler] handleAbort")
-      Done
     }
   }
 }
@@ -60,29 +55,24 @@ trait WFOSObserveHandler extends ScriptDsl {
   handleSetupCommand("wfos-observe") { cmd ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Received $cmd")
-
-      Done
     }
   }
 
   handleDiagnosticCommand { hint ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] Diag Mode: Hint = $hint")
-      Done
     }
   }
 
   handleShutdown {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] handleShutdown")
-      Done
     }
   }
 
   handleAbort {
     spawn {
       println(s"[${Thread.currentThread().getName}] [WFOSObserveHandler] handleAbort")
-      Done
     }
   }
 }
@@ -115,7 +105,6 @@ class IrisHandlers(cswServices: CswServices) extends Script(cswServices) {
   handleSetupCommand("iris") { cmd ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [IrisHandlers] Received $cmd")
-      Done
     }
   }
 
@@ -127,7 +116,6 @@ class TcsHandlers(cswServices: CswServices) extends Script(cswServices) {
   handleSetupCommand("tcs") { cmd ⇒
     spawn {
       println(s"[${Thread.currentThread().getName}] [TcsHandlers] Received $cmd")
-      Done
     }
   }
 }

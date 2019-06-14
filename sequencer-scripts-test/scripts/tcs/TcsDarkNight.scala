@@ -4,9 +4,6 @@ import ocs.framework.ScriptImports._
 
 class TcsDarkNight(csw: CswServices) extends Script(csw) {
 
-  private var eventCount   = 0
-  private var commandCount = 0
-
   handleSetupCommand("setup-tcs") { command =>
     spawn {
       println(s"[Tcs] Received command: ${command.commandName}")
@@ -26,7 +23,6 @@ class TcsDarkNight(csw: CswServices) extends Script(csw) {
 
       println(s"[Tcs] Received response: $firstAssemblyResponse")
       csw.sendResult(s"$firstAssemblyResponse")
-      Done
     }
   }
 }

@@ -44,20 +44,16 @@ class IrisDarkNight(csw: CswServices) extends Script(csw) {
 
       val assemblyResponse2 = csw.submit("Sample1Assembly", command2).await
       csw.updateSubCommand(subCmdResponse = assemblyResponse2)
-
-      Done
     }
   }
 
-  override def onShutdown(): Future[Done] = spawn {
+  override def onShutdown(): Future[Unit] = spawn {
     publisherStream.cancel()
     subscriptionStream.unsubscribe().await
     println("shutdown iris")
-    Done
   }
 
-  override def abort(): Future[Done] = spawn {
+  override def abort(): Future[Unit] = spawn {
     flag = true
-    Done
   }
 }
