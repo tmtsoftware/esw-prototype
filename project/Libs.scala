@@ -16,7 +16,7 @@ object Libs {
   val `scala-async`              = dep("org.scala-lang.modules" %% "scala-async"               % "0.10.0")
   val `play-json`                = dep("com.typesafe.play"      %%% "play-json"                % "2.7.3") //Apache 2.0
   val `play-functional`          = dep("com.typesafe.play"      %%% "play-functional"          % "2.7.3") //Apache 2.0
-  val `play-json-derived-codecs` = dep("org.julienrf"           %%% "play-json-derived-codecs" % "5.0.0")
+  val `play-json-derived-codecs` = dep("org.julienrf"           %%% "play-json-derived-codecs" % "6.0.0")
   val `monix`                    = dep("io.monix"               %%% "monix"                    % "3.0.0-RC1")
   val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.7")
   val airstream                  = dep("com.raquo"              %%% "airstream"                % "0.7")
