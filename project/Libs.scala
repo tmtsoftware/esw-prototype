@@ -66,7 +66,7 @@ object SharedLibs {
 }
 
 object React4s {
-  val `react4s` = dep("com.github.ahnfelt" %%% "react4s" % "0.9.26-SNAPSHOT")
+  val `react4s` = dep("com.github.ahnfelt" %%% "react4s" % "0.9.27-SNAPSHOT")
 }
 
 object Sparse {
