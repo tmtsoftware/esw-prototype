@@ -18,7 +18,7 @@ object Libs {
   val `play-functional`          = dep("com.typesafe.play"      %%% "play-functional"          % "2.7.3") //Apache 2.0
   val `play-json-derived-codecs` = dep("org.julienrf"           %%% "play-json-derived-codecs" % "5.0.0")
   val `monix`                    = dep("io.monix"               %%% "monix"                    % "3.0.0-RC1")
-  val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.7")
+  val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.8")
   val airstream                  = dep("com.raquo"              %%% "airstream"                % "0.7")
   val laminar                    = dep("com.raquo"              %%% "laminar"                  % "0.7")
 }
