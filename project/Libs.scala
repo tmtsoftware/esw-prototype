@@ -20,7 +20,7 @@ object Libs {
   val `monix`                    = dep("io.monix"               %%% "monix"                    % "3.0.0-RC1")
   val `scalajs-dom`              = dep("org.scala-js"           %%% "scalajs-dom"              % "0.9.7")
   val airstream                  = dep("com.raquo"              %%% "airstream"                % "0.7")
-  val laminar                    = dep("com.raquo"              %%% "laminar"                  % "0.7")
+  val laminar                    = dep("com.raquo"              %%% "laminar"                  % "0.7.2")
 }
 
 object Enumeratum {
